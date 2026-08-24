@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- ✅ الفافيكون الافتراضي (سيتم تغييره ديناميكياً عبر React) -->
+    <!-- <link rel="icon" type="image/x-icon" href="/vite.svg" /> -->
+     <!-- ✅ أضف id حتى نتمكن من التعديل عليه لاحقاً -->
+<link rel="icon" type="image/x-icon" href="/vite.svg" id="dynamic-favicon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- ✅ العنوان الافتراضي (سيتم تغييره ديناميكياً عبر React) -->
+    <title>منصة البحث العلمي | وزارة التعليم العالي</title>
+
+    <style>
+      body, input, select, textarea, button, a, span, p, h1, h2, h3, h4, h5, h6, li, label, div {
+        font-family: 'Cairo', 'Inter', sans-serif;
+      }
+      [dir="ltr"] body, 
+      [dir="ltr"] input, [dir="ltr"] select, [dir="ltr"] textarea, 
+      [dir="ltr"] button, [dir="ltr"] a, [dir="ltr"] span, [dir="ltr"] p, 
+      [dir="ltr"] h1, [dir="ltr"] h2, [dir="ltr"] h3, [dir="ltr"] h4, 
+      [dir="ltr"] h5, [dir="ltr"] h6, [dir="ltr"] li, [dir="ltr"] label, [dir="ltr"] div {
+        font-family: 'Inter', 'Cairo', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
