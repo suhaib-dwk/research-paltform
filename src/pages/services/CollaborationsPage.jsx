@@ -7,10 +7,10 @@ const CollabsPage = () => {
     <div className="p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-black text-[#0a1628]">{t('collabs.title')}</h1>
+          <h1 className="text-2xl font-black text-[#1a1613]">{t('collabs.title')}</h1>
           <p className="text-sm text-gray-400 mt-1">{t('collabs.desc')}</p>
         </div>
-        <button className="flex items-center gap-2 bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all">
+        <button className="flex items-center gap-2 bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#e8623a]/25 transition-all">
           <Plus className="w-4 h-4" /> {t('collabs.request')}
         </button>
       </div>

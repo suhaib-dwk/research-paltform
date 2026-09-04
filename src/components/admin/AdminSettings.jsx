@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Settings, Save, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
+import { resolveUploadUrl } from '../../api';
 import { API_BASE_URL } from '../../api';
 
 const AdminSettings = () => {
@@ -119,7 +120,7 @@ const AdminSettings = () => {
               <div key={key} className="space-y-3">
                 <label className="text-sm font-bold text-gray-600">{key === 'site_logo' ? 'شعار الموقع (Logo)' : 'أيقونة التبويب (Favicon)'}</label>
                 <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-blue-400 transition-colors relative">
-                  <img src={previews[key] || formData[key] || 'https://via.placeholder.com/100'} alt="" className={`${key === 'site_logo' ? 'w-24 h-24' : 'w-16 h-16'} object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-1`} />
+                  <img src={previews[key] || resolveUploadUrl(formData[key]) || 'https://via.placeholder.com/100'} alt="" className={`${key === 'site_logo' ? 'w-24 h-24' : 'w-16 h-16'} object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-1`} />
                   <input type="file" accept="image/*" onChange={e => handleFileChange(e, key)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <p className="text-xs text-gray-400 flex items-center justify-center gap-1"><Upload className="w-4 h-4" /> اضغط للرفع</p>
                 </div>

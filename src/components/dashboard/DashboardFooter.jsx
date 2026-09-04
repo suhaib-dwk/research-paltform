@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GraduationCap, MapPin, Phone, Mail, ShieldCheck } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
+import { resolveUploadUrl } from '../../api';
 
 const DashboardFooter = () => {
   const { i18n } = useTranslation();
@@ -10,7 +11,7 @@ const DashboardFooter = () => {
   const { siteSettings } = useContext(SiteContext);
 
   return (
-    <footer className="mt-auto border-t border-gray-200 dark:border-[#1e3050]/30 bg-white dark:bg-[#0a1628]/30 backdrop-blur-sm transition-colors duration-300">
+    <footer className="mt-auto border-t border-gray-200 dark:border-[#3a322c]/30 bg-white dark:bg-[#1a1613]/30 backdrop-blur-sm transition-colors duration-300">
       <div className="px-6 py-5">
         <div className="max-w-6xl mx-auto">
           {/* روابط سريعة */}
@@ -22,24 +23,24 @@ const DashboardFooter = () => {
               { to: '/dashboard/terms', label: currentLang === 'ar' ? 'الشروط والأحكام' : 'Terms & Conditions' },
               { to: '/dashboard/privacy', label: currentLang === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy' },
             ].map((link) => (
-              <Link key={link.to} to={link.to} className="text-[11px] text-gray-500 dark:text-gray-500 hover:text-[#c8a44e] transition-colors duration-200">
+              <Link key={link.to} to={link.to} className="text-[11px] text-gray-500 dark:text-gray-500 hover:text-[#e8623a] transition-colors duration-200">
                 {link.label}
               </Link>
             ))}
           </div>
 
           {/* فاصل */}
-          <div className="border-t border-gray-200 dark:border-[#1e3050]/30 pt-4 mb-4" />
+          <div className="border-t border-gray-200 dark:border-[#3a322c]/30 pt-4 mb-4" />
 
           {/* معلومات التواصل */}
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-5 text-gray-500 dark:text-gray-500">
             {siteSettings?.phone && (
-              <a href={`tel:${siteSettings.phone}`} className="flex items-center gap-1.5 text-[11px] hover:text-[#c8a44e] transition-colors" dir="ltr">
+              <a href={`tel:${siteSettings.phone}`} className="flex items-center gap-1.5 text-[11px] hover:text-[#e8623a] transition-colors" dir="ltr">
                 <Phone className="w-3 h-3" />{siteSettings.phone}
               </a>
             )}
             {siteSettings?.email && (
-              <a href={`mailto:${siteSettings.email}`} className="flex items-center gap-1.5 text-[11px] hover:text-[#c8a44e] transition-colors" dir="ltr">
+              <a href={`mailto:${siteSettings.email}`} className="flex items-center gap-1.5 text-[11px] hover:text-[#e8623a] transition-colors" dir="ltr">
                 <Mail className="w-3 h-3" />{siteSettings.email}
               </a>
             )}
@@ -52,13 +53,13 @@ const DashboardFooter = () => {
           </div>
 
           {/* فاصل + حقوق */}
-          <div className="border-t border-gray-200 dark:border-[#1e3050]/30 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="border-t border-gray-200 dark:border-[#3a322c]/30 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               {siteSettings?.site_logo ? (
-                <img src={siteSettings.site_logo} alt="Logo" className="h-5 w-auto max-w-[20px] object-contain rounded opacity-40" />
+                <img src={resolveUploadUrl(siteSettings.site_logo)} alt="Logo" className="h-5 w-auto max-w-[20px] object-contain rounded opacity-40" />
               ) : (
-                <div className="w-5 h-5 bg-[#c8a44e]/20 dark:bg-[#c8a44e]/30 rounded flex items-center justify-center">
-                  <GraduationCap className="w-3 h-3 text-[#c8a44e]/50" />
+                <div className="w-5 h-5 bg-[#e8623a]/20 dark:bg-[#e8623a]/30 rounded flex items-center justify-center">
+                  <GraduationCap className="w-3 h-3 text-[#e8623a]/50" />
                 </div>
               )}
               <span className="text-[11px] text-gray-400 dark:text-gray-600 transition-colors duration-300">
@@ -68,7 +69,7 @@ const DashboardFooter = () => {
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-[10px] text-gray-400 dark:text-gray-600">
-              <ShieldCheck className="w-3 h-3 text-[#c8a44e]/50" />
+              <ShieldCheck className="w-3 h-3 text-[#e8623a]/50" />
               <span>{currentLang === 'ar' ? 'محمي بتشفير SSL' : 'Secured by SSL'}</span>
             </div>
           </div>

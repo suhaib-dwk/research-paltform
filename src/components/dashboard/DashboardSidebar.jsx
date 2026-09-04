@@ -7,7 +7,7 @@ import {
   BarChart3, MessageSquare, Settings, HelpCircle,
   X, GraduationCap, ShieldCheck, Building2, UserCog,
   ListChecks, Clock, User,
-  ChevronDown,
+  ChevronDown, Award, Briefcase,
   // أيقونات الخدمات
   Languages, Sparkles, BookMarked,
   Mail, Send, LayoutTemplate, Shield
@@ -44,7 +44,7 @@ const getVisibleServices = (role) => {
 // =========================================================
 // عناصر القائمة حسب الدور
 // =========================================================
-const getMenuItems = (role, t) => {
+const getMenuItems = (role, t, isAr) => {
   const items = {
     undergrad: [
       { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
@@ -99,6 +99,7 @@ const getMenuItems = (role, t) => {
     university: [
       { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
       { id: 'tasks', icon: ListChecks, label: t('tasks.title'), to: '/dashboard/tasks' },
+      { id: 'academic-quality', icon: Award, label: t('academic_quality.title'), to: '/dashboard/academic-quality' },
       { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
       { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
       { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
@@ -107,6 +108,7 @@ const getMenuItems = (role, t) => {
     college: [
       { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
       { id: 'tasks', icon: ListChecks, label: t('tasks.title'), to: '/dashboard/tasks' },
+      { id: 'academic-quality', icon: Award, label: t('academic_quality.title'), to: '/dashboard/academic-quality' },
       { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
       { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
       { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
@@ -114,6 +116,7 @@ const getMenuItems = (role, t) => {
     research_center: [
       { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
       { id: 'tasks', icon: ListChecks, label: t('tasks.title'), to: '/dashboard/tasks' },
+      { id: 'academic-quality', icon: Award, label: t('academic_quality.title'), to: '/dashboard/academic-quality' },
       { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
       { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
       { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
@@ -132,6 +135,13 @@ const getMenuItems = (role, t) => {
       { id: 'colleges', icon: GraduationCap, label: t('employee.colleges.title'), to: '/dashboard/colleges' },
       { id: 'users', icon: UserCog, label: t('employee.users.title'), to: '/dashboard/users', badge: 3 },
       { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 2 },
+      { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
+    ],
+    service_provider: [
+      { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
+      { id: 'provider-requests', icon: Briefcase, label: isAr ? 'طلبات الخدمة' : 'Service Requests', to: '/dashboard/provider-requests' },
+      { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
+      { id: 'account', icon: User, label: t('account.title'), to: '/dashboard/account' },
       { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
     ],
     super_admin: [
@@ -155,7 +165,7 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
   const { user: userData, currentLang, isRTL } = useSite();
   const location = useLocation();
 
-  const menuItems = getMenuItems(userData?.role, t);
+  const menuItems = getMenuItems(userData?.role, t, currentLang === 'ar');
   const visibleServices = getVisibleServices(userData?.role);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
@@ -182,31 +192,31 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
   const sidebarContent = (
     <div className="flex flex-col h-full">
       {/* رأس القائمة (موبايل فقط) */}
-      <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#1e3050]/50">
+      <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#3a322c]/50">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#c8a44e] to-[#e6c96e] rounded-lg flex items-center justify-center">
-            <GraduationCap className="w-4 h-4 text-[#0a1628]" />
+          <div className="w-8 h-8 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-lg flex items-center justify-center">
+            <GraduationCap className="w-4 h-4 text-white" />
           </div>
           <span className="text-gray-900 dark:text-white text-sm font-bold">{t('admin_menu.sidebar')}</span>
         </div>
         <button
           onClick={() => setIsOpen(false)}
           aria-label="Close menu"
-          className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1a2744] rounded-lg transition-colors"
+          className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* معلومات المستخدم (ديسكتوب فقط) */}
-      <div className="hidden lg:block p-5 border-b border-gray-200 dark:border-[#1e3050]/40">
+      <div className="hidden lg:block p-5 border-b border-gray-200 dark:border-[#3a322c]/40">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#c8a44e] to-[#e6c96e] text-[#0a1628] rounded-xl flex items-center justify-center text-sm font-black shadow-sm">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#e8623a] to-[#f0916d] text-white rounded-xl flex items-center justify-center text-sm font-black shadow-sm">
             {userData?.name?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-gray-900 dark:text-white text-sm font-bold truncate">{userData?.name || 'User'}</p>
-            <p className="text-[#c8a44e] text-[10px] font-semibold truncate">{t(`account.role_${userData?.role || 'default'}`)}</p>
+            <p className="text-[#e8623a] text-[10px] font-semibold truncate">{t(`account.role_${userData?.role || 'default'}`)}</p>
           </div>
         </div>
       </div>
@@ -223,24 +233,24 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
               onClick={handleLinkClick}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
                 active
-                  ? 'bg-amber-50 dark:bg-[#c8a44e]/10 text-[#c8a44e]'
-                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#1a2744]/60 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]'
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               {active && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#c8a44e] rounded-full`}
+                  className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#e8623a] rounded-full`}
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
               <Icon className={`w-[18px] h-[18px] flex-shrink-0 transition-colors ${
-                active ? 'text-[#c8a44e]' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
+                active ? 'text-[#e8623a]' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
               }`} />
               <span className="flex-1 truncate">{item.label}</span>
               {item.badge && (
                 <span className={`min-w-[20px] h-5 px-1.5 flex items-center justify-center text-[10px] font-bold rounded-full ${
-                  active ? 'bg-[#c8a44e]/20 text-[#c8a44e]' : 'bg-gray-200 dark:bg-[#1e3050] text-gray-600 dark:text-gray-400 group-hover:bg-gray-300 dark:group-hover:bg-[#2a3a5c]'
+                  active ? 'bg-[#e8623a]/20 text-[#e8623a]' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-600 dark:text-gray-400 group-hover:bg-gray-300 dark:group-hover:bg-[#4a4038]'
                 }`}>
                   {item.badge}
                 </span>
@@ -251,25 +261,25 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
 
         {/* ---- قسم الخدمات (قابل للطي) ---- */}
         {visibleServices.length > 0 && (
-          <div className="pt-2 mt-2 border-t border-gray-100 dark:border-[#1e3050]/30">
+          <div className="pt-2 mt-2 border-t border-gray-100 dark:border-[#3a322c]/30">
             <button
               onClick={handleToggleServices}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
                 isAnyServiceActive
-                  ? 'bg-amber-50 dark:bg-[#c8a44e]/10 text-[#c8a44e]'
-                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#1a2744]/60 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]'
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               {isAnyServiceActive && (
                 <motion.div
                   layoutId="sidebar-active-services"
-                  className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#c8a44e] rounded-full`}
+                  className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#e8623a] rounded-full`}
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
               <BookOpen className={`w-[18px] h-[18px] flex-shrink-0 transition-colors ${
                 isAnyServiceActive
-                  ? 'text-[#c8a44e]'
+                  ? 'text-[#e8623a]'
                   : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
               }`} />
               <span className="flex-1 truncate text-start">
@@ -277,8 +287,8 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
               </span>
               <span className={`min-w-[20px] h-5 px-1.5 flex items-center justify-center text-[10px] font-bold rounded-full ${
                 isAnyServiceActive
-                  ? 'bg-[#c8a44e]/20 text-[#c8a44e]'
-                  : 'bg-gray-200 dark:bg-[#1e3050] text-gray-600 dark:text-gray-400'
+                  ? 'bg-[#e8623a]/20 text-[#e8623a]'
+                  : 'bg-gray-200 dark:bg-[#3a322c] text-gray-600 dark:text-gray-400'
               }`}>
                 {visibleServices.length}
               </span>
@@ -311,12 +321,12 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
                           onClick={handleLinkClick}
                           className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 group ${
                             active
-                              ? 'bg-[#c8a44e]/10 text-[#c8a44e]'
-                              : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-[#1a2744]/40 hover:text-gray-700 dark:hover:text-gray-300'
+                              ? 'bg-[#e8623a]/10 text-[#e8623a]'
+                              : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-[#2a231e]/40 hover:text-gray-700 dark:hover:text-gray-300'
                           }`}
                         >
                           <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${
-                            active ? 'text-[#c8a44e]' : 'text-gray-300 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400'
+                            active ? 'text-[#e8623a]' : 'text-gray-300 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400'
                           }`} />
                           <span className="truncate">
                             {currentLang === 'ar' ? svc.label_ar : svc.label_en}
@@ -333,12 +343,12 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
       </nav>
 
       {/* تذييل القائمة */}
-      <div className="p-3 border-t border-gray-200 dark:border-[#1e3050]/40 space-y-1">
+      <div className="p-3 border-t border-gray-200 dark:border-[#3a322c]/40 space-y-1">
         <Link
           to="/dashboard/account"
           onClick={handleLinkClick}
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
-            isActive('/dashboard/account') ? 'bg-amber-50 dark:bg-[#c8a44e]/10 text-[#c8a44e]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#1a2744]/60 hover:text-gray-900 dark:hover:text-white'
+            isActive('/dashboard/account') ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
           }`}
         >
           <User className="w-[18px] h-[18px]" />
@@ -348,7 +358,7 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
           to="/dashboard/activity"
           onClick={handleLinkClick}
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
-            isActive('/dashboard/activity') ? 'bg-amber-50 dark:bg-[#c8a44e]/10 text-[#c8a44e]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#1a2744]/60 hover:text-gray-900 dark:hover:text-white'
+            isActive('/dashboard/activity') ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
           }`}
         >
           <Clock className="w-[18px] h-[18px]" />
@@ -358,7 +368,7 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
           to="/dashboard/settings"
           onClick={handleLinkClick}
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
-            isActive('/dashboard/settings') ? 'bg-amber-50 dark:bg-[#c8a44e]/10 text-[#c8a44e]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#1a2744]/60 hover:text-gray-900 dark:hover:text-white'
+            isActive('/dashboard/settings') ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
           }`}
         >
           <Settings className="w-[18px] h-[18px]" />
@@ -370,7 +380,7 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
-      <aside className="hidden lg:flex fixed top-20 bottom-0 z-20 w-72 bg-white dark:bg-[#080f1e]/95 backdrop-blur-xl border-e border-gray-200 dark:border-[#1e3050]/40 flex-col transition-colors duration-300">
+      <aside className="hidden lg:flex fixed top-20 bottom-0 z-20 w-72 bg-white dark:bg-[#1f1a17]/95 backdrop-blur-xl border-e border-gray-200 dark:border-[#3a322c]/40 flex-col transition-colors duration-300">
         {sidebarContent}
       </aside>
 
@@ -381,7 +391,7 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: isRTL ? -300 : 300, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-[#080f1e] border-e border-gray-200 dark:border-[#1e3050]/40 flex flex-col lg:hidden shadow-2xl shadow-black/10 dark:shadow-black/50 transition-colors duration-300"
+            className="fixed top-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-[#1f1a17] border-e border-gray-200 dark:border-[#3a322c]/40 flex flex-col lg:hidden shadow-2xl shadow-black/10 dark:shadow-black/50 transition-colors duration-300"
             style={{ [isRTL ? 'right' : 'left']: 0 }}
           >
             {sidebarContent}

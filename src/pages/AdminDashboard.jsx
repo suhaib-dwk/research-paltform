@@ -6,7 +6,7 @@ import {
   Loader2, CheckCircle, AlertCircle, Menu, X, Globe
 } from 'lucide-react';
 import { SiteContext } from '../SiteContext';
-import { API_BASE_URL } from '../api';
+import { API_BASE_URL, resolveUploadUrl } from '../api';
 
 const AdminDashboard = () => {
   const { i18n } = useTranslation();
@@ -215,7 +215,7 @@ const AdminDashboard = () => {
               <div className="space-y-3">
                 <label className="text-sm font-bold text-gray-600">شعار الموقع (Logo)</label>
                 <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#c8a44e] transition-colors relative">
-                  <img src={previews.site_logo || formData.site_logo || 'https://via.placeholder.com/150'} alt="Logo" className="w-24 h-24 object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-2" />
+                  <img src={previews.site_logo || resolveUploadUrl(formData.site_logo) || 'https://via.placeholder.com/150'} alt="Logo" className="w-24 h-24 object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-2" />
                   <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'site_logo')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <p className="text-xs text-gray-400 flex items-center justify-center gap-1"><Upload className="w-4 h-4" /> {currentLang === 'ar' ? 'اضغط لرفع صورة جديدة' : 'Click to upload'}</p>
                 </div>
@@ -225,7 +225,7 @@ const AdminDashboard = () => {
               <div className="space-y-3">
                 <label className="text-sm font-bold text-gray-600">أيقونة التبويب (Favicon)</label>
                 <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#c8a44e] transition-colors relative">
-                  <img src={previews.site_favicon || formData.site_favicon || 'https://via.placeholder.com/50'} alt="Favicon" className="w-16 h-16 object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-1" />
+                  <img src={previews.site_favicon || resolveUploadUrl(formData.site_favicon) || 'https://via.placeholder.com/50'} alt="Favicon" className="w-16 h-16 object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-1" />
                   <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'site_favicon')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <p className="text-xs text-gray-400 flex items-center justify-center gap-1"><Upload className="w-4 h-4" /> {currentLang === 'ar' ? 'اضغط لرفع أيقونة جديدة' : 'Click to upload'}</p>
                 </div>

@@ -297,10 +297,10 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
             )}
 
             {/* ─── المرحلة الدراسية — مقفلة ─── */}
-            <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5">
+            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5">
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? 'المرحلة الدراسية' : 'Academic Level'}</h2>
-                    <span className="flex items-center gap-1 text-[10px] text-gray-400 bg-gray-100 dark:bg-[#1a2744] px-2 py-0.5 rounded-full">
+                    <span className="flex items-center gap-1 text-[10px] text-gray-400 bg-gray-100 dark:bg-[#2a231e] px-2 py-0.5 rounded-full">
                         <Lock className="w-3 h-3" />
                         {isAr ? 'محددة حسب دورك' : 'Fixed by your role'}
                     </span>
@@ -311,13 +311,13 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                         const isLocked = !isActive;
                         return (
                             <div key={level.id}
-                                className={`relative p-4 rounded-xl border-2 text-center transition-all ${isActive ? 'border-[#c8a44e] bg-[#c8a44e]/5' : 'border-gray-100 dark:border-[#1e3050]/20 opacity-35 cursor-not-allowed'}`}>
+                                className={`relative p-4 rounded-xl border-2 text-center transition-all ${isActive ? 'border-[#e8623a] bg-[#e8623a]/5' : 'border-gray-100 dark:border-[#3a322c]/20 opacity-35 cursor-not-allowed'}`}>
                                 <span className="text-3xl block mb-2">{level.icon}</span>
-                                <span className={`text-sm font-bold block ${isActive ? 'text-[#c8a44e]' : 'text-gray-500 dark:text-gray-500'}`}>
+                                <span className={`text-sm font-bold block ${isActive ? 'text-[#e8623a]' : 'text-gray-500 dark:text-gray-500'}`}>
                                     {isAr ? level.label_ar : level.label_en}
                                 </span>
-                                {isActive && <div className="absolute top-2 end-2 w-5 h-5 bg-[#c8a44e] rounded-full flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>}
-                                {isLocked && <div className="absolute inset-0 flex items-center justify-center"><div className="w-7 h-7 bg-gray-200 dark:bg-[#1e3050] rounded-full flex items-center justify-center"><Lock className="w-3 h-3 text-gray-400" /></div></div>}
+                                {isActive && <div className="absolute top-2 end-2 w-5 h-5 bg-[#e8623a] rounded-full flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>}
+                                {isLocked && <div className="absolute inset-0 flex items-center justify-center"><div className="w-7 h-7 bg-gray-200 dark:bg-[#3a322c] rounded-full flex items-center justify-center"><Lock className="w-3 h-3 text-gray-400" /></div></div>}
                             </div>
                         );
                     })}
@@ -345,10 +345,10 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                             <button key={rt.id} onClick={() => !isDisabled && handleTypeChange(rt)} disabled={isDisabled}
                                 className={`text-start p-4 rounded-2xl border-2 transition-all relative ${
                                     isDisabled
-                                        ? 'border-gray-100 dark:border-[#1e3050]/20 opacity-40 cursor-not-allowed'
+                                        ? 'border-gray-100 dark:border-[#3a322c]/20 opacity-40 cursor-not-allowed'
                                         : selectedType?.id === rt.id
                                             ? rt.color + ' ' + rt.bg + ' shadow-lg'
-                                            : 'border-gray-200 dark:border-[#1e3050] hover:' + rt.color + ' hover:shadow-md'
+                                            : 'border-gray-200 dark:border-[#3a322c] hover:' + rt.color + ' hover:shadow-md'
                                 }`}>
                                 {isDisabled && <div className="absolute top-2 end-2"><Lock className="w-4 h-4 text-gray-300 dark:text-gray-600" /></div>}
                                 <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">{isAr ? rt.label_ar : rt.label_en}</h3>
@@ -363,7 +363,7 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
 
             {/* ─── النموذج ─── */}
             {selectedType && (
-                <form onSubmit={handleSubmit} className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
+                <form onSubmit={handleSubmit} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 space-y-4">
 
                     {/* ─── اختيار البحث من القائمة (خبير / نهائي) ─── */}
                     {needsParentSelection && (
@@ -376,7 +376,7 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                             </label>
 
                             {parentOptions.length === 0 ? (
-                                <div className="flex items-center gap-2.5 p-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628]">
+                                <div className="flex items-center gap-2.5 p-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613]">
                                     <AlertCircle className="w-5 h-5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
                                     <p className="text-sm text-gray-400">
                                         {selectedType.id === 'expert'
@@ -392,8 +392,8 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                                         onClick={() => setShowParentDropdown(!showParentDropdown)}
                                         className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 text-sm transition-all ${
                                             selectedParentId
-                                                ? 'border-[#c8a44e] bg-[#c8a44e]/5 text-gray-900 dark:text-white'
-                                                : 'border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-400 dark:text-gray-600 hover:border-[#c8a44e]/40'
+                                                ? 'border-[#e8623a] bg-[#e8623a]/5 text-gray-900 dark:text-white'
+                                                : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-400 dark:text-gray-600 hover:border-[#e8623a]/40'
                                         }`}
                                     >
                                         <span className="truncate">
@@ -406,22 +406,22 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                                     </button>
 
                                     {showParentDropdown && (
-                                        <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-[#111d33] border border-gray-200 dark:border-[#2a3a5c] rounded-xl shadow-xl z-30 max-h-60 overflow-y-auto">
+                                        <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-[#211c18] border border-gray-200 dark:border-[#4a4038] rounded-xl shadow-xl z-30 max-h-60 overflow-y-auto">
                                             {parentOptions.map(req => (
                                                 <button
                                                     key={req.id}
                                                     type="button"
                                                     onClick={() => handleSelectParent(req)}
-                                                    className={`w-full text-start px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-[#1e3050]/30 last:border-0 ${
+                                                    className={`w-full text-start px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-[#3a322c]/30 last:border-0 ${
                                                         String(req.id) === selectedParentId
-                                                            ? 'bg-[#c8a44e]/10 text-[#c8a44e] font-semibold'
-                                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2744]'
+                                                            ? 'bg-[#e8623a]/10 text-[#e8623a] font-semibold'
+                                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2a231e]'
                                                     }`}
                                                 >
                                                     <p className="truncate font-medium">{req.title_ar || req.title_en}</p>
                                                     <p className="text-[10px] text-gray-400 mt-0.5">
                                                         {req.meta_ar || req.meta_en} · {req.date}
-                                                        {req.score != null && <span className="ms-2 text-[#c8a44e] font-bold">{req.score}/100</span>}
+                                                        {req.score != null && <span className="ms-2 text-[#e8623a] font-bold">{req.score}/100</span>}
                                                     </p>
                                                 </button>
                                             ))}
@@ -454,8 +454,8 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                             maxLength={500}
                             className={`w-full px-4 py-3 rounded-xl border text-sm transition ${
                                 needsParentSelection
-                                    ? 'border-gray-200 dark:border-[#1e3050] bg-gray-100 dark:bg-[#0a1628]/60 text-gray-700 dark:text-gray-400 cursor-not-allowed'
-                                    : 'border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#c8a44e]/30 focus:border-[#c8a44e]'
+                                    ? 'border-gray-200 dark:border-[#3a322c] bg-gray-100 dark:bg-[#1a1613]/60 text-gray-700 dark:text-gray-400 cursor-not-allowed'
+                                    : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/30 focus:border-[#e8623a]'
                             }`}
                         />
                     </div>
@@ -467,7 +467,7 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                                 {isAr ? 'رفع الملف' : 'Upload File'} <span className="text-rose-500">*</span>
                             </label>
-                            <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-[#1e3050] hover:border-[#c8a44ب]/50 hover:bg-[#c8a44e]/5'}`}>
+                            <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-[#3a322c] hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5'}`}>
                                 <input type="file" className="hidden"
                                     onChange={(e) => {
                                         const selected = e.target.files[0];
@@ -500,7 +500,7 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                                     </div>
                                 ) : (
                                     <>
-                                        <Upload className="w-7 h-7 text-gray-300 dark:text-gray-600 group-hover:text-[#c8a44e] transition-colors mb-2" />
+                                        <Upload className="w-7 h-7 text-gray-300 dark:text-gray-600 group-hover:text-[#e8623a] transition-colors mb-2" />
                                         <span className="text-xs text-gray-400 font-medium">{isAr ? 'اسحب الملف أو انقر للاختيار' : 'Drag file or click to browse'}</span>
                                         <span className="text-[10px] text-gray-300 dark:text-gray-600 mt-1">PDF, DOC, DOCX — Max 20MB</span>
                                     </>
@@ -532,12 +532,12 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملاحظات (اختياري)' : 'Notes (Optional)'}</label>
                         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
                             placeholder={isAr ? 'أي تفاصيل إضافية تود إيصالها للمحكم...' : 'Any additional details for the reviewer...'}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#c8a44e]/30 focus:border-[#c8a44e] transition resize-none"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/30 focus:border-[#e8623a] transition resize-none"
                         />
                     </div>
 
                     {/* ─── ملخص الطلب ─── */}
-                    <div className="bg-gray-50 dark:bg-[#0a1628] rounded-xl p-3.5 space-y-2">
+                    <div className="bg-gray-50 dark:bg-[#1a1613] rounded-xl p-3.5 space-y-2">
                         <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{isAr ? 'ملخص الطلب' : 'Request Summary'}</h4>
                         <div className="grid grid-cols-2 gap-2 text-xs">
                             <div>
@@ -559,14 +559,14 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
                             {needsParentSelection && selectedParentReq && (
                                 <div className="col-span-2">
                                     <span className="text-gray-400">{isAr ? 'مبني على:' : 'Based on:'}</span>
-                                    <span className="ms-1 font-semibold text-[#c8a44e]">#{selectedParentReq.id} — {selectedParentReq.title_ar || selectedParentReq.title_en}</span>
+                                    <span className="ms-1 font-semibold text-[#e8623a]">#{selectedParentReq.id} — {selectedParentReq.title_ar || selectedParentReq.title_en}</span>
                                 </div>
                             )}
                         </div>
                     </div>
 
                     <button type="submit" disabled={!isFormValid || submitting}
-                        className="w-full py-3.5 bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] hover:from-[#b8953e] hover:to-[#d6b95e] disabled:from-gray-300 disabled:to-gray-300 disabled:dark:from-gray-600 disabled:dark:to-gray-600 text-[#0a1628] disabled:text-gray-500 dark:disabled:text-gray-500 font-bold text-sm rounded-xl transition-all shadow-lg shadow-[#c8a44e]/25 disabled:shadow-none flex items-center justify-center gap-2.5">
+                        className="w-full py-3.5 bg-gradient-to-l from-[#e8623a] to-[#f0916d] hover:from-[#b8953e] hover:to-[#d6b95e] disabled:from-gray-300 disabled:to-gray-300 disabled:dark:from-gray-600 disabled:dark:to-gray-600 text-white disabled:text-gray-500 dark:disabled:text-gray-500 font-bold text-sm rounded-xl transition-all shadow-lg shadow-[#e8623a]/25 disabled:shadow-none flex items-center justify-center gap-2.5">
                         {submitting
                             ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</>
                             : <><Send className="w-4 h-4" />{isAr ? 'إرسال طلب التحكيم' : 'Submit Review Request'}</>
@@ -582,8 +582,8 @@ const isFormValid = researchTitle.trim() && selectedType && (!needsParentSelecti
             icon={Shield}
             title={{ ar: 'خدمة التحكيم', en: 'Review Service' }}
             description={{ ar: 'احصل على تحكيم أكاديمي موثوق لبحثك من متخصصين', en: 'Get reliable academic review from specialists' }}
-            gradient="from-[#c8a44e] to-[#e6c96e]"
-            shadowColor="shadow-[#c8a44e]/20"
+            gradient="from-[#e8623a] to-[#f0916d]"
+            shadowColor="shadow-[#e8623a]/20"
             guideSections={guideSections}
             mockRequests={requests}
             loadingRequests={loadingRequests}

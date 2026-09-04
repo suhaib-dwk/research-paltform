@@ -11,6 +11,8 @@ import AllNewsPage from './pages/AllNewsPage';
 import DynamicPage from './pages/DynamicPage';
 import ContactPage from './pages/ContactPage';
 import HelpPage from './pages/HelpPage';
+import AboutUsPage from './pages/AboutUsPage';
+import TargetAudiencePage from './pages/TargetAudiencePage';
 import Footer from './components/layout/Footer';
 import DynamicHead from './components/layout/DynamicHead';
 
@@ -38,6 +40,8 @@ import CollaborationsPage from './pages/services/CollaborationsPage';
 import ReviewsPage from './pages/dashboard/ReviewsPage';
 import ReviewsHistoryPage from './pages/dashboard/ReviewsHistoryPage';
 import StatsPage from './pages/dashboard/StatsPage';
+import AcademicQualityPage from './pages/dashboard/AcademicQualityPage';
+import ProviderRequestsPage from './pages/dashboard/ProviderRequestsPage';
 
 // صفحات الموظفين
 import UniversitiesPage from './pages/dashboard/employee/UniversitiesPage';
@@ -108,6 +112,8 @@ function AppContent() {
             <Route path="/all-news" element={<AllNewsPage />} />
             <Route path="/contact-us" element={<ContactPage />} />
             <Route path="/help" element={<HelpPage />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/target-audience" element={<TargetAudiencePage />} />
             <Route path="/page/:slug" element={<DynamicPage />} />
 
             {/* ---- لوحة التحكم ---- */}
@@ -138,6 +144,8 @@ function AppContent() {
               <Route path="reviews" element={<RoleRoute allowedRoles={['reviewer', 'faculty']}><ReviewsPage /></RoleRoute>} />
               <Route path="reviews/history" element={<RoleRoute allowedRoles={['reviewer', 'faculty']}><ReviewsHistoryPage /></RoleRoute>} />
               <Route path="stats" element={<RoleRoute allowedRoles={nonEmployeeRoles}><StatsPage /></RoleRoute>} />
+              <Route path="academic-quality" element={<RoleRoute allowedRoles={['university', 'college', 'research_center']}><AcademicQualityPage /></RoleRoute>} />
+              <Route path="provider-requests" element={<RoleRoute allowedRoles={['service_provider']}><ProviderRequestsPage /></RoleRoute>} />
             </Route>
 
             {/* ---- لوحة الإدارة ---- */}

@@ -62,6 +62,7 @@ const formatFileSize = (bytes) => {
 const TranslationPage = () => {
     const { currentLang, isRTL, user } = useSite();
     const isAr = currentLang === 'ar';
+    const entityId = user?.user_id ?? user?.id;
 
     const [sourceLang, setSourceLang] = useState('ar');
     const [targetLang, setTargetLang] = useState('en');
@@ -89,7 +90,7 @@ const TranslationPage = () => {
         setLoadingRequests(true);
         try {
             const formData = new FormData();
-            formData.append('user_id', user?.id || '');
+            formData.append('user_id', entityId || '');
             const res = await fetch(`${API_BASE_URL}/get_translation_requests.php`, {
                 method: 'POST', body: formData, credentials: 'include',
             });
@@ -103,8 +104,8 @@ const TranslationPage = () => {
     };
 
     useEffect(() => {
-        if (user?.id) fetchRequests();
-    }, [user?.id]);
+        if (entityId) fetchRequests();
+    }, [entityId]);
 
     // ✅ تبديل اللغات مع إعادة تعيين النوع
     const handleSwapLangs = () => {
@@ -133,7 +134,7 @@ const TranslationPage = () => {
 
         try {
             const formData = new FormData();
-            formData.append('user_id', user?.id || '');
+            formData.append('user_id', entityId || '');
             formData.append('source_lang', sourceLang);
             formData.append('target_lang', targetLang);
             formData.append('urgency', urgency);

@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   GraduationCap, BookOpen, UserCheck, Microscope, Building2,
-  Landmark, FlaskConical, ShieldCheck, UserCog,
+  Landmark, FlaskConical, ShieldCheck, UserCog, Briefcase,
   ArrowLeft, ArrowRight, Check, Eye, EyeOff,
-  AlertCircle, Loader2, CheckCircle2
+  AlertCircle, Loader2, CheckCircle2, Upload, FileText, X
 } from 'lucide-react';
 import { API_BASE_URL } from '../api';
+import { getAllServices } from '../data/servicesConfig';
 
 // =========================================================
 // 1. الفئات
@@ -23,10 +24,18 @@ const categories = [
   { key: 'research_center', icon: FlaskConical },
   { key: 'ministry',   icon: Landmark },
   { key: 'employee',   icon: UserCog },
+  { key: 'service_provider', icon: Briefcase },
 ];
 
-// ✅ الأدوار ذات الخطوتين فقط
+// ✅ الأدوار ذات الخطوتين فقط (service_provider ثلاثي الخطوات كالكيانات/البكالوريوس)
 const TWO_STEP_ROLES = ['employee', 'grad', 'phd', 'faculty', 'researcher'];
+
+// ✅ الخدمات الثماني المسموح لمقدّم خدمة الاختصاص بها (التحكيم والمساعد الذكي مستثنيان)
+const PROVIDER_EXCLUDED_SLUGS = ['initial-review', 'expert-review', 'final-review', 'ai-assistant'];
+const getProviderServiceOptions = () =>
+  getAllServices()
+    .filter(s => !PROVIDER_EXCLUDED_SLUGS.includes(s.slug))
+    .map(s => ({ value: s.slug, label_ar: s.title_ar, label_en: s.title_en }));
 
 // =========================================================
 // 2. خريطة ربط كل دور بجدول الملف الشخصي
@@ -42,6 +51,7 @@ const ROLE_PROFILE_TABLE_MAP = {
   research_center: 'profiles_entity',
   ministry:        'profiles_entity',
   employee:        'profiles_system',
+  service_provider: 'profiles_service_provider',
 };
 
 const getProfileTableName = (role) => ROLE_PROFILE_TABLE_MAP[role] || null;
@@ -55,17 +65,17 @@ const RoleCard = ({ icon: Icon, roleKey, label, selected, onClick }) => (
     onClick={() => onClick(roleKey)}
     className={`group flex flex-col items-center justify-center p-5 border-2 rounded-2xl transition-all duration-300 cursor-pointer h-full
       ${selected === roleKey
-        ? 'border-[#c8a44e] bg-[#c8a44e]/10 shadow-lg shadow-[#c8a44e]/15 scale-[1.02]'
+        ? 'border-brand-orange bg-brand-orange/10 shadow-lg shadow-brand-orange/15 scale-[1.02]'
         : 'border-gray-100 bg-white hover:border-gray-200 hover:shadow-md'
       }`}
   >
     <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 ${selected === roleKey
-        ? 'bg-gradient-to-br from-[#c8a44e] to-[#e6c96e] text-[#0a1628] shadow-md shadow-[#c8a44e]/30'
+        ? 'bg-brand-orange text-white shadow-md shadow-brand-orange/30'
         : 'bg-gray-100 text-gray-400 group-hover:bg-gray-200'
       }`}>
       <Icon className="w-6 h-6" />
     </div>
-    <span className={`text-xs font-bold text-center leading-tight ${selected === roleKey ? 'text-[#a8872e]' : 'text-gray-600'}`}>{label}</span>
+    <span className={`text-xs font-bold text-center leading-tight ${selected === roleKey ? 'text-brand-orange-dark' : 'text-gray-600'}`}>{label}</span>
   </button>
 );
 
@@ -77,16 +87,16 @@ const StepIndicator = ({ currentStep, steps, t }) => (
     {steps.map((labelKey, index) => (
       <div key={index} className="flex items-center gap-2">
         <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${currentStep === index + 1
-            ? 'bg-[#0a1628] text-white shadow-lg shadow-[#c8a44e]/10'
+            ? 'bg-brand-ink text-white shadow-lg shadow-brand-orange/10'
             : currentStep > index + 1
-              ? 'bg-[#c8a44e]/15 text-[#c8a44e]'
+              ? 'bg-brand-orange/15 text-brand-orange'
               : 'bg-gray-100 text-gray-400'
           }`}>
           {currentStep > index + 1 ? <Check className="w-3.5 h-3.5" /> : index + 1}
           <span className="hidden sm:inline">{t(labelKey)}</span>
         </div>
         {index < steps.length - 1 && (
-          <div className={`w-6 h-[2px] rounded-full transition-colors duration-300 ${currentStep > index + 1 ? 'bg-[#c8a44e]/40' : 'bg-gray-200'}`} />
+          <div className={`w-6 h-[2px] rounded-full transition-colors duration-300 ${currentStep > index + 1 ? 'bg-brand-orange/40' : 'bg-gray-200'}`} />
         )}
       </div>
     ))}
@@ -127,7 +137,7 @@ const PasswordStrength = ({ password }) => {
 // =========================================================
 // 7. مكون الحقل
 // =========================================================
-const InputField = ({ t, labelKey, name, type = 'text', colSpan = '', options = [], value, onChange, onBlur, error, touched }) => {
+const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', options = [], accept, value, onChange, onBlur, error, touched }) => {
   const [showPwd, setShowPwd] = useState(false);
   const isPassword = type === 'password';
   const inputType = isPassword ? (showPwd ? 'text' : 'password') : type;
@@ -138,7 +148,7 @@ const InputField = ({ t, labelKey, name, type = 'text', colSpan = '', options = 
     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 bg-red-50/30'
     : isValid
       ? 'border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-emerald-50/30'
-      : 'border-gray-200 focus:border-[#c8a44e] focus:ring-2 focus:ring-[#c8a44e]/20';
+      : 'border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20';
   const dir = ['email', 'url', 'password'].includes(type) ? 'ltr' : undefined;
 
   const renderControl = () => {
@@ -157,6 +167,65 @@ const InputField = ({ t, labelKey, name, type = 'text', colSpan = '', options = 
     }
     if (type === 'textarea') {
       return <textarea rows={3} value={value || ''} onChange={(e) => onChange(name, e.target.value)} onBlur={() => onBlur(name)} className={`${base} ${state} resize-none`} />;
+    }
+    if (type === 'multiselect') {
+      const selected = Array.isArray(value) ? value : [];
+      const toggle = (val) => {
+        const next = selected.includes(val) ? selected.filter(v => v !== val) : [...selected, val];
+        onChange(name, next);
+        onBlur(name);
+      };
+      return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          {options.map((opt) => {
+            const isSelected = selected.includes(opt.value);
+            const label = isAr ? opt.label_ar : opt.label_en;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => toggle(opt.value)}
+                className={`text-xs font-bold px-3 py-2.5 rounded-xl border-2 transition-all duration-200 text-center ${isSelected
+                    ? 'border-brand-orange bg-brand-orange/10 text-brand-orange-dark'
+                    : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'
+                  }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      );
+    }
+    if (type === 'file') {
+      const file = value instanceof File ? value : null;
+      return (
+        <div>
+          <input
+            id={`file-${name}`}
+            type="file"
+            accept={accept}
+            className="hidden"
+            onChange={(e) => { onChange(name, e.target.files?.[0] || null); onBlur(name); }}
+          />
+          {!file ? (
+            <label htmlFor={`file-${name}`} className={`flex items-center justify-center gap-2 border-2 border-dashed rounded-xl px-4 py-6 cursor-pointer transition-colors ${hasError ? 'border-red-300 bg-red-50/30' : 'border-gray-200 hover:border-brand-orange hover:bg-brand-orange/5'}`}>
+              <Upload className="w-5 h-5 text-gray-400" />
+              <span className="text-sm font-semibold text-gray-500">{t('form.choose_file')}</span>
+            </label>
+          ) : (
+            <div className="flex items-center justify-between gap-2 border border-emerald-200 bg-emerald-50/40 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <FileText className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <span className="text-sm font-semibold text-gray-700 truncate">{file.name}</span>
+              </div>
+              <button type="button" onClick={() => { onChange(name, null); }} className="text-gray-400 hover:text-red-500 flex-shrink-0">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      );
     }
     return (
       <div className="relative">
@@ -344,6 +413,29 @@ const getFormFields = (role, step, dropdowns = {}) => {
     };
   }
 
+  // ✅ مقدّم خدمة — 3 خطوات (بيانات أساسية ثم اختيار الخدمات + CV)
+  if (role === 'service_provider') {
+    if (step === 2) return {
+      titleKey: 'sections.basic_data',
+      loginEmailField: 'email',
+      fields: [
+        { labelKey: 'form.full_name', name: 'full_name', colSpan: 'md:col-span-2' },
+        { labelKey: 'form.email', name: 'email', type: 'email' },
+        { labelKey: 'form.phone', name: 'phone', type: 'tel' },
+        ...passwordFields,
+      ]
+    };
+    if (step === 3) return {
+      titleKey: 'sections.provider_details',
+      fields: [
+        { labelKey: 'form.provider_services', name: 'service_slugs', type: 'multiselect', colSpan: 'md:col-span-2', options: getProviderServiceOptions() },
+        { labelKey: 'form.qualifications', name: 'qualifications', type: 'textarea', colSpan: 'md:col-span-2' },
+        { labelKey: 'form.bio', name: 'bio', type: 'textarea', colSpan: 'md:col-span-2' },
+        { labelKey: 'form.cv_file', name: 'cv', type: 'file', accept: '.pdf,.doc,.docx', colSpan: 'md:col-span-2' },
+      ]
+    };
+  }
+
   return { titleKey: '', fields: [] };
 };
 
@@ -353,6 +445,7 @@ const getFormFields = (role, step, dropdowns = {}) => {
 const RegisterPage = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
+  const isAr = i18n.language === 'ar';
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
   const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
 
@@ -387,6 +480,9 @@ const RegisterPage = () => {
 
   const validateField = (name, value, type) => {
     if (type === 'number') { if (value === '' || value === null || value === undefined) return t('validation.required'); return ''; }
+    if (type === 'file') { if (!value) return t('validation.required'); return ''; }
+    if (type === 'multiselect') { if (!Array.isArray(value) || value.length === 0) return t('validation.required'); return ''; }
+    if (name === 'qualifications' || name === 'bio') return ''; // ✅ حقول اختيارية لمقدّم الخدمة
     if (!value || (typeof value === 'string' && !value.trim())) return t('validation.required');
     if (type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('validation.invalid_email');
     if (name === 'password' && value.length < 8) return t('validation.password_min');
@@ -415,8 +511,8 @@ const RegisterPage = () => {
 
   const handleFieldBlur = (name) => {
     setTouched(prev => ({ ...prev, [name]: true }));
-    const value = formData[name] || '';
     const fieldDef = getCurrentFields().find(f => f.name === name);
+    const value = fieldDef?.type === 'file' || fieldDef?.type === 'multiselect' ? formData[name] : (formData[name] || '');
     setErrors(prev => ({ ...prev, [name]: validateField(name, value, fieldDef?.type || 'text') }));
   };
 
@@ -432,7 +528,7 @@ const RegisterPage = () => {
     const newTouched = {};
     fields.forEach(field => {
       newTouched[field.name] = true;
-      const value = formData[field.name] || '';
+      const value = field.type === 'file' || field.type === 'multiselect' ? formData[field.name] : (formData[field.name] || '');
       const err = validateField(field.name, value, field.type || 'text');
       if (err) newErrors[field.name] = err;
     });
@@ -470,20 +566,30 @@ const RegisterPage = () => {
     if (!formData.password || formData.password.length < 8) { setApiError(t('validation.password_min')); return; }
     if (formData.password !== formData.confirm_password) { setApiError(t('validation.password_mismatch')); return; }
 
-    const { password, confirm_password, ...profileData } = formData;
+    const { password, confirm_password, cv, service_slugs, ...profileData } = formData;
     const profileTable = getProfileTableName(selectedRole);
     if (!profileTable) { setApiError(t('errors.registration_failed')); return; }
 
     if (selectedRole === 'grad') profileData.degree = 'master';
     if (selectedRole === 'phd')  profileData.degree = 'phd';
 
-    const payload = { role: selectedRole, email: loginEmail, password, profile_table: profileTable, profile: profileData };
-    const encodedPayload = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    // ✅ multipart/form-data — يدعم رفع ملف CV لمقدّم الخدمة، بدون تعيين
+    // Content-Type يدوياً (المتصفح يضيف الـ boundary تلقائياً).
+    const fd = new FormData();
+    fd.append('role', selectedRole);
+    fd.append('email', loginEmail);
+    fd.append('password', password);
+    fd.append('profile_table', profileTable);
+    fd.append('profile', JSON.stringify(profileData));
+    if (selectedRole === 'service_provider') {
+      if (cv instanceof File) fd.append('cv', cv);
+      fd.append('service_slugs', JSON.stringify(Array.isArray(service_slugs) ? service_slugs : []));
+    }
 
     setLoading(true);
     setApiError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/register.php`, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: encodedPayload });
+      const res = await fetch(`${API_BASE_URL}/register.php`, { method: 'POST', body: fd });
       const result = await res.json();
       if (result.debug) {
         console.error('PHP DEBUG:', result.debug, 'FILE:', result.file, 'LINE:', result.line);
@@ -511,66 +617,81 @@ const RegisterPage = () => {
 
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen bg-[#f4f6fb] flex flex-col relative overflow-hidden">
-        <div className="h-20" />
-        <div className="absolute top-1/3 start-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#c8a44e]/[0.06] rounded-full blur-[120px] pointer-events-none" />
-        <div className="flex-grow flex items-center justify-center px-4 relative z-10">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-sm shadow-black/[0.03] border border-gray-100 p-10 text-center">
-            <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle2 className="w-10 h-10" /></div>
-            <h2 className="text-2xl font-black text-[#0a1628] mb-3">{t('register.success_title')}</h2>
-            <p className="text-sm text-gray-400 leading-relaxed mb-8">{t('register.success_desc')}</p>
-            <Link to="/login" className="inline-flex items-center gap-2 bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-8 py-3.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300">
-              {t('register.go_to_login')} <ArrowLeft className={`w-4 h-4 ${isRTL ? '' : 'rotate-180'}`} />
-            </Link>
-          </div>
+      <div className="min-h-[calc(100vh-6rem)] bg-brand-cream-hero flex items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-sm shadow-black/[0.03] border border-gray-100 p-10 text-center">
+          <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle2 className="w-10 h-10" /></div>
+          <h2 className="text-2xl font-black text-brand-ink mb-3">{t('register.success_title')}</h2>
+          <p className="text-sm text-brand-muted leading-relaxed mb-8">{t('register.success_desc')}</p>
+          <Link to="/login" className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300">
+            {t('register.go_to_login')} <ArrowLeft className={`w-4 h-4 ${isRTL ? '' : 'rotate-180'}`} />
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb] flex flex-col relative overflow-hidden">
-      <div className="absolute top-0 start-0 w-[500px] h-[500px] bg-[#c8a44e]/[0.04] rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 end-0 w-[400px] h-[400px] bg-[#0a1628]/[0.03] rounded-full blur-[100px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
-      <div className="h-20" />
-      <div className="flex-grow flex items-start justify-center px-4 py-12 relative z-10">
-        <div className="w-full max-w-5xl">
+    <div className="min-h-[calc(100vh-6rem)] bg-brand-cream-hero grid lg:grid-cols-2">
+      {/* ✅ عمود الصورة */}
+      <div className="hidden lg:flex relative bg-brand-ink overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/40 to-transparent" />
+        <div className="relative z-10 flex flex-col justify-end p-10 md:p-14">
+          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-4 max-w-md">
+            {t('register.side_title')}
+          </h2>
+          <p className="text-white/70 max-w-sm leading-relaxed">
+            {t('register.side_desc')}
+          </p>
+        </div>
+      </div>
+
+      {/* ✅ عمود النموذج */}
+      <div className="flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-xl">
           {selectedRole && currentStep > 1 && totalSteps > 2 && (
             <StepIndicator currentStep={currentStep - 1} steps={stepLabels.slice(1, totalSteps - 1)} t={t} />
           )}
-          <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-12">
+          <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-10">
             {currentStep === 1 && (
               <div>
-                <div className="text-center mb-10">
-                  <h2 className="text-3xl font-black text-[#0a1628] mb-3">{t('register.title')}</h2>
-                  <p className="text-gray-400">{t('register.subtitle')}</p>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
+                <h2 className="text-2xl font-black text-brand-ink mb-1">{t('register.title')}</h2>
+                <p className="text-sm text-brand-muted mb-8">{t('register.subtitle')}</p>
+                <div className="grid grid-cols-2 gap-4">
                   {categories.map((cat) => (
                     <RoleCard key={cat.key} icon={cat.icon} roleKey={cat.key} label={t(`roles.${cat.key}`)} selected={selectedRole} onClick={handleRoleSelect} />
                   ))}
                 </div>
-                <div className="mt-10 flex justify-end">
-                  <button onClick={handleNext} disabled={!selectedRole} className={`flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 ${selectedRole ? 'bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] hover:shadow-lg hover:shadow-[#c8a44e]/25' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
+                <div className="mt-10">
+                  <button onClick={handleNext} disabled={!selectedRole} className={`w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm transition-all duration-300 ${selectedRole ? 'bg-brand-orange text-white hover:bg-brand-orange-dark' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
                     {t('register.next')} <ForwardArrow className="w-4 h-4" />
                   </button>
+                  <p className="text-center text-sm text-brand-muted mt-6">
+                    <Link to="/login" className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
+                      {t('register.go_to_login')}
+                    </Link>
+                  </p>
                 </div>
               </div>
             )}
             {currentStep > 1 && selectedRole && (
               <div>
                 {currentStep === 2 && (
-                  <button onClick={handleBack} className="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-[#0a1628] transition-colors mb-6 group">
+                  <button onClick={handleBack} className="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-brand-ink transition-colors mb-6 group">
                     <BackArrow className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />{t('register.back_to_roles')}
                   </button>
                 )}
                 <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-[#c8a44e]/10 text-[#c8a44e] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
                     {(() => { const Icon = categories.find(c => c.key === selectedRole)?.icon || UserCheck; return <Icon className="w-5 h-5" />; })()}
                   </div>
                   <div>
-                    <h2 className="text-xl font-black text-[#0a1628]">{t('register.as')} <span className="text-[#c8a44e]">{t(`roles.${selectedRole}`)}</span></h2>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5">{t(getFormFields(selectedRole, currentStep).titleKey)}</p>
+                    <h2 className="text-xl font-black text-brand-ink">{t('register.as')} <span className="text-brand-orange">{t(`roles.${selectedRole}`)}</span></h2>
+                    <p className="text-xs text-brand-muted font-medium mt-0.5">{t(getFormFields(selectedRole, currentStep).titleKey)}</p>
                   </div>
                 </div>
                 {apiError && (
@@ -581,14 +702,14 @@ const RegisterPage = () => {
                 <form onSubmit={(e) => { e.preventDefault(); handleNext(); }} className="space-y-5" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {getCurrentFields().map((field) => (
-                      <InputField key={field.name} t={t} labelKey={field.labelKey} name={field.name} type={field.type || 'text'} colSpan={field.colSpan || ''} options={field.options || []} value={formData[field.name]} onChange={handleFieldChange} onBlur={handleFieldBlur} error={errors[field.name]} touched={touched[field.name]} />
+                      <InputField key={field.name} t={t} isAr={isAr} labelKey={field.labelKey} name={field.name} type={field.type || 'text'} colSpan={field.colSpan || ''} options={field.options || []} accept={field.accept} value={formData[field.name]} onChange={handleFieldChange} onBlur={handleFieldBlur} error={errors[field.name]} touched={touched[field.name]} />
                     ))}
                   </div>
                   <div className="flex items-center justify-between pt-6 border-t border-gray-50 mt-8">
-                    <button type="button" onClick={handleBack} className="flex items-center gap-2 px-6 py-3 text-sm font-bold text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                    <button type="button" onClick={handleBack} className="flex items-center gap-2 px-6 py-3 text-sm font-bold text-gray-500 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
                       <BackArrow className="w-4 h-4" /> {t('register.prev')}
                     </button>
-                    <button type="submit" disabled={loading} className="flex items-center gap-2 px-8 py-3.5 bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
+                    <button type="submit" disabled={loading} className="flex items-center gap-2 px-8 py-3.5 bg-brand-orange text-white rounded-full text-sm font-bold hover:bg-brand-orange-dark transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                       {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                         <>{currentStep === totalSteps ? t('register.submit') : t('register.next_step')} {currentStep < totalSteps ? <ForwardArrow className="w-4 h-4" /> : <Check className="w-4 h-4" />}</>
                       )}

@@ -7,6 +7,7 @@ import {
     Languages, AlertCircle, Loader2, RefreshCw
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useSite } from '../../SiteContext';
 import { API_BASE_URL } from '../../api';
 
@@ -77,10 +78,10 @@ const getStats = (role, lang, stats) => {
             icon: Shield,
             label: lang === 'ar' ? 'طلبات التحكيم' : 'Review Requests',
             value: s.review_total ?? 0,
-            color: 'from-[#c8a44e]/20 to-[#c8a44e]/5',
-            iconColor: 'text-[#c8a44e] dark:text-[#d4b35a]',
-            borderColor: 'border-[#c8a44e]/20 dark:border-[#c8a44e]/20',
-            iconBg: 'bg-[#c8a44e]/10 dark:bg-[#c8a44e]/10',
+            color: 'from-[#e8623a]/20 to-[#e8623a]/5',
+            iconColor: 'text-[#e8623a] dark:text-[#f0916d]',
+            borderColor: 'border-[#e8623a]/20 dark:border-[#e8623a]/20',
+            iconBg: 'bg-[#e8623a]/10 dark:bg-[#e8623a]/10',
         },
         {
             icon: Languages,
@@ -116,7 +117,7 @@ const getStats = (role, lang, stats) => {
 const getQuickActions = (role, lang) => {
     if (role === 'employee') {
         return [
-            { icon: Shield, label: lang === 'ar' ? 'التحكيم' : 'Review', to: '../../dashboard/services/review', color: 'hover:border-[#c8a44e]/50 hover:bg-[#c8a44e]/5 dark:hover:border-[#c8a44e]/50 dark:hover:bg-[#c8a44e]/5' },
+            { icon: Shield, label: lang === 'ar' ? 'التحكيم' : 'Review', to: '../../dashboard/services/review', color: 'hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5 dark:hover:border-[#e8623a]/50 dark:hover:bg-[#e8623a]/5' },
             { icon: Languages, label: lang === 'ar' ? 'الترجمة' : 'Translation', to: '../../dashboard/services/translation', color: 'hover:border-blue-500/50 hover:bg-blue-50 dark:hover:border-blue-500/50 dark:hover:bg-blue-500/5' },
             { icon: FileText, label: lang === 'ar' ? 'سجل الطلبات' : 'Requests Log', to: '../../dashboard/dashboard/requests', color: 'hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/5' },
             { icon: BarChart3, label: lang === 'ar' ? 'التقارير' : 'Reports', to: '../../dashboard/dashboard/reports', color: 'hover:border-purple-500/50 hover:bg-purple-50 dark:hover:border-purple-500/50 dark:hover:bg-purple-500/5' },
@@ -124,30 +125,49 @@ const getQuickActions = (role, lang) => {
     }
 
     return [
-        { icon: Shield, label: lang === 'ar' ? 'طلب تحكيم' : 'Request Review', to: '../../dashboard/services/review', color: 'hover:border-[#c8a44e]/50 hover:bg-[#c8a44e]/5 dark:hover:border-[#c8a44e]/50 dark:hover:bg-[#c8a44e]/5' },
+        { icon: Shield, label: lang === 'ar' ? 'طلب تحكيم' : 'Request Review', to: '../../dashboard/services/review', color: 'hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5 dark:hover:border-[#e8623a]/50 dark:hover:bg-[#e8623a]/5' },
         { icon: Languages, label: lang === 'ar' ? 'طلب ترجمة' : 'Request Translation', to: '../../dashboard/services/translation', color: 'hover:border-blue-500/50 hover:bg-blue-50 dark:hover:border-blue-500/50 dark:hover:bg-blue-500/5' },
         { icon: BookOpen, label: lang === 'ar' ? 'سجل الطلبات' : 'Requests Log', to: '../../dashboard/dashboard/requests', color: 'hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/5' },
         { icon: TrendingUp, label: lang === 'ar' ? 'الإحصائيات' : 'Statistics', to: '../../dashboard/dashboard/stats', color: 'hover:border-purple-500/50 hover:bg-purple-50 dark:hover:border-purple-500/50 dark:hover:bg-purple-500/5' },
     ];
 };
 
+// ✅ بيانات رسم "النشاط الشهري" — تُبنى من dashboardData.monthly إن توفرت من الخادم،
+// وإلا بيانات افتراضية معقولة (placeholder) بنفس اسم الأشهر المترجَم
+const MONTH_KEYS_AR = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+const MONTH_KEYS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const getMonthlyChartData = (monthly, isAr) => {
+    if (Array.isArray(monthly) && monthly.length > 0) {
+        return monthly.map((m, i) => ({
+            month: isAr ? (m.label_ar || MONTH_KEYS_AR[i % 12]) : (m.label_en || MONTH_KEYS_EN[i % 12]),
+            requests: m.total ?? m.requests ?? 0,
+        }));
+    }
+    // Placeholder: لا توجد بيانات فعلية بعد من get_dashboard.php
+    return MONTH_KEYS_EN.map((_, i) => ({
+        month: isAr ? MONTH_KEYS_AR[i] : MONTH_KEYS_EN[i],
+        requests: 0,
+    }));
+};
+
 // ✅ هيكل Skeleton للتحميل
 const StatSkeleton = () => (
-    <div className="rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 dark:from-[#1a2744]/50 dark:to-[#0d1a2e]/50 border border-gray-200 dark:border-[#1e3050]/30 p-4 lg:p-5 animate-pulse">
-        <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-[#1e3050] mb-3" />
-        <div className="w-16 h-8 rounded-lg bg-gray-200 dark:bg-[#1e3050] mb-1" />
-        <div className="w-20 h-3 rounded bg-gray-200 dark:bg-[#1e3050]" />
+    <div className="rounded-2xl bg-gradient-to-br from-gray-100 to-gray-50 dark:from-[#2a231e]/50 dark:to-[#211c18]/50 border border-gray-200 dark:border-[#3a322c]/30 p-4 lg:p-5 animate-pulse">
+        <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-[#3a322c] mb-3" />
+        <div className="w-16 h-8 rounded-lg bg-gray-200 dark:bg-[#3a322c] mb-1" />
+        <div className="w-20 h-3 rounded bg-gray-200 dark:bg-[#3a322c]" />
     </div>
 );
 
 const ActivitySkeleton = () => (
-    <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-[#0d1a2e]/40 border border-gray-100 dark:border-[#1e3050]/20 animate-pulse">
-        <div className="mt-1.5 w-2 h-2 rounded-full bg-gray-300 dark:bg-[#1e3050] flex-shrink-0" />
+    <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-[#211c18]/40 border border-gray-100 dark:border-[#3a322c]/20 animate-pulse">
+        <div className="mt-1.5 w-2 h-2 rounded-full bg-gray-300 dark:bg-[#3a322c] flex-shrink-0" />
         <div className="flex-1 space-y-2">
-            <div className="w-full h-3 rounded bg-gray-200 dark:bg-[#1e3050]" />
-            <div className="w-24 h-2.5 rounded bg-gray-200 dark:bg-[#1e3050]" />
+            <div className="w-full h-3 rounded bg-gray-200 dark:bg-[#3a322c]" />
+            <div className="w-24 h-2.5 rounded bg-gray-200 dark:bg-[#3a322c]" />
         </div>
-        <div className="w-14 h-5 rounded-full bg-gray-200 dark:bg-[#1e3050] flex-shrink-0" />
+        <div className="w-14 h-5 rounded-full bg-gray-200 dark:bg-[#3a322c] flex-shrink-0" />
     </div>
 );
 
@@ -163,13 +183,16 @@ const DashboardHome = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // ⚠️ login.php يُرجع الحقل باسم user_id (وليس id)، ويُخزَّن كما هو في localStorage['user']
+    const userId = userData?.user_id ?? userData?.id;
+
     // ✅ جلب البيانات
     const fetchDashboard = async () => {
         setLoading(true);
         setError(null);
         try {
             const formData = new FormData();
-            formData.append('user_id', userData?.id || '');
+            formData.append('user_id', userId || '');
             formData.append('lang', currentLang);
 
             const res = await fetch(`${API_BASE_URL}/get_dashboard.php`, {
@@ -193,12 +216,13 @@ const DashboardHome = () => {
     };
 
     useEffect(() => {
-        if (userData?.id) fetchDashboard();
-    }, [userData?.id]);
+        if (userId) fetchDashboard();
+    }, [userId]);
 
     const stats = getStats(userData?.role, currentLang, dashboardData?.stats);
     const quickActions = getQuickActions(userData?.role, currentLang);
     const activity = dashboardData?.activity || [];
+    const monthlyChartData = getMonthlyChartData(dashboardData?.monthly, isAr);
 
     const typeStyles = {
         submit: 'bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
@@ -213,7 +237,7 @@ const DashboardHome = () => {
     };
 
     const serviceBadgeStyles = {
-        review: 'bg-[#c8a44e]/10 text-[#c8a44e] dark:bg-[#c8a44e]/15',
+        review: 'bg-[#e8623a]/10 text-[#e8623a] dark:bg-[#e8623a]/15',
         translation: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400',
     };
 
@@ -221,13 +245,13 @@ const DashboardHome = () => {
         <div className="max-w-6xl mx-auto space-y-6">
 
             {/* ─── الترحيب ─── */}
-            <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="relative overflow-hidden rounded-2xl bg-white dark:bg-gradient-to-br dark:from-[#0f1d35] dark:to-[#0a1628] border border-gray-200 dark:border-[#1e3050]/50 p-6 lg:p-8 shadow-sm dark:shadow-none transition-colors duration-300">
-                <div className="absolute top-0 start-0 w-64 h-64 bg-[#c8a44e]/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 hidden dark:block" />
+            <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="relative overflow-hidden rounded-2xl bg-white dark:bg-gradient-to-br dark:from-[#211c18] dark:to-[#1a1613] border border-gray-200 dark:border-[#3a322c]/50 p-6 lg:p-8 shadow-sm dark:shadow-none transition-colors duration-300">
+                <div className="absolute top-0 start-0 w-64 h-64 bg-[#e8623a]/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 hidden dark:block" />
                 <div className="absolute bottom-0 end-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2 hidden dark:block" />
 
                 <div className="relative z-10 flex items-start justify-between">
                     <div>
-                        <p className="text-[#c8a44e] text-sm font-semibold mb-1">{greeting} 👋</p>
+                        <p className="text-[#e8623a] text-sm font-semibold mb-1">{greeting} 👋</p>
                         <h1 className="text-gray-900 dark:text-white text-2xl lg:text-3xl font-black mb-2 transition-colors duration-300">{name}</h1>
                         <p className="text-gray-500 dark:text-gray-400 text-sm max-w-lg transition-colors duration-300">
                             {userData?.role === 'employee'
@@ -239,7 +263,7 @@ const DashboardHome = () => {
                     <button
                         onClick={fetchDashboard}
                         disabled={loading}
-                        className="p-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0d1a2e] text-gray-400 hover:text-[#c8a44e] hover:border-[#c8a44e]/30 transition-all disabled:opacity-40"
+                        className="p-2.5 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#211c18] text-gray-400 hover:text-[#e8623a] hover:border-[#e8623a]/30 transition-all disabled:opacity-40"
                         title={isAr ? 'تحديث' : 'Refresh'}
                     >
                         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -278,16 +302,38 @@ const DashboardHome = () => {
                 }
             </div>
 
+            {/* ─── رسم النشاط الشهري ─── */}
+            <motion.div custom={5} variants={fadeUp} initial="hidden" animate="visible" className="bg-white dark:bg-[#1a1613]/60 border border-gray-200 dark:border-[#3a322c]/40 rounded-2xl p-5 shadow-sm dark:shadow-none transition-colors duration-300">
+                <h2 className="text-gray-900 dark:text-white text-sm font-bold mb-4 transition-colors duration-300">
+                    {isAr ? 'إحصائيات الطلبات الشهرية' : 'Monthly Request Statistics'}
+                </h2>
+                <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={monthlyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-gray-100 dark:stroke-[#3a322c]/40" />
+                            <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                            <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                            <Tooltip
+                                cursor={{ fill: 'rgba(232, 98, 58, 0.06)' }}
+                                contentStyle={{ borderRadius: 12, border: '1px solid #f3f4f6', fontSize: 12 }}
+                                labelStyle={{ fontWeight: 700, marginBottom: 4 }}
+                            />
+                            <Bar dataKey="requests" fill="#e8623a" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الطلبات' : 'Requests'} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </motion.div>
+
             {/* ─── إجراءات سريعة + النشاط الأخير ─── */}
             <div className="grid lg:grid-cols-5 gap-4 lg:gap-6">
 
                 {/* إجراءات سريعة */}
-                <motion.div custom={5} variants={fadeUp} initial="hidden" animate="visible" className="lg:col-span-2 bg-white dark:bg-[#0a1628]/60 border border-gray-200 dark:border-[#1e3050]/40 rounded-2xl p-5 shadow-sm dark:shadow-none transition-colors duration-300">
+                <motion.div custom={6} variants={fadeUp} initial="hidden" animate="visible" className="lg:col-span-2 bg-white dark:bg-[#1a1613]/60 border border-gray-200 dark:border-[#3a322c]/40 rounded-2xl p-5 shadow-sm dark:shadow-none transition-colors duration-300">
                     <h2 className="text-gray-900 dark:text-white text-sm font-bold mb-4 transition-colors duration-300">{isAr ? 'إجراءات سريعة' : 'Quick Actions'}</h2>
                     <div className="grid grid-cols-2 gap-3">
                         {quickActions.map((action) => (
                             <Link key={action.to} to={action.to}
-                                className={`flex flex-col items-center gap-2.5 p-4 rounded-xl border border-gray-200 dark:border-[#1e3050]/40 bg-gray-50 dark:bg-[#0d1a2e]/50 ${action.color} transition-all duration-200 group`}
+                                className={`flex flex-col items-center gap-2.5 p-4 rounded-xl border border-gray-200 dark:border-[#3a322c]/40 bg-gray-50 dark:bg-[#211c18]/50 ${action.color} transition-all duration-200 group`}
                             >
                                 <action.icon className="w-5 h-5 text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white transition-colors duration-200" />
                                 <span className="text-xs text-gray-600 group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-white font-medium text-center transition-colors duration-200">{action.label}</span>
@@ -297,11 +343,11 @@ const DashboardHome = () => {
                 </motion.div>
 
                 {/* النشاط الأخير */}
-                <motion.div custom={6} variants={fadeUp} initial="hidden" animate="visible" className="lg:col-span-3 bg-white dark:bg-[#0a1628]/60 border border-gray-200 dark:border-[#1e3050]/40 rounded-2xl p-5 shadow-sm dark:shadow-none transition-colors duration-300">
+                <motion.div custom={7} variants={fadeUp} initial="hidden" animate="visible" className="lg:col-span-3 bg-white dark:bg-[#1a1613]/60 border border-gray-200 dark:border-[#3a322c]/40 rounded-2xl p-5 shadow-sm dark:shadow-none transition-colors duration-300">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-gray-900 dark:text-white text-sm font-bold transition-colors duration-300">{isAr ? 'النشاط الأخير' : 'Recent Activity'}</h2>
                         {activity.length > 0 && (
-                            <Link to="/dashboard/activity" className="text-[#c8a44e] text-xs font-medium hover:underline flex items-center gap-1">
+                            <Link to="/dashboard/activity" className="text-[#e8623a] text-xs font-medium hover:underline flex items-center gap-1">
                                 {isAr ? 'عرض الكل' : 'View All'} <Arrow className="w-3 h-3" />
                             </Link>
                         )}
@@ -321,7 +367,7 @@ const DashboardHome = () => {
                         <div className="space-y-3">
                             {activity.map((item) => (
                                 <div key={item.id}
-                                    className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-[#0d1a2e]/40 border border-gray-100 dark:border-[#1e3050]/20 hover:border-gray-300 dark:hover:border-[#1e3050]/40 transition-colors duration-200"
+                                    className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-[#211c18]/40 border border-gray-100 dark:border-[#3a322c]/20 hover:border-gray-300 dark:hover:border-[#3a322c]/40 transition-colors duration-200"
                                 >
                                     <div className="mt-1.5 flex-shrink-0">
                                         <span className={`block w-2 h-2 rounded-full ${typeDots[item.type] || 'bg-gray-400'}`} />

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HelpCircle, ChevronDown, MessageCircle, AlertCircle } from 'lucide-react';
-// import Footer from '../components/layout/Footer';
+import { Plus, Phone, Mail, MapPin, Loader2, CheckCircle, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { SiteContext } from '../SiteContext';
 import { API_BASE_URL } from '../api';
+import { getValidationMessages, validateField as validateFieldValue } from '../utils/formValidation';
+import ErrorMessage from '../components/shared/ErrorMessage';
 
 const HelpPage = () => {
   const { t, i18n } = useTranslation();
@@ -12,7 +13,9 @@ const HelpPage = () => {
   const currentLang = i18n.language;
   const [openIndex, setOpenIndex] = useState(null);
 
-  // حالات البيانات
+  const { siteInfo } = useContext(SiteContext);
+
+  // حالات الأسئلة الشائعة
   const [faqs, setFaqs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,137 +43,354 @@ const HelpPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // ✅ حالة نموذج التواصل
+  const validationMessages = getValidationMessages(currentLang);
+  const [isFormLoading, setIsFormLoading] = useState(false);
+  const [isFormSuccess, setIsFormSuccess] = useState(false);
+  const [apiError, setApiError] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const validateField = (name, value) => validateFieldValue(name, value, validationMessages);
+
+  const validateAll = () => {
+    const newErrors = {};
+    let isValid = true;
+    Object.keys(formData).forEach((key) => {
+      const err = validateField(key, formData[key]);
+      if (err) {
+        newErrors[key] = err;
+        isValid = false;
+      }
+    });
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setApiError(null);
+    if (touched[name]) {
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateAll()) return;
+
+    setIsFormLoading(true);
+    setApiError(null);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/send_message.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const result = await res.json();
+
+      if (result.status === 'success') {
+        setIsFormSuccess(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setErrors({});
+        setTouched({});
+        setTimeout(() => setIsFormSuccess(false), 4000);
+      } else {
+        setApiError(result.message);
+      }
+    } catch (err) {
+      setApiError(currentLang === 'ar' ? 'فشل الاتصال بالخادم' : 'Failed to connect to server');
+    } finally {
+      setIsFormLoading(false);
+    }
+  };
+
+  const getInputClass = (fieldName) => {
+    const base = 'w-full px-4 py-3 rounded-xl border outline-none transition-all placeholder:text-gray-300';
+    const hasError = touched[fieldName] && errors[fieldName];
+    if (hasError) {
+      return `${base} border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 bg-red-50/30`;
+    }
+    return `${base} border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20`;
+  };
+
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+
   return (
     <>
-      {/* هيدر الصفحة */}
-      <section className="relative bg-gradient-to-br from-[#0a1628] to-[#1a2744] py-24 overflow-hidden">
-        <div className="absolute -top-20 -left-20 w-72 h-72 bg-[#c8a44e]/10 rounded-full blur-3xl"></div>
-        <div className="container mx-auto px-6 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-20 h-20 bg-[#c8a44e]/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6"
-          >
-            <HelpCircle className="w-10 h-10 text-[#c8a44e]" />
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-black text-white mb-4"
-          >
-            {t('nav.help')}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-300 max-w-xl mx-auto"
-          >
-            {currentLang === 'ar' ? 'اكتشف إجابات لأكثر الأسئلة شيوعاً حول المنصة' : 'Find answers to the most common questions about the platform'}
-          </motion.p>
+      {/* ✅ قسم الهيرو */}
+      <section className="bg-brand-cream-hero py-16 md:py-20">
+        <div className="container mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="inline-block text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4"
+              >
+                {t('help.hero_label')}
+              </motion.span>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4"
+              >
+                {t('help.hero_title_line1')}{' '}
+                <span className="text-brand-orange block">{t('help.hero_title_line2')}</span>
+              </motion.h1>
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: '4rem' }}
+                transition={{ delay: 0.3 }}
+                className="h-1 bg-brand-ink"
+              />
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-4"
+            >
+              <p className="text-brand-muted italic leading-relaxed">
+                {t('help.hero_quote')}
+              </p>
+              <p className="text-brand-muted leading-relaxed">
+                {t('help.hero_desc')}
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      <section className="py-20 bg-[#f4f6fb]">
+      {/* ✅ قسم الأسئلة الشائعة */}
+      <section className="py-16 md:py-20 bg-[#faf7f4]">
         <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto space-y-4">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            {/* صورة توضيحية */}
+            <motion.div
+              initial={{ opacity: 0, x: isRTL ? 30 : -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="aspect-square bg-gradient-to-br from-brand-cream to-brand-cream-hero rounded-2xl"
+            >
+              {/* TODO: استبدال هذا المكان بصورة حقيقية من تصميم Figma */}
+            </motion.div>
 
-            {/* حالة التحميل (Skeleton) */}
-            {isLoading && (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
-                  <div className="flex items-center justify-between">
-                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                    <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
+            {/* قائمة الأسئلة */}
+            <div>
+              {isLoading && (
+                <div className="space-y-6">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="border-b border-brand-ink/10 py-6 animate-pulse">
+                      <div className="flex items-center gap-4">
+                        <div className="h-8 w-8 bg-brand-cream rounded"></div>
+                        <div className="h-5 bg-brand-cream rounded w-2/3"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {error && !isLoading && (
+                <div className="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100 flex items-center gap-3">
+                  <AlertCircle className="w-6 h-6 flex-shrink-0" />
+                  <div>
+                    <p className="font-bold">حدث خطأ أثناء تحميل الأسئلة</p>
+                    <p className="text-sm opacity-80">{error}</p>
                   </div>
-                  <div className="mt-4 h-20 bg-gray-100 rounded"></div>
                 </div>
-              ))
-            )}
+              )}
 
-            {/* حالة الخطأ */}
-            {error && !isLoading && (
-              <div className="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100 flex items-center gap-3">
-                <AlertCircle className="w-6 h-6 flex-shrink-0" />
-                <div>
-                  <p className="font-bold">حدث خطأ أثناء تحميل الأسئلة</p>
-                  <p className="text-sm opacity-80">{error}</p>
-                </div>
+              {!isLoading && !error && faqs.map((faq, index) => (
+                <motion.div
+                  key={faq.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.08 }}
+                  className="border-b border-brand-ink/10"
+                >
+                  <button
+                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                    className="w-full flex items-center gap-4 py-6 text-start hover:opacity-80 transition-opacity"
+                  >
+                    <span className="text-3xl font-black text-brand-orange w-10 flex-shrink-0">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className="font-bold text-brand-ink text-lg flex-1">
+                      {currentLang === 'ar' ? faq.question_ar : faq.question_en}
+                    </span>
+                    <motion.span
+                      animate={{ rotate: openIndex === index ? 45 : 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="flex-shrink-0 text-brand-orange"
+                    >
+                      <Plus className="w-5 h-5" />
+                    </motion.span>
+                  </button>
+
+                  <AnimatePresence>
+                    {openIndex === index && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="ps-14 pb-6 text-brand-muted leading-relaxed">
+                          {currentLang === 'ar' ? faq.answer_ar : faq.answer_en}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ✅ قسم تواصل معنا */}
+      <section className="py-16 px-4 md:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-6xl mx-auto bg-brand-orange rounded-2xl p-8 md:p-14 grid lg:grid-cols-2 gap-10"
+        >
+          {/* بيانات التواصل */}
+          <div>
+            <h2 className="text-white font-black text-3xl mb-3">{t('help.cta_title')}</h2>
+            <p className="text-white/80 mb-6">{t('help.cta_subtitle')}</p>
+            <div className="w-12 h-0.5 bg-white/40 mb-6" />
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-white flex-shrink-0" />
+                <span dir="ltr" className="text-white/90 text-sm">{siteInfo?.phone || '...'}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-white flex-shrink-0" />
+                <span className="text-white/90 text-sm">{siteInfo?.email || '...'}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-white flex-shrink-0" />
+                <span className="text-white/90 text-sm">
+                  {currentLang === 'ar' ? (siteInfo?.address_ar || '...') : (siteInfo?.address_en || '...')}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* نموذج التواصل */}
+          <form onSubmit={handleSubmit} noValidate className="bg-white rounded-2xl p-6 md:p-8">
+            {apiError && (
+              <div className="mb-5 p-3 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {apiError}
+              </div>
+            )}
+            {isFormSuccess && (
+              <div className="mb-5 p-3 bg-emerald-50 text-emerald-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                {currentLang === 'ar' ? 'تم إرسال رسالتك بنجاح!' : 'Your message sent successfully!'}
               </div>
             )}
 
-            {/* عرض الأسئلة الشائعة ديناميكياً */}
-            {!isLoading && !error && faqs.map((faq, index) => (
-              <motion.div
-                key={faq.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-              >
-                <button
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50/50 transition-colors"
-                >
-                  <span className="font-bold text-gray-800 text-lg pe-4">
-                    {currentLang === 'ar' ? faq.question_ar : faq.question_en}
-                  </span>
-                  <motion.div
-                    animate={{ rotate: openIndex === index ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-[#c8a44e]/10 rounded-full p-1 flex-shrink-0"
-                  >
-                    <ChevronDown className="w-5 h-5 text-[#c8a44e]" />
-                  </motion.div>
-                </button>
-
-                <AnimatePresence>
-                  {openIndex === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 text-gray-500 leading-relaxed border-t border-gray-100 pt-4">
-                        {currentLang === 'ar' ? faq.answer_ar : faq.answer_en}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* كرت الدعم المباشر */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto mt-16 bg-[#0a1628] p-10 rounded-3xl text-center text-white shadow-2xl relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#c8a44e]/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="relative z-10">
-              <MessageCircle className="w-12 h-12 mx-auto mb-4 text-[#c8a44e]" />
-              <h3 className="text-2xl font-bold mb-2">
-                {currentLang === 'ar' ? 'لم تجد إجابتك؟' : "Didn't find your answer?"}
-              </h3>
-              <p className="text-gray-400 mb-8">
-                {currentLang === 'ar' ? 'فريق الدعم الفني جاهز لمساعدتك على مدار الساعة' : 'Our technical support team is ready to help you 24/7'}
-              </p>
-              <Link
-                to="/contact-us"
-                className="inline-block bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300"
-              >
-                {currentLang === 'ar' ? 'تواصل معنا الآن' : 'Contact us now'}
-              </Link>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="text-sm font-bold text-brand-ink mb-1.5 block">
+                  {t('help.form_full_name')}
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder={t('help.form_full_name')}
+                  className={getInputClass('name')}
+                />
+                <ErrorMessage message={touched.name ? errors.name : ''} />
+              </div>
+              <div>
+                <label className="text-sm font-bold text-brand-ink mb-1.5 block">
+                  {t('help.form_email')}
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  dir="ltr"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder={t('help.form_email')}
+                  className={getInputClass('email')}
+                />
+                <ErrorMessage message={touched.email ? errors.email : ''} />
+              </div>
             </div>
-          </motion.div>
-        </div>
+
+            <div className="mb-4">
+              <label className="text-sm font-bold text-brand-ink mb-1.5 block">
+                {t('help.form_subject')}
+              </label>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder={t('help.form_subject')}
+                className={getInputClass('subject')}
+              />
+              <ErrorMessage message={touched.subject ? errors.subject : ''} />
+            </div>
+
+            <div className="mb-6">
+              <label className="text-sm font-bold text-brand-ink mb-1.5 block">
+                {t('help.form_message')}
+              </label>
+              <textarea
+                name="message"
+                rows="4"
+                value={formData.message}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder={t('help.form_message')}
+                className={getInputClass('message')}
+              ></textarea>
+              <ErrorMessage message={touched.message ? errors.message : ''} />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isFormLoading}
+              className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3 rounded-full font-bold hover:bg-brand-orange-dark transition-all duration-300 disabled:opacity-70"
+            >
+              {isFormLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('help.form_submit')}
+              {!isFormLoading && <ArrowIcon className="w-4 h-4" />}
+            </button>
+          </form>
+        </motion.div>
       </section>
-      {/* <Footer /> */}
     </>
   );
 };

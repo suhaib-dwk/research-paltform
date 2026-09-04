@@ -1,6 +1,7 @@
 import { useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SiteContext } from '../../SiteContext';
+import { resolveUploadUrl } from '../../api';
 
 const DynamicHead = () => {
   const { siteSettings } = useContext(SiteContext);
@@ -19,7 +20,7 @@ const DynamicHead = () => {
         document.head.appendChild(link);
       }
       // تحديد النوع بناءً على الامتداد
-      const faviconUrl = siteSettings.site_favicon;
+      const faviconUrl = resolveUploadUrl(siteSettings.site_favicon);
       if (faviconUrl.endsWith('.svg')) {
         link.type = 'image/svg+xml';
       } else if (faviconUrl.endsWith('.png')) {

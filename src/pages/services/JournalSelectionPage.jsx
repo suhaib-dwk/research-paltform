@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSite } from '../../SiteContext';
+import { API_BASE_URL } from '../../api';
 import ServicePageWrapper from './ServicePageWrapper';
-import { BookMarked, Search, ExternalLink, TrendingUp, Globe, Filter, ListChecks, Lightbulb, HelpCircle } from 'lucide-react';
+import { BookMarked, Search, ExternalLink, TrendingUp, Globe, Filter, ListChecks, Lightbulb, HelpCircle, Send, XCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 const FIELDS = [
   { id: 'cs', label_ar: 'علوم الحاسب', label_en: 'Computer Science' }, { id: 'med', label_ar: 'الطب', label_en: 'Medicine' },
@@ -14,20 +15,87 @@ const JOURNALS = [
   { id: 3, name: 'Journal of Medical Research', q: 'Q1', if: 9.2, oa: false, field: 'med', acc: 12 },
 ];
 
-const MOCK = [
-  { id: 1, title_ar: 'اختيار مجلة لبحث الذكاء الاصطناعي', title_en: 'Journal selection for AI research', status: 'completed', date: '2025-01-10', score: 92, meta_ar: 'علوم الحاسب · 5 مجلات مقترحة' },
-  { id: 2, title_ar: 'اختيار مجلة لبحث الطب', title_en: 'Journal selection for medical research', status: 'in_progress', date: '2025-01-14', progress: 70, meta_ar: 'الطب · جاري البحث...' },
-  { id: 3, title_ar: 'اختيار مجلة بحث الهندسة', title_en: 'Journal selection for engineering', status: 'needs_info', date: '2025-01-11', meta_ar: 'الهندسة', info_needed_ar: 'يرجى توضيح هل البحث باللغة العربية أم الإنجليزية، وهل تفضل مجلات وصول مفتوح فقط.' },
-];
+const getApiError = (serverMsg, isAr) => {
+  if (!serverMsg) return isAr ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred';
+  const map = {
+    unauthorized: { ar: 'يرجى تسجيل الدخول أولاً', en: 'Please login first' },
+    research_field_required: { ar: 'يرجى اختيار التخصص', en: 'Please select a field' },
+    file_required: { ar: 'يرجى رفع الملف', en: 'Please upload a file' },
+    invalid_file_type: { ar: 'صيغة الملف غير مقبولة', en: 'Invalid file type' },
+    file_size_exceeded: { ar: 'حجم الملف يتجاوز 20 ميغابايت', en: 'File size exceeds 20MB' },
+    database_insert_failed: { ar: 'فشل حفظ الطلب', en: 'Failed to save request' },
+  };
+  const lower = serverMsg.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  for (const [key, trans] of Object.entries(map)) {
+    if (lower.includes(key)) return isAr ? trans.ar : trans.en;
+  }
+  return serverMsg;
+};
 
 const JournalSelectionPage = () => {
-  const { currentLang } = useSite();
+  const { currentLang, user } = useSite();
   const isAr = currentLang === 'ar';
+  const entityId = user?.user_id ?? user?.id;
   const [field, setField] = useState('');
   const [query, setQuery] = useState('');
   const [minIF, setMinIF] = useState('');
   const [oaOnly, setOaOnly] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [reqFile, setReqFile] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [loadingRequests, setLoadingRequests] = useState(true);
+
+  const fetchRequests = async () => {
+    setLoadingRequests(true);
+    try {
+      const fd = new FormData();
+      fd.append('user_id', entityId || '');
+      const res = await fetch(`${API_BASE_URL}/get_journal_selection_requests.php`, { method: 'POST', body: fd });
+      const result = await res.json();
+      if (result.status === 'success') {
+        setRequests(result.data.map(r => ({ ...r, title_ar: r.research_field, title_en: r.research_field })));
+      }
+    } catch (err) {
+      console.error('Fetch journal selection requests error:', err);
+    } finally {
+      setLoadingRequests(false);
+    }
+  };
+
+  useEffect(() => { if (entityId) fetchRequests(); }, [entityId]);
+
+  const handleSubmitRequest = async () => {
+    if (!field || !reqFile) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(null);
+    try {
+      const fieldLabel = FIELDS.find(f => f.id === field);
+      const fd = new FormData();
+      fd.append('user_id', entityId || '');
+      fd.append('research_field', fieldLabel ? (isAr ? fieldLabel.label_ar : fieldLabel.label_en) : field);
+      fd.append('priority', oaOnly ? 'open_access' : (minIF ? 'impact' : 'no_preference'));
+      fd.append('notes', query.trim());
+      fd.append('file', reqFile);
+      const res = await fetch(`${API_BASE_URL}/submit_journal_selection.php`, { method: 'POST', body: fd });
+      const result = await res.json();
+      if (result.status === 'success') {
+        setSubmitSuccess(isAr ? `تم إرسال طلبك بنجاح! رقم الطلب: #${result.data.id}` : `Request submitted! Request #${result.data.id}`);
+        setReqFile(null);
+        fetchRequests();
+      } else {
+        setSubmitError(getApiError(result.message, isAr));
+      }
+    } catch (err) {
+      console.error('Journal selection submit error:', err);
+      setSubmitError(isAr ? 'فشل الاتصال بالخادم' : 'Failed to connect to server');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const filtered = JOURNALS.filter(j => {
     if (field && j.field !== field) return false;
@@ -46,6 +114,18 @@ const JournalSelectionPage = () => {
 
   const form = (
     <div className="space-y-4">
+      {submitError && (
+        <div className="flex items-start gap-2.5 p-3.5 bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-800/30 rounded-xl">
+          <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-red-600 dark:text-red-400 font-medium">{submitError}</p>
+        </div>
+      )}
+      {submitSuccess && (
+        <div className="flex items-start gap-2.5 p-3.5 bg-emerald-50 dark:bg-emerald-900/15 border border-emerald-200 dark:border-emerald-800/30 rounded-xl">
+          <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{submitSuccess}</p>
+        </div>
+      )}
       <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
@@ -68,6 +148,30 @@ const JournalSelectionPage = () => {
           <button onClick={() => setShowResults(true)} className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-semibold rounded-xl transition-colors">{isAr ? 'بحث' : 'Search'}</button>
         </div>
       </div>
+
+      {/* ─── طلب مساعدة مقدّم خدمة ─── */}
+      <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-3">
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? 'اطلب مساعدة مختص في اختيار المجلة' : 'Request expert help choosing a journal'}</h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400">{isAr ? 'ارفع ملخص بحثك وسيتواصل معك مختص لاقتراح أفضل المجلات (يتطلب اختيار التخصص أعلاه)' : 'Upload your abstract and a specialist will suggest the best journals (requires selecting a field above)'}</p>
+        <label className="flex items-center justify-center h-24 border-2 border-dashed border-gray-200 dark:border-[#1e3050] rounded-xl cursor-pointer hover:border-cyan-400 hover:bg-cyan-50/50 dark:hover:bg-cyan-900/10 transition-all">
+          <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={(e) => {
+            const selected = e.target.files[0];
+            if (!selected) return;
+            const ext = selected.name.split('.').pop().toLowerCase();
+            if (!['pdf', 'doc', 'docx'].includes(ext)) { setSubmitError(isAr ? 'صيغة الملف غير مقبولة' : 'Invalid file type'); return; }
+            if (selected.size > 20 * 1024 * 1024) { setSubmitError(isAr ? 'حجم الملف يتجاوز 20 ميغابايت' : 'File size exceeds 20MB'); return; }
+            setReqFile(selected); setSubmitError(null);
+          }} />
+          {reqFile ? (
+            <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2"><CheckCircle className="w-4 h-4" />{reqFile.name}</span>
+          ) : (
+            <span className="text-xs text-gray-400 flex items-center gap-2"><Search className="w-4 h-4" />{isAr ? 'ارفع ملخص البحث (PDF, DOC, DOCX)' : 'Upload abstract (PDF, DOC, DOCX)'}</span>
+          )}
+        </label>
+        <button onClick={handleSubmitRequest} disabled={!field || !reqFile || submitting} className="w-full py-3 bg-gradient-to-l from-cyan-600 to-cyan-500 hover:from-cyan-700 hover:to-cyan-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-cyan-500/25 disabled:shadow-none flex items-center justify-center gap-2">
+          {submitting ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</> : <><Send className="w-4 h-4" />{isAr ? 'إرسال الطلب' : 'Submit Request'}</>}
+        </button>
+      </div>
       {showResults && (
         <div className="space-y-3">
           <p className="text-sm text-gray-500">{isAr ? `${filtered.length} مجلة` : `${filtered.length} journals`}</p>
@@ -88,7 +192,7 @@ const JournalSelectionPage = () => {
   );
 
   return (
-    <ServicePageWrapper icon={BookMarked} title={{ ar: 'اختيار المجلة', en: 'Journal Selection' }} description={{ ar: 'ابحث عن المجلة الأنسب لبحثك', en: 'Find the most suitable journal for your research' }} gradient="from-cyan-500 to-cyan-600" shadowColor="shadow-cyan-500/20" guideSections={guideSections} mockRequests={MOCK}>
+    <ServicePageWrapper icon={BookMarked} title={{ ar: 'اختيار المجلة', en: 'Journal Selection' }} description={{ ar: 'ابحث عن المجلة الأنسب لبحثك', en: 'Find the most suitable journal for your research' }} gradient="from-cyan-500 to-cyan-600" shadowColor="shadow-cyan-500/20" guideSections={guideSections} mockRequests={requests} loadingRequests={loadingRequests}>
       {form}
     </ServicePageWrapper>
   );

@@ -1,15 +1,17 @@
 import { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { 
-  ArrowLeft, ArrowRight, Users, Building2, FileText, FlaskConical, 
+import {
+  ArrowLeft, ArrowRight, Users, Building2, FileText, FlaskConical,
   BookOpen, TrendingUp, HandCoins, Scale, Shield,
   GraduationCap, Award, Globe, Lightbulb, Microscope,
-  Database, Settings, HelpCircle, ChevronRight, Star
+  Database, Settings, HelpCircle, ChevronRight, Star,
+  Upload, Search, Loader2, CheckCircle, AlertCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Footer from '../components/layout/Footer';
 import { API_BASE_URL } from '../api';
 import { SiteContext } from '../SiteContext';
+import { getValidationMessages, validateField as validateFieldValue } from '../utils/formValidation';
+import ErrorMessage from '../components/shared/ErrorMessage';
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
@@ -17,7 +19,7 @@ const HomePage = () => {
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const currentLang = i18n.language;
 
-  const { siteSettings, homeSlides } = useContext(SiteContext);
+  const { siteSettings, homeSlides, siteInfo } = useContext(SiteContext);
 
   const [servicesData, setServicesData] = useState([]);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
@@ -25,7 +27,7 @@ const HomePage = () => {
   const [isLoadingNews, setIsLoadingNews] = useState(true);
   const [newsError, setNewsError] = useState(null);
 
-  const heroBadge = siteSettings[`hero_badge_${currentLang}`] || 'Ministry of Higher Education';
+  const heroBadge = siteSettings[`hero_badge_${currentLang}`] || t('hero.badge');
   const heroTitle = siteSettings[`hero_title_${currentLang}`] || t('hero.title');
   const heroDesc = siteSettings[`hero_desc_${currentLang}`] || t('hero.desc');
 
@@ -49,20 +51,6 @@ const HomePage = () => {
       'graduation-cap': GraduationCap,
     };
     return iconsMap[iconName] || BookOpen;
-  };
-
-  const getGradientClass = (colorClass) => {
-    const validGradients = [
-      'from-blue-500 to-blue-600', 'from-green-500 to-green-600',
-      'from-purple-500 to-purple-600', 'from-orange-500 to-orange-600',
-      'from-red-500 to-red-600', 'from-indigo-500 to-indigo-600',
-      'from-pink-500 to-pink-600', 'from-teal-500 to-teal-600',
-      'from-cyan-500 to-cyan-600',
-    ];
-    if (colorClass && validGradients.some(g => colorClass.includes(g.split(' ')[0].replace('from-', '')))) {
-      return `bg-gradient-to-br ${colorClass}`;
-    }
-    return 'bg-gradient-to-br from-[#c8a44e] to-[#a8872e]';
   };
 
   useEffect(() => {
@@ -98,10 +86,31 @@ const HomePage = () => {
   }, [currentLang]);
 
   const statsData = [
-    { icon: Users, count: "12,500+", label: t('stats.researchers'), border: "border-t-[#c8a44e]" },
-    { icon: Building2, count: "85+", label: t('stats.universities'), border: "border-t-emerald-500" },
-    { icon: FileText, count: "45,000+", label: t('stats.publications'), border: "border-t-[#0a1628]" },
-    { icon: FlaskConical, count: "3,200+", label: t('stats.projects'), border: "border-t-[#e6c96e]" },
+    { count: "12,500+", label: t('stats.researchers') },
+    { count: "85+", label: t('stats.universities') },
+    { count: "45,000+", label: t('stats.publications') },
+    { count: "3,200+", label: t('stats.projects') },
+  ];
+
+  const infoTiles = [
+    { key: 'research_system', title: t('home.tile1_title'), desc: t('home.tile1_desc'), dark: true },
+    { key: 'classification', title: t('home.tile2_title'), desc: t('home.tile2_desc'), orange: true },
+    { key: 'transparency', title: t('home.tile3_title'), desc: t('home.tile3_desc') },
+    { key: 'integration', title: t('home.tile4_title'), desc: t('home.tile4_desc') },
+  ];
+
+  const howItWorks = [
+    { number: '01', title: t('home.step1_title'), desc: t('home.step1_desc') },
+    { number: '02', title: t('home.step2_title'), desc: t('home.step2_desc') },
+    { number: '03', title: t('home.step3_title'), desc: t('home.step3_desc') },
+    { number: '04', title: t('home.step4_title'), desc: t('home.step4_desc') },
+  ];
+
+  const platformServices = [
+    { icon: Upload, title: t('services.submit_research'), desc: t('services.submit_research_desc'), highlight: true },
+    { icon: TrendingUp, title: t('services.track_status'), desc: t('services.track_status_desc') },
+    { icon: HandCoins, title: t('services.funding'), desc: t('services.funding_desc') },
+    { icon: Search, title: t('services.collaboration'), desc: t('services.collaboration_desc') },
   ];
 
   const formatDate = (dateString) => {
@@ -110,14 +119,78 @@ const HomePage = () => {
     });
   };
 
-  const translateCategory = (cat) => {
-    const categories = {
-      'updates': currentLang === 'ar' ? 'تحديثات' : 'Updates',
-      'grants': currentLang === 'ar' ? 'منح' : 'Grants',
-      'events': currentLang === 'ar' ? 'فعاليات' : 'Events',
-      'announcements': currentLang === 'ar' ? 'إعلانات' : 'Announcements'
-    };
-    return categories[cat] || cat;
+  // ✅ نموذج التواصل (مطابق لصفحة Help Center)
+  const validationMessages = getValidationMessages(currentLang);
+  const [isFormLoading, setIsFormLoading] = useState(false);
+  const [isFormSuccess, setIsFormSuccess] = useState(false);
+  const [apiError, setApiError] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+
+  const validateField = (name, value) => validateFieldValue(name, value, validationMessages);
+
+  const validateAll = () => {
+    const newErrors = {};
+    let isValid = true;
+    Object.keys(formData).forEach((key) => {
+      const err = validateField(key, formData[key]);
+      if (err) { newErrors[key] = err; isValid = false; }
+    });
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setApiError(null);
+    if (touched[name]) {
+      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateAll()) return;
+    setIsFormLoading(true);
+    setApiError(null);
+    try {
+      const res = await fetch(`${API_BASE_URL}/send_message.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const result = await res.json();
+      if (result.status === 'success') {
+        setIsFormSuccess(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setErrors({});
+        setTouched({});
+        setTimeout(() => setIsFormSuccess(false), 4000);
+      } else {
+        setApiError(result.message);
+      }
+    } catch (err) {
+      setApiError(currentLang === 'ar' ? 'فشل الاتصال بالخادم' : 'Failed to connect to server');
+    } finally {
+      setIsFormLoading(false);
+    }
+  };
+
+  const getInputClass = (fieldName) => {
+    const base = 'w-full px-4 py-3 rounded-xl border outline-none transition-all placeholder:text-gray-300';
+    const hasError = touched[fieldName] && errors[fieldName];
+    if (hasError) {
+      return `${base} border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 bg-red-50/30`;
+    }
+    return `${base} border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20`;
   };
 
   return (
@@ -131,220 +204,314 @@ const HomePage = () => {
       `}</style>
 
       {/* ═══════ البانر الديناميكي ═══════ */}
-      <section className="relative h-[85vh] md:h-screen w-full overflow-hidden bg-[#0a1628]">
+      <section className="relative h-[80vh] md:h-[85vh] w-full overflow-hidden bg-brand-ink">
         <div className={`flex h-full w-[300%] ${isRTL ? 'banner-track-rtl' : 'banner-track-ltr'}`}>
           {[...bannerSlides, ...bannerSlides, ...bannerSlides].map((slide, index) => (
             <div key={index} className="relative w-1/3 h-full flex-shrink-0">
-              <img 
-                src={slide.image_url} 
-                alt="Research" 
+              <img
+                src={slide.image_url}
+                alt="Research"
                 className="w-full h-full object-cover"
                 loading={index < 3 ? 'eager' : 'lazy'}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/90 via-[#0a1628]/50 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/50 to-transparent"></div>
             </div>
           ))}
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-6">
-          <span className="inline-block px-5 py-2 mb-6 text-sm font-bold tracking-widest text-[#e6c96e] uppercase bg-[#c8a44e]/10 backdrop-blur-md rounded-full border border-[#c8a44e]/30">
-            {heroBadge}
-          </span>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight drop-shadow-lg max-w-5xl">
-            {heroTitle}
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight drop-shadow-lg max-w-4xl">
+            {t('home.hero_title_line1')}{' '}
+            <span className="text-brand-orange">{t('home.hero_title_line2')}</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-12 leading-relaxed max-w-3xl drop-shadow-md">
+          <p className="text-lg text-gray-300 mb-10 leading-relaxed max-w-2xl drop-shadow-md">
             {heroDesc}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link 
-              to="/register" 
-              className="group flex items-center gap-3 bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-[#c8a44e]/30 transition-all duration-300 hover:scale-105"
+            <Link
+              to="/register"
+              className="group flex items-center gap-3 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold hover:bg-brand-orange-dark transition-all duration-300"
             >
               {t('hero.btn_register')} <ArrowIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link 
-              to="/login" 
-              className="px-10 py-4 rounded-2xl font-bold text-lg text-white bg-white/10 backdrop-blur-sm border border-white/30 hover:bg-white/20 hover:border-[#c8a44e]/40 transition-all duration-300"
+            <Link
+              to="/login"
+              className="px-8 py-3.5 rounded-full font-bold text-white bg-white/10 backdrop-blur-sm border border-white/30 hover:bg-white/20 transition-all duration-300"
             >
               {t('hero.btn_login')}
             </Link>
           </div>
         </div>
-        {/* تدرج سفلي للدمج مع القسم التالي */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#f4f6fb] to-transparent z-10"></div>
       </section>
 
-      {/* ═══════ الخدمات ═══════ */}
-      <section className="py-20 bg-[#f4f6fb] relative overflow-hidden">
-        <div className="absolute top-0 start-0 w-[500px] h-[500px] bg-[#c8a44e]/[0.04] rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-        <div className="absolute bottom-0 end-0 w-[400px] h-[400px] bg-[#0a1628]/[0.03] rounded-full blur-[100px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-14">
-            <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-wider text-[#c8a44e] uppercase bg-[#c8a44e]/10 rounded-full mb-4">
-              {t('services.title_badge') || t('services.title')}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] mb-4">{t('services.title')}</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">{t('services.subtitle')}</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {isLoadingServices ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-white p-8 rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 animate-pulse">
-                  <div className="w-14 h-14 bg-gray-200 rounded-2xl mb-5"></div>
-                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
-                  <div className="h-4 bg-gray-100 rounded w-full"></div>
-                </div>
-              ))
-            ) : (
-              servicesData.map((service) => {
-                const DynamicIcon = getIconComponent(service.icon_name);
-                const gradientClass = getGradientClass(service.color_class);
-                return (
-                  <Link 
-                    to={`/service/${service.slug}`} 
-                    key={service.id} 
-                    className="group bg-white p-8 rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 hover:shadow-xl hover:shadow-[#c8a44e]/10 hover:-translate-y-2 transition-all duration-300 flex flex-col"
-                  >
-                    <div className={`w-14 h-14 rounded-2xl ${gradientClass} flex items-center justify-center mb-5 text-white shadow-lg group-hover:scale-110 transition-transform`}>
-                      <DynamicIcon className="w-7 h-7" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[#0a1628] mb-2">
-                      {currentLang === 'ar' ? service.title_ar : service.title_en}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed flex-grow">
-                      {currentLang === 'ar' ? service.desc_ar : service.desc_en}
-                    </p>
-                    <div className="mt-5 text-[#c8a44e] font-bold text-sm flex items-center gap-1 group-hover:gap-2.5 transition-all">
-                      {t('services.explore')} <ArrowIcon className="w-4 h-4" />
-                    </div>
-                  </Link>
-                );
-              })
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════ الإحصائيات ═══════ */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute top-0 start-0 w-96 h-96 bg-[#c8a44e]/[0.04] rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 end-0 w-80 h-80 bg-[#0a1628]/[0.03] rounded-full translate-x-1/2 translate-y-1/2 blur-3xl pointer-events-none"></div>
-
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-wider text-[#c8a44e] uppercase bg-[#c8a44e]/10 rounded-full mb-4">
-              {t('stats.title_badge') || t('stats.title')}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-[#0a1628]">{t('stats.title')}</h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      {/* ═══════ شريط الإحصائيات ═══════ */}
+      <section className="bg-brand-ink py-10 border-t border-white/10">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {statsData.map((stat, index) => (
-              <div key={index} className={`relative bg-[#f4f6fb]/60 backdrop-blur-sm p-8 rounded-3xl shadow-sm shadow-black/[0.02] border border-gray-100 text-center hover:shadow-lg hover:shadow-[#c8a44e]/10 transition-shadow duration-300 border-t-4 ${stat.border}`}>
-                <stat.icon className="w-10 h-10 mx-auto mb-4 text-[#c8a44e]/60" />
-                <h3 className="text-4xl font-black text-[#0a1628] mb-2">{stat.count}</h3>
-                <p className="text-sm text-gray-400 font-medium">{stat.label}</p>
+              <div key={index}>
+                <p className="text-3xl md:text-4xl font-black text-white mb-1">{stat.count}</p>
+                <p className="text-[11px] md:text-xs font-bold uppercase tracking-wide text-brand-orange">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════ الأخبار ═══════ */}
-      <section className="py-20 bg-[#f4f6fb] relative overflow-hidden">
-        <div className="absolute top-1/2 start-0 w-[400px] h-[400px] bg-[#c8a44e]/[0.03] rounded-full -translate-y-1/2 -translate-x-1/2 blur-[100px] pointer-events-none" />
-
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-14 gap-4">
+      {/* ═══════ نبذة عن المنصة ═══════ */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-wider text-[#c8a44e] uppercase bg-[#c8a44e]/10 rounded-full mb-4">
-                {t('news.title_badge') || t('news.title')}
+              <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
+                {t('home.about_label')}
               </span>
-              <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] mb-2">{t('news.title')}</h2>
-              <p className="text-gray-400">{t('news.subtitle')}</p>
+              <h2 className="text-3xl md:text-4xl font-black text-brand-ink leading-tight mb-4">
+                {t('home.about_title')}
+              </h2>
+              <div className="w-16 h-1 bg-brand-ink mb-6" />
+              <p className="text-brand-muted leading-relaxed mb-6">
+                {t('home.about_desc')}
+              </p>
+              <Link
+                to="/about-us"
+                className="text-brand-orange font-bold text-sm hover:underline"
+              >
+                {t('home.explore_features')} →
+              </Link>
             </div>
-            <Link to="/all-news" className="flex items-center gap-2 text-[#c8a44e] font-bold hover:text-[#a8872e] hover:gap-3 transition-all">
-              {t('news.view_all')} <ArrowIcon className="w-5 h-5" />
+
+            <div className="grid grid-cols-2 gap-4">
+              {infoTiles.map((tile, index) => (
+                <div
+                  key={tile.key}
+                  className={`p-6 rounded-2xl ${
+                    tile.dark ? 'bg-brand-ink text-white' :
+                    tile.orange ? 'bg-brand-orange text-white' :
+                    'bg-brand-cream-hero text-brand-ink'
+                  }`}
+                >
+                  <h3 className={`text-xs font-bold uppercase tracking-wide mb-2 ${tile.dark || tile.orange ? 'text-white/70' : 'text-brand-orange'}`}>
+                    {tile.title}
+                  </h3>
+                  <p className={`text-sm leading-relaxed ${tile.dark || tile.orange ? 'text-white/90' : 'text-brand-muted'}`}>
+                    {tile.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════ كيف تعمل المنصة ═══════ */}
+      <section className="bg-brand-ink py-16 md:py-20">
+        <div className="container mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-10 items-start mb-12">
+            <div>
+              <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
+                {t('home.how_label')}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-black text-white leading-tight">
+                {t('home.how_title')}
+              </h2>
+            </div>
+            <p className="text-white/60 leading-relaxed">
+              {t('home.how_desc')}
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-white/10 pt-10">
+            {howItWorks.map((step, index) => (
+              <div key={index}>
+                <span className="text-3xl font-black text-brand-orange/50 block mb-3">{step.number}</span>
+                <h3 className="font-bold text-white mb-2">{step.title}</h3>
+                <p className="text-sm text-white/50 leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════ خدمات المنصة ═══════ */}
+      <section className="py-16 md:py-20 bg-brand-cream-hero">
+        <div className="container mx-auto px-6">
+          <div className="mb-10">
+            <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
+              {t('services.title_badge_small')}
+            </span>
+            <p className="text-brand-muted max-w-xl">{t('services.subtitle')}</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {platformServices.map((service, index) => (
+              <div
+                key={index}
+                className={`p-6 rounded-2xl flex items-start gap-4 ${
+                  service.highlight ? 'bg-brand-orange/10 border border-brand-orange/20' : 'bg-white'
+                }`}
+              >
+                <service.icon className={`w-6 h-6 flex-shrink-0 ${service.highlight ? 'text-brand-orange' : 'text-brand-ink'}`} />
+                <div>
+                  <h3 className="font-bold text-brand-ink mb-1">{service.title}</h3>
+                  <p className="text-sm text-brand-muted leading-relaxed">{service.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════ آخر الأخبار ═══════ */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
+            <div>
+              <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
+                {t('news.title_badge_small')}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-black text-brand-ink">{t('news.subtitle')}</h2>
+            </div>
+            <Link to="/all-news" className="text-brand-orange font-bold text-sm hover:underline">
+              {t('home.explore_features')}
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {isLoadingNews ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm shadow-black/[0.03] border border-gray-100 animate-pulse">
-                  <div className="h-52 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
-                    <div className="h-6 bg-gray-200 rounded w-full mb-3"></div>
-                    <div className="h-4 bg-gray-100 rounded w-5/6"></div>
+          {isLoadingNews ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-brand-cream-hero rounded-2xl overflow-hidden animate-pulse">
+                  <div className="h-44 bg-brand-cream"></div>
+                  <div className="p-5">
+                    <div className="h-4 bg-brand-cream rounded w-1/3 mb-3"></div>
+                    <div className="h-5 bg-brand-cream rounded w-full"></div>
                   </div>
                 </div>
-              ))
-            ) : newsError ? (
-              <div className="md:col-span-3 bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100 text-center">
-                <p className="font-bold mb-1">{currentLang === 'ar' ? 'حدث خطأ أثناء تحميل الأخبار' : 'Error loading news'}</p>
-                <p className="text-sm">{newsError}</p>
-              </div>
-            ) : (
-              newsData.map((item) => (
-                <Link to={`/news/${item.slug}`} key={item.id} className="group bg-white rounded-3xl overflow-hidden shadow-sm shadow-black/[0.03] border border-gray-100 hover:shadow-xl hover:shadow-[#c8a44e]/10 transition-all duration-300 flex flex-col">
-                  <div className="h-52 overflow-hidden relative">
-                    <img src={item.image_url} alt={item.title_ar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-xs font-bold text-[#c8a44e] px-3 py-1.5 rounded-full border border-[#c8a44e]/20">
-                      {translateCategory(item.category)}
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow">
-                    <p className="text-sm text-gray-400 mb-3 font-medium">{formatDate(item.created_at)}</p>
-                    <h3 className="text-lg font-bold text-[#0a1628] group-hover:text-[#c8a44e] transition-colors leading-relaxed flex-grow">
-                      {currentLang === 'ar' ? item.title_ar : item.title_en}
+              ))}
+            </div>
+          ) : newsError ? (
+            <div className="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100 text-center">
+              <p className="font-bold">{currentLang === 'ar' ? 'حدث خطأ أثناء تحميل الأخبار' : 'Error loading news'}</p>
+            </div>
+          ) : (
+            <>
+              {newsData[0] && (
+                <Link
+                  to={`/news/${newsData[0].slug}`}
+                  className="group relative block h-72 rounded-2xl overflow-hidden mb-6"
+                >
+                  <img src={newsData[0].image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/30 to-transparent" />
+                  <div className="absolute bottom-0 start-0 p-8">
+                    <h3 className="text-white text-2xl font-black mb-3 max-w-lg">
+                      {currentLang === 'ar' ? newsData[0].title_ar : newsData[0].title_en}
                     </h3>
-                    <div className="mt-4 text-[#c8a44e] font-bold text-sm flex items-center gap-1 group-hover:gap-2.5 transition-all">
-                      {t('news.read_more')} <ArrowIcon className="w-4 h-4" />
-                    </div>
+                    <p className="text-white/70 text-sm mb-2">{formatDate(newsData[0].created_at)}</p>
+                    <span className="text-brand-orange font-bold text-sm">{t('news.read_more')} →</span>
                   </div>
                 </Link>
-              ))
+              )}
+              <div className="grid md:grid-cols-3 gap-6">
+                {newsData.slice(1, 4).map((item) => (
+                  <Link to={`/news/${item.slug}`} key={item.id} className="group bg-brand-cream-hero rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="p-6">
+                      <h3 className="font-bold text-brand-ink mb-2 group-hover:text-brand-orange transition-colors leading-relaxed">
+                        {currentLang === 'ar' ? item.title_ar : item.title_en}
+                      </h3>
+                      <p className="text-sm text-brand-muted mb-3">{formatDate(item.created_at)}</p>
+                      <span className="text-brand-orange font-bold text-sm flex items-center gap-1">
+                        {t('news.read_more')} <ArrowIcon className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ✅ قسم تواصل معنا */}
+      <section className="py-16 px-4 md:px-8 bg-white">
+        <div className="max-w-6xl mx-auto bg-brand-orange rounded-2xl p-8 md:p-14 grid lg:grid-cols-2 gap-10">
+          <div>
+            <h2 className="text-white font-black text-3xl mb-3">{t('help.cta_title')}</h2>
+            <p className="text-white/80 mb-6">{t('help.cta_subtitle')}</p>
+            <div className="w-12 h-0.5 bg-white/40 mb-6" />
+
+            <div className="space-y-4">
+              <span dir="ltr" className="text-white/90 text-sm block">{siteInfo?.phone || '...'}</span>
+              <span className="text-white/90 text-sm block">{siteInfo?.email || '...'}</span>
+              <span className="text-white/90 text-sm block">
+                {currentLang === 'ar' ? (siteInfo?.address_ar || '...') : (siteInfo?.address_en || '...')}
+              </span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} noValidate className="bg-white rounded-2xl p-6 md:p-8">
+            {apiError && (
+              <div className="mb-5 p-3 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {apiError}
+              </div>
             )}
-          </div>
-        </div>
-      </section>
+            {isFormSuccess && (
+              <div className="mb-5 p-3 bg-emerald-50 text-emerald-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                {currentLang === 'ar' ? 'تم إرسال رسالتك بنجاح!' : 'Your message sent successfully!'}
+              </div>
+            )}
 
-      {/* ═══════ الشروط والأحكام ═══════ */}
-      <section className="py-16 bg-white border-t border-gray-100 relative overflow-hidden">
-        <div className="absolute bottom-0 end-0 w-[350px] h-[350px] bg-[#c8a44e]/[0.03] rounded-full translate-x-1/2 translate-y-1/2 blur-[80px] pointer-events-none" />
-
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-12">
-            <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-wider text-[#c8a44e] uppercase bg-[#c8a44e]/10 rounded-full mb-4">
-              {t('policies.title_badge') || t('policies.title')}
-            </span>
-            <h2 className="text-3xl font-black text-[#0a1628]">{t('policies.title')}</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Link to="/page/terms" className="group flex items-start gap-5 p-8 bg-[#f4f6fb] rounded-2xl border border-gray-100 hover:border-[#c8a44e]/30 hover:shadow-lg hover:shadow-[#c8a44e]/10 transition-all duration-300">
-              <div className="w-14 h-14 rounded-xl bg-[#c8a44e]/10 text-[#c8a44e] flex items-center justify-center flex-shrink-0 group-hover:bg-[#c8a44e] group-hover:text-white transition-colors duration-300">
-                <Scale className="w-7 h-7" />
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_full_name')}</label>
+                <input
+                  type="text" name="name" value={formData.name}
+                  onChange={handleChange} onBlur={handleBlur}
+                  placeholder={t('help.form_full_name')} className={getInputClass('name')}
+                />
+                <ErrorMessage message={touched.name ? errors.name : ''} />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[#0a1628] mb-2 group-hover:text-[#c8a44e] transition-colors">{t('policies.terms_title')}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{t('policies.terms_desc')}</p>
+                <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_email')}</label>
+                <input
+                  type="email" name="email" dir="ltr" value={formData.email}
+                  onChange={handleChange} onBlur={handleBlur}
+                  placeholder={t('help.form_email')} className={getInputClass('email')}
+                />
+                <ErrorMessage message={touched.email ? errors.email : ''} />
               </div>
-            </Link>
-            <Link to="/page/policy" className="group flex items-start gap-5 p-8 bg-[#f4f6fb] rounded-2xl border border-gray-100 hover:border-[#0a1628]/20 hover:shadow-lg hover:shadow-[#0a1628]/10 transition-all duration-300">
-              <div className="w-14 h-14 rounded-xl bg-[#0a1628]/10 text-[#0a1628] flex items-center justify-center flex-shrink-0 group-hover:bg-[#0a1628] group-hover:text-white transition-colors duration-300">
-                <Shield className="w-7 h-7" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-[#0a1628] mb-2 group-hover:text-[#0a1628] transition-colors">{t('policies.policy_title')}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{t('policies.policy_desc')}</p>
-              </div>
-            </Link>
-          </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_subject')}</label>
+              <input
+                type="text" name="subject" value={formData.subject}
+                onChange={handleChange} onBlur={handleBlur}
+                placeholder={t('help.form_subject')} className={getInputClass('subject')}
+              />
+              <ErrorMessage message={touched.subject ? errors.subject : ''} />
+            </div>
+
+            <div className="mb-6">
+              <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_message')}</label>
+              <textarea
+                name="message" rows="4" value={formData.message}
+                onChange={handleChange} onBlur={handleBlur}
+                placeholder={t('help.form_message')} className={getInputClass('message')}
+              ></textarea>
+              <ErrorMessage message={touched.message ? errors.message : ''} />
+            </div>
+
+            <button
+              type="submit" disabled={isFormLoading}
+              className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3 rounded-full font-bold hover:bg-brand-orange-dark transition-all duration-300 disabled:opacity-70"
+            >
+              {isFormLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('help.form_submit')}
+              {!isFormLoading && <ArrowIcon className="w-4 h-4" />}
+            </button>
+          </form>
         </div>
       </section>
-
-      {/* <Footer /> */}
     </>
   );
 };

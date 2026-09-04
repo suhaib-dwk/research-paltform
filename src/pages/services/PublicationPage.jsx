@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSite } from '../../SiteContext';
+import { API_BASE_URL } from '../../api';
 import ServicePageWrapper from '../services/ServicePageWrapper';
-import { Send, CheckCircle, Circle, ArrowRight, FileText, Upload, AlertCircle, ListChecks, Lightbulb, HelpCircle } from 'lucide-react';
+import { Send, CheckCircle, Circle, ArrowRight, FileText, Upload, AlertCircle, ListChecks, Lightbulb, HelpCircle, XCircle, Loader2 } from 'lucide-react';
 
 const STEPS = [
   { id: 1, label_ar: 'اختيار المجلة', label_en: 'Select Journal' },
@@ -17,17 +18,26 @@ const REQ_FILES = [
   { id: 'supplementary', label_ar: 'مواد تكميلية', label_en: 'Supplementary', req: false },
 ];
 
-const MOCK = [
-  { id: 1, title_ar: 'نشر بحث الذكاء الاصطناعي', title_en: 'Publish AI Research', status: 'submitted', date: '2025-01-10', meta_ar: 'Nature Computing Science' },
-  { id: 2, title_ar: 'نشر بحث الطب', title_en: 'Publish Medical Research', status: 'under_review', date: '2025-01-12', progress: 40, meta_ar: 'Journal of Medical Research' },
-  { id: 3, title_ar: 'نشر بحث الهندسة', title_en: 'Publish Engineering Research', status: 'revision_needed', date: '2025-01-08', meta_ar: 'IEEE Access', revision_note_ar: 'المحكمون طلبوا تعديل القسم التجريبي وإضافة مقارنة مع منهجية بديلة.' },
-  { id: 4, title_ar: 'نشر بحث سابق', title_en: 'Publish Previous Research', status: 'accepted', date: '2025-01-05', meta_ar: 'PLOS ONE' },
-  { id: 5, title_ar: 'نشر بحث مرفوض', title_en: 'Publish Rejected Research', status: 'rejected', date: '2025-01-03', meta_ar: 'مجلة غير مناسبة', info_needed_ar: 'يمكنك إعادة التقديم لمجلة أخرى. استخدم خدمة اختيار المجلة للمساعدة.' },
-];
+const getApiError = (serverMsg, isAr) => {
+  if (!serverMsg) return isAr ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred';
+  const map = {
+    unauthorized: { ar: 'يرجى تسجيل الدخول أولاً', en: 'Please login first' },
+    file_required: { ar: 'يرجى رفع المخطوطة', en: 'Please upload the manuscript' },
+    invalid_file_type: { ar: 'صيغة الملف غير مقبولة', en: 'Invalid file type' },
+    file_size_exceeded: { ar: 'حجم الملف يتجاوز 20 ميغابايت', en: 'File size exceeds 20MB' },
+    database_insert_failed: { ar: 'فشل حفظ الطلب', en: 'Failed to save request' },
+  };
+  const lower = serverMsg.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  for (const [key, trans] of Object.entries(map)) {
+    if (lower.includes(key)) return isAr ? trans.ar : trans.en;
+  }
+  return serverMsg;
+};
 
 const PublicationPage = () => {
-  const { currentLang, isRTL } = useSite();
+  const { currentLang, isRTL, user } = useSite();
   const isAr = currentLang ==='ar';
+  const entityId = user?.user_id ?? user?.id;
   const [step, setStep] = useState(1);
   const [files, setFiles] = useState({});
   const [journal, setJournal] = useState('');
@@ -35,6 +45,31 @@ const PublicationPage = () => {
   const [abstract, setAbstract] = useState('');
   const [keywords, setKeywords] = useState('');
   const [authors, setAuthors] = useState([{ name: '', email: '' }]);
+
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [loadingRequests, setLoadingRequests] = useState(true);
+
+  const fetchRequests = async () => {
+    setLoadingRequests(true);
+    try {
+      const fd = new FormData();
+      fd.append('user_id', entityId || '');
+      const res = await fetch(`${API_BASE_URL}/get_publication_requests.php`, { method: 'POST', body: fd });
+      const result = await res.json();
+      if (result.status === 'success') {
+        setRequests(result.data.map(r => ({ ...r, title_ar: 'نشر: ' + (r.target_journal || ''), title_en: 'Publish: ' + (r.target_journal || '') })));
+      }
+    } catch (err) {
+      console.error('Fetch publication requests error:', err);
+    } finally {
+      setLoadingRequests(false);
+    }
+  };
+
+  useEffect(() => { if (entityId) fetchRequests(); }, [entityId]);
 
   const addAuthor = () => setAuthors(p => [...p, { name: '', email: '' }]);
   const updateAuthor = (i, f, v) => setAuthors(p => { const n = [...p]; n[i][f] = v; return n; });
@@ -47,6 +82,42 @@ const PublicationPage = () => {
     return true;
   };
 
+  const handleSubmit = async () => {
+    if (!files.manuscript) { setSubmitError(isAr ? 'يرجى رفع المخطوطة' : 'Please upload the manuscript'); return; }
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(null);
+    try {
+      const authorsText = authors.filter(a => a.name).map(a => `${a.name}${a.email ? ` <${a.email}>` : ''}`).join(', ');
+      const notes = [
+        `${isAr ? 'العنوان' : 'Title'}: ${title}`,
+        `${isAr ? 'الملخص' : 'Abstract'}: ${abstract}`,
+        keywords ? `${isAr ? 'الكلمات المفتاحية' : 'Keywords'}: ${keywords}` : null,
+        authorsText ? `${isAr ? 'المؤلفون' : 'Authors'}: ${authorsText}` : null,
+      ].filter(Boolean).join('\n');
+
+      const fd = new FormData();
+      fd.append('user_id', entityId || '');
+      fd.append('target_journal', journal.trim());
+      fd.append('notes', notes);
+      fd.append('file', files.manuscript);
+      const res = await fetch(`${API_BASE_URL}/submit_publication.php`, { method: 'POST', body: fd });
+      const result = await res.json();
+      if (result.status === 'success') {
+        setSubmitSuccess(isAr ? `تم إرسال طلب النشر بنجاح! رقم الطلب: #${result.data.id}` : `Publication request submitted! Request #${result.data.id}`);
+        setStep(1); setFiles({}); setJournal(''); setTitle(''); setAbstract(''); setKeywords(''); setAuthors([{ name: '', email: '' }]);
+        fetchRequests();
+      } else {
+        setSubmitError(getApiError(result.message, isAr));
+      }
+    } catch (err) {
+      console.error('Publication submit error:', err);
+      setSubmitError(isAr ? 'فشل الاتصال بالخادم' : 'Failed to connect to server');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const guideSections = [
     { id: 'how', icon: ListChecks, title_ar: 'خطوات النشر', title_en: 'Publication Steps', items_ar: ['اختر المجلة المستهدفة', 'ارفع جميع الملفات المطلوبة', 'أدخل بيانات البحث والمؤلفين', 'راجع التفاصيل وأرسل الطلب', 'تابع حالة التقديم من تبويب طلباتي'], items_en: ['Select target journal', 'Upload all required files', 'Enter research & author details', 'Review and submit', 'Track status in My Requests'] },
     { id: 'statuses', icon: Lightbulb, title_ar: 'حالات التقديم', title_en: 'Submission Statuses', items_ar: ['تم الإرسال: وصل طلبك للمنصة', 'قيد المراجعة: لدى المحكمين حالياً', 'بحاجة إلى تعديل: المحكمون طلبوا تعديلات', 'مقبول: تم قبول البحث للنشر!', 'مرفوض: لم يُقبل، يمكنك إعادة التقديم'], items_en: ['Submitted: request received', 'Under Review: with reviewers', 'Revision Needed: reviewers requested changes', 'Accepted: paper accepted!', 'Rejected: not accepted, can resubmit'] },
@@ -54,6 +125,19 @@ const PublicationPage = () => {
   ];
 
   const form = (
+    <div className="space-y-4">
+      {submitError && (
+        <div className="flex items-start gap-2.5 p-3.5 bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-800/30 rounded-xl">
+          <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-red-600 dark:text-red-400 font-medium">{submitError}</p>
+        </div>
+      )}
+      {submitSuccess && (
+        <div className="flex items-start gap-2.5 p-3.5 bg-emerald-50 dark:bg-emerald-900/15 border border-emerald-200 dark:border-emerald-800/30 rounded-xl">
+          <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{submitSuccess}</p>
+        </div>
+      )}
     <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
       {/* شريط التقدم */}
       <div className="flex items-center justify-between mb-2">
@@ -117,14 +201,17 @@ const PublicationPage = () => {
         {step < 4 ? (
           <button onClick={() => setStep(p => p + 1)} disabled={!canProceed()} className="px-6 py-2.5 bg-gradient-to-l from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-rose-500/25 disabled:shadow-none flex items-center gap-2">{isAr ? 'التالي' : 'Next'}<ArrowRight className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} /></button>
         ) : (
-          <button className="px-6 py-2.5 bg-gradient-to-l from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 flex items-center gap-2"><Send className="w-4 h-4" />{isAr ? 'إرسال' : 'Submit'}</button>
+          <button onClick={handleSubmit} disabled={submitting} className="px-6 py-2.5 bg-gradient-to-l from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 disabled:shadow-none flex items-center gap-2">
+            {submitting ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</> : <><Send className="w-4 h-4" />{isAr ? 'إرسال' : 'Submit'}</>}
+          </button>
         )}
       </div>
+    </div>
     </div>
   );
 
   return (
-    <ServicePageWrapper icon={Send} title={{ ar: 'خدمة النشر', en: 'Publication Service' }} description={{ ar: 'قدّم بحثك للمجلات باحترافية', en: 'Submit your research to journals professionally' }} gradient="from-rose-500 to-rose-600" shadowColor="shadow-rose-500/20" guideSections={guideSections} mockRequests={MOCK}>
+    <ServicePageWrapper icon={Send} title={{ ar: 'خدمة النشر', en: 'Publication Service' }} description={{ ar: 'قدّم بحثك للمجلات باحترافية', en: 'Submit your research to journals professionally' }} gradient="from-rose-500 to-rose-600" shadowColor="shadow-rose-500/20" guideSections={guideSections} mockRequests={requests} loadingRequests={loadingRequests}>
       {form}
     </ServicePageWrapper>
   );

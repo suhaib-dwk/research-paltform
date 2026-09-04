@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useSite } from '../SiteContext';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardSidebar from '../components/dashboard/DashboardSidebar';
-import DashboardFooter from '../components/dashboard/DashboardFooter';
 
 const DashboardLayout = () => {
   const { user, siteSettings, currentLang, isRTL, logoutUser } = useSite();
@@ -39,8 +38,8 @@ const DashboardLayout = () => {
   }, [isOpen]);
 
   return (
-    // ✅ دعم الوضع الفاتح (bg-gray-50) والداكن (bg-[#060d1b])
-    <div className="min-h-screen bg-gray-50 dark:bg-[#060d1b] flex flex-col transition-colors duration-300" dir={isRTL ? 'rtl' : 'ltr'}>
+    // ✅ دعم الوضع الفاتح (bg-gray-50) والداكن (brand.dark)
+    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1613] flex flex-col transition-colors duration-300" dir={isRTL ? 'rtl' : 'ltr'}>
       <DashboardHeader
         onMenuToggle={handleMenuToggle}
         onLogout={handleLogout}
@@ -65,7 +64,6 @@ const DashboardLayout = () => {
         <main className="flex-1 p-4 lg:p-8">
           <Outlet />
         </main>
-        <DashboardFooter />
       </div>
     </div>
   );

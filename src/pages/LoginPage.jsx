@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, AlertCircle, CheckCircle, Shield, Loader2, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { useSite } from '../SiteContext'; // ✅ استخدام الهوك الجديد
+import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, AlertCircle, CheckCircle, Loader2, Eye, EyeOff, KeyRound } from 'lucide-react';
+import { useSite } from '../SiteContext';
 import { API_BASE_URL } from '../api';
 
 const getValidationMessages = (lang) => ({
@@ -74,6 +74,7 @@ const getLocalizedApiError = (serverMessage, currentLang) => {
   // إذا لم يتم العثور على تطابق، نرجع الرسالة الأصلية من السيرفر
   return serverMessage;
 };
+
 const LoginPage = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
@@ -82,7 +83,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const msgs = getValidationMessages(currentLang);
 
-  // ✅ استخدام الهوك الجديد
   const { siteSettings, loginUser } = useSite();
 
   const [step, setStep] = useState(1);
@@ -144,40 +144,41 @@ const LoginPage = () => {
 
     if (hasError) return `${base} border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 bg-red-50/30`;
     if (isValid) return `${base} border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-emerald-50/30`;
-    return `${base} border-gray-200 focus:border-[#c8a44e] focus:ring-2 focus:ring-[#c8a44e]/20`;
+    return `${base} border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20`;
   };
 
-    const handleLoginSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!validateStep1()) return;
     setLoading(true); setApiError(null);
     try {
       const payload = { email: email.trim(), password };
-      
+
       // ✅ تشفير البيانات بـ Base64 للتجاوز الآمن لجدار الحماية أونلاين
       const encodedPayload = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 
-      const res = await fetch(`${API_BASE_URL}/login.php`, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'text/plain' }, 
-        body: encodedPayload 
+      const res = await fetch(`${API_BASE_URL}/login.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: encodedPayload
       });
-      
+
       const result = await res.json();
-      
+
       if (result.status === 'success') {
-        // ✅ استخدام loginUser بدلاً من localStorage
         loginUser(result.data);
         if (result.data.role === 'super_admin') { setApiSuccess(msgs.api.adminLogin); setTimeout(() => navigate('/admin/settings'), 800); }
-        else { setStep(2); }
-      } else { 
-        setApiError(getLocalizedApiError(result.message, currentLang) || msgs.api.loginFailed); 
+        // ⚠️ مؤقتاً: تخطي خطوة التحقق بـ OTP (setStep(2)) والانتقال مباشرة للداشبورد.
+        // السبب: خطوة الـ OTP حالياً شكلية بالكامل (لا يوجد إرسال/تحقق فعلي من كود عبر السيرفر)
+        // وهذا يعطّل التجربة المحلية أثناء التطوير. لإعادة تفعيلها، أرجع السطر: else { setStep(2); }
+        else { navigate('/dashboard'); }
+      } else {
+        setApiError(getLocalizedApiError(result.message, currentLang) || msgs.api.loginFailed);
       }
     } catch (err) {
       const adminEmail = siteSettings?.admin_email || 'admin@site.com';
       const adminPass = siteSettings?.admin_password || 'Admin@123456';
       if (email.trim() === adminEmail && password === adminPass) {
-        // ✅ استخدام loginUser لتسجيل المدير الاحتياطي
         loginUser({ role: 'super_admin', name: currentLang === 'ar' ? 'مدير النظام' : 'System Admin', email: email.trim() });
         setApiSuccess(msgs.api.adminLogin); setTimeout(() => navigate('/admin'), 800);
       } else { setApiError(msgs.api.server); }
@@ -237,331 +238,325 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb] flex flex-col relative overflow-hidden">
-      {/* خلفية ديكورية موحدة مع التسجيل */}
-      <div className="absolute top-0 start-0 w-[500px] h-[500px] bg-[#c8a44e]/[0.04] rounded-full blur-[100px] -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 end-0 w-[400px] h-[400px] bg-[#0a1628]/[0.03] rounded-full blur-[100px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
-      <div className="h-20" />
+    <div className="min-h-[calc(100vh-6rem)] bg-brand-cream-hero grid lg:grid-cols-2">
+      {/* ✅ عمود الصورة */}
+      <div className="hidden lg:flex relative bg-brand-ink overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1573497491765-dccce02b29df?q=80&w=2070&auto=format&fit=crop"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/40 to-transparent" />
+        <div className="relative z-10 flex flex-col justify-end p-10 md:p-14">
+          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-4 max-w-md">
+            {t('login.side_title')}
+          </h2>
+          <p className="text-white/70 max-w-sm leading-relaxed">
+            {t('login.side_desc')}
+          </p>
+        </div>
+      </div>
 
-      <div className="flex-grow flex items-start justify-center px-4 py-12 relative z-10">
-        <div className="w-full max-w-5xl">
+      {/* ✅ عمود النموذج */}
+      <div className="flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
 
           {/* ═══════ الخطوة الأولى: تسجيل الدخول ═══════ */}
           {step === 1 && (
-            <div className="max-w-md mx-auto">
-              <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-12">
+            <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-10">
+              <h2 className="text-2xl font-black text-brand-ink mb-1">{t('login.title')}</h2>
+              <p className="text-sm text-brand-muted mb-8">{t('login.subtitle')}</p>
 
-                <div className="text-center mb-10">
-                  <div className="w-20 h-20 bg-[#c8a44e]/10 text-[#c8a44e] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Lock className="w-10 h-10" />
+              {apiError && (
+                <div className="mb-6 p-3.5 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />{apiError}
+                </div>
+              )}
+              {apiSuccess && (
+                <div className="mb-6 p-3.5 bg-emerald-50 text-emerald-500 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />{apiSuccess}
+                </div>
+              )}
+
+              <form onSubmit={handleLoginSubmit} className="space-y-5" noValidate>
+                {/* حقل البريد */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-semibold text-brand-ink mb-1.5">{t('login.email')}</label>
+                  <div className="relative">
+                    <Mail className="absolute top-1/2 -translate-y-1/2 start-4 w-[18px] h-[18px] text-gray-400" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setApiError(null);
+                        if (touched.email) setErrors(p => ({ ...p, email: validateEmail(e.target.value) }));
+                      }}
+                      onBlur={() => {
+                        setTouched(p => ({ ...p, email: true }));
+                        setErrors(p => ({ ...p, email: validateEmail(email) }));
+                      }}
+                      className={getInputClass('email', true)}
+                      placeholder="name@university.edu"
+                      dir="ltr"
+                    />
+                    {touched.email && email.trim() && (
+                      <span className="absolute end-4 top-1/2 -translate-y-1/2">
+                        {errors.email
+                          ? <AlertCircle className="w-5 h-5 text-red-400" />
+                          : <CheckCircle className="w-5 h-5 text-emerald-500" />
+                        }
+                      </span>
+                    )}
                   </div>
-                  <h2 className="text-3xl font-black text-[#0a1628] mb-3">{t('login.title')}</h2>
-                  <p className="text-sm text-gray-400">{t('login.subtitle')}</p>
+                  <FieldError message={touched.email ? errors.email : ''} />
                 </div>
 
-                {apiError && (
-                  <div className="mb-6 p-3.5 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
-                    <AlertCircle className="w-5 h-5 flex-shrink-0" />{apiError}
-                  </div>
-                )}
-                {apiSuccess && (
-                  <div className="mb-6 p-3.5 bg-emerald-50 text-emerald-500 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
-                    <CheckCircle className="w-5 h-5 flex-shrink-0" />{apiSuccess}
-                  </div>
-                )}
-
-                <form onSubmit={handleLoginSubmit} className="space-y-5" noValidate>
-                  {/* حقل البريد */}
-                  <div className="flex flex-col">
-                    <label className="text-sm font-semibold text-gray-600 mb-1.5">{t('login.email')}</label>
-                    <div className="relative">
-                      <Mail className="absolute top-1/2 -translate-y-1/2 start-4 w-[18px] h-[18px] text-gray-400" />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setApiError(null);
-                          if (touched.email) setErrors(p => ({ ...p, email: validateEmail(e.target.value) }));
-                        }}
-                        onBlur={() => {
-                          setTouched(p => ({ ...p, email: true }));
-                          setErrors(p => ({ ...p, email: validateEmail(email) }));
-                        }}
-                        className={getInputClass('email', true)}
-                        placeholder="name@university.edu"
-                        dir="ltr"
-                      />
-                      {touched.email && email.trim() && (
-                        <span className="absolute end-4 top-1/2 -translate-y-1/2">
-                          {errors.email
-                            ? <AlertCircle className="w-5 h-5 text-red-400" />
-                            : <CheckCircle className="w-5 h-5 text-emerald-500" />
-                          }
-                        </span>
-                      )}
-                    </div>
-                    <FieldError message={touched.email ? errors.email : ''} />
-                  </div>
-
-                  {/* حقل كلمة المرور */}
-                  <div className="flex flex-col">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-sm font-semibold text-gray-600">{t('login.password')}</label>
-                      <button
-                        type="button"
-                        onClick={() => goToStep(3)}
-                        className="text-xs font-bold text-[#c8a44e] hover:text-[#a8872e] transition-colors"
-                      >
-                        {t('login.forgot_password')}
-                      </button>
-                    </div>
-                    <div className="relative">
-                      <Lock className="absolute top-1/2 -translate-y-1/2 start-4 w-[18px] h-[18px] text-gray-400" />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          setApiError(null);
-                          if (touched.password) setErrors(p => ({ ...p, password: validatePassword(e.target.value) }));
-                        }}
-                        onBlur={() => {
-                          setTouched(p => ({ ...p, password: true }));
-                          setErrors(p => ({ ...p, password: validatePassword(password) }));
-                        }}
-                        className={getInputClass('password', true, true)}
-                        placeholder="••••••••"
-                        dir="ltr"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute end-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
-                      </button>
-                      {touched.password && password && (
-                        <span className="absolute end-4 top-1/2 -translate-y-1/2">
-                          {errors.password
-                            ? <AlertCircle className="w-5 h-5 text-red-400" />
-                            : <CheckCircle className="w-5 h-5 text-emerald-500" />
-                          }
-                        </span>
-                      )}
-                    </div>
-                    <FieldError message={touched.password ? errors.password : ''} />
-                  </div>
-
-                  {/* مؤشر قوة كلمة المرور */}
-                  {password.length > 0 && (
-                    <div className="flex gap-1.5 mt-2">
-                      {[1, 2, 3, 4].map((level) => {
-                        const strength =
-                          password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^a-zA-Z0-9]/.test(password) ? 4
-                            : password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) ? 3
-                              : password.length >= 6 && (/[A-Z]/.test(password) || /[0-9]/.test(password)) ? 2
-                                : 1;
-                        const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-emerald-400'];
-                        return (
-                          <div
-                            key={level}
-                            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${level <= strength ? colors[strength - 1] : 'bg-gray-100'
-                              }`}
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <div className="pt-4 border-t border-gray-50 mt-6">
+                {/* حقل كلمة المرور */}
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-sm font-semibold text-brand-ink">{t('login.password')}</label>
                     <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] py-3.5 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                      type="button"
+                      onClick={() => goToStep(3)}
+                      className="text-xs font-bold text-brand-orange hover:text-brand-orange-dark transition-colors"
                     >
-                      {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('login.submit')} <ArrowIcon className="w-4 h-4" /></>}
+                      {t('login.forgot_password')}
                     </button>
                   </div>
-                </form>
+                  <div className="relative">
+                    <Lock className="absolute top-1/2 -translate-y-1/2 start-4 w-[18px] h-[18px] text-gray-400" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setApiError(null);
+                        if (touched.password) setErrors(p => ({ ...p, password: validatePassword(e.target.value) }));
+                      }}
+                      onBlur={() => {
+                        setTouched(p => ({ ...p, password: true }));
+                        setErrors(p => ({ ...p, password: validatePassword(password) }));
+                      }}
+                      className={getInputClass('password', true, true)}
+                      placeholder="••••••••"
+                      dir="ltr"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute end-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+                    </button>
+                    {touched.password && password && (
+                      <span className="absolute end-4 top-1/2 -translate-y-1/2">
+                        {errors.password
+                          ? <AlertCircle className="w-5 h-5 text-red-400" />
+                          : <CheckCircle className="w-5 h-5 text-emerald-500" />
+                        }
+                      </span>
+                    )}
+                  </div>
+                  <FieldError message={touched.password ? errors.password : ''} />
+                </div>
 
-                <p className="text-center text-sm text-gray-400 mt-8">
-                  {t('login.no_account')}{' '}
-                  <Link to="/register" className="text-[#c8a44e] font-bold hover:text-[#a8872e] transition-colors">
-                    {t('login.create_account')}
-                  </Link>
-                </p>
-              </div>
+                {/* مؤشر قوة كلمة المرور */}
+                {password.length > 0 && (
+                  <div className="flex gap-1.5 mt-2">
+                    {[1, 2, 3, 4].map((level) => {
+                      const strength =
+                        password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^a-zA-Z0-9]/.test(password) ? 4
+                          : password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) ? 3
+                            : password.length >= 6 && (/[A-Z]/.test(password) || /[0-9]/.test(password)) ? 2
+                              : 1;
+                      const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-emerald-400'];
+                      return (
+                        <div
+                          key={level}
+                          className={`h-1 flex-1 rounded-full transition-colors duration-300 ${level <= strength ? colors[strength - 1] : 'bg-gray-100'
+                            }`}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-brand-orange text-white py-3.5 rounded-full text-sm font-bold hover:bg-brand-orange-dark flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('login.submit')} <ArrowIcon className="w-4 h-4" /></>}
+                </button>
+              </form>
+
+              <p className="text-center text-sm text-brand-muted mt-8">
+                {t('login.no_account')}{' '}
+                <Link to="/register" className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
+                  {t('login.create_account')}
+                </Link>
+              </p>
             </div>
           )}
 
           {/* ═══════ الخطوة الثانية: OTP ═══════ */}
           {step === 2 && (
-            <div className="max-w-md mx-auto">
-              <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-12">
+            <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-10">
+              <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-brand-ink">
+                    {t('login.otp_title')}
+                  </h2>
+                  <p className="text-xs text-brand-muted font-medium mt-0.5">
+                    {t('login.otp_desc')} <br />
+                    <span className="font-bold text-brand-ink mt-1 block" dir="ltr">{email}</span>
+                  </p>
+                </div>
+              </div>
 
-                <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-black text-[#0a1628]">
-                      {t('login.otp_title')}
-                    </h2>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5">
-                      {t('login.otp_desc')} <br />
-                      <span className="font-bold text-[#0a1628] mt-1 block" dir="ltr">{email}</span>
-                    </p>
-                  </div>
+              {apiSuccess && (
+                <div className="mb-6 p-3.5 bg-emerald-50 text-emerald-500 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />{apiSuccess}
+                </div>
+              )}
+
+              <form onSubmit={handleOtpSubmit} noValidate>
+                <div
+                  className={`flex justify-center gap-3 mb-6 ${otpError ? 'mb-2' : ''}`}
+                  dir="ltr"
+                  onPaste={handlePaste}
+                >
+                  {otp.map((data, index) => (
+                    <input
+                      key={index}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      ref={(el) => (inputRefs.current[index] = el)}
+                      value={data}
+                      onChange={(e) => handleChange(e.target, index)}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
+                      className={`w-12 h-14 text-center text-2xl font-bold rounded-xl outline-none transition-all duration-200 ${otpError
+                        ? 'border-2 border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-2 focus:ring-red-100'
+                        : data
+                          ? 'border-2 border-emerald-300 bg-emerald-50/50 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100'
+                          : 'border-2 border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20'
+                        }`}
+                    />
+                  ))}
                 </div>
 
-                {apiSuccess && (
-                  <div className="mb-6 p-3.5 bg-emerald-50 text-emerald-500 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
-                    <CheckCircle className="w-5 h-5 flex-shrink-0" />{apiSuccess}
+                {otpError && (
+                  <div className="mb-6 flex items-center justify-center gap-1.5 text-red-500 text-sm font-medium">
+                    <AlertCircle className="w-4 h-4" />{otpError}
                   </div>
                 )}
 
-                <form onSubmit={handleOtpSubmit} noValidate>
-                  <div
-                    className={`flex justify-center gap-3 mb-6 ${otpError ? 'mb-2' : ''}`}
-                    dir="ltr"
-                    onPaste={handlePaste}
+                <button
+                  type="submit"
+                  disabled={otpLoading}
+                  className="w-full bg-brand-orange text-white py-3.5 rounded-full text-sm font-bold hover:bg-brand-orange-dark flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+                >
+                  {otpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('login.verify')} <ArrowIcon className="w-4 h-4" /></>}
+                </button>
+
+                <div className="text-center flex items-center justify-center gap-3">
+                  <button type="button" className="text-sm text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
+                    {t('login.resend')}
+                  </button>
+                  <span className="text-gray-200">|</span>
+                  <button
+                    type="button"
+                    onClick={() => goToStep(1)}
+                    className="text-sm text-brand-muted hover:text-brand-ink transition-colors"
                   >
-                    {otp.map((data, index) => (
-                      <input
-                        key={index}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        ref={(el) => (inputRefs.current[index] = el)}
-                        value={data}
-                        onChange={(e) => handleChange(e.target, index)}
-                        onKeyDown={(e) => handleKeyDown(e, index)}
-                        className={`w-12 h-14 text-center text-2xl font-bold rounded-xl outline-none transition-all duration-200 ${otpError
-                          ? 'border-2 border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-2 focus:ring-red-100'
-                          : data
-                            ? 'border-2 border-emerald-300 bg-emerald-50/50 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100'
-                            : 'border-2 border-gray-200 focus:border-[#c8a44e] focus:ring-2 focus:ring-[#c8a44e]/20'
-                          }`}
-                      />
-                    ))}
-                  </div>
-
-                  {otpError && (
-                    <div className="mb-6 flex items-center justify-center gap-1.5 text-red-500 text-sm font-medium">
-                      <AlertCircle className="w-4 h-4" />{otpError}
-                    </div>
-                  )}
-
-                  <div className="pt-4 border-t border-gray-50 mt-6">
-                    <button
-                      type="submit"
-                      disabled={otpLoading}
-                      className="w-full bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] py-3.5 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none mb-4"
-                    >
-                      {otpLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('login.verify')} <ArrowIcon className="w-4 h-4" /></>}
-                    </button>
-                  </div>
-
-                  <div className="text-center flex items-center justify-center gap-3">
-                    <button type="button" className="text-sm text-[#c8a44e] font-bold hover:text-[#a8872e] transition-colors">
-                      {t('login.resend')}
-                    </button>
-                    <span className="text-gray-200">|</span>
-                    <button
-                      type="button"
-                      onClick={() => goToStep(1)}
-                      className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      {t('login.back_to_login')}
-                    </button>
-                  </div>
-                </form>
-              </div>
+                    {t('login.back_to_login')}
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 
           {/* ═══════ الخطوة الثالثة: نسيت كلمة السر ═══════ */}
           {step === 3 && (
-            <div className="max-w-md mx-auto">
-              <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-12">
+            <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-10">
+              <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
+                <div className="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0">
+                  <KeyRound className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-brand-ink">{t('login.forgot_title')}</h2>
+                  <p className="text-xs text-brand-muted font-medium mt-0.5">{t('login.forgot_desc')}</p>
+                </div>
+              </div>
 
-                <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-[#c8a44e]/10 text-[#c8a44e] flex items-center justify-center flex-shrink-0">
-                    <KeyRound className="w-5 h-5" />
+              {apiError && (
+                <div className="mb-6 p-3.5 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />{apiError}
+                </div>
+              )}
+              {apiSuccess && (
+                <div className="mb-6 p-3.5 bg-emerald-50 text-emerald-500 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />{apiSuccess}
+                </div>
+              )}
+
+              <form onSubmit={handleForgotSubmit} className="space-y-5" noValidate>
+                <div className="flex flex-col">
+                  <label className="text-sm font-semibold text-brand-ink mb-1.5">{t('login.email')}</label>
+                  <div className="relative">
+                    <Mail className="absolute top-1/2 -translate-y-1/2 start-4 w-[18px] h-[18px] text-gray-400" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setApiError(null);
+                        setApiSuccess(null);
+                        if (touched.email) setErrors(p => ({ ...p, email: validateEmail(e.target.value) }));
+                      }}
+                      onBlur={() => {
+                        setTouched(p => ({ ...p, email: true }));
+                        setErrors(p => ({ ...p, email: validateEmail(email) }));
+                      }}
+                      className={getInputClass('email', true)}
+                      placeholder="name@university.edu"
+                      dir="ltr"
+                    />
+                    {touched.email && email.trim() && (
+                      <span className="absolute end-4 top-1/2 -translate-y-1/2">
+                        {errors.email
+                          ? <AlertCircle className="w-5 h-5 text-red-400" />
+                          : <CheckCircle className="w-5 h-5 text-emerald-500" />
+                        }
+                      </span>
+                    )}
                   </div>
-                  <div>
-                    <h2 className="text-xl font-black text-[#0a1628]">{t('login.forgot_title')}</h2>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5">{t('login.forgot_desc')}</p>
-                  </div>
+                  <FieldError message={touched.email ? errors.email : ''} />
                 </div>
 
-                {apiError && (
-                  <div className="mb-6 p-3.5 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
-                    <AlertCircle className="w-5 h-5 flex-shrink-0" />{apiError}
-                  </div>
-                )}
-                {apiSuccess && (
-                  <div className="mb-6 p-3.5 bg-emerald-50 text-emerald-500 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
-                    <CheckCircle className="w-5 h-5 flex-shrink-0" />{apiSuccess}
-                  </div>
-                )}
+                <button
+                  type="submit"
+                  disabled={forgotLoading}
+                  className="w-full bg-brand-orange text-white py-3.5 rounded-full text-sm font-bold hover:bg-brand-orange-dark flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {forgotLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('login.forgot_submit')} <ArrowIcon className="w-4 h-4" /></>}
+                </button>
+              </form>
 
-                <form onSubmit={handleForgotSubmit} className="space-y-5" noValidate>
-                  <div className="flex flex-col">
-                    <label className="text-sm font-semibold text-gray-600 mb-1.5">{t('login.email')}</label>
-                    <div className="relative">
-                      <Mail className="absolute top-1/2 -translate-y-1/2 start-4 w-[18px] h-[18px] text-gray-400" />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setApiError(null);
-                          setApiSuccess(null);
-                          if (touched.email) setErrors(p => ({ ...p, email: validateEmail(e.target.value) }));
-                        }}
-                        onBlur={() => {
-                          setTouched(p => ({ ...p, email: true }));
-                          setErrors(p => ({ ...p, email: validateEmail(email) }));
-                        }}
-                        className={getInputClass('email', true)}
-                        placeholder="name@university.edu"
-                        dir="ltr"
-                      />
-                      {touched.email && email.trim() && (
-                        <span className="absolute end-4 top-1/2 -translate-y-1/2">
-                          {errors.email
-                            ? <AlertCircle className="w-5 h-5 text-red-400" />
-                            : <CheckCircle className="w-5 h-5 text-emerald-500" />
-                          }
-                        </span>
-                      )}
-                    </div>
-                    <FieldError message={touched.email ? errors.email : ''} />
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-50 mt-6">
-                    <button
-                      type="submit"
-                      disabled={forgotLoading}
-                      className="w-full bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] py-3.5 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
-                    >
-                      {forgotLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>{t('login.forgot_submit')} <ArrowIcon className="w-4 h-4" /></>}
-                    </button>
-                  </div>
-                </form>
-
-                <div className="text-center mt-8">
-                  <button
-                    type="button"
-                    onClick={() => goToStep(1)}
-                    className="text-sm text-gray-400 hover:text-[#c8a44e] transition-colors inline-flex items-center gap-1.5 font-bold"
-                  >
-                    <ArrowLeft className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} />
-                    {t('login.back_to_login')}
-                  </button>
-                </div>
+              <div className="text-center mt-8">
+                <button
+                  type="button"
+                  onClick={() => goToStep(1)}
+                  className="text-sm text-brand-muted hover:text-brand-orange transition-colors inline-flex items-center gap-1.5 font-bold"
+                >
+                  <ArrowLeft className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} />
+                  {t('login.back_to_login')}
+                </button>
               </div>
             </div>
           )}
