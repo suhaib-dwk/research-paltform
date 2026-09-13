@@ -281,6 +281,52 @@ try {
     }
     $stmt->close();
 
+    // === ج1: دور "university" فقط — إنشاء صف universities + عضوية admin فورًا ===
+    // (Stage A: بدلاً من الانتظار لأول حفظ لملف الجامعة البحثي — يضمن وجود
+    // university_id من لحظة التسجيل، فلا تحتاج صفحة الملف الشخصي منطق تزويد
+    // أول-زيارة. اسم universities.name يُبذر مرة واحدة هنا من entity_name
+    // الذي تم التحقق من عدم فراغه أعلاه، ولا يُستشار من profiles_entity مجددًا
+    // بعد ذلك — universities تصبح المصدر الوحيد الموثوق للاسم من الآن فصاعدًا)
+    if ($role === 'university') {
+        $entityNameForUniversity = trim((string) ($profile['entity_name'] ?? $name));
+
+        $stmtUni = $conn->prepare('INSERT INTO universities (name) VALUES (?)');
+        if (!$stmtUni) {
+            $conn->rollback();
+            $conn->close();
+            jsonResponse(['status' => 'error', 'message' => 'Prepare universities failed', 'debug' => $conn->error]);
+        }
+        $stmtUni->bind_param('s', $entityNameForUniversity);
+        if (!$stmtUni->execute()) {
+            $err = $stmtUni->error;
+            $stmtUni->close();
+            $conn->rollback();
+            $conn->close();
+            jsonResponse(['status' => 'error', 'message' => 'Insert universities failed', 'debug' => $err]);
+        }
+        $universityId = $conn->insert_id;
+        $stmtUni->close();
+
+        $stmtUu = $conn->prepare(
+            "INSERT INTO university_users (university_id, user_id, university_role_id)
+             VALUES (?, ?, (SELECT id FROM university_roles WHERE `key` = 'admin'))"
+        );
+        if (!$stmtUu) {
+            $conn->rollback();
+            $conn->close();
+            jsonResponse(['status' => 'error', 'message' => 'Prepare university_users failed', 'debug' => $conn->error]);
+        }
+        $stmtUu->bind_param('ii', $universityId, $userId);
+        if (!$stmtUu->execute()) {
+            $err = $stmtUu->error;
+            $stmtUu->close();
+            $conn->rollback();
+            $conn->close();
+            jsonResponse(['status' => 'error', 'message' => 'Insert university_users failed', 'debug' => $err]);
+        }
+        $stmtUu->close();
+    }
+
     // === ج2: مقدّم خدمة فقط — رفع CV + ربط الخدمات المختارة (داخل نفس المعاملة) ===
     if ($role === 'service_provider') {
         $cvUploadDir = '../uploads/cvs/';

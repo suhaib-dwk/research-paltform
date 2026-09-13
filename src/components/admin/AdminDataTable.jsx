@@ -8,7 +8,7 @@ import { API_BASE_URL } from '../../api';
 
 const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const { i18n } = useTranslation();
-    const isRTL = i18n.language === 'ar';
+    const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -350,13 +350,13 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                 <div className="relative w-full sm:max-w-md">
                     <Search className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-4' : 'left-4'} w-5 h-5 text-gray-400`} />
                     <input type="text" placeholder={isRTL ? 'ابحث في الجدول...' : 'Search in table...'} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full border border-gray-200 rounded-xl ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white`}
+                        className={`w-full border border-gray-200 dark:border-[#3a322c] rounded-xl ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 focus:ring-2 focus:ring-[#e8623a] outline-none bg-white dark:bg-[#211c18]`}
                     />
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     {!readOnly && (
-                        <button onClick={openAddModal} className="flex items-center justify-center gap-2 bg-blue-600 text-white px-5 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-sm">
+                        <button onClick={openAddModal} className="flex items-center justify-center gap-2 bg-[#e8623a] text-white px-5 py-3 rounded-xl font-bold hover:bg-[#d4502a] transition-colors shadow-sm">
                             <Plus className="w-5 h-5" />
                             {isRTL ? 'إضافة جديد' : 'Add New'}
                         </button>
@@ -366,7 +366,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     <div className="relative" ref={exportMenuRef}>
                         <button
                             onClick={() => setExportMenuOpen(!exportMenuOpen)}
-                            className="flex items-center justify-center gap-2 bg-green-100 text-green-700 px-5 py-3 rounded-xl font-bold hover:bg-green-200 transition-colors border border-green-200"
+                            className="flex items-center justify-center gap-2 bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 px-5 py-3 rounded-xl font-bold hover:bg-emerald-200 dark:hover:bg-emerald-900/30 transition-colors border border-emerald-200 dark:border-emerald-800/30"
                         >
                             <FileDown className="w-5 h-5" />
                             <span className="hidden sm:inline">{isRTL ? 'تصدير' : 'Export'}</span>
@@ -374,26 +374,26 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                         </button>
 
                         {exportMenuOpen && (
-                            <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 w-52 z-50 animate-in fade-in slide-in-from-top-2`}>
-                                <button onClick={handlePrint} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <Printer className="w-4 h-4 text-gray-500" />
+                            <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-white dark:bg-[#211c18] rounded-xl shadow-2xl border border-gray-100 dark:border-[#3a322c] py-2 w-52 z-50 animate-in fade-in slide-in-from-top-2`}>
+                                <button onClick={handlePrint} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
+                                    <Printer className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                                     {isRTL ? 'طباعة' : 'Print'}
                                 </button>
-                                <button onClick={handleExportWord} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
-                                    <FileText className="w-4 h-4 text-blue-500" />
+                                <button onClick={handleExportWord} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-[#e8623a]/10 transition-colors">
+                                    <FileText className="w-4 h-4 text-[#e8623a]" />
                                     {isRTL ? 'تصدير Word' : 'Export Word'}
-                                    <span className="text-[10px] text-gray-400 mr-auto">.doc</span>
+                                    <span className="text-[10px] text-gray-400 dark:text-gray-500 mr-auto">.doc</span>
                                 </button>
-                                <button onClick={handleExportExcel} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 transition-colors">
-                                    <FileSpreadsheet className="w-4 h-4 text-green-500" />
+                                <button onClick={handleExportExcel} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/15 transition-colors">
+                                    <FileSpreadsheet className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                                     {isRTL ? 'تصدير Excel' : 'Export Excel'}
-                                    <span className="text-[10px] text-gray-400 mr-auto">.csv</span>
+                                    <span className="text-[10px] text-gray-400 dark:text-gray-500 mr-auto">.csv</span>
                                 </button>
-                                <div className="border-t border-gray-100 my-1"></div>
-                                <button onClick={handleExportPDF} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 transition-colors">
-                                    <FileDown className="w-4 h-4 text-red-500" />
+                                <div className="border-t border-gray-100 dark:border-[#3a322c] my-1"></div>
+                                <button onClick={handleExportPDF} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/15 transition-colors">
+                                    <FileDown className="w-4 h-4 text-red-500 dark:text-red-400" />
                                     {isRTL ? 'تصدير PDF' : 'Export PDF'}
-                                    <span className="text-[10px] text-gray-400 mr-auto">.pdf</span>
+                                    <span className="text-[10px] text-gray-400 dark:text-gray-500 mr-auto">.pdf</span>
                                 </button>
                             </div>
                         )}
@@ -402,13 +402,13 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             </div>
 
             {fetchError && (
-                <div className="mb-6 p-5 bg-red-50 border border-red-200 rounded-xl">
+                <div className="mb-6 p-5 bg-red-50 dark:bg-red-900/15 border border-red-200 dark:border-red-800/30 rounded-xl">
                     <div className="flex items-start gap-3">
-                        <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
+                        <AlertCircle className="w-6 h-6 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
                         <div>
-                            <h4 className="font-bold text-red-700 mb-1">{isRTL ? 'خطأ في تحميل الجدول' : 'Failed to load table'}</h4>
-                            <p className="text-sm text-red-600 mb-3">{fetchError}</p>
-                            <button onClick={fetchData} className="text-sm bg-red-100 text-red-700 px-4 py-1.5 rounded-lg hover:bg-red-200 font-medium">
+                            <h4 className="font-bold text-red-700 dark:text-red-400 mb-1">{isRTL ? 'خطأ في تحميل الجدول' : 'Failed to load table'}</h4>
+                            <p className="text-sm text-red-600 dark:text-red-400 mb-3">{fetchError}</p>
+                            <button onClick={fetchData} className="text-sm bg-red-100 dark:bg-red-900/25 text-red-700 dark:text-red-400 px-4 py-1.5 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/40 font-medium">
                                 {isRTL ? 'إعادة المحاولة' : 'Retry'}
                             </button>
                         </div>
@@ -417,7 +417,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             )}
 
             {isLoading ? (
-                <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-blue-500" /></div>
+                <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-[#e8623a]" /></div>
             ) : (
                 <>
                     {/* جدول مخفي للتصدير */}
@@ -425,16 +425,16 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                         <table className="w-full text-sm text-left">
                             <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="px-4 py-3 border-b border-gray-200">#{isRTL ? 'رقم' : 'ID'}</th>
-                                    {visibleCols.map(col => (<th key={col.key} className="px-4 py-3 border-b border-gray-200">{getColLabel(col)}</th>))}
+                                    <th className="px-4 py-3 border-b border-gray-200 dark:border-[#3a322c]">#{isRTL ? 'رقم' : 'ID'}</th>
+                                    {visibleCols.map(col => (<th key={col.key} className="px-4 py-3 border-b border-gray-200 dark:border-[#3a322c]">{getColLabel(col)}</th>))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredData.map(row => (
                                     <tr key={row.id}>
-                                        <td className="px-4 py-3 border-b border-gray-100">{row.id}</td>
+                                        <td className="px-4 py-3 border-b border-gray-100 dark:border-[#3a322c]">{row.id}</td>
                                         {visibleCols.map(col => (
-                                            <td key={col.key} className="px-4 py-3 border-b border-gray-100" dangerouslySetInnerHTML={{ __html: formatCellValue(col, row[col.key]) }} />
+                                            <td key={col.key} className="px-4 py-3 border-b border-gray-100 dark:border-[#3a322c]" dangerouslySetInnerHTML={{ __html: formatCellValue(col, row[col.key]) }} />
                                         ))}
                                     </tr>
                                 ))}
@@ -447,23 +447,23 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                         {filteredData.length === 0 ? (
                             <div className="text-center py-10 text-gray-400">{isRTL ? 'لا توجد بيانات' : 'No data found'}</div>
                         ) : filteredData.map((row) => (
-                            <div key={row.id} className="bg-white p-4 rounded-xl border shadow-sm space-y-3">
+                            <div key={row.id} className="bg-white dark:bg-[#211c18] p-4 rounded-xl border border-gray-200 dark:border-[#3a322c]/60 shadow-sm space-y-3">
                                 {visibleCols.filter(c => c.key !== 'id').slice(0, 4).map(col => (
                                     <div key={col.key} className="flex justify-between items-start">
                                         <span className="text-xs font-bold text-gray-500">{getColLabel(col)}</span>
-                                        <span className="text-sm text-gray-800 text-end max-w-[70%] truncate" dangerouslySetInnerHTML={{ __html: col.type === 'boolean' ? (row[col.key] == 1 ? '✅' : '❌') : (row[col.key] || '-') }} />
+                                        <span className="text-sm text-gray-900 dark:text-white text-end max-w-[70%] truncate" dangerouslySetInnerHTML={{ __html: col.type === 'boolean' ? (row[col.key] == 1 ? '✅' : '❌') : (row[col.key] || '-') }} />
                                     </div>
                                 ))}
-                                <div className="flex gap-2 pt-2 border-t">
-                                    <button onClick={() => setViewModal({ isOpen: true, data: row })} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                                <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-[#3a322c]">
+                                    <button onClick={() => setViewModal({ isOpen: true, data: row })} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-gray-100 dark:bg-[#2a231e] rounded-lg hover:bg-gray-200">
                                         <Eye className="w-4 h-4" /> {isRTL ? 'عرض' : 'View'}
                                     </button>
                                     {!readOnly && (
                                         <>
-                                            <button onClick={() => openEditModal(row)} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100">
+                                            <button onClick={() => openEditModal(row)} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-amber-50 dark:bg-amber-900/15 text-amber-600 dark:text-amber-400 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/25">
                                                 <Edit3 className="w-4 h-4" /> {isRTL ? 'تعديل' : 'Edit'}
                                             </button>
-                                            <button onClick={() => setDeleteModal({ isOpen: true, id: row.id, isLoading: false })} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100">
+                                            <button onClick={() => setDeleteModal({ isOpen: true, id: row.id, isLoading: false })} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/25">
                                                 <Trash2 className="w-4 h-4" /> {isRTL ? 'حذف' : 'Delete'}
                                             </button>
                                         </>
@@ -474,10 +474,10 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     </div>
 
                     {/* ✅ جدول Desktop مع التعديل السريع */}
-                    <div className="hidden lg:block bg-white rounded-2xl border shadow-sm overflow-hidden">
+                    <div className="hidden lg:block bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <thead className="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50 dark:bg-[#1a1613] border-b border-gray-200 dark:border-[#3a322c]">
                                     <tr>
                                         <th className="px-6 py-4">#</th>
                                         {visibleCols.map(col => (<th key={col.key} className="px-6 py-4">{getColLabel(col)}</th>))}
@@ -493,7 +493,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                         </tr>
                                     ) : (
                                         filteredData.map((row) => (
-                                            <tr key={row.id} className="hover:bg-gray-50 transition-colors">
+                                            <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
                                                 <td className="px-6 py-4 font-medium text-gray-400">{row.id}</td>
                                                 {visibleCols.map(col => (
                                                     <td key={col.key} className="px-6 py-4">
@@ -510,7 +510,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                             if (e.key === 'Enter' && e.ctrlKey) handleInlineSave(row.id, col.key);
                                                                             if (e.key === 'Escape') handleInlineCancel();
                                                                         }}
-                                                                        className="w-full border-2 border-blue-400 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-blue-50/30 resize-none"
+                                                                        className="w-full border-2 border-[#e8623a] rounded-lg p-2 text-sm focus:ring-2 focus:ring-[#e8623a] outline-none bg-orange-50 dark:bg-[#e8623a]/10 resize-none"
                                                                     />
                                                                 ) : (
                                                                     <input
@@ -523,15 +523,15 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                             if (e.key === 'Escape') handleInlineCancel();
                                                                         }}
                                                                         dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                                        className="w-full border-2 border-blue-400 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-blue-50/30"
+                                                                        className="w-full border-2 border-[#e8623a] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[#e8623a] outline-none bg-orange-50 dark:bg-[#e8623a]/10"
                                                                     />
                                                                 )}
                                                                 <button onClick={() => handleInlineSave(row.id, col.key)} disabled={isSavingCell}
-                                                                    className="p-1.5 text-green-600 hover:bg-green-100 rounded-lg transition-colors flex-shrink-0" title={isRTL ? 'حفظ (Enter)' : 'Save (Enter)'}>
+                                                                    className="p-1.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/25 rounded-lg transition-colors flex-shrink-0" title={isRTL ? 'حفظ (Enter)' : 'Save (Enter)'}>
                                                                     {isSavingCell ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                                                                 </button>
                                                                 <button onClick={handleInlineCancel}
-                                                                    className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0" title={isRTL ? 'إلغاء (Esc)' : 'Cancel (Esc)'}>
+                                                                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg transition-colors flex-shrink-0" title={isRTL ? 'إلغاء (Esc)' : 'Cancel (Esc)'}>
                                                                     <X className="w-4 h-4" />
                                                                 </button>
                                                             </div>
@@ -540,18 +540,18 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                         ) : col.type === 'boolean' ? (
                                                             <button onClick={() => handleToggle(row.id, col.key, row[col.key])} title="Toggle">
                                                                 {row[col.key] == 1
-                                                                    ? <ToggleRight className="w-8 h-8 text-green-500" />
-                                                                    : <ToggleLeft className="w-8 h-8 text-gray-300" />
+                                                                    ? <ToggleRight className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
+                                                                    : <ToggleLeft className="w-8 h-8 text-gray-300 dark:text-gray-600" />
                                                                 }
                                                             </button>
                                                         ) : (
                                                             /* ✅ القيمة مع زر التعديل السريع عند التمرير */
                                                             <div className="flex items-center gap-2 group">
-                                                                <span className="font-medium text-gray-800 whitespace-pre-wrap">{row[col.key] || '-'}</span>
+                                                                <span className="font-medium text-gray-900 dark:text-white whitespace-pre-wrap">{row[col.key] || '-'}</span>
                                                                 {canInlineEdit(col) && (
                                                                     <button
                                                                         onClick={() => setEditingCell({ rowId: row.id, colKey: col.key, value: row[col.key] || '' })}
-                                                                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-300 hover:text-blue-500 transition-all duration-150 flex-shrink-0"
+                                                                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-300 hover:text-[#e8623a] transition-all duration-150 flex-shrink-0"
                                                                         title={isRTL ? 'تعديل سريع' : 'Quick Edit'}
                                                                     >
                                                                         <Pencil className="w-3.5 h-3.5" />
@@ -564,9 +564,9 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 {!readOnly && (
                                                     <td className="px-6 py-4 text-end">
                                                         <div className="flex items-center justify-end gap-2">
-                                                            <button onClick={() => setViewModal({ isOpen: true, data: row })} className="p-2 text-gray-500 hover:bg-blue-50 hover:text-blue-600 rounded-lg"><Eye className="w-4 h-4" /></button>
-                                                            <button onClick={() => openEditModal(row)} className="p-2 text-gray-500 hover:bg-amber-50 hover:text-amber-600 rounded-lg"><Edit3 className="w-4 h-4" /></button>
-                                                            <button onClick={() => setDeleteModal({ isOpen: true, id: row.id, isLoading: false })} className="p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+                                                            <button onClick={() => setViewModal({ isOpen: true, data: row })} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-orange-50 dark:bg-[#e8623a]/10 hover:text-[#e8623a] rounded-lg"><Eye className="w-4 h-4" /></button>
+                                                            <button onClick={() => openEditModal(row)} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-amber-50 dark:hover:bg-amber-900/15 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg"><Edit3 className="w-4 h-4" /></button>
+                                                            <button onClick={() => setDeleteModal({ isOpen: true, id: row.id, isLoading: false })} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                                                         </div>
                                                     </td>
                                                 )}
@@ -583,21 +583,21 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال العرض */}
             {viewModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setViewModal({ isOpen: false, data: null })}>
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="sticky top-0 bg-white p-6 border-b flex items-center justify-between">
-                            <h3 className="text-xl font-bold text-gray-800">{isRTL ? 'تفاصيل السجل' : 'Record Details'} (#{viewModal.data.id})</h3>
-                            <button onClick={() => setViewModal({ isOpen: false, data: null })} className="p-2 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button>
+                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 border-b flex items-center justify-between">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">{isRTL ? 'تفاصيل السجل' : 'Record Details'} (#{viewModal.data.id})</h3>
+                            <button onClick={() => setViewModal({ isOpen: false, data: null })} className="p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg"><X className="w-5 h-5" /></button>
                         </div>
                         <div className="p-6 space-y-4">
                             {columns.map(col => (
-                                <div key={col.key} className="border-b pb-4">
-                                    <p className="text-xs font-bold text-gray-400 mb-1">{getColLabel(col)}</p>
+                                <div key={col.key} className="border-b border-gray-100 dark:border-[#3a322c] pb-4">
+                                    <p className="text-xs font-bold text-gray-400 dark:text-gray-500 mb-1">{getColLabel(col)}</p>
                                     {col.type === 'image' ? (
                                         <img src={viewModal.data[col.key]} className="w-40 h-24 object-cover rounded-lg border" alt="" />
                                     ) : col.type === 'boolean' ? (
-                                        <p className="text-gray-800 bg-gray-50 p-3 rounded-lg text-sm">{viewModal.data[col.key] == 1 ? (isRTL ? 'مفعل' : 'Active') : (isRTL ? 'غير مفعل' : 'Inactive')}</p>
+                                        <p className="text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1a1613] p-3 rounded-lg text-sm">{viewModal.data[col.key] == 1 ? (isRTL ? 'مفعل' : 'Active') : (isRTL ? 'غير مفعل' : 'Inactive')}</p>
                                     ) : (
-                                        <p className="text-gray-800 whitespace-pre-wrap bg-gray-50 p-3 rounded-lg text-sm">{viewModal.data[col.key] || '-'}</p>
+                                        <p className="text-gray-900 dark:text-white whitespace-pre-wrap bg-gray-50 dark:bg-[#1a1613] p-3 rounded-lg text-sm">{viewModal.data[col.key] || '-'}</p>
                                     )}
                                 </div>
                             ))}
@@ -609,12 +609,12 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال التعديل الكامل */}
             {editModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditModal({ isOpen: false, data: null, values: {} })}>
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="sticky top-0 bg-white p-6 border-b flex items-center justify-between">
-                            <h3 className="text-lg font-bold text-gray-800">
+                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 border-b flex items-center justify-between">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                                 {isRTL ? 'تعديل السجل' : 'Edit Record'} #{editModal.data.id}
                             </h3>
-                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="p-2 hover:bg-gray-100 rounded-lg">
+                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -622,13 +622,13 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {columns.filter(c => c.key !== 'id' && !c.hidden && c.type !== 'boolean' && c.type !== 'image').map(col => (
                                     <div key={col.key} className={col.type === 'longtext' ? 'md:col-span-2' : ''}>
-                                        <label className="text-sm font-bold text-gray-700 mb-1 block">{getColLabel(col)}</label>
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                         {col.type === 'longtext' ? (
                                             <textarea
                                                 rows={6}
                                                 value={editModal.values[col.key] || ''}
                                                 onChange={e => setEditModal({ ...editModal, values: { ...editModal.values, [col.key]: e.target.value } })}
-                                                className="w-full border border-gray-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl p-3 focus:ring-2 focus:ring-[#e8623a] outline-none resize-none"
                                             />
                                         ) : (
                                             <input
@@ -636,18 +636,18 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 value={editModal.values[col.key] || ''}
                                                 onChange={e => setEditModal({ ...editModal, values: { ...editModal.values, [col.key]: e.target.value } })}
                                                 dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none"
                                             />
                                         )}
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="p-6 border-t flex gap-3 justify-end">
-                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="px-6 py-2.5 bg-gray-100 rounded-xl text-sm font-bold hover:bg-gray-200">
+                        <div className="p-6 border-t border-gray-100 dark:border-[#3a322c] flex gap-3 justify-end">
+                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="px-6 py-2.5 bg-gray-100 dark:bg-[#2a231e] rounded-xl text-sm font-bold hover:bg-gray-200">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
-                            <button onClick={handleSaveEdit} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700">
+                            <button onClick={handleSaveEdit} className="px-6 py-2.5 bg-[#e8623a] text-white rounded-xl text-sm font-bold hover:bg-[#d4502a]">
                                 {isRTL ? 'حفظ التعديلات' : 'Save Changes'}
                             </button>
                         </div>
@@ -658,10 +658,10 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال الإضافة */}
             {addModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setAddModal({ isOpen: false })}>
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="sticky top-0 bg-white p-6 border-b flex items-center justify-between">
-                            <h3 className="text-lg font-bold text-gray-800">{isRTL ? 'إضافة سجل جديد' : 'Add New Record'}</h3>
-                            <button onClick={() => setAddModal({ isOpen: false })} className="p-2 hover:bg-gray-100 rounded-lg">
+                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 border-b flex items-center justify-between">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{isRTL ? 'إضافة سجل جديد' : 'Add New Record'}</h3>
+                            <button onClick={() => setAddModal({ isOpen: false })} className="p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -673,41 +673,41 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                             <label className="flex items-center gap-3 cursor-pointer select-none">
                                                 <input type="checkbox" checked={addData[col.key] == 1}
                                                     onChange={(e) => handleAddChange(col.key, e.target.checked ? '1' : '0')}
-                                                    className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer" />
-                                                <span className="text-sm font-bold text-gray-700">{getColLabel(col)}</span>
+                                                    className="w-5 h-5 rounded text-[#e8623a] focus:ring-[#e8623a] cursor-pointer" />
+                                                <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{getColLabel(col)}</span>
                                             </label>
                                         ) : col.type === 'image' ? (
                                             <div>
-                                                <label className="text-sm font-bold text-gray-700 mb-1 block">{getColLabel(col)}</label>
+                                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                                 <input type="url" value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder="https://example.com/image.jpg" dir="ltr"
-                                                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" />
                                             </div>
                                         ) : col.type === 'longtext' ? (
                                             <div>
-                                                <label className="text-sm font-bold text-gray-700 mb-1 block">{getColLabel(col)}</label>
+                                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                                 <textarea rows={5} value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder={isRTL ? 'اكتب النص هنا...' : 'Type text here...'}
-                                                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none resize-none" />
+                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none resize-none" />
                                             </div>
                                         ) : (
                                             <div>
-                                                <label className="text-sm font-bold text-gray-700 mb-1 block">{getColLabel(col)}</label>
+                                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                                 <input type="text" value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder={isRTL ? 'أدخل القيمة...' : 'Enter value...'}
                                                     dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" />
+                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" />
                                             </div>
                                         )}
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="p-6 border-t flex gap-3 justify-end">
-                            <button onClick={() => setAddModal({ isOpen: false })} className="px-6 py-2.5 bg-gray-100 rounded-xl text-sm font-bold hover:bg-gray-200">
+                        <div className="p-6 border-t border-gray-100 dark:border-[#3a322c] flex gap-3 justify-end">
+                            <button onClick={() => setAddModal({ isOpen: false })} className="px-6 py-2.5 bg-gray-100 dark:bg-[#2a231e] rounded-xl text-sm font-bold hover:bg-gray-200">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
-                            <button onClick={handleAddSubmit} disabled={isAdding} className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 flex items-center gap-2 disabled:bg-blue-400">
+                            <button onClick={handleAddSubmit} disabled={isAdding} className="px-6 py-2.5 bg-[#e8623a] text-white rounded-xl text-sm font-bold hover:bg-[#d4502a] flex items-center gap-2 disabled:bg-[#e8623a]/50">
                                 <Loader2 className={`w-5 h-5 animate-spin ${isAdding ? 'block' : 'hidden'}`} />
                                 {isAdding ? (isRTL ? 'جاري الحفظ...' : 'Saving...') : (isRTL ? 'حفظ السجل' : 'Save Record')}
                             </button>
@@ -719,16 +719,16 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال الحذف */}
             {deleteModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => !deleteModal.isLoading && setDeleteModal({ isOpen: false, id: null, isLoading: false })}>
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
+                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
                         <div className="p-6 text-center">
-                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Trash2 className="w-8 h-8 text-red-500" />
+                            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Trash2 className="w-8 h-8 text-red-500 dark:text-red-400" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">{isRTL ? 'تأكيد الحذف؟' : 'Confirm Delete?'}</h3>
-                            <p className="text-sm text-gray-500">{isRTL ? 'سيتم حذف هذا السجل نهائياً.' : 'This record will be permanently deleted.'}</p>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{isRTL ? 'تأكيد الحذف؟' : 'Confirm Delete?'}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{isRTL ? 'سيتم حذف هذا السجل نهائياً.' : 'This record will be permanently deleted.'}</p>
                         </div>
-                        <div className="flex border-t">
-                            <button onClick={() => setDeleteModal({ isOpen: false, id: null, isLoading: false })} disabled={deleteModal.isLoading} className="flex-1 py-4 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                        <div className="flex border-t border-gray-100 dark:border-[#3a322c]">
+                            <button onClick={() => setDeleteModal({ isOpen: false, id: null, isLoading: false })} disabled={deleteModal.isLoading} className="flex-1 py-4 text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
                             <button onClick={handleDelete} disabled={deleteModal.isLoading} className="flex-1 py-4 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:bg-red-400">

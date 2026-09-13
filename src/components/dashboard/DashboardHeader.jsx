@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GraduationCap, Bell, Menu, ChevronDown,
-  User, LogOut, Languages, Sun, Moon, LayoutDashboard
+  User, LogOut, Languages, Sun, Moon, Settings, Clock
 } from 'lucide-react';
 import { useSite } from '../../SiteContext';
-import { resolveUploadUrl } from '../../api';
+
+// اللوجو الثابت نفسه المستخدم بالـ Navbar/Footer بالصفحة الرئيسية (بدل site_logo الديناميكي)
+const staticLogoUrl = '/logo/logo1.png';
 
 const DashboardHeader = ({ onMenuToggle, onLogout }) => {
   const { t, i18n } = useTranslation();
@@ -62,16 +64,24 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
         </button>
 
         <Link to="/dashboard" className="flex items-center gap-3 group">
-          {siteSettings?.site_logo ? (
-            <img src={resolveUploadUrl(siteSettings.site_logo)} alt={siteName} className="h-9 w-auto max-w-[36px] object-contain rounded-lg opacity-90 group-hover:opacity-100 transition-opacity" />
-          ) : (
+          <img
+            src={staticLogoUrl}
+            alt={siteName}
+            className="h-28 w-auto -my-10 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'flex';
+            }}
+          />
+          {/* البديل (يظهر عند فشل تحميل الصورة) */}
+          <div style={{ display: 'none' }} className="items-center gap-2.5">
             <div className="w-9 h-9 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-lg flex items-center justify-center shadow-md shadow-[#e8623a]/20">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-          )}
-          <span className="hidden sm:block text-gray-900 dark:text-white font-bold text-sm group-hover:text-[#e8623a] transition-colors">
-            {siteName}
-          </span>
+            <span className="hidden sm:block text-gray-900 dark:text-white font-bold text-sm group-hover:text-[#e8623a] transition-colors">
+              {siteName}
+            </span>
+          </div>
         </Link>
       </div>
 
@@ -149,9 +159,13 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
                     <User className="w-4 h-4 text-[#e8623a]" />
                     {t('account.title')}
                   </Link>
-                  <Link to="/dashboard" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
-                    <LayoutDashboard className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                    {t('nav.dashboard')}
+                  <Link to="/dashboard/settings" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
+                    <Settings className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    {t('settings.title')}
+                  </Link>
+                  <Link to="/dashboard/activity" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
+                    <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                    {t('activity.title')}
                   </Link>
                 </div>
 

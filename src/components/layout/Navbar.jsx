@@ -1,20 +1,21 @@
+// src\components\layout\Navbar.jsx
 import { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, ChevronDown, ShieldCheck, LogOut, Globe } from 'lucide-react';
+import { Menu, X, ShieldCheck, LogOut, Globe } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
-import { resolveUploadUrl } from '../../api';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  // ✅ مقارنة بادئة اللغة لا تطابقًا حرفيًا — كاشف اللغة (LanguageDetector) قد
+  // يُرجع كودًا كاملاً مثل "ar-IQ" بدل "ar" فقط، فتفشل المقارنة الصارمة القديمة.
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false;
   const currentLang = i18n.language;
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const { siteInfo, navLinks, siteSettings } = useContext(SiteContext);
+  const { siteInfo, siteSettings } = useContext(SiteContext);
 
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
@@ -44,7 +45,8 @@ const Navbar = () => {
   };
 
   const siteName = siteSettings[`site_name_${currentLang}`] || 'IR SOURCE';
-  const siteLogo = resolveUploadUrl(siteSettings.site_logo);
+  // تم تحديد مسار اللوجو الثابت مباشرة
+  const staticLogoUrl = '/logo/logo1.png'; 
 
   const mainLinks = [
     { path: '/', label: t('nav.home') },
@@ -55,26 +57,29 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="w-full bg-brand-cream-hero py-4 px-4 md:px-8">
+    // تم التعديل هنا: إضافة sticky top-0 z-50 لتثبيت القائمة
+    <header className="sticky top-0 z-50 w-full bg-brand-cream-hero py-4 px-4 md:px-8 transition-all duration-300">
       <div className="max-w-7xl mx-auto bg-brand-cream rounded-full shadow-sm px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* اللوجو */}
         <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0">
-          {siteLogo ? (
-            <img
-              src={siteLogo}
-              alt={siteName}
-              className="h-32 w-auto object-contain -my-12"
-            />
-          ) : (
-            <>
-              <div className="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center text-white text-xs font-black shadow-sm group-hover:shadow-md transition-shadow">
-                IR
-              </div>
-              <span className="text-lg font-black tracking-wide hidden sm:block text-brand-ink">
-                SOURCE
-              </span>
-            </>
-          )}
+          <img
+            src={staticLogoUrl}
+            alt={siteName}
+            className="h-32 w-auto object-contain -my-12"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'flex';
+            }}
+          />
+          {/* البديل */}
+          <div style={{ display: 'none' }} className="flex items-center gap-2.5">
+             <div className="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center text-white text-xs font-black shadow-sm group-hover:shadow-md transition-shadow">
+              IR
+            </div>
+            <span className="text-lg font-black tracking-wide hidden sm:block text-brand-ink">
+              SOURCE
+            </span>
+          </div>
         </Link>
 
         {/* التنقل - ديسكتوب */}
@@ -95,40 +100,6 @@ const Navbar = () => {
               </Link>
             );
           })}
-
-          {navLinks.length > 0 && (
-            <div className="relative">
-              <button
-                onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-                className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-brand-muted hover:text-brand-ink rounded-full transition-all duration-200"
-              >
-                {t('nav.more')}
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    isMoreMenuOpen ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-
-              {isMoreMenuOpen && (
-                <>
-                  <div className="fixed inset-0 z-10" onClick={() => setIsMoreMenuOpen(false)} />
-                  <div className="absolute top-full mt-2 start-0 w-52 bg-white rounded-xl shadow-2xl shadow-black/10 border border-brand-ink/10 py-1.5 z-20">
-                    {navLinks.map((link, index) => (
-                      <Link
-                        key={link.id || index}
-                        to={`/page/${link.slug}`}
-                        onClick={() => setIsMoreMenuOpen(false)}
-                        className="block px-4 py-2.5 text-sm text-brand-muted hover:bg-brand-orange/10 hover:text-brand-orange transition-colors"
-                      >
-                        {currentLang === 'ar' ? link.title_ar : link.title_en}
-                      </Link>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
         </nav>
 
         {/* أزرار - ديسكتوب */}
@@ -186,24 +157,26 @@ const Navbar = () => {
 
       {/* قائمة الموبايل */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden max-w-7xl mx-auto mt-2 rounded-3xl bg-brand-cream shadow-sm">
+        <div className="lg:hidden max-w-7xl mx-auto mt-2 rounded-3xl bg-brand-cream shadow-sm z-40 relative">
           <div className="px-6 py-6 space-y-5">
             {/* لوجو موبايل */}
             <div className="flex items-center gap-3 pb-4 border-b border-brand-ink/10">
-              {siteLogo ? (
-                <img
-                  src={siteLogo}
-                  alt={siteName}
-                  className="h-28 w-auto object-contain -my-10"
-                />
-              ) : (
-                <>
-                  <div className="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center text-white text-xs font-black">
-                    IR
-                  </div>
-                  <span className="text-base font-black text-brand-ink">SOURCE</span>
-                </>
-              )}
+              <img
+                src={staticLogoUrl}
+                alt={siteName}
+                className="h-28 w-auto object-contain -my-10"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              {/* البديل للموبايل */}
+              <div style={{ display: 'none' }} className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center text-white text-xs font-black">
+                  IR
+                </div>
+                <span className="text-base font-black text-brand-ink">SOURCE</span>
+              </div>
             </div>
 
             <nav className="flex flex-col gap-1">
@@ -225,26 +198,6 @@ const Navbar = () => {
                 );
               })}
             </nav>
-
-            {navLinks.length > 0 && (
-              <div className="pt-3 border-t border-brand-ink/10">
-                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-muted/60 mb-2 px-3">
-                  {t('nav.discover')}
-                </p>
-                <nav className="flex flex-col gap-0.5">
-                  {navLinks.map((link, index) => (
-                    <Link
-                      key={link.id || index}
-                      to={`/page/${link.slug}`}
-                      onClick={closeMobileMenu}
-                      className="py-2.5 px-3 rounded-lg text-sm text-brand-muted/80 hover:bg-white/60 hover:text-brand-ink transition-colors"
-                    >
-                      {currentLang === 'ar' ? link.title_ar : link.title_en}
-                    </Link>
-                  ))}
-                </nav>
-              </div>
-            )}
 
             <div className="flex flex-col gap-2.5 pt-4 border-t border-brand-ink/10">
               {isAdmin ? (

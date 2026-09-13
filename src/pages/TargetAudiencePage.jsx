@@ -6,7 +6,7 @@ import { CheckCircle2 } from 'lucide-react';
 
 const TargetAudiencePage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {

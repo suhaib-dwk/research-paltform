@@ -20,9 +20,13 @@ i18n
   });
 
 // تحديث اتجاه الصفحة ولغتها عند التبديل (مهم لتطبيق الخطوط بشكل صحيح)
+// ✅ مقارنة بادئة اللغة لا تطابقًا حرفيًا — كاشف اللغة (LanguageDetector) قد يُرجع
+// كودًا كاملاً مثل "ar-IQ" بدل "ar" فقط، فتفشل المقارنة الصارمة (=== 'ar') وتبقى
+// الصفحة LTR رغم أن i18next يعرض بالفعل نصوصًا عربية (fallback داخلي على "ar").
 i18n.on('languageChanged', (lng) => {
-  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
-  document.documentElement.lang = lng;
+  const isArabic = lng?.toLowerCase().startsWith('ar');
+  document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+  document.documentElement.lang = isArabic ? 'ar' : 'en';
 });
 
 export default i18n;

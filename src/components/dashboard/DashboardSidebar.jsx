@@ -1,15 +1,14 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard, FileText, Users, BookOpen,
-  BarChart3, MessageSquare, Settings, HelpCircle,
+  BarChart3, MessageSquare, HelpCircle,
   X, GraduationCap, ShieldCheck, Building2, UserCog,
-  ListChecks, Clock, User,
-  ChevronDown, Award, Briefcase,
+  ListChecks, User,
+  Award, Briefcase,
   // أيقونات الخدمات
-  Languages, Sparkles, BookMarked,
+  Languages, BookMarked,
   Mail, Send, LayoutTemplate, Shield
 } from 'lucide-react';
 import { useSite } from '../../SiteContext';
@@ -21,13 +20,12 @@ const UNDERGRAD_ROLE = 'undergrad';
 const ADVANCED_ROLES = ['grad', 'phd', 'researcher', 'faculty'];
 const SERVICE_ROLES = [UNDERGRAD_ROLE, ...ADVANCED_ROLES];
 
-const SIDEBAR_SERVICES = [
+export const SIDEBAR_SERVICES = [
   // خدمات مشتركة (بما فيها التحكيم للطلاب)
   { id: 'svc_review', slug: 'review', icon: Shield, label_ar: 'تحكيم', label_en: 'Review', roles: ['undergrad', 'grad', 'phd', 'faculty', 'researcher'] },
   { id: 'svc_translation', slug: 'translation', icon: Languages, label_ar: 'الترجمة', label_en: 'Translation', roles: SERVICE_ROLES },
   { id: 'svc_proofreading', slug: 'proofreading', icon: FileText, label_ar: 'التدقيق اللغوي', label_en: 'Language Editing', roles: SERVICE_ROLES },
   { id: 'svc_consultation', slug: 'consultation', icon: MessageSquare, label_ar: 'الاستشارة', label_en: 'Consultation', roles: SERVICE_ROLES },
-  { id: 'svc_ai_assistant', slug: 'ai-assistant', icon: Sparkles, label_ar: 'المساعد الذكي', label_en: 'AI Assistant', roles: SERVICE_ROLES },
   // خدمات الأدوار المتقدمة
   { id: 'svc_journal_selection', slug: 'journal-selection', icon: BookMarked, label_ar: 'اختيار مجلة', label_en: 'Journal Selection', roles: ADVANCED_ROLES },
   { id: 'svc_journal_evaluation', slug: 'journal-evaluation', icon: BarChart3, label_ar: 'تقييم مجلة', label_en: 'Journal Evaluation', roles: ADVANCED_ROLES },
@@ -36,7 +34,7 @@ const SIDEBAR_SERVICES = [
   { id: 'svc_publication', slug: 'publication', icon: Send, label_ar: 'النشر', label_en: 'Publication', roles: ADVANCED_ROLES },
 ];
 
-const getVisibleServices = (role) => {
+export const getVisibleServices = (role) => {
   if (!role || !SERVICE_ROLES.includes(role)) return [];
   return SIDEBAR_SERVICES.filter(svc => svc.roles.includes(role));
 };
@@ -98,6 +96,7 @@ const getMenuItems = (role, t, isAr) => {
     ],
     university: [
       { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
+      { id: 'university-profile', icon: Building2, label: isAr ? 'ملف الجامعة' : 'University Profile', to: '/dashboard/university-profile' },
       { id: 'tasks', icon: ListChecks, label: t('tasks.title'), to: '/dashboard/tasks' },
       { id: 'academic-quality', icon: Award, label: t('academic_quality.title'), to: '/dashboard/academic-quality' },
       { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
@@ -167,23 +166,14 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
 
   const menuItems = getMenuItems(userData?.role, t, currentLang === 'ar');
   const visibleServices = getVisibleServices(userData?.role);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   const isActive = (to) => {
     if (to === '/dashboard') return location.pathname === '/dashboard';
     return location.pathname.startsWith(to);
   };
 
-  const isServiceActive = (slug) => location.pathname.startsWith(`/dashboard/services/${slug}`);
-  const isAnyServiceActive = visibleServices.some(svc => isServiceActive(svc.slug));
-
-  const handleToggleServices = () => {
-    if (!isServicesOpen && !isAnyServiceActive) {
-      setIsServicesOpen(true);
-    } else {
-      setIsServicesOpen(!isServicesOpen);
-    }
-  };
+  // ✅ "الخدمات" نشطة عند فتح فهرسها (/dashboard/services) أو أي خدمة فرعية منه
+  const isServicesActive = location.pathname.startsWith('/dashboard/services');
 
   const handleLinkClick = () => {
     if (window.innerWidth < 1024) setIsOpen(false);
@@ -206,19 +196,6 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
         >
           <X className="w-5 h-5" />
         </button>
-      </div>
-
-      {/* معلومات المستخدم (ديسكتوب فقط) */}
-      <div className="hidden lg:block p-5 border-b border-gray-200 dark:border-[#3a322c]/40">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#e8623a] to-[#f0916d] text-white rounded-xl flex items-center justify-center text-sm font-black shadow-sm">
-            {userData?.name?.charAt(0)?.toUpperCase() || 'U'}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-gray-900 dark:text-white text-sm font-bold truncate">{userData?.name || 'User'}</p>
-            <p className="text-[#e8623a] text-[10px] font-semibold truncate">{t(`account.role_${userData?.role || 'default'}`)}</p>
-          </div>
-        </div>
       </div>
 
       {/* القائمة الرئيسية */}
@@ -259,26 +236,27 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
           );
         })}
 
-        {/* ---- قسم الخدمات (قابل للطي) ---- */}
+        {/* ---- رابط فهرس الخدمات (يفتح صفحة مستقلة بكل الخدمات كبطاقات) ---- */}
         {visibleServices.length > 0 && (
           <div className="pt-2 mt-2 border-t border-gray-100 dark:border-[#3a322c]/30">
-            <button
-              onClick={handleToggleServices}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
-                isAnyServiceActive
+            <Link
+              to="/dashboard/services"
+              onClick={handleLinkClick}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
+                isServicesActive
                   ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]'
                   : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              {isAnyServiceActive && (
+              {isServicesActive && (
                 <motion.div
-                  layoutId="sidebar-active-services"
+                  layoutId="sidebar-active"
                   className={`absolute ${isRTL ? 'right-0' : 'left-0'} top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#e8623a] rounded-full`}
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
               <BookOpen className={`w-[18px] h-[18px] flex-shrink-0 transition-colors ${
-                isAnyServiceActive
+                isServicesActive
                   ? 'text-[#e8623a]'
                   : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
               }`} />
@@ -286,95 +264,17 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
                 {currentLang === 'ar' ? 'الخدمات' : 'Services'}
               </span>
               <span className={`min-w-[20px] h-5 px-1.5 flex items-center justify-center text-[10px] font-bold rounded-full ${
-                isAnyServiceActive
+                isServicesActive
                   ? 'bg-[#e8623a]/20 text-[#e8623a]'
                   : 'bg-gray-200 dark:bg-[#3a322c] text-gray-600 dark:text-gray-400'
               }`}>
                 {visibleServices.length}
               </span>
-              <motion.span
-                animate={{ rotate: (isServicesOpen || isAnyServiceActive) ? (isRTL ? -90 : 90) : 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex-shrink-0"
-              >
-                <ChevronDown className="w-4 h-4" />
-              </motion.span>
-            </button>
-
-            <AnimatePresence initial={false}>
-              {(isServicesOpen || isAnyServiceActive) && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="overflow-hidden"
-                >
-                  <div className={`${isRTL ? 'pr-3' : 'pl-3'} pt-1 space-y-0.5`}>
-                    {visibleServices.map((svc) => {
-                      const active = isServiceActive(svc.slug);
-                      const Icon = svc.icon;
-                      return (
-                        <Link
-                          key={svc.id}
-                          to={`/dashboard/services/${svc.slug}`}
-                          onClick={handleLinkClick}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 group ${
-                            active
-                              ? 'bg-[#e8623a]/10 text-[#e8623a]'
-                              : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-[#2a231e]/40 hover:text-gray-700 dark:hover:text-gray-300'
-                          }`}
-                        >
-                          <Icon className={`w-4 h-4 flex-shrink-0 transition-colors ${
-                            active ? 'text-[#e8623a]' : 'text-gray-300 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400'
-                          }`} />
-                          <span className="truncate">
-                            {currentLang === 'ar' ? svc.label_ar : svc.label_en}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            </Link>
           </div>
         )}
       </nav>
 
-      {/* تذييل القائمة */}
-      <div className="p-3 border-t border-gray-200 dark:border-[#3a322c]/40 space-y-1">
-        <Link
-          to="/dashboard/account"
-          onClick={handleLinkClick}
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
-            isActive('/dashboard/account') ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
-          }`}
-        >
-          <User className="w-[18px] h-[18px]" />
-          <span>{t('account.title')}</span>
-        </Link>
-        <Link
-          to="/dashboard/activity"
-          onClick={handleLinkClick}
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
-            isActive('/dashboard/activity') ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
-          }`}
-        >
-          <Clock className="w-[18px] h-[18px]" />
-          <span>{t('activity.title')}</span>
-        </Link>
-        <Link
-          to="/dashboard/settings"
-          onClick={handleLinkClick}
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
-            isActive('/dashboard/settings') ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
-          }`}
-        >
-          <Settings className="w-[18px] h-[18px]" />
-          <span>{t('settings.title')}</span>
-        </Link>
-      </div>
     </div>
   );
 

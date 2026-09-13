@@ -5,7 +5,7 @@ import { Target, Eye, Shield, RefreshCw, Home, Users, ClipboardCheck } from 'luc
 
 const AboutUsPage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const currentLang = i18n.language;
 
   useEffect(() => {

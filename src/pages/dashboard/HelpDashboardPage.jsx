@@ -10,7 +10,7 @@ const faqItems = [
 
 const HelpDashboardPage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
 
   return (
     <div className="p-6 max-w-4xl">

@@ -5,7 +5,7 @@ import {
   GraduationCap, BookOpen, UserCheck, Microscope, Building2,
   Landmark, FlaskConical, ShieldCheck, UserCog, Briefcase,
   ArrowLeft, ArrowRight, Check, Eye, EyeOff,
-  AlertCircle, Loader2, CheckCircle2, Upload, FileText, X
+  AlertCircle, Loader2, CheckCircle2, Upload, FileText, X, Info
 } from 'lucide-react';
 import { API_BASE_URL } from '../api';
 import { getAllServices } from '../data/servicesConfig';
@@ -27,19 +27,13 @@ const categories = [
   { key: 'service_provider', icon: Briefcase },
 ];
 
-// ✅ الأدوار ذات الخطوتين فقط (service_provider ثلاثي الخطوات كالكيانات/البكالوريوس)
 const TWO_STEP_ROLES = ['employee', 'grad', 'phd', 'faculty', 'researcher'];
-
-// ✅ الخدمات الثماني المسموح لمقدّم خدمة الاختصاص بها (التحكيم والمساعد الذكي مستثنيان)
 const PROVIDER_EXCLUDED_SLUGS = ['initial-review', 'expert-review', 'final-review', 'ai-assistant'];
 const getProviderServiceOptions = () =>
   getAllServices()
     .filter(s => !PROVIDER_EXCLUDED_SLUGS.includes(s.slug))
     .map(s => ({ value: s.slug, label_ar: s.title_ar, label_en: s.title_en }));
 
-// =========================================================
-// 2. خريطة ربط كل دور بجدول الملف الشخصي
-// =========================================================
 const ROLE_PROFILE_TABLE_MAP = {
   undergrad:       'profiles_undergrad',
   grad:            'profiles_grad',
@@ -57,66 +51,80 @@ const ROLE_PROFILE_TABLE_MAP = {
 const getProfileTableName = (role) => ROLE_PROFILE_TABLE_MAP[role] || null;
 
 // =========================================================
-// 3. بطاقة اختيار الفئة
+// 2. بطاقة اختيار الفئة (بتصميم محسن)
 // =========================================================
 const RoleCard = ({ icon: Icon, roleKey, label, selected, onClick }) => (
   <button
     type="button"
     onClick={() => onClick(roleKey)}
-    className={`group flex flex-col items-center justify-center p-5 border-2 rounded-2xl transition-all duration-300 cursor-pointer h-full
-      ${selected === roleKey
-        ? 'border-brand-orange bg-brand-orange/10 shadow-lg shadow-brand-orange/15 scale-[1.02]'
-        : 'border-gray-100 bg-white hover:border-gray-200 hover:shadow-md'
-      }`}
+    className={`group flex flex-col items-center justify-center p-6 border-2 rounded-3xl transition-all duration-300 cursor-pointer h-full relative overflow-hidden ${
+      selected === roleKey
+        ? 'border-brand-orange bg-orange-50/50 shadow-[0_8px_30px_rgba(249,115,22,0.15)] scale-[1.02]'
+        : 'border-gray-100 bg-white hover:border-brand-orange/30 hover:shadow-lg hover:bg-gray-50'
+    }`}
   >
-    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 ${selected === roleKey
-        ? 'bg-brand-orange text-white shadow-md shadow-brand-orange/30'
-        : 'bg-gray-100 text-gray-400 group-hover:bg-gray-200'
-      }`}>
-      <Icon className="w-6 h-6" />
+    {/* زخرفة خلفية خفيفة */}
+    {selected === roleKey && <div className="absolute top-0 right-0 w-24 h-24 bg-brand-orange/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>}
+    
+    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 relative z-10 ${
+      selected === roleKey
+        ? 'bg-brand-orange text-white shadow-lg scale-110'
+        : 'bg-gray-100 text-gray-400 group-hover:bg-brand-orange/10 group-hover:text-brand-orange'
+    }`}>
+      <Icon className="w-7 h-7" />
+      {selected === roleKey && <Check className="absolute top-2 right-2 w-4 h-4 text-white bg-green-500 rounded-full p-0.5" />}
     </div>
-    <span className={`text-xs font-bold text-center leading-tight ${selected === roleKey ? 'text-brand-orange-dark' : 'text-gray-600'}`}>{label}</span>
+    <span className={`text-xs font-bold text-center leading-snug relative z-10 ${
+      selected === roleKey ? 'text-brand-orange-dark' : 'text-gray-600 group-hover:text-brand-ink'
+    }`}>{label}</span>
   </button>
 );
 
 // =========================================================
-// 4. مؤشر الخطوات
+// 3. مؤشر الخطوات (بتصميم متصل)
 // =========================================================
 const StepIndicator = ({ currentStep, steps, t }) => (
-  <div className="flex items-center justify-center gap-2 mb-10 flex-wrap">
-    {steps.map((labelKey, index) => (
-      <div key={index} className="flex items-center gap-2">
-        <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 ${currentStep === index + 1
-            ? 'bg-brand-ink text-white shadow-lg shadow-brand-orange/10'
-            : currentStep > index + 1
-              ? 'bg-brand-orange/15 text-brand-orange'
-              : 'bg-gray-100 text-gray-400'
+  <div className="flex items-center justify-center gap-1 sm:gap-4 mb-10 flex-wrap">
+    {steps.map((labelKey, index) => {
+      const isActive = currentStep === index + 1;
+      const isCompleted = currentStep > index + 1;
+      return (
+        <div key={index} className="flex items-center gap-2 sm:gap-4">
+          <div className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 border ${
+            isActive ? 'bg-brand-orange border-brand-orange text-white shadow-lg shadow-brand-orange/40 scale-110' : 
+            isCompleted ? 'bg-brand-orange/10 border-brand-orange text-brand-orange' : 
+            'bg-white border-gray-200 text-gray-400'
           }`}>
-          {currentStep > index + 1 ? <Check className="w-3.5 h-3.5" /> : index + 1}
-          <span className="hidden sm:inline">{t(labelKey)}</span>
+            {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
+          </div>
+          <span className={`hidden sm:block text-xs font-medium transition-colors ${
+            isActive ? 'text-brand-orange font-bold' : isCompleted ? 'text-gray-500' : 'text-gray-300'
+          }`}>{t(labelKey)}</span>
+          {index < steps.length - 1 && (
+            <div className={`w-6 h-0.5 sm:w-12 rounded-full transition-colors duration-500 ${
+              isCompleted ? 'bg-brand-orange' : 'bg-gray-200'
+            }`} />
+          )}
         </div>
-        {index < steps.length - 1 && (
-          <div className={`w-6 h-[2px] rounded-full transition-colors duration-300 ${currentStep > index + 1 ? 'bg-brand-orange/40' : 'bg-gray-200'}`} />
-        )}
-      </div>
-    ))}
+      );
+    })}
   </div>
 );
 
 // =========================================================
-// 5. رسالة خطأ الحقل
+// 4. رسالة خطأ الحقل
 // =========================================================
 const FieldError = ({ message }) => {
   if (!message) return null;
   return (
-    <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{message}
-    </p>
+    <div className="mt-2 flex items-center gap-1.5 text-red-500 text-xs bg-red-50 p-2 rounded-lg border border-red-100 animate-pulse">
+      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" /> <span>{message}</span>
+    </div>
   );
 };
 
 // =========================================================
-// 6. مؤشر قوة كلمة المرور
+// 5. مؤشر قوة كلمة المرور
 // =========================================================
 const PasswordStrength = ({ password }) => {
   const strength =
@@ -124,18 +132,18 @@ const PasswordStrength = ({ password }) => {
       : password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) ? 3
         : password.length >= 6 && (/[A-Z]/.test(password) || /[0-9]/.test(password)) ? 2
           : 1;
-  const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-emerald-400'];
+  const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-emerald-500'];
   return (
-    <div className="flex gap-1.5 mt-2">
+    <div className="flex gap-1.5 mt-3 h-1.5">
       {[1, 2, 3, 4].map((level) => (
-        <div key={level} className={`h-1 flex-1 rounded-full transition-colors duration-300 ${level <= strength ? colors[strength - 1] : 'bg-gray-100'}`} />
+        <div key={level} className={`flex-1 rounded-full transition-all duration-500 ${level <= strength ? colors[strength - 1] : 'bg-gray-100'}`} />
       ))}
     </div>
   );
 };
 
 // =========================================================
-// 7. مكون الحقل
+// 6. مكون الحقل (بتصميم Inputs حديث)
 // =========================================================
 const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', options = [], accept, value, onChange, onBlur, error, touched }) => {
   const [showPwd, setShowPwd] = useState(false);
@@ -143,18 +151,23 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
   const inputType = isPassword ? (showPwd ? 'text' : 'password') : type;
   const hasError = touched && error;
   const isValid = touched && !error && value;
-  const base = 'w-full bg-white border text-gray-700 text-sm rounded-xl px-4 py-3.5 transition-all duration-200 outline-none';
+  
+  // تصميم الحالة الأساسية
+  const base = 'w-full bg-white text-gray-700 text-sm border-2 rounded-2xl px-4 py-3.5 transition-all duration-200 outline-none shadow-sm';
+  
+  // حالات الحقل (تركيز، خطأ، صحيح)
   const state = hasError
-    ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 bg-red-50/30'
+    ? 'border-red-200 bg-red-50/50 focus:border-red-400 focus:ring-4 focus:ring-red-100'
     : isValid
-      ? 'border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-emerald-50/30'
-      : 'border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20';
+      ? 'border-emerald-200 bg-emerald-50/50 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100'
+      : 'border-gray-200 focus:border-brand-orange focus:ring-4 focus:ring-brand-orange/10 hover:border-brand-orange/50';
+      
   const dir = ['email', 'url', 'password'].includes(type) ? 'ltr' : undefined;
 
   const renderControl = () => {
     if (type === 'select') {
       return (
-        <select value={value || ''} onChange={(e) => onChange(name, e.target.value)} onBlur={() => onBlur(name)} className={`${base} ${state} appearance-none`}>
+        <select value={value || ''} onChange={(e) => onChange(name, e.target.value)} onBlur={() => onBlur(name)} className={`${base} ${state} appearance-none cursor-pointer`}>
           <option value="">{t('form.select')}</option>
           {options.map((opt, i) => {
             const val = typeof opt === 'string' ? opt : opt.value;
@@ -176,7 +189,7 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
         onBlur(name);
       };
       return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
             const label = isAr ? opt.label_ar : opt.label_en;
@@ -185,10 +198,11 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
                 key={opt.value}
                 type="button"
                 onClick={() => toggle(opt.value)}
-                className={`text-xs font-bold px-3 py-2.5 rounded-xl border-2 transition-all duration-200 text-center ${isSelected
-                    ? 'border-brand-orange bg-brand-orange/10 text-brand-orange-dark'
-                    : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'
-                  }`}
+                className={`text-xs font-bold px-3 py-3 rounded-xl border-2 transition-all duration-200 text-center hover:scale-[1.02] ${
+                  isSelected
+                    ? 'border-brand-orange bg-brand-orange text-white shadow-md shadow-brand-orange/20'
+                    : 'border-gray-200 bg-white text-gray-500 hover:border-brand-orange/40 hover:text-brand-orange'
+                }`}
               >
                 {label}
               </button>
@@ -209,17 +223,23 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
             onChange={(e) => { onChange(name, e.target.files?.[0] || null); onBlur(name); }}
           />
           {!file ? (
-            <label htmlFor={`file-${name}`} className={`flex items-center justify-center gap-2 border-2 border-dashed rounded-xl px-4 py-6 cursor-pointer transition-colors ${hasError ? 'border-red-300 bg-red-50/30' : 'border-gray-200 hover:border-brand-orange hover:bg-brand-orange/5'}`}>
-              <Upload className="w-5 h-5 text-gray-400" />
-              <span className="text-sm font-semibold text-gray-500">{t('form.choose_file')}</span>
+            <label htmlFor={`file-${name}`} className={`flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-2xl p-6 cursor-pointer transition-all duration-300 group hover:bg-gray-50 ${
+              hasError ? 'border-red-300 bg-red-50/50' : 'border-gray-200 hover:border-brand-orange'
+            }`}>
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${hasError ? 'bg-red-100 text-red-400' : 'bg-brand-orange/10 text-brand-orange group-hover:bg-brand-orange group-hover:text-white'}`}>
+                <Upload className="w-6 h-6" />
+              </div>
+              <span className="text-sm font-semibold text-gray-500 group-hover:text-gray-700">{t('form.choose_file')}</span>
             </label>
           ) : (
-            <div className="flex items-center justify-between gap-2 border border-emerald-200 bg-emerald-50/40 rounded-xl px-4 py-3">
-              <div className="flex items-center gap-2 min-w-0">
-                <FileText className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span className="text-sm font-semibold text-gray-700 truncate">{file.name}</span>
+            <div className="flex items-center justify-between gap-3 border border-emerald-200 bg-emerald-50/50 rounded-2xl px-4 py-3 shadow-sm">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <span className="text-sm font-bold text-gray-700 truncate">{file.name}</span>
               </div>
-              <button type="button" onClick={() => { onChange(name, null); }} className="text-gray-400 hover:text-red-500 flex-shrink-0">
+              <button type="button" onClick={() => { onChange(name, null); }} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-100 rounded-lg transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -229,10 +249,10 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
     }
     return (
       <div className="relative">
-        <input type={inputType} value={value || ''} dir={dir} onChange={(e) => onChange(name, e.target.value)} onBlur={() => onBlur(name)} className={`${base} ${isPassword ? 'pe-12' : ''} ${state}`} />
+        <input type={inputType} value={value || ''} dir={dir} onChange={(e) => onChange(name, e.target.value)} onBlur={() => onBlur(name)} className={`${base} ${isPassword ? 'pe-12' : ''} ${state}`} placeholder=" " />
         {isPassword && (
-          <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-            {showPwd ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+          <button type="button" onClick={() => setShowPwd(!showPwd)} className="absolute end-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+            {showPwd ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         )}
       </div>
@@ -241,7 +261,10 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
 
   return (
     <div className={`flex flex-col ${colSpan}`}>
-      <label className="text-sm font-semibold text-gray-600 mb-1.5">{t(labelKey)}</label>
+      <label className="text-sm font-bold text-brand-ink mb-2 flex items-center gap-2">
+        {t(labelKey)}
+        {name === 'password' && <span className="text-[10px] font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{t('form.required')}</span>}
+      </label>
       {renderControl()}
       {hasError && <FieldError message={error} />}
       {name === 'password' && value && <PasswordStrength password={value} />}
@@ -255,11 +278,9 @@ const passwordFields = [
 ];
 
 // =========================================================
-// 8. قوالب البيانات
+// 7. قوالب البيانات (نفس المنطق السابق)
 // =========================================================
 const getFormFields = (role, step, dropdowns = {}) => {
-
-  // ✅ موظف — خطوتين
   if (role === 'employee') {
     if (step === 2) return {
       titleKey: 'sections.basic_data',
@@ -274,8 +295,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ طالب بكالوريوس — 3 خطوات
   if (role === 'undergrad') {
     if (step === 2) return {
       titleKey: 'sections.personal_data',
@@ -304,8 +323,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ طالب ماجستير — خطوتين (الأكاديمي دُمج مع الشخصي)
   if (role === 'grad') {
     if (step === 2) return {
       titleKey: 'sections.personal_data',
@@ -327,8 +344,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ طالب دكتوراه — خطوتين (نفس ماجستير)
   if (role === 'phd') {
     if (step === 2) return {
       titleKey: 'sections.personal_data',
@@ -350,8 +365,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ عضو هيئة تدريسية — خطوتين
   if (role === 'faculty') {
     if (step === 2) return {
       titleKey: 'sections.basic_data',
@@ -368,8 +381,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ باحث — خطوتين
   if (role === 'researcher') {
     if (step === 2) return {
       titleKey: 'sections.basic_data',
@@ -385,8 +396,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ الكيانات — 3 خطوات
   if (['university', 'college', 'research_center', 'ministry'].includes(role)) {
     if (step === 2) return {
       titleKey: 'sections.entity_basic_data',
@@ -412,8 +421,6 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
-  // ✅ مقدّم خدمة — 3 خطوات (بيانات أساسية ثم اختيار الخدمات + CV)
   if (role === 'service_provider') {
     if (step === 2) return {
       titleKey: 'sections.basic_data',
@@ -435,16 +442,15 @@ const getFormFields = (role, step, dropdowns = {}) => {
       ]
     };
   }
-
   return { titleKey: '', fields: [] };
 };
 
 // =========================================================
-// 9. المكون الرئيسي
+// 8. المكون الرئيسي (بتصميم محسن)
 // =========================================================
 const RegisterPage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const isAr = i18n.language === 'ar';
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
   const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
@@ -474,7 +480,6 @@ const RegisterPage = () => {
       .catch(() => { });
   }, [i18n.language]);
 
-  // ✅ عدد الخطوات ديناميكي
   const totalSteps = selectedRole && TWO_STEP_ROLES.includes(selectedRole) ? 2 : (selectedRole ? 3 : 1);
   const stepLabels = ['steps.category', 'steps.basic', 'steps.details'];
 
@@ -482,7 +487,7 @@ const RegisterPage = () => {
     if (type === 'number') { if (value === '' || value === null || value === undefined) return t('validation.required'); return ''; }
     if (type === 'file') { if (!value) return t('validation.required'); return ''; }
     if (type === 'multiselect') { if (!Array.isArray(value) || value.length === 0) return t('validation.required'); return ''; }
-    if (name === 'qualifications' || name === 'bio') return ''; // ✅ حقول اختيارية لمقدّم الخدمة
+    if (name === 'qualifications' || name === 'bio') return '';
     if (!value || (typeof value === 'string' && !value.trim())) return t('validation.required');
     if (type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('validation.invalid_email');
     if (name === 'password' && value.length < 8) return t('validation.password_min');
@@ -573,8 +578,6 @@ const RegisterPage = () => {
     if (selectedRole === 'grad') profileData.degree = 'master';
     if (selectedRole === 'phd')  profileData.degree = 'phd';
 
-    // ✅ multipart/form-data — يدعم رفع ملف CV لمقدّم الخدمة، بدون تعيين
-    // Content-Type يدوياً (المتصفح يضيف الـ boundary تلقائياً).
     const fd = new FormData();
     fd.append('role', selectedRole);
     fd.append('email', loginEmail);
@@ -617,13 +620,18 @@ const RegisterPage = () => {
 
   if (registrationSuccess) {
     return (
-      <div className="min-h-[calc(100vh-6rem)] bg-brand-cream-hero flex items-center justify-center px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-sm shadow-black/[0.03] border border-gray-100 p-10 text-center">
-          <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle2 className="w-10 h-10" /></div>
-          <h2 className="text-2xl font-black text-brand-ink mb-3">{t('register.success_title')}</h2>
-          <p className="text-sm text-brand-muted leading-relaxed mb-8">{t('register.success_desc')}</p>
-          <Link to="/login" className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300">
-            {t('register.go_to_login')} <ArrowLeft className={`w-4 h-4 ${isRTL ? '' : 'rotate-180'}`} />
+      <div className="min-h-screen bg-brand-cream-hero flex flex-col items-center justify-center px-4 py-12">
+        <Link to="/" className="mb-8">
+          <img src="/logo/logo1.png" alt="SOURCE" className="h-24 w-auto object-contain" />
+        </Link>
+        <div className="w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 p-12 text-center animate-[scale-in_0.5s_ease-out]">
+          <div className="w-24 h-24 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-emerald-200">
+            <CheckCircle2 className="w-12 h-12" />
+          </div>
+          <h2 className="text-3xl font-black text-brand-ink mb-4">{t('register.success_title')}</h2>
+          <p className="text-base text-gray-600 leading-relaxed mb-10 max-w-sm mx-auto">{t('register.success_desc')}</p>
+          <Link to="/login" className="inline-flex items-center gap-3 bg-brand-ink text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-brand-orange transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+            {t('register.go_to_login')} <ArrowLeft className={`w-5 h-5 ${isRTL ? '' : 'rotate-180'}`} />
           </Link>
         </div>
       </div>
@@ -631,46 +639,76 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] bg-brand-cream-hero grid lg:grid-cols-2">
-      {/* ✅ عمود الصورة */}
-      <div className="hidden lg:flex relative bg-brand-ink overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/40 to-transparent" />
-        <div className="relative z-10 flex flex-col justify-end p-10 md:p-14">
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-4 max-w-md">
+    <div className="min-h-screen bg-brand-cream-hero flex flex-col lg:flex-row overflow-hidden">
+      {/* عمود الصورة الجانبي */}
+      <div className="hidden lg:flex relative w-1/2 bg-brand-ink items-center justify-center p-12">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop"
+            alt=""
+            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-ink via-brand-ink/80 to-brand-orange/20"></div>
+        </div>
+        <div className="relative z-10 text-white max-w-lg">
+          <h1 className="text-5xl font-black leading-tight mb-6 drop-shadow-2xl">
             {t('register.side_title')}
-          </h2>
-          <p className="text-white/70 max-w-sm leading-relaxed">
+          </h1>
+          <p className="text-lg text-gray-300 leading-relaxed font-light">
             {t('register.side_desc')}
           </p>
         </div>
       </div>
 
-      {/* ✅ عمود النموذج */}
-      <div className="flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-xl">
-          {selectedRole && currentStep > 1 && totalSteps > 2 && (
-            <StepIndicator currentStep={currentStep - 1} steps={stepLabels.slice(1, totalSteps - 1)} t={t} />
+      {/* عمود النموذج */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative z-10">
+        <div className="w-full max-w-xl relative">
+
+          {/* ✅ الشعار فوق الفورم (الصفحة بدون هيدر/فوتر) */}
+          <div className="flex justify-center mb-8">
+            <Link to="/">
+              <img src="/logo/logo1.png" alt="SOURCE" className="h-24 w-auto object-contain" />
+            </Link>
+          </div>
+
+          {/* مؤشر الخطوات */}
+          {selectedRole && currentStep > 1 && (
+            <div className="mb-8">
+               <StepIndicator currentStep={currentStep - 1} steps={stepLabels.slice(1, totalSteps)} t={t} />
+            </div>
           )}
-          <div className="bg-white rounded-3xl shadow-sm shadow-black/[0.03] border border-gray-100 p-8 md:p-10">
+
+          {/* حاوية البطاقة الرئيسية */}
+          <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/50 border border-white p-8 md:p-12 relative overflow-hidden">
+            {/* زخرفة خلفية خفيفة */}
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-orange to-orange-400"></div>
+
             {currentStep === 1 && (
               <div>
-                <h2 className="text-2xl font-black text-brand-ink mb-1">{t('register.title')}</h2>
-                <p className="text-sm text-brand-muted mb-8">{t('register.subtitle')}</p>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="text-center mb-10">
+                  <h2 className="text-3xl font-black text-brand-ink mb-3">{t('register.title')}</h2>
+                  <p className="text-brand-muted text-sm">{t('register.subtitle')}</p>
+                </div>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {categories.map((cat) => (
                     <RoleCard key={cat.key} icon={cat.icon} roleKey={cat.key} label={t(`roles.${cat.key}`)} selected={selectedRole} onClick={handleRoleSelect} />
                   ))}
                 </div>
-                <div className="mt-10">
-                  <button onClick={handleNext} disabled={!selectedRole} className={`w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm transition-all duration-300 ${selectedRole ? 'bg-brand-orange text-white hover:bg-brand-orange-dark' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
-                    {t('register.next')} <ForwardArrow className="w-4 h-4" />
+
+                <div className="mt-12">
+                  <button 
+                    onClick={handleNext} 
+                    disabled={!selectedRole}
+                    className={`w-full group flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg ${
+                      selectedRole 
+                        ? 'bg-gradient-to-r from-brand-orange to-orange-500 text-white hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-1' 
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {t('register.next')} <ForwardArrow className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
-                  <p className="text-center text-sm text-brand-muted mt-6">
+                  <p className="text-center text-sm text-gray-500 mt-6">
                     <Link to="/login" className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
                       {t('register.go_to_login')}
                     </Link>
@@ -678,40 +716,52 @@ const RegisterPage = () => {
                 </div>
               </div>
             )}
+
             {currentStep > 1 && selectedRole && (
               <div>
                 {currentStep === 2 && (
-                  <button onClick={handleBack} className="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-brand-ink transition-colors mb-6 group">
+                  <button onClick={handleBack} className="flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-brand-orange mb-8 group transition-colors">
                     <BackArrow className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />{t('register.back_to_roles')}
                   </button>
                 )}
-                <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
-                    {(() => { const Icon = categories.find(c => c.key === selectedRole)?.icon || UserCheck; return <Icon className="w-5 h-5" />; })()}
+
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-50 text-brand-orange flex items-center justify-center shadow-sm">
+                    {(() => { const Icon = categories.find(c => c.key === selectedRole)?.icon || UserCheck; return <Icon className="w-6 h-6" />; })()}
                   </div>
                   <div>
                     <h2 className="text-xl font-black text-brand-ink">{t('register.as')} <span className="text-brand-orange">{t(`roles.${selectedRole}`)}</span></h2>
-                    <p className="text-xs text-brand-muted font-medium mt-0.5">{t(getFormFields(selectedRole, currentStep).titleKey)}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-gray-400 font-medium px-2 py-1 bg-gray-100 rounded-md border border-gray-200">
+                        {t(getFormFields(selectedRole, currentStep).titleKey)}
+                      </span>
+                    </div>
                   </div>
                 </div>
+
                 {apiError && (
-                  <div className="mb-6 p-3.5 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
+                  <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-2xl flex items-center gap-3 text-sm font-bold border border-red-100 animate-[shake_0.5s_ease-in-out]">
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />{apiError}
                   </div>
                 )}
-                <form onSubmit={(e) => { e.preventDefault(); handleNext(); }} className="space-y-5" noValidate>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <form onSubmit={(e) => { e.preventDefault(); handleNext(); }} className="space-y-6" noValidate>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {getCurrentFields().map((field) => (
                       <InputField key={field.name} t={t} isAr={isAr} labelKey={field.labelKey} name={field.name} type={field.type || 'text'} colSpan={field.colSpan || ''} options={field.options || []} accept={field.accept} value={formData[field.name]} onChange={handleFieldChange} onBlur={handleFieldBlur} error={errors[field.name]} touched={touched[field.name]} />
                     ))}
                   </div>
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-50 mt-8">
-                    <button type="button" onClick={handleBack} className="flex items-center gap-2 px-6 py-3 text-sm font-bold text-gray-500 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
+
+                  <div className="flex items-center justify-between pt-8 border-t border-gray-100 mt-8">
+                    <button type="button" onClick={handleBack} className="flex items-center gap-2 px-6 py-3.5 text-sm font-bold text-gray-500 border border-gray-200 rounded-full hover:bg-gray-50 hover:text-brand-ink transition-all">
                       <BackArrow className="w-4 h-4" /> {t('register.prev')}
                     </button>
-                    <button type="submit" disabled={loading} className="flex items-center gap-2 px-8 py-3.5 bg-brand-orange text-white rounded-full text-sm font-bold hover:bg-brand-orange-dark transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button type="submit" disabled={loading} className="flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-brand-orange to-orange-500 text-white rounded-full text-sm font-bold hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:-translate-y-1">
                       {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-                        <>{currentStep === totalSteps ? t('register.submit') : t('register.next_step')} {currentStep < totalSteps ? <ForwardArrow className="w-4 h-4" /> : <Check className="w-4 h-4" />}</>
+                        <>
+                          {currentStep === totalSteps ? t('register.submit') : t('register.next_step')} 
+                          {currentStep < totalSteps ? <ForwardArrow className="w-4 h-4" /> : <Check className="w-4 h-4" />}
+                        </>
                       )}
                     </button>
                   </div>

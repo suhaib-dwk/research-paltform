@@ -10,7 +10,7 @@ import { API_BASE_URL, resolveUploadUrl } from '../api';
 
 const AdminDashboard = () => {
   const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const currentLang = i18n.language;
   const navigate = useNavigate();
   

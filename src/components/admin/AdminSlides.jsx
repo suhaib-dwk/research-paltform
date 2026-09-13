@@ -96,15 +96,15 @@ const AdminSlides = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Image className="w-7 h-7 text-green-500" /> 
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <Image className="w-7 h-7 text-[#e8623a]" /> 
             {currentLang === 'ar' ? 'إدارة صور البانر' : 'Manage Hero Slides'}
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {currentLang === 'ar' ? 'هذه الصور تظهر متحركة في أعلى الصفحة الرئيسية' : 'These images appear as a slideshow on the homepage'}
           </p>
         </div>
-        <label className="cursor-pointer bg-green-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-green-700 flex items-center gap-2 transition-colors relative shadow-sm">
+        <label className="cursor-pointer bg-[#e8623a] text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors relative shadow-sm">
           {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
           {currentLang === 'ar' ? 'إضافة صورة جديدة' : 'Add New Slide'}
           <input type="file" accept="image/*" onChange={handleAdd} className="hidden" disabled={isUploading} />
@@ -112,7 +112,7 @@ const AdminSlides = () => {
       </div>
 
       {actionError && (
-        <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl flex items-center gap-3 text-sm font-medium border border-red-100">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400 rounded-xl flex items-center gap-3 text-sm font-medium border border-red-100 dark:border-red-800/30">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           {actionError}
           <button onClick={() => setActionError(null)} className="ms-auto font-bold hover:text-red-800">✕</button>
@@ -120,7 +120,7 @@ const AdminSlides = () => {
       )}
 
       {slides.length === 0 ? (
-        <div className="bg-white rounded-2xl border-2 border-dashed border-gray-200 p-16 text-center text-gray-400">
+        <div className="bg-white dark:bg-[#211c18] rounded-2xl border-2 border-dashed border-gray-200 dark:border-[#3a322c] p-16 text-center text-gray-400 dark:text-gray-500">
           <Image className="w-20 h-20 mx-auto mb-4 opacity-30" />
           <p className="font-bold text-lg">{currentLang === 'ar' ? 'لا توجد صور بعد' : 'No slides yet'}</p>
           <p className="text-sm mt-1">{currentLang === 'ar' ? 'اضغط على زر "إضافة صورة جديدة" لبدء رفع الشرائح' : 'Click "Add New Slide" to start uploading'}</p>
@@ -128,16 +128,16 @@ const AdminSlides = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {slides.map((slide, index) => (
-            <div key={slide.id} className="bg-white rounded-2xl shadow-sm border overflow-hidden group relative">
-              <div className="aspect-video overflow-hidden bg-gray-100">
+            <div key={slide.id} className="bg-white dark:bg-[#211c18] rounded-2xl shadow-sm border border-gray-200 dark:border-[#3a322c]/60 overflow-hidden group relative">
+              <div className="aspect-video overflow-hidden bg-gray-100 dark:bg-[#1a1613]">
                 <img src={slide.image_url} alt={`Slide ${index + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
-              <div className="p-4 flex items-center justify-between border-t">
-                <span className="text-sm font-bold text-gray-600">{currentLang === 'ar' ? 'شريحة رقم' : 'Slide'} {index + 1}</span>
+              <div className="p-4 flex items-center justify-between border-t border-gray-100 dark:border-[#3a322c]">
+                <span className="text-sm font-bold text-gray-600 dark:text-gray-400">{currentLang === 'ar' ? 'شريحة رقم' : 'Slide'} {index + 1}</span>
                 {/* ✅ زر الحذف الجديد يفتح النافذة */}
                 <button 
                   onClick={() => openDeleteModal(slide)} 
-                  className="p-2 text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                  className="p-2 text-red-500 bg-red-50 dark:bg-red-900/15 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/25 transition-colors"
                   title={currentLang === 'ar' ? 'حذف الشريحة' : 'Delete Slide'}
                 >
                   <Trash2 className="w-5 h-5" />
@@ -155,10 +155,10 @@ const AdminSlides = () => {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeDeleteModal}></div>
           
           {/* محتوى النافذة */}
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-[fadeInUp_0.3s_ease-out]">
-            
+          <div className="relative bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-[fadeInUp_0.3s_ease-out]">
+
             {/* معاينة الصورة المراد حذفها */}
-            <div className="relative h-48 bg-gray-100 overflow-hidden">
+            <div className="relative h-48 bg-gray-100 dark:bg-[#1a1613] overflow-hidden">
               <img 
                 src={deleteModal.slide?.image_url} 
                 alt="Preview" 
@@ -174,10 +174,10 @@ const AdminSlides = () => {
 
             {/* نص التأكيد */}
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 {currentLang === 'ar' ? 'هل أنت متأكد من الحذف؟' : 'Are you sure?'}
               </h3>
-              <p className="text-sm text-gray-500 leading-relaxed">
+              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                 {currentLang === 'ar' 
                   ? 'سيتم حذف هذه الصورة من شرائح البانر الرئيسي نهائياً. لا يمكن التراجع عن هذا الإجراء.'
                   : 'This image will be permanently removed from the hero slides. This action cannot be undone.'}
@@ -188,7 +188,7 @@ const AdminSlides = () => {
                 <button
                   onClick={closeDeleteModal}
                   disabled={deleteModal.isLoading}
-                  className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-[#1a1613] rounded-xl hover:bg-gray-200 dark:hover:bg-[#2a231e] transition-colors disabled:opacity-50"
                 >
                   {currentLang === 'ar' ? 'إلغاء الأمر' : 'Cancel'}
                 </button>

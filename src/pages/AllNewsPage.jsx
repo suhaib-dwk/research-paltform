@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../api'; // ✅ أضف هذا السطر
 
 const AllNewsPage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const currentLang = i18n.language;
 

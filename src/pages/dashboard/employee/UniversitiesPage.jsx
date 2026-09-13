@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../../../api';
 
 const UniversitiesPage = () => {
     const { t, i18n } = useTranslation();
-    const isRTL = i18n.language === 'ar';
+    const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
     const [search, setSearch] = useState('');
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);

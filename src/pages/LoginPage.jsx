@@ -77,7 +77,7 @@ const getLocalizedApiError = (serverMessage, currentLang) => {
 
 const LoginPage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const currentLang = i18n.language;
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const navigate = useNavigate();
@@ -167,7 +167,7 @@ const LoginPage = () => {
 
       if (result.status === 'success') {
         loginUser(result.data);
-        if (result.data.role === 'super_admin') { setApiSuccess(msgs.api.adminLogin); setTimeout(() => navigate('/admin/settings'), 800); }
+        if (result.data.role === 'super_admin') { setApiSuccess(msgs.api.adminLogin); setTimeout(() => navigate('/admin'), 800); }
         // ⚠️ مؤقتاً: تخطي خطوة التحقق بـ OTP (setStep(2)) والانتقال مباشرة للداشبورد.
         // السبب: خطوة الـ OTP حالياً شكلية بالكامل (لا يوجد إرسال/تحقق فعلي من كود عبر السيرفر)
         // وهذا يعطّل التجربة المحلية أثناء التطوير. لإعادة تفعيلها، أرجع السطر: else { setStep(2); }
@@ -238,11 +238,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-6rem)] bg-brand-cream-hero grid lg:grid-cols-2">
+    <div className="min-h-screen bg-brand-cream-hero grid lg:grid-cols-2">
       {/* ✅ عمود الصورة */}
       <div className="hidden lg:flex relative bg-brand-ink overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1573497491765-dccce02b29df?q=80&w=2070&auto=format&fit=crop"
+          src="/Home/home04.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-70"
         />
@@ -260,6 +260,13 @@ const LoginPage = () => {
       {/* ✅ عمود النموذج */}
       <div className="flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
+
+          {/* ✅ الشعار فوق الفورم (الصفحة بدون هيدر/فوتر) */}
+          <div className="flex justify-center mb-8">
+            <Link to="/">
+              <img src="/logo/logo1.png" alt="SOURCE" className="h-24 w-auto object-contain" />
+            </Link>
+          </div>
 
           {/* ═══════ الخطوة الأولى: تسجيل الدخول ═══════ */}
           {step === 1 && (

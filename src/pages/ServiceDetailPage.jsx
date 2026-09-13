@@ -8,7 +8,7 @@ import { API_BASE_URL } from '../api';
 const ServiceDetailPage = () => {
   const { slug } = useParams(); // استقبال slug من الرابط
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
   const currentLang = i18n.language;
 

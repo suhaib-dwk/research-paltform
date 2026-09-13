@@ -42,6 +42,7 @@ import ReviewsHistoryPage from './pages/dashboard/ReviewsHistoryPage';
 import StatsPage from './pages/dashboard/StatsPage';
 import AcademicQualityPage from './pages/dashboard/AcademicQualityPage';
 import ProviderRequestsPage from './pages/dashboard/ProviderRequestsPage';
+import UniversityProfilePage from './pages/dashboard/UniversityProfilePage';
 
 // صفحات الموظفين
 import UniversitiesPage from './pages/dashboard/employee/UniversitiesPage';
@@ -50,6 +51,7 @@ import UsersPage from './pages/dashboard/employee/UsersPage';
 
 // صفحات الخدمات
 import ServicePageLayout from './pages/services/ServicePageLayout';
+import ServicesIndexPage from './pages/services/ServicesIndexPage';
 
 // =========================================================
 // حراس المسارات
@@ -84,12 +86,17 @@ function AppContent() {
 
   const isDashboardPage = location.pathname.startsWith('/dashboard');
   const isAdminPage = location.pathname.startsWith('/admin');
+  // ✅ صفحتا تسجيل الدخول والتسجيل بدون هيدر/فوتر — تصميم مستقل بشعار فوق الفورم مباشرة
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   useEffect(() => {
-    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = i18n.language;
-    document.documentElement.style.fontFamily =
-      i18n.language === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif";
+    // ✅ مقارنة بادئة اللغة لا تطابقًا حرفيًا — كاشف اللغة (LanguageDetector) قد
+    // يُرجع كودًا كاملاً مثل "ar-IQ" أو "ar-SA" بدل "ar" فقط، وكانت المقارنة
+    // الصارمة القديمة (=== 'ar') تفشل حينها فتُبقي الاتجاه LTR رغم أن النصوص عربية.
+    const isArabic = i18n.language?.toLowerCase().startsWith('ar');
+    document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+    document.documentElement.lang = isArabic ? 'ar' : 'en';
+    document.documentElement.style.fontFamily = isArabic ? "'Cairo', sans-serif" : "'Inter', sans-serif";
   }, [i18n.language]);
 
   const nonEmployeeRoles = ['undergrad', 'grad', 'faculty', 'researcher', 'reviewer', 'university', 'college', 'research_center', 'ministry'];
@@ -99,7 +106,7 @@ function AppContent() {
     <>
       <DynamicHead />
       <div className="flex flex-col min-h-screen">
-        {!isDashboardPage && (isAdmin ? <AdminNavbar /> : <Navbar />)}
+        {!isDashboardPage && !isAuthPage && (isAdmin ? <AdminNavbar /> : <Navbar />)}
 
         <main className="flex-grow">
           <Routes>
@@ -128,7 +135,8 @@ function AppContent() {
               <Route path="help" element={<HelpDashboardPage />} />
               <Route path="activity" element={<ActivityPage />} />
 
-              {/* صفحات الخدمات (ديناميكية حسب الـ slug) */}
+              {/* صفحات الخدمات (فهرس عام + ديناميكية حسب الـ slug) */}
+              <Route path="services" element={<ServicesIndexPage />} />
               <Route path="services/:slug" element={<ServicePageLayout />} />
 
               {/* صفحات الموظفين */}
@@ -144,6 +152,7 @@ function AppContent() {
               <Route path="reviews" element={<RoleRoute allowedRoles={['reviewer', 'faculty']}><ReviewsPage /></RoleRoute>} />
               <Route path="reviews/history" element={<RoleRoute allowedRoles={['reviewer', 'faculty']}><ReviewsHistoryPage /></RoleRoute>} />
               <Route path="stats" element={<RoleRoute allowedRoles={nonEmployeeRoles}><StatsPage /></RoleRoute>} />
+              <Route path="university-profile" element={<RoleRoute allowedRoles={['university']}><UniversityProfilePage /></RoleRoute>} />
               <Route path="academic-quality" element={<RoleRoute allowedRoles={['university', 'college', 'research_center']}><AcademicQualityPage /></RoleRoute>} />
               <Route path="provider-requests" element={<RoleRoute allowedRoles={['service_provider']}><ProviderRequestsPage /></RoleRoute>} />
             </Route>
@@ -170,7 +179,7 @@ function AppContent() {
           </Routes>
         </main>
 
-        {!isDashboardPage && (isAdmin ? <AdminFooter /> : <Footer />)}
+        {!isDashboardPage && !isAuthPage && (isAdmin ? <AdminFooter /> : <Footer />)}
       </div>
     </>
   );

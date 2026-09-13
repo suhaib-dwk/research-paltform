@@ -7,7 +7,9 @@ export const SiteContext = createContext();
 export const SiteProvider = ({ children }) => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
-  const isRTL = currentLang === 'ar';
+  // ✅ مقارنة بادئة اللغة لا تطابقًا حرفيًا — كاشف اللغة (LanguageDetector) قد
+  // يُرجع كودًا كاملاً مثل "ar-IQ" بدل "ar" فقط، فتفشل المقارنة الصارمة القديمة.
+  const isRTL = currentLang?.toLowerCase().startsWith('ar') ?? false;
 
   const [siteInfo, setSiteInfo] = useState({});
   const [navLinks, setNavLinks] = useState([]);

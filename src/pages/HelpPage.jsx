@@ -9,7 +9,7 @@ import ErrorMessage from '../components/shared/ErrorMessage';
 
 const HelpPage = () => {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const currentLang = i18n.language;
   const [openIndex, setOpenIndex] = useState(null);
 

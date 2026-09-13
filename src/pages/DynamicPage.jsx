@@ -18,7 +18,7 @@ const getIcon = (name) => {
 const DynamicPage = () => {
   const { slug } = useParams();
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const ArrowIcon = isRTL ? ArrowRight : ArrowLeft;
   const lang = i18n.language;
 

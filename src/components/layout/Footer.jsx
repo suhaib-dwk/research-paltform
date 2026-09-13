@@ -1,9 +1,10 @@
+// src\components\layout\Footer.jsx
 import { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, ShieldCheck } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
-import { resolveUploadUrl } from '../../api';
+// import { resolveUploadUrl } from '../../api'; // لم تعد بحاجة لهذا الاستيراد
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
@@ -12,7 +13,8 @@ const Footer = () => {
   const { siteInfo, siteSettings } = useContext(SiteContext);
 
   const siteName = siteSettings[`site_name_${currentLang}`] || t('footer.about_title');
-  const siteLogo = resolveUploadUrl(siteSettings.site_logo);
+  // تم تحديد مسار اللوجو الثابت مباشرة (مطابق للـ Navbar)
+  const staticLogoUrl = '/logo/logo1.png';
 
   useEffect(() => {
     const checkAdminStatus = () => {
@@ -56,20 +58,25 @@ const Footer = () => {
           {/* عن المنصة */}
           <div className="md:col-span-5">
             <div className="flex items-center gap-3 mb-6">
-              {siteLogo ? (
-                <img
-                  src={siteLogo}
-                  alt={siteName}
-                  className="h-40 w-auto object-contain -my-16"
-                />
-              ) : (
-                <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 bg-brand-orange rounded-xl flex items-center justify-center text-white text-sm font-black">
-                    IR
-                  </div>
-                  <span className="text-xl font-black text-brand-ink tracking-wide">SOURCE</span>
+              {/* تم التعديل هنا لاستخدام اللوجو الثابت مع معالجة الخطأ */}
+              <img
+                src={staticLogoUrl}
+                alt={siteName}
+                className="h-40 w-auto object-contain -my-16"
+                onError={(e) => {
+                  // في حال فشل تحميل الصورة، يتم إخفاؤها وإظهار البديل
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              
+              {/* البديل (يظهر عند فشل تحميل الصورة) */}
+              <div style={{ display: 'none' }} className="flex items-center gap-3">
+                <div className="w-14 h-14 bg-brand-orange rounded-xl flex items-center justify-center text-white text-sm font-black">
+                  IR
                 </div>
-              )}
+                <span className="text-xl font-black text-brand-ink tracking-wide">SOURCE</span>
+              </div>
             </div>
             <p className="text-sm text-brand-muted leading-relaxed mb-8 max-w-sm">
               {t('footer.about_desc')}
