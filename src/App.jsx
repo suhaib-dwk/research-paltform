@@ -104,7 +104,9 @@ function AppContent() {
     <>
       <DynamicHead />
       <div className="flex flex-col min-h-screen">
-        {!isDashboardPage && !isAuthPage && (isAdmin ? <AdminNavbar /> : <Navbar />)}
+        {/* ✅ صفحات لوحة الإدارة (/admin/*) لها تخطيطها المستقل بالكامل (AdminLayout: سايدبار + هيدر
+            هاتف خاصين بها) — عرض AdminNavbar هنا فوقها كان يسبب هيدرين متراكبين بألوان غير متسقة. */}
+        {!isDashboardPage && !isAdminPage && !isAuthPage && (isAdmin ? <AdminNavbar /> : <Navbar />)}
 
         <main className="flex-grow">
           <Routes>
@@ -175,7 +177,7 @@ function AppContent() {
           </Routes>
         </main>
 
-        {!isDashboardPage && !isAuthPage && (isAdmin ? <AdminFooter /> : <Footer />)}
+        {!isDashboardPage && !isAdminPage && !isAuthPage && (isAdmin ? <AdminFooter /> : <Footer />)}
       </div>
     </>
   );
