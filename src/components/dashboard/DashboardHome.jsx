@@ -4,7 +4,7 @@ import {
     FileText, Users, BarChart3, BookOpen,
     TrendingUp, Clock, CheckCircle2, ArrowLeft,
     ArrowRight, MessageSquare, ClipboardList, Shield,
-    Languages, AlertCircle, Loader2, RefreshCw
+    Languages, AlertCircle, Loader2, RefreshCw, Eye, Download
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
@@ -128,7 +128,7 @@ const getQuickActions = (role, lang) => {
         { icon: Shield, label: lang === 'ar' ? 'طلب تحكيم' : 'Request Review', to: '../../dashboard/services/review', color: 'hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5 dark:hover:border-[#e8623a]/50 dark:hover:bg-[#e8623a]/5' },
         { icon: Languages, label: lang === 'ar' ? 'طلب ترجمة' : 'Request Translation', to: '../../dashboard/services/translation', color: 'hover:border-blue-500/50 hover:bg-blue-50 dark:hover:border-blue-500/50 dark:hover:bg-blue-500/5' },
         { icon: BookOpen, label: lang === 'ar' ? 'سجل الطلبات' : 'Requests Log', to: '../../dashboard/dashboard/requests', color: 'hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/5' },
-        { icon: TrendingUp, label: lang === 'ar' ? 'الإحصائيات' : 'Statistics', to: '../../dashboard/dashboard/stats', color: 'hover:border-purple-500/50 hover:bg-purple-50 dark:hover:border-purple-500/50 dark:hover:bg-purple-500/5' },
+        { icon: MessageSquare, label: lang === 'ar' ? 'طلب استشارة' : 'Request Consultation', to: '../../dashboard/services/consultation', color: 'hover:border-purple-500/50 hover:bg-purple-50 dark:hover:border-purple-500/50 dark:hover:bg-purple-500/5' },
     ];
 };
 
@@ -171,6 +171,31 @@ const ActivitySkeleton = () => (
     </div>
 );
 
+// ✅ بطاقات "إحصائيات النشر" — منقولة من صفحة الإحصائيات المستقلة السابقة
+// (StatsPage.jsx، محذوفة الآن) لتُعرض هنا ضمن لوحة التحكم مباشرة. تعتمد على
+// get_stats.php (مقاييس نشر البحث: أبحاث/استشهادات/مشاهدات/تحميلات) — مختلف
+// تماماً عن get_dashboard.php أعلاه (مقاييس طلبات الخدمات).
+const PUBLISHING_CARD_DEFS = [
+    { key: 'researches', icon: FileText, color: 'from-[#e8623a] to-[#f0916d]' },
+    { key: 'citations', icon: TrendingUp, color: 'from-emerald-500 to-emerald-400' },
+    { key: 'views', icon: Eye, color: 'from-[#d4502a] to-[#e8623a]' },
+    { key: 'downloads', icon: Download, color: 'from-gray-500 to-gray-400' },
+];
+const PUBLISHING_CARD_LABELS = {
+    researches: { ar: 'الأبحاث', en: 'Researches' },
+    citations: { ar: 'الاستشهادات', en: 'Citations' },
+    views: { ar: 'المشاهدات', en: 'Views' },
+    downloads: { ar: 'التحميلات', en: 'Downloads' },
+};
+
+const PublishingStatSkeleton = () => (
+    <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6 animate-pulse">
+        <div className="w-12 h-12 rounded-xl bg-gray-200 dark:bg-[#3a322c] mb-4" />
+        <div className="w-16 h-8 rounded-lg bg-gray-200 dark:bg-[#3a322c] mb-1" />
+        <div className="w-20 h-3 rounded bg-gray-200 dark:bg-[#3a322c]" />
+    </div>
+);
+
 const DashboardHome = () => {
     const { user: userData, currentLang, isRTL } = useSite();
     const isAr = currentLang === 'ar';
@@ -195,10 +220,15 @@ const DashboardHome = () => {
             formData.append('user_id', userId || '');
             formData.append('lang', currentLang);
 
+            // ⚠️ لا نستخدم credentials: 'include' هنا — get_dashboard.php لا يعتمد
+            // على كوكيز/session إطلاقاً (المصادقة عبر user_id بالـ FormData فقط)،
+            // وإرسالها كان يجعل المتصفح يرفض استجابة السيرفر لأن رأس CORS المُعاد
+            // هو 'Access-Control-Allow-Origin: *' — والمواصفة تمنع الجمع بين
+            // النجمة العامة و credentials صراحةً (يسبب فشل fetch رغم نجاح الطلب
+            // فعلياً على السيرفر، وهذا بالضبط ما ظهر بخطأ CORS في console).
             const res = await fetch(`${API_BASE_URL}/get_dashboard.php`, {
                 method: 'POST',
                 body: formData,
-                credentials: 'include',
             });
             const result = await res.json();
 
@@ -217,6 +247,21 @@ const DashboardHome = () => {
 
     useEffect(() => {
         if (userId) fetchDashboard();
+    }, [userId]);
+
+    // ✅ إحصائيات النشر (منقولة من StatsPage.jsx السابقة) — طلب منفصل ومستقل
+    // عن fetchDashboard لأنه API مختلف تماماً (get_stats.php)
+    const [publishingStats, setPublishingStats] = useState({ researches: 0, citations: 0, views: 0, downloads: 0, monthly: [] });
+    const [publishingLoading, setPublishingLoading] = useState(true);
+
+    useEffect(() => {
+        if (!userId) return;
+        setPublishingLoading(true);
+        fetch(`${API_BASE_URL}/get_stats.php?user_id=${userId}`)
+            .then((r) => r.json())
+            .then((r) => { if (r.status === 'success') setPublishingStats(r.data); })
+            .catch(() => {})
+            .finally(() => setPublishingLoading(false));
     }, [userId]);
 
     const stats = getStats(userData?.role, currentLang, dashboardData?.stats);
@@ -347,7 +392,7 @@ const DashboardHome = () => {
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-gray-900 dark:text-white text-sm font-bold transition-colors duration-300">{isAr ? 'النشاط الأخير' : 'Recent Activity'}</h2>
                         {activity.length > 0 && (
-                            <Link to="/dashboard/activity" className="text-[#e8623a] text-xs font-medium hover:underline flex items-center gap-1">
+                            <Link to="/dashboard/settings?tab=activity" className="text-[#e8623a] text-xs font-medium hover:underline flex items-center gap-1">
                                 {isAr ? 'عرض الكل' : 'View All'} <Arrow className="w-3 h-3" />
                             </Link>
                         )}
@@ -396,6 +441,56 @@ const DashboardHome = () => {
                     )}
                 </motion.div>
 
+            </div>
+
+            {/* ─── إحصائيات النشر (منقولة من صفحة الإحصائيات المستقلة السابقة) ─── */}
+            <div>
+                <h2 className="text-gray-900 dark:text-white text-sm font-bold mb-4 transition-colors duration-300">
+                    {isAr ? 'إحصائيات النشر' : 'Publishing Stats'}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    {publishingLoading
+                        ? Array.from({ length: 4 }).map((_, i) => <PublishingStatSkeleton key={i} />)
+                        : PUBLISHING_CARD_DEFS.map((s) => {
+                            const Icon = s.icon;
+                            return (
+                                <div key={s.key} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6 hover:shadow-md transition-shadow">
+                                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} text-white flex items-center justify-center mb-4 shadow-lg`}>
+                                        <Icon className="w-6 h-6" />
+                                    </div>
+                                    <p className="text-3xl font-black text-gray-900 dark:text-white">{publishingStats[s.key]}</p>
+                                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? PUBLISHING_CARD_LABELS[s.key].ar : PUBLISHING_CARD_LABELS[s.key].en}</p>
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+
+                <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6">
+                    <h3 className="text-gray-900 dark:text-white text-sm font-bold mb-4">{isAr ? 'الأبحاث الشهرية' : 'Monthly Research Submissions'}</h3>
+                    {publishingLoading ? (
+                        <div className="flex items-center justify-center h-64">
+                            <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                        </div>
+                    ) : (
+                        <div className="h-64">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={publishingStats.monthly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-gray-100 dark:stroke-[#3a322c]/40" />
+                                    <XAxis dataKey={isAr ? 'label_ar' : 'label_en'} tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
+                                    <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                                    <Tooltip
+                                        cursor={{ fill: 'rgba(232, 98, 58, 0.06)' }}
+                                        contentStyle={{ borderRadius: 12, border: '1px solid #f3f4f6', backgroundColor: '#ffffff', fontSize: 12 }}
+                                        wrapperClassName="dark:[&_.recharts-default-tooltip]:!bg-[#211c18] dark:[&_.recharts-default-tooltip]:!border-[#3a322c]"
+                                        labelStyle={{ fontWeight: 700, marginBottom: 4 }}
+                                    />
+                                    <Bar dataKey="total" fill="#e8623a" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الأبحاث' : 'Researches'} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

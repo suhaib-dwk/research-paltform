@@ -216,8 +216,11 @@ const ReviewServicePage = () => {
         try {
             const formData = new FormData();
             formData.append('user_id', user?.id || '');
+            // ⚠️ بدون credentials: 'include' — لا اعتماد على كوكيز/session هنا
+            // (user_id بالـ FormData فقط)، وإرسالها مع Access-Control-Allow-Origin: *
+            // بالسيرفر يجعل المتصفح يحجب الاستجابة رغم نجاح الطلب فعلياً.
             const res = await fetch(`${API_BASE_URL}/get_review_requests.php`, {
-                method: 'POST', body: formData, credentials: 'include',
+                method: 'POST', body: formData,
             });
             const result = await res.json();
             if (result.status === 'success') setRequests(result.data);
@@ -279,8 +282,9 @@ const ReviewServicePage = () => {
             formData.append('parent_request_id', selectedParentId);
         }
 
+        // ⚠️ بدون credentials: 'include' — نفس سبب get_review_requests.php أعلاه
         const res = await fetch(`${API_BASE_URL}/submit_review.php`, {
-            method: 'POST', body: formData, credentials: 'include',
+            method: 'POST', body: formData,
         });
         const result = await res.json();
 

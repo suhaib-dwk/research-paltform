@@ -32,14 +32,12 @@ import SettingsPage from './pages/dashboard/SettingsPage';
 import AccountPage from './pages/dashboard/AccountPage';
 import MessagesPage from './pages/dashboard/MessagesPage';
 import HelpDashboardPage from './pages/dashboard/HelpDashboardPage';
-import ActivityPage from './pages/dashboard/ActivityPage';
 import TasksPage from './pages/dashboard/TasksPage';
 import ResearchesPage from './pages/dashboard/ResearchesPage';
 import NewResearchPage from './pages/dashboard/NewResearchPage';
 import CollaborationsPage from './pages/services/CollaborationsPage';
 import ReviewsPage from './pages/dashboard/ReviewsPage';
 import ReviewsHistoryPage from './pages/dashboard/ReviewsHistoryPage';
-import StatsPage from './pages/dashboard/StatsPage';
 import AcademicQualityPage from './pages/dashboard/AcademicQualityPage';
 import ProviderRequestsPage from './pages/dashboard/ProviderRequestsPage';
 import UniversityProfilePage from './pages/dashboard/UniversityProfilePage';
@@ -133,7 +131,6 @@ function AppContent() {
               <Route path="account" element={<AccountPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="help" element={<HelpDashboardPage />} />
-              <Route path="activity" element={<ActivityPage />} />
 
               {/* صفحات الخدمات (فهرس عام + ديناميكية حسب الـ slug) */}
               <Route path="services" element={<ServicesIndexPage />} />
@@ -151,7 +148,6 @@ function AppContent() {
               <Route path="collaborations" element={<RoleRoute allowedRoles={['researcher', 'faculty', 'university', 'research_center']}><CollaborationsPage /></RoleRoute>} />
               <Route path="reviews" element={<RoleRoute allowedRoles={['reviewer', 'faculty']}><ReviewsPage /></RoleRoute>} />
               <Route path="reviews/history" element={<RoleRoute allowedRoles={['reviewer', 'faculty']}><ReviewsHistoryPage /></RoleRoute>} />
-              <Route path="stats" element={<RoleRoute allowedRoles={nonEmployeeRoles}><StatsPage /></RoleRoute>} />
               <Route path="university-profile" element={<RoleRoute allowedRoles={['university']}><UniversityProfilePage /></RoleRoute>} />
               <Route path="academic-quality" element={<RoleRoute allowedRoles={['university', 'college', 'research_center']}><AcademicQualityPage /></RoleRoute>} />
               <Route path="provider-requests" element={<RoleRoute allowedRoles={['service_provider']}><ProviderRequestsPage /></RoleRoute>} />

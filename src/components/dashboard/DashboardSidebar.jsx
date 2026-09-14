@@ -56,7 +56,6 @@ const getMenuGroups = (role, t, isAr) => {
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 3 },
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -68,7 +67,6 @@ const getMenuGroups = (role, t, isAr) => {
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 2 },
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -80,7 +78,6 @@ const getMenuGroups = (role, t, isAr) => {
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 2 },
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -94,7 +91,6 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'reviews', icon: ShieldCheck, label: t('reviews.title'), to: '/dashboard/reviews', badge: 2 },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 5 },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -108,7 +104,6 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 1 },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -138,7 +133,6 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -152,7 +146,6 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'academic-quality', icon: Award, label: t('academic_quality.title'), to: '/dashboard/academic-quality' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -167,7 +160,6 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -179,7 +171,6 @@ const getMenuGroups = (role, t, isAr) => {
       ]},
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -221,7 +212,6 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'reviews', icon: ShieldCheck, label: t('reviews.title'), to: '/dashboard/reviews' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'stats', icon: BarChart3, label: t('stats.title'), to: '/dashboard/stats' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
@@ -246,19 +236,30 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
     return location.pathname.startsWith(to);
   };
 
-  // ✅ "الخدمات" نشطة عند فتح فهرسها (/dashboard/services) أو أي خدمة فرعية منه
-  const isServicesActive = location.pathname.startsWith('/dashboard/services');
+  // ✅ "الخدمات" نشطة عند فتح فهرسها (/dashboard/services) أو أي خدمة فرعية
+  // منه، باستثناء المساعد الذكي — له رابط مستقل بنفس المجموعة فيتولى تنشيط
+  // نفسه عبر isActive العادية بدل ما يُحسب ضمن نشاط "الخدمات".
+  const isServicesActive = location.pathname.startsWith('/dashboard/services')
+    && !location.pathname.startsWith('/dashboard/services/ai-assistant');
 
-  // ✅ حقن رابط فهرس الخدمات كأول عنصر داخل مجموعة "الخدمات" (مشترك بين كل
-  // الأدوار، فلا يُكرَّر تعريفه بكل دور جوا getMenuGroups). يظهر فقط لو عند
-  // الدور خدمات فعلية بـ SIDEBAR_SERVICES (نفس شرط الظهور القديم).
+  // ✅ حقن رابط فهرس الخدمات + رابط "المساعد الذكي" كأول عنصرين داخل مجموعة
+  // "الخدمات" (مشتركان بين كل الأدوار، فلا يُكرَّر تعريفهما بكل دور جوا
+  // getMenuGroups). المساعد الذكي يظهر فقط للأدوار الخمسة المؤهَّلة لخدمة
+  // svc_ai_assistant أصلاً (نتحقق عبر visibleServices بدل تكرار قائمة أدوار).
+  const aiAssistantService = visibleServices.find((svc) => svc.slug === 'ai-assistant');
   const menuGroups = getMenuGroups(userData?.role, t, isAr).map((group) => {
     if (group.id !== 'services' || visibleServices.length === 0) return group;
     const servicesLink = {
       id: 'services-index', icon: BookOpen, to: '/dashboard/services',
       label: isAr ? 'الخدمات' : 'Services', badge: visibleServices.length, isServicesLink: true,
     };
-    return { ...group, items: [servicesLink, ...group.items] };
+    const injected = aiAssistantService
+      ? [servicesLink, {
+          id: 'ai-assistant-link', icon: aiAssistantService.icon, to: '/dashboard/services/ai-assistant',
+          label: isAr ? aiAssistantService.label_ar : aiAssistantService.label_en,
+        }]
+      : [servicesLink];
+    return { ...group, items: [...injected, ...group.items] };
   }).filter((group) => group.items.length > 0);
 
   const handleLinkClick = () => {

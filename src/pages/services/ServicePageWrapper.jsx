@@ -238,7 +238,7 @@ const ServicePageWrapper = ({
   const CardRenderer = renderRequestCard || DefaultRequestCard;
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* ---- رأس الصفحة ---- */}
       <div className="flex items-center gap-4">
         <div className={`w-12 h-12 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center shadow-lg ${shadowColor}`}>

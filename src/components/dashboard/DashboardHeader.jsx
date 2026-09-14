@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GraduationCap, Bell, Menu, ChevronDown,
-  User, LogOut, Languages, Sun, Moon, Settings, Clock
+  User, LogOut, Languages, Sun, Moon, Settings
 } from 'lucide-react';
 import { useSite } from '../../SiteContext';
 
@@ -162,10 +162,6 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
                   <Link to="/dashboard/settings" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
                     <Settings className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     {t('settings.title')}
-                  </Link>
-                  <Link to="/dashboard/activity" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
-                    <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                    {t('activity.title')}
                   </Link>
                 </div>
 

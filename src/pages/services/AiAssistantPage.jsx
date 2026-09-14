@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSite } from '../../SiteContext';
+import { API_BASE_URL } from '../../api';
 import ServicePageWrapper from './ServicePageWrapper';
-import { Sparkles, Send, Bot, User, Loader2, ListChecks, Lightbulb, HelpCircle } from 'lucide-react';
+import { Sparkles, Send, Bot, User, Loader2, ListChecks, Lightbulb, HelpCircle, AlertCircle } from 'lucide-react';
 
-const INITIAL_MSGS = [
-  { id: 1, role: 'assistant', content_ar: 'مرحباً! أنا المساعد الذكي لأبحاثك. كيف يمكنني مساعدتك؟', content_en: "Hello! I'm your smart research assistant. How can I help?" },
+// ✅ رسالة الترحيب الافتراضية بنسختين — تُستبدَل حسب لغة الواجهة الحالية عند
+// أول تحميل فقط (انظر useState الابتدائي بالمكوّن)، وليست ثنائية اللغة بعد ذلك.
+const getInitialMsgs = (isAr) => [
+  { id: 1, role: 'assistant', content: isAr ? 'مرحباً! أنا المساعد الذكي لأبحاثك. كيف يمكنني مساعدتك؟' : "Hello! I'm your smart research assistant. How can I help?" },
 ];
 
 const QUICK = [
@@ -16,23 +19,63 @@ const QUICK = [
 const AiAssistantPage = () => {
   const { currentLang, user } = useSite();
   const isAr = currentLang === 'ar';
-  const [messages, setMessages] = useState(INITIAL_MSGS);
+  const entityId = user?.user_id ?? user?.id;
+  const [messages, setMessages] = useState(() => getInitialMsgs(isAr));
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorNotice, setErrorNotice] = useState(null); // { type: 'info' | 'error', text }
   const endRef = useRef(null);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const handleSend = () => {
-    if (!input.trim() || isLoading) return;
-    setMessages(p => [...p, { id: Date.now(), role: 'user', content_ar: input, content_en: input }]);
+  // ✅ يستدعي ai_chat_assistant.php فعلياً — يقرأ مفتاح المزوّد المفعّل (OpenRouter/OpenAI)
+  // من لوحة تحكم الأدمن (نفس آلية تقييم جاهزية الجامعة)، بدل الردود الوهمية الثابتة سابقاً.
+  //
+  // ✅ كل رسالة تُخزَّن بحقل content واحد فقط (نص فعلي بلغة كتابتها/استلامها)،
+  // لا content_ar/content_en مكرَّرين — لأنه لا توجد ترجمة فعلية بينهما أصلاً.
+  // هذا يمنع تناقضاً كان يحدث سابقاً: لو المستخدم بدّل لغة الواجهة منتصف
+  // محادثة قائمة، كانت رسائل سابقة تُعرض/تُرسَل بلغة الواجهة الحالية بأثر
+  // رجعي رغم أن نصها الفعلي المخزَّن لم يتغيّر (لأن content_ar/content_en
+  // كانا نسخة واحدة مكررة تحت مفتاحين، لا ترجمة حقيقية). الآن lang المُرسل
+  // للخادم يعتمد على لغة رسالة المستخدم الحالية فعلياً، لا على currentLang
+  // العامة المطبَّقة بأثر رجعي على كل التاريخ.
+  const handleSend = async () => {
+    if (!input.trim() || isLoading || !entityId) return;
+    const userMessage = { id: Date.now(), role: 'user', content: input, lang: currentLang };
+    const nextMessages = [...messages, userMessage];
+    setMessages(nextMessages);
     setInput('');
     setIsLoading(true);
-    setTimeout(() => {
-      const r = isAr ? ['بناءً على سؤالك، إليك بعض الاقتراحات المفيدة لبحثك. أنصحك بالتركيز على الجانب المنهجي وتحديد الفجوة البحثية بوضوح.', 'هذا سؤال جيد. يُفضل مراجعة الدراسات السابقة وتحليل المنهجيات المستخدمة لتحديد أفضل نهج.', 'يمكنني مساعدتك في تحسين الصياغة الأكاديمية. النص يجب أن يكون دقيقاً وموضوعياً.'] : ['Based on your question, here are some useful suggestions. Focus on methodology and clearly identify the research gap.', 'Good question. Review previous studies and analyze methodologies to determine the best approach.', 'I can help improve academic writing. Text should be precise and objective.'][Math.floor(Math.random() * 3)];
-      setMessages(p => [...p, { id: Date.now(), role: 'assistant', content_ar: r, content_en: r }]);
+    setErrorNotice(null);
+
+    try {
+      // نرسل تاريخ المحادثة كاملاً (بصيغة role/content بسيطة يفهمها أي مزوّد متوافق مع OpenAI)
+      const history = nextMessages
+        .filter((m) => m.role === 'user' || m.role === 'assistant')
+        .map((m) => ({ role: m.role, content: m.content }));
+
+      const res = await fetch(`${API_BASE_URL}/ai_chat_assistant.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // ✅ lang هنا يعكس لغة الرسالة الحالية فعلياً (وليس لغة واجهة عامة
+        // قد لا تطابق لغة النص الفعلي لو بُدِّلت أثناء محادثة قائمة).
+        body: JSON.stringify({ user_id: entityId, lang: currentLang, messages: history }),
+      });
+      const result = await res.json();
+
+      if (result.status === 'success') {
+        const replyText = result.data.content;
+        setMessages((p) => [...p, { id: Date.now() + 1, role: 'assistant', content: replyText, lang: currentLang }]);
+      } else if (result.message === 'ai_not_configured') {
+        setErrorNotice({ type: 'info', text: isAr ? 'ميزة الذكاء الاصطناعي غير مُفعّلة بعد على هذا الخادم (لم يُضبط مفتاح مزوّد من لوحة تحكم الأدمن).' : 'AI features are not configured on this server yet (no provider key set from the admin panel).' });
+      } else {
+        setErrorNotice({ type: 'error', text: isAr ? 'تعذّر الحصول على رد، حاول مرة أخرى لاحقاً.' : 'Failed to get a response, please try again later.' });
+      }
+    } catch (err) {
+      setErrorNotice({ type: 'error', text: isAr ? 'تعذّر الاتصال بالخادم' : 'Failed to connect to server' });
+    } finally {
       setIsLoading(false);
-    }, 1200);
+    }
   };
 
   const guideSections = [
@@ -50,6 +93,16 @@ const AiAssistantPage = () => {
           </button>
         ))}
       </div>
+      {errorNotice && (
+        <div className={`flex items-start gap-2.5 p-3 mb-3 rounded-xl border text-sm font-medium ${
+          errorNotice.type === 'info'
+            ? 'bg-blue-50 dark:bg-blue-900/15 border-blue-200 dark:border-blue-800/30 text-blue-600 dark:text-blue-400'
+            : 'bg-red-50 dark:bg-red-900/15 border-red-200 dark:border-red-800/30 text-red-600 dark:text-red-400'
+        }`}>
+          <AlertCircle className="w-4.5 h-4.5 flex-shrink-0 mt-0.5" />
+          <p>{errorNotice.text}</p>
+        </div>
+      )}
       <div className="flex-1 bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {messages.map(m => (
@@ -57,8 +110,11 @@ const AiAssistantPage = () => {
               <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${m.role === 'user' ? 'bg-gradient-to-br from-[#e8623a] to-[#f0916d]' : 'bg-gradient-to-br from-amber-400 to-amber-600'}`}>
                 {m.role === 'user' ? <User className="w-3.5 h-3.5 text-white" /> : <Bot className="w-3.5 h-3.5 text-white" />}
               </div>
-              <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${m.role === 'user' ? 'bg-[#e8623a] text-white rounded-tr-sm' : 'bg-gray-100 dark:bg-[#2a231e] text-gray-700 dark:text-gray-300 rounded-tl-sm'}`}>
-                {isAr ? m.content_ar : m.content_en}
+              <div
+                dir={m.lang ? (m.lang === 'ar' ? 'rtl' : 'ltr') : undefined}
+                className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${m.role === 'user' ? 'bg-[#e8623a] text-white rounded-tr-sm' : 'bg-gray-100 dark:bg-[#2a231e] text-gray-700 dark:text-gray-300 rounded-tl-sm'}`}
+              >
+                {m.content}
               </div>
             </div>
           ))}

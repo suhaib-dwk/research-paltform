@@ -91,8 +91,11 @@ const TranslationPage = () => {
         try {
             const formData = new FormData();
             formData.append('user_id', entityId || '');
+            // ⚠️ بدون credentials: 'include' — لا اعتماد على كوكيز/session هنا
+            // (user_id بالـ FormData فقط)، وإرسالها مع Access-Control-Allow-Origin: *
+            // بالسيرفر يجعل المتصفح يحجب الاستجابة رغم نجاح الطلب فعلياً.
             const res = await fetch(`${API_BASE_URL}/get_translation_requests.php`, {
-                method: 'POST', body: formData, credentials: 'include',
+                method: 'POST', body: formData,
             });
             const result = await res.json();
             if (result.status === 'success') setRequests(result.data);
@@ -145,8 +148,9 @@ const TranslationPage = () => {
                 formData.append('english_variant', englishVariant);
             }
 
+            // ⚠️ بدون credentials: 'include' — نفس سبب get_translation_requests.php أعلاه
             const res = await fetch(`${API_BASE_URL}/submit_translation.php`, {
-                method: 'POST', body: formData, credentials: 'include',
+                method: 'POST', body: formData,
             });
             const result = await res.json();
 
