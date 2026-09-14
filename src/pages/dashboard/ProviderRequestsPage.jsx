@@ -176,15 +176,13 @@ const ProviderRequestsPage = () => {
     const serviceLabel = (slug) => SERVICE_LABELS[slug] ? (isAr ? SERVICE_LABELS[slug].ar : SERVICE_LABELS[slug].en) : slug;
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-2xl flex items-center justify-center shadow-lg shadow-[#e8623a]/20">
-                    <Briefcase className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">{isAr ? 'طلبات الخدمة' : 'Service Requests'}</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{isAr ? 'إدارة طلبات الخدمات التي تقدّمها' : 'Manage requests for the services you provide'}</p>
-                </div>
+        <div className="max-w-6xl mx-auto space-y-6">
+            <div>
+                <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+                    <Briefcase className="w-6 h-6 text-[#e8623a]" />
+                    {isAr ? 'طلبات الخدمة' : 'Service Requests'}
+                </h1>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة طلبات الخدمات التي تقدّمها' : 'Manage requests for the services you provide'}</p>
             </div>
 
             {actionError && (

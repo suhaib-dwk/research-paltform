@@ -84,7 +84,7 @@ const SettingsPage = () => {
     }
 
     return (
-        <div className="p-6 space-y-6 max-w-3xl">
+        <div className="p-6 space-y-6 max-w-3xl mx-auto">
             <div className="mb-2">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'الإعدادات' : 'Settings'}</h1>
                 <p className="text-sm text-gray-400 mt-1">{isAr ? 'إدارة تفضيلاتك وإعدادات الحساب' : 'Manage your preferences and account settings'}</p>

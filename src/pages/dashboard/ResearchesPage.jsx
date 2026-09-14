@@ -60,11 +60,11 @@ const ResearchesPage = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="max-w-6xl mx-auto p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                 <div>
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'الأبحاث' : 'Researches'}</h1>
-                    <p className="text-sm text-gray-400 mt-1">{isAr ? 'إدارة أبحاثك ومنشوراتك' : 'Manage your research and publications'}</p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة أبحاثك ومنشوراتك' : 'Manage your research and publications'}</p>
                 </div>
                 <Link to="/dashboard/researches/new" className="flex items-center gap-2 bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#e8623a]/25 transition-all">
                     <Plus className="w-4 h-4" /> {isAr ? 'بحث جديد' : 'New Research'}
@@ -99,7 +99,7 @@ const ResearchesPage = () => {
                                 <div className="flex items-center gap-1.5 mt-1"><Calendar className="w-3.5 h-3.5 text-gray-400" /><span className="text-xs text-gray-400">{r.date}</span></div>
                             </div>
                             <span className={`text-xs font-bold px-3 py-1.5 rounded-full flex-shrink-0 ${statusColors[r.status]}`}>{statusLabel(r.status, isAr)}</span>
-                            <button onClick={() => openDetails(r.id)} className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 dark:text-blue-400 flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors flex-shrink-0"><Eye className="w-4 h-4" /></button>
+                            <button onClick={() => openDetails(r.id)} className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center hover:bg-orange-100 dark:hover:bg-[#e8623a]/20 transition-colors flex-shrink-0"><Eye className="w-4 h-4" /></button>
                         </div>
                     ))}
                 </div>

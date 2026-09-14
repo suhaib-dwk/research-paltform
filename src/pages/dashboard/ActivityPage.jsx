@@ -8,7 +8,7 @@ const EVENT_STYLES = {
     login: { icon: LogIn, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
     profile_update: { icon: FileText, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     avatar_update: { icon: FileText, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
-    research_submit: { icon: CheckCircle, color: 'text-[#e8623a] bg-[#e8623a]/10' },
+    research_submit: { icon: CheckCircle, color: 'text-[#e8623a] bg-[#e8623a]/10 dark:text-[#f0916d] dark:bg-[#e8623a]/15' },
     review_submit: { icon: ShieldCheck, color: 'text-violet-500 bg-violet-50 dark:bg-violet-900/20 dark:text-violet-400' },
     task_complete: { icon: CheckCircle, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     message_reply: { icon: MessageSquare, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
@@ -42,10 +42,10 @@ const ActivityPage = () => {
     }, [entityId]);
 
     return (
-        <div className="p-6 max-w-3xl">
+        <div className="p-6 max-w-3xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'سجل النشاط' : 'Activity Log'}</h1>
-                <p className="text-sm text-gray-400 mt-1">{isAr ? 'آخر الأحداث والإجراءات على حسابك' : 'Recent actions on your account'}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'آخر الأحداث والإجراءات على حسابك' : 'Recent actions on your account'}</p>
             </div>
 
             {error && !loading && (
@@ -80,8 +80,8 @@ const ActivityPage = () => {
                                         <div className="flex-1 pb-6">
                                             <p className="font-semibold text-gray-900 dark:text-white text-sm">{isAr ? log.action_ar : log.action_en}</p>
                                             <div className="flex items-center gap-1.5 mt-1">
-                                                <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                                <p className="text-xs text-gray-400">{log.time}</p>
+                                                <Clock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+                                                <p className="text-xs text-gray-400 dark:text-gray-500">{log.time}</p>
                                             </div>
                                         </div>
                                     </div>

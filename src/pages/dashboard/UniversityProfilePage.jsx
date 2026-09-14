@@ -237,13 +237,13 @@ const UniversityProfilePage = () => {
     }
 
     return (
-        <div className="p-6 max-w-4xl space-y-6">
+        <div className="p-6 max-w-6xl mx-auto space-y-6">
             <div>
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
                     <Building2 className="w-6 h-6 text-[#e8623a]" />
                     {isAr ? 'ملف الجامعة البحثية' : 'University Research Profile'}
                 </h1>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                     {entityName || (isAr ? 'أكمل بيانات جامعتك الأساسية وهيكلها الأكاديمي' : 'Complete your university\'s basic information and academic structure')}
                 </p>
             </div>
@@ -454,7 +454,7 @@ const UniversityProfilePage = () => {
                 )}
 
                 {!assessment && !assessmentError && (
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-gray-400 dark:text-gray-500">
                         {isAr ? 'لم يتم إجراء أي تقييم بعد. اضغط الزر أعلاه لتحليل ملف جامعتك وتقدير مدى جاهزيتها البحثية.' : 'No assessment has been run yet. Click the button above to analyze your university profile and estimate its research readiness.'}
                     </p>
                 )}

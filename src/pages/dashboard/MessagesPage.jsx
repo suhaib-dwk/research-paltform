@@ -85,10 +85,10 @@ const MessagesPage = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 max-w-6xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'الرسائل' : 'Messages'}</h1>
-                <p className="text-sm text-gray-400 mt-1">{isAr ? 'رسائلك وإشعاراتك' : 'Your messages and notifications'}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'رسائلك وإشعاراتك' : 'Your messages and notifications'}</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-220px)]">
@@ -116,7 +116,7 @@ const MessagesPage = () => {
                                         <p className={`text-sm font-semibold ${msg.read ? 'text-gray-600 dark:text-gray-400' : 'text-gray-900 dark:text-white'}`}>{isAr ? msg.subject_ar : msg.subject_en}</p>
                                         {!msg.read && <span className="w-2.5 h-2.5 bg-[#e8623a] rounded-full flex-shrink-0 mt-1.5" />}
                                     </div>
-                                    <p className="text-xs text-gray-400 mt-1">{msg.date}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{msg.date}</p>
                                 </button>
                             ))
                         )}

@@ -162,7 +162,8 @@ const InputField = ({ t, isAr, labelKey, name, type = 'text', colSpan = '', opti
       ? 'border-emerald-200 bg-emerald-50/50 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100'
       : 'border-gray-200 focus:border-brand-orange focus:ring-4 focus:ring-brand-orange/10 hover:border-brand-orange/50';
       
-  const dir = ['email', 'url', 'password'].includes(type) ? 'ltr' : undefined;
+  // ✅ يتبع اتجاه اللغة الحالية بدل LTR ثابت دائمًا — يبقى RTL في الصفحة العربية
+  const dir = ['email', 'url', 'password'].includes(type) ? (isAr ? 'rtl' : 'ltr') : undefined;
 
   const renderControl = () => {
     if (type === 'select') {

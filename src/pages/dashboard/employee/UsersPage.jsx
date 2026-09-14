@@ -98,10 +98,10 @@ const UsersPage = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 max-w-6xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'المستخدمون' : 'Users'}</h1>
-                <p className="text-sm text-gray-400 mt-1">{isAr ? 'إدارة حسابات المستخدمين والموافقة عليها' : 'Manage and approve user accounts'}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة حسابات المستخدمين والموافقة عليها' : 'Manage and approve user accounts'}</p>
             </div>
             <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 overflow-hidden">
                 <div className="p-4 border-b border-gray-50 dark:border-[#3a322c]/50 flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -147,7 +147,7 @@ const UsersPage = () => {
                                     </td>
                                     <td className="px-5 py-3.5">
                                         <div className="flex items-center gap-2">
-                                            <button onClick={() => openDetails(u.id)} className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500 dark:text-blue-400 flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"><Eye className="w-4 h-4" /></button>
+                                            <button onClick={() => openDetails(u.id)} className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center hover:bg-orange-100 dark:hover:bg-[#e8623a]/20 transition-colors"><Eye className="w-4 h-4" /></button>
                                             {u.status === 'pending' && (
                                                 <>
                                                     <button

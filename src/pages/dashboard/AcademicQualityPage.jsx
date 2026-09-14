@@ -400,7 +400,7 @@ const AcademicQualityPage = () => {
     ];
 
     return (
-        <div className="p-6">
+        <div className="p-6 max-w-6xl mx-auto">
             {/* رأس الصفحة */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <div>
@@ -408,7 +408,7 @@ const AcademicQualityPage = () => {
                         <Award className="w-6 h-6 text-[#e8623a]" />
                         {isAr ? 'جودة الأكاديمية — معيار البحث العلمي' : 'Academic Quality — Scientific Research Standard'}
                     </h1>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                         {isAr
                             ? `المعيار ${std.code} · الوزن في الاعتماد المؤسسي العراقي ${std.weight_percent}% · ${std.indicators_count} مؤشرًا ضمن 8 عناصر`
                             : `Standard ${std.code} · Weight in Iraqi institutional accreditation ${std.weight_percent}% · ${std.indicators_count} indicators across 8 elements`}
@@ -429,9 +429,9 @@ const AcademicQualityPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {statCards.map((s, i) => (
                     <div key={i} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5">
-                        <p className="text-xs text-gray-400 mb-2">{s.label}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">{s.label}</p>
                         <p className="text-2xl font-black text-gray-900 dark:text-white">
-                            {s.value}<small className="text-sm font-medium text-gray-400">{s.suffix}</small>
+                            {s.value}<small className="text-sm font-medium text-gray-400 dark:text-gray-500">{s.suffix}</small>
                         </p>
                     </div>
                 ))}
@@ -468,7 +468,7 @@ const AcademicQualityPage = () => {
                     {activeElement && (
                         <>
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{isAr ? activeElement.name_ar : (activeElement.name_en || activeElement.name_ar)}</h2>
-                            <p className="text-xs text-gray-400 mb-4">
+                            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
                                 {isAr
                                     ? `${activeElement.indicators.length} مؤشرًا ضمن هذا العنصر — الفترة المرجعية ${period}`
                                     : `${activeElement.indicators.length} indicators in this element — reporting period ${period}`}
@@ -488,7 +488,7 @@ const AcademicQualityPage = () => {
                                                 className="w-full flex items-center justify-between gap-3 px-4 py-3.5 bg-gray-50/70 dark:bg-[#1a1613]/60 text-start"
                                             >
                                                 <span className="flex items-baseline gap-2.5 min-w-0">
-                                                    <span className="text-[11px] text-gray-400 flex-shrink-0">{ind.code}</span>
+                                                    <span className="text-[11px] text-gray-400 dark:text-gray-500 flex-shrink-0">{ind.code}</span>
                                                     <span className="text-sm text-gray-900 dark:text-white truncate">{isAr ? ind.title_ar : (ind.title_en || ind.title_ar)}</span>
                                                 </span>
                                                 <span className="flex items-center gap-2 flex-shrink-0">

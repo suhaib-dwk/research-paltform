@@ -93,10 +93,10 @@ const NewResearchPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-3xl">
+        <div className="p-6 max-w-3xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'إضافة بحث جديد' : 'Add New Research'}</h1>
-                <p className="text-sm text-gray-400 mt-1">{isAr ? 'املأ بيانات البحث وارفع الملف' : 'Fill in the research details and upload file'}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'املأ بيانات البحث وارفع الملف' : 'Fill in the research details and upload file'}</p>
             </div>
 
             {error && (
@@ -146,8 +146,8 @@ const NewResearchPage = () => {
                             </div>
                         ) : (
                             <>
-                                <Upload className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-                                <p className="text-sm text-gray-500">{isAr ? 'اسحب الملف هنا أو اضغط للاختيار (PDF, DOCX - حد أقصى 20MB)' : 'Drag file here or click to select (PDF, DOCX - Max 20MB)'}</p>
+                                <Upload className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{isAr ? 'اسحب الملف هنا أو اضغط للاختيار (PDF, DOCX - حد أقصى 20MB)' : 'Drag file here or click to select (PDF, DOCX - Max 20MB)'}</p>
                             </>
                         )}
                     </label>

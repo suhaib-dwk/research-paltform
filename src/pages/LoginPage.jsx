@@ -305,7 +305,7 @@ const LoginPage = () => {
                       }}
                       className={getInputClass('email', true)}
                       placeholder="name@university.edu"
-                      dir="ltr"
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
                     {touched.email && email.trim() && (
                       <span className="absolute end-4 top-1/2 -translate-y-1/2">
@@ -347,7 +347,7 @@ const LoginPage = () => {
                       }}
                       className={getInputClass('password', true, true)}
                       placeholder="••••••••"
-                      dir="ltr"
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
                     <button
                       type="button"
@@ -420,7 +420,7 @@ const LoginPage = () => {
                   </h2>
                   <p className="text-xs text-brand-muted font-medium mt-0.5">
                     {t('login.otp_desc')} <br />
-                    <span className="font-bold text-brand-ink mt-1 block" dir="ltr">{email}</span>
+                    <span className="font-bold text-brand-ink mt-1 block" dir={isRTL ? 'rtl' : 'ltr'}>{email}</span>
                   </p>
                 </div>
               </div>
@@ -434,7 +434,7 @@ const LoginPage = () => {
               <form onSubmit={handleOtpSubmit} noValidate>
                 <div
                   className={`flex justify-center gap-3 mb-6 ${otpError ? 'mb-2' : ''}`}
-                  dir="ltr"
+                  dir={isRTL ? 'rtl' : 'ltr'}
                   onPaste={handlePaste}
                 >
                   {otp.map((data, index) => (
@@ -532,7 +532,7 @@ const LoginPage = () => {
                       }}
                       className={getInputClass('email', true)}
                       placeholder="name@university.edu"
-                      dir="ltr"
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
                     {touched.email && email.trim() && (
                       <span className="absolute end-4 top-1/2 -translate-y-1/2">

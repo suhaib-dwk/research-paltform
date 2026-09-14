@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, ArrowUpRight, BookOpen } from 'lucide-react';
+import { X, ArrowUpRight, BookOpen, FileText } from 'lucide-react';
 import { useSite } from '../../SiteContext';
-import { getVisibleServices } from '../../components/dashboard/DashboardSidebar';
+import { getVisibleServices, ADVANCED_ROLES } from '../../components/dashboard/DashboardSidebar';
 import { SERVICES_INDEX_DETAILS } from '../../data/servicesIndexData';
 
 // =========================================================
@@ -111,6 +111,10 @@ const ServicesIndexPage = () => {
 
   const visibleServices = getVisibleServices(userData?.role);
   const [activeService, setActiveService] = useState(null);
+  // ✅ "الأبحاث" ليست خدمة تُطلب من مزوّد (بلا modal/تفاصيل) بل صفحة إدارة
+  // أبحاث المستخدم نفسه — تظهر هنا كرابط مباشر بنفس شكل بطاقة الخدمة،
+  // فقط للأدوار الأكاديمية المتقدمة (grad/phd/researcher/faculty).
+  const showResearchesCard = ADVANCED_ROLES.includes(userData?.role);
 
   const handleBegin = (slug) => {
     setActiveService(null);
@@ -126,12 +130,12 @@ const ServicesIndexPage = () => {
         </h1>
         <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
           {isAr
-            ? `${visibleServices.length} خدمات متاحة لدورك — اضغط على أي خدمة لعرض تفاصيلها`
-            : `${visibleServices.length} services available for your role — click any service to view its details`}
+            ? `${visibleServices.length + (showResearchesCard ? 1 : 0)} خدمات متاحة لدورك — اضغط على أي خدمة لعرض تفاصيلها`
+            : `${visibleServices.length + (showResearchesCard ? 1 : 0)} services available for your role — click any service to view its details`}
         </p>
       </div>
 
-      {visibleServices.length === 0 ? (
+      {visibleServices.length === 0 && !showResearchesCard ? (
         <div className="bg-white dark:bg-[#211c18] rounded-2xl border-2 border-dashed border-gray-200 dark:border-[#3a322c] p-16 text-center text-gray-400 dark:text-gray-500">
           <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-30" />
           <p className="font-bold text-lg">{isAr ? 'لا توجد خدمات متاحة لدورك حالياً' : 'No services available for your role yet'}</p>
@@ -143,11 +147,30 @@ const ServicesIndexPage = () => {
               {isAr ? 'الخدمات المتاحة' : 'Available Services'}
             </h2>
             <span className="text-xs font-bold text-gray-400 dark:text-gray-500">
-              {visibleServices.length} {isAr ? 'خدمة' : 'services'}
+              {visibleServices.length + (showResearchesCard ? 1 : 0)} {isAr ? 'خدمة' : 'services'}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {showResearchesCard && (
+              <button
+                onClick={() => navigate('/dashboard/researches')}
+                className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-[#e8623a]/40 dark:hover:border-[#e8623a]/30 hover:shadow-lg hover:shadow-[#e8623a]/5 transition-all duration-200 group"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-11 h-11 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-[#e8623a]/20 flex-shrink-0">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[#e8623a] transition-colors" />
+                </div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1.5">
+                  {isAr ? 'الأبحاث' : 'Researches'}
+                </h3>
+                <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed line-clamp-2">
+                  {isAr ? 'إدارة أبحاثك المسجّلة وتقديم بحث جديد' : 'Manage your registered research and submit a new one'}
+                </p>
+              </button>
+            )}
             {visibleServices.map((svc) => {
               const Icon = svc.icon;
               return (

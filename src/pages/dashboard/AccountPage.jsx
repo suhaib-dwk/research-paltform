@@ -94,10 +94,10 @@ const AccountPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-3xl">
+        <div className="p-6 max-w-3xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'الحساب' : 'Account'}</h1>
-                <p className="text-sm text-gray-400 mt-1">{isAr ? 'إدارة بياناتك الشخصية' : 'Manage your personal information'}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة بياناتك الشخصية' : 'Manage your personal information'}</p>
             </div>
 
             {error && (
@@ -129,7 +129,7 @@ const AccountPage = () => {
                     </div>
                     <div>
                         <p className="font-bold text-gray-900 dark:text-white">{form.full_name || (isAr ? 'بدون اسم' : 'No name')}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{user?.role}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{user?.role}</p>
                     </div>
                 </div>
 

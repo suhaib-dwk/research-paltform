@@ -102,7 +102,6 @@ const ReviewsPage = ({ statusFilter = null }) => {
 
     const reviewsByType = statusFilter ? reviews : reviews.filter(r => r.review_type === activeTab);
     const filteredReviews = filterStatus === 'all' ? reviewsByType : reviewsByType.filter(r => r.status === filterStatus);
-    const activeType = REVIEW_TYPES.find(rt => rt.id === activeTab) || REVIEW_TYPES[0];
 
     const openDetails = (researchId) => {
         setDetailsId(researchId);
@@ -123,15 +122,13 @@ const ReviewsPage = ({ statusFilter = null }) => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 bg-gradient-to-br ${activeType.color} rounded-2xl flex items-center justify-center shadow-lg ${activeType.shadowColor}`}>
-                    <ShieldCheck className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">{isAr ? 'التحكيم' : 'Review'}</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{isAr ? 'إدارة طلبات التحكيم ومتابعتها' : 'Manage and track review requests'}</p>
-                </div>
+        <div className="max-w-6xl mx-auto space-y-6">
+            <div>
+                <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+                    <ShieldCheck className="w-6 h-6 text-[#e8623a]" />
+                    {isAr ? 'التحكيم' : 'Review'}
+                </h1>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة طلبات التحكيم ومتابعتها' : 'Manage and track review requests'}</p>
             </div>
 
             {!statusFilter && (

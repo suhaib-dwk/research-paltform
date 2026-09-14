@@ -7,8 +7,8 @@ import { API_BASE_URL } from '../../api';
 const CARD_DEFS = [
     { key: 'researches', icon: FileText, color: 'from-[#e8623a] to-[#f0916d]' },
     { key: 'citations', icon: TrendingUp, color: 'from-emerald-500 to-emerald-400' },
-    { key: 'views', icon: Eye, color: 'from-blue-500 to-blue-400' },
-    { key: 'downloads', icon: Download, color: 'from-purple-500 to-purple-400' },
+    { key: 'views', icon: Eye, color: 'from-[#d4502a] to-[#e8623a]' },
+    { key: 'downloads', icon: Download, color: 'from-gray-500 to-gray-400' },
 ];
 
 const CARD_LABELS = {
@@ -37,10 +37,10 @@ const StatsPage = () => {
     }, [entityId]);
 
     return (
-        <div className="p-6">
+        <div className="p-6 max-w-6xl mx-auto">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'الإحصائيات' : 'Statistics'}</h1>
-                <p className="text-sm text-gray-400 mt-1">{isAr ? 'إحصائيات أبحاثك ومنشوراتك' : 'Your research and publication stats'}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إحصائيات أبحاثك ومنشوراتك' : 'Your research and publication stats'}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -52,7 +52,7 @@ const StatsPage = () => {
                                 <Icon className="w-6 h-6" />
                             </div>
                             <p className="text-3xl font-black text-gray-900 dark:text-white">{loading ? '—' : stats[s.key]}</p>
-                            <p className="text-sm text-gray-400 mt-1">{isAr ? CARD_LABELS[s.key].ar : CARD_LABELS[s.key].en}</p>
+                            <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? CARD_LABELS[s.key].ar : CARD_LABELS[s.key].en}</p>
                         </div>
                     );
                 })}
@@ -73,7 +73,8 @@ const StatsPage = () => {
                                 <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} allowDecimals={false} />
                                 <Tooltip
                                     cursor={{ fill: 'rgba(232, 98, 58, 0.06)' }}
-                                    contentStyle={{ borderRadius: 12, border: '1px solid #f3f4f6', fontSize: 12 }}
+                                    contentStyle={{ borderRadius: 12, border: '1px solid #f3f4f6', backgroundColor: '#ffffff', fontSize: 12 }}
+                                    wrapperClassName="dark:[&_.recharts-default-tooltip]:!bg-[#211c18] dark:[&_.recharts-default-tooltip]:!border-[#3a322c]"
                                     labelStyle={{ fontWeight: 700, marginBottom: 4 }}
                                 />
                                 <Bar dataKey="total" fill="#e8623a" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الأبحاث' : 'Researches'} />
