@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -113,19 +113,10 @@ try {
     $roleKey  = $user['role_key'];
     $userName = $email; // قيمة افتراضية
 
-    $profileMap = [
-        'undergrad'        => ['table' => 'profiles_undergrad', 'col' => 'full_name'],
-        'grad'             => ['table' => 'profiles_grad',      'col' => 'full_name'],
-        'faculty'          => ['table' => 'profiles_faculty',   'col' => 'name'],
-        'researcher'       => ['table' => 'profiles_researcher','col' => 'full_name'],
-        'reviewer'         => ['table' => 'profiles_reviewer',  'col' => 'full_name'],
-        'university'       => ['table' => 'profiles_entity',    'col' => 'entity_name'],
-        'college'          => ['table' => 'profiles_entity',    'col' => 'entity_name'],
-        'research_center'  => ['table' => 'profiles_entity',    'col' => 'entity_name'],
-        'ministry'         => ['table' => 'profiles_entity',    'col' => 'entity_name'],
-        'employee'         => ['table' => 'profiles_system',    'col' => 'full_name'], // ✅ أضفنا الموظف
-        'service_provider' => ['table' => 'profiles_service_provider', 'col' => 'full_name'], // ✅ أضفنا مقدّم الخدمة
-    ];
+    // ✅ Stage A.5: الخريطة انتقلت إلى get_login_profile_name_map() في
+    // a03_helpers.php لتُشاركها me.php أيضاً بدل تكرارها هنا
+    require_once('a03_helpers.php');
+    $profileMap = get_login_profile_name_map();
 
     if (isset($profileMap[$roleKey])) {
         $map = $profileMap[$roleKey];
@@ -145,7 +136,19 @@ try {
 
     $conn->close();
 
-    // ===== 8. إرجاع بيانات الدخول الناجحة =====
+    // ===== 8. Stage A.5: إنشاء جلسة PHP حقيقية على الخادم =====
+    // session_regenerate_id(true) يمنع session fixation: أي معرّف جلسة
+    // كان موجوداً قبل الدخول (مثلاً جلسة زائر) يُستبدل بمعرّف جديد كلياً.
+    // نُخزّن الحد الأدنى فقط (user_id/role/وقت الدخول) — الاسم والبريد
+    // يُعاد اشتقاقهما من user_id عند كل طلب لاحق عبر الدوال الموجودة أصلاً،
+    // بدل تخزينهما كنسخة قد تُصبح قديمة إن عُدِّل الملف الشخصي لاحقاً.
+    require_once('a04_auth.php');
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $userId;
+    $_SESSION['role'] = $roleKey;
+    $_SESSION['logged_in_at'] = time();
+
+    // ===== 9. إرجاع بيانات الدخول الناجحة (الشكل نفسه دون أي تغيير) =====
     jsonResponse([
         'status' => 'success',
         'data'   => [

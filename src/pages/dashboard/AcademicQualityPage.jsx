@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSite } from '../../SiteContext';
-import { API_BASE_URL, resolveUploadUrl } from '../../api';
+import { API_BASE_URL } from '../../api';
 import {
     Award, ChevronDown, ChevronUp, Loader2, XCircle, CheckCircle2,
     Paperclip, UploadCloud, FileText,
@@ -50,7 +50,7 @@ const periodOptions = () => {
 // =========================================================
 // نموذج مؤشر واحد (قابل للطي)
 // =========================================================
-const IndicatorForm = ({ indicator, isAr, entityId, period, onSaved }) => {
+const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
     const r = indicator.response || {};
     const [complianceLevel, setComplianceLevel] = useState(r.compliance_level || '');
     const [maturityLevel, setMaturityLevel] = useState(r.maturity_level ?? '');
@@ -76,7 +76,6 @@ const IndicatorForm = ({ indicator, isAr, entityId, period, onSaved }) => {
         setSaveMsg(null);
 
         const payload = {
-            entity_id: entityId,
             indicator_id: indicator.id,
             reporting_period: period,
             assessment,
@@ -102,6 +101,7 @@ const IndicatorForm = ({ indicator, isAr, entityId, period, onSaved }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
+                credentials: 'include',
             });
             const result = await res.json();
             if (result.status === 'success') {
@@ -123,12 +123,11 @@ const IndicatorForm = ({ indicator, isAr, entityId, period, onSaved }) => {
         setSaveMsg(null);
         try {
             const fd = new FormData();
-            fd.append('entity_id', entityId);
             fd.append('indicator_id', indicator.id);
             fd.append('reporting_period', period);
             fd.append('evidence', file);
 
-            const res = await fetch(`${API_BASE_URL}/quality_upload_evidence.php`, { method: 'POST', body: fd });
+            const res = await fetch(`${API_BASE_URL}/quality_upload_evidence.php`, { method: 'POST', body: fd, credentials: 'include' });
             const result = await res.json();
             if (result.status === 'success') {
                 setEvidenceFiles(prev => [...prev, result.data]);
@@ -265,7 +264,9 @@ const IndicatorForm = ({ indicator, isAr, entityId, period, onSaved }) => {
                     )}
                     {evidenceFiles.map((f, i) => (
                         <li key={f.id || i} className="flex items-center justify-between gap-2 text-xs">
-                            <a href={resolveUploadUrl(f.file_path)} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-blue-500 hover:underline truncate">
+                            {/* ✅ Stage A.5: رابط عبر نقطة تنزيل مُصادَق عليها (تتحقق من ملكية
+                                الجامعة عند كل وصول) بدل رابط عام دائم مباشر لملف الرفع */}
+                            <a href={`${API_BASE_URL}/quality_evidence_download.php?id=${f.id}`} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-blue-500 hover:underline truncate">
                                 <FileText className="w-3.5 h-3.5 flex-shrink-0" /><span className="truncate">{f.file_name}</span>
                             </a>
                             {f.uploaded_at && <span className="text-gray-400 flex-shrink-0">{f.uploaded_at}</span>}
@@ -302,8 +303,6 @@ const IndicatorForm = ({ indicator, isAr, entityId, period, onSaved }) => {
 const AcademicQualityPage = () => {
     const { user, currentLang } = useSite();
     const isAr = currentLang === 'ar';
-    // ⚠️ login.php يُرجع الحقل باسم user_id (وليس id)، ويُخزَّن كما هو في localStorage['user']
-    const entityId = user?.user_id ?? user?.id;
 
     const [period, setPeriod] = useState(defaultPeriod());
     const [framework, setFramework] = useState(null); // { standard, elements }
@@ -314,13 +313,14 @@ const AcademicQualityPage = () => {
     const [error, setError] = useState(null);
 
     const loadAll = useCallback(async () => {
-        if (!entityId) return;
         setLoading(true);
         setError(null);
         try {
+            // ✅ Stage A.5: university_id يُحلّ من الجلسة على الخادم — لا يُرسَل
+            // أي معرّف هوية في الطلب سوى period (مرشِّح ضمن نطاق المتصل نفسه)
             const [fwRes, smRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/quality_get.php?${new URLSearchParams({ entity_id: entityId, period })}`).then(r => r.json()),
-                fetch(`${API_BASE_URL}/quality_summary.php?${new URLSearchParams({ entity_id: entityId, period })}`).then(r => r.json()),
+                fetch(`${API_BASE_URL}/quality_get.php?${new URLSearchParams({ period })}`, { credentials: 'include' }).then(r => r.json()),
+                fetch(`${API_BASE_URL}/quality_summary.php?${new URLSearchParams({ period })}`, { credentials: 'include' }).then(r => r.json()),
             ]);
 
             if (fwRes.status !== 'success') {
@@ -337,7 +337,7 @@ const AcademicQualityPage = () => {
         } finally {
             setLoading(false);
         }
-    }, [entityId, period, isAr]);
+    }, [period, isAr]);
 
     useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -502,7 +502,6 @@ const AcademicQualityPage = () => {
                                                 <IndicatorForm
                                                     indicator={ind}
                                                     isAr={isAr}
-                                                    entityId={entityId}
                                                     period={period}
                                                     onSaved={loadAll}
                                                 />

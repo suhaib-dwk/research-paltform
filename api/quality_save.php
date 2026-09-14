@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -88,12 +88,11 @@ try {
         jsonResponse(['status' => 'error', 'message' => 'Invalid JSON data']);
     }
 
-    $entityId    = (int) ($data['entity_id'] ?? 0);
     $indicatorId = (int) ($data['indicator_id'] ?? 0);
     $period      = trim($data['reporting_period'] ?? '');
 
-    if ($entityId <= 0 || $indicatorId <= 0 || $period === '') {
-        jsonResponse(['status' => 'error', 'message' => 'entity_id, indicator_id and reporting_period are required']);
+    if ($indicatorId <= 0 || $period === '') {
+        jsonResponse(['status' => 'error', 'message' => 'indicator_id and reporting_period are required']);
     }
 
     require_once('a01_connect.php');
@@ -104,28 +103,13 @@ try {
     }
     $conn->set_charset('utf8mb4');
 
-    // ===== التحقق أن entity_id مستخدم حقيقي بدور جهة أكاديمية =====
-    $stmt = $conn->prepare(
-        "SELECT u.id, r.key AS role_key FROM users u
-         JOIN roles r ON u.role_id = r.id
-         WHERE u.id = ? AND u.deleted_at IS NULL LIMIT 1"
-    );
-    $stmt->bind_param('i', $entityId);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($res->num_rows === 0) {
-        $stmt->close();
-        $conn->close();
-        jsonResponse(['status' => 'error', 'message' => 'Invalid entity_id']);
-    }
-    $entityRow = $res->fetch_assoc();
-    $stmt->close();
-
-    $allowedRoles = ['university', 'college', 'research_center'];
-    if (!in_array($entityRow['role_key'], $allowedRoles, true)) {
-        $conn->close();
-        jsonResponse(['status' => 'error', 'message' => 'This role cannot submit quality data']);
-    }
+    // ===== Stage A.5: university_id يُحلّ من الجلسة المُصادَق عليها —
+    // يستبدل التحقق القديم الذي كان يكتفي بالتأكد أن entity_id ينتمي
+    // *لمستخدم ما* بالدور الصحيح، دون التحقق أنه المتصل الفعلي بهذا
+    // الطلب (ثغرة IDOR حقيقية: أي متصل قادر على انتحال أي entity_id آخر) =====
+    require_once('a04_auth.php');
+    $actingUserId = require_authenticated_user($conn);
+    $universityId = require_university_access($conn);
 
     // ===== جلب نوع المؤشر ودرجته القصوى =====
     $stmt = $conn->prepare("SELECT indicator_type, max_score FROM academic_quality_indicators WHERE id = ? LIMIT 1");
@@ -163,13 +147,16 @@ try {
         'target_value'     => $targetValue,
     ], $maxScore);
 
-    // ===== إدراج أو تحديث =====
+    // ===== إدراج أو تحديث — الآن عبر university_id (مفتاح الفرادة الجديد
+    // من db_academic_quality_tenant_migration.sql)، مع الإبقاء على entity_id
+    // كعمود تدقيق/توافق تاريخي فقط (قيمته الآن الهوية المُصادَق عليها
+    // فعلياً من الجلسة، لا قيمة واردة من العميل) =====
     $stmt = $conn->prepare(
         "INSERT INTO academic_quality_entity_responses
-            (entity_id, indicator_id, reporting_period, actual_value, target_value,
+            (entity_id, university_id, indicator_id, reporting_period, actual_value, target_value,
              maturity_level, compliance_level, assessment, evidence_quality, score,
              gap_notes, corrective_action, owner_name, due_date, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE
             actual_value = VALUES(actual_value),
             target_value = VALUES(target_value),
@@ -191,8 +178,8 @@ try {
     }
 
     $stmt->bind_param(
-        'iisddissidsssss',
-        $entityId, $indicatorId, $period, $actualValue, $targetValue,
+        'iiisddissidsssss',
+        $actingUserId, $universityId, $indicatorId, $period, $actualValue, $targetValue,
         $maturityLevel, $complianceLevel, $assessment, $evidenceQuality, $score,
         $gapNotes, $correctiveAction, $ownerName, $dueDateSql, $status
     );
@@ -204,6 +191,13 @@ try {
         jsonResponse(['status' => 'error', 'message' => 'Save failed', 'debug' => $err]);
     }
     $stmt->close();
+
+    // ===== Stage A.5: تسجيل نشاط تحديث مؤشر الجودة (log_activity الموجودة
+    // أصلاً في a03_helpers.php — لا آلية تسجيل جديدة) =====
+    log_activity($conn, $actingUserId, 'quality_indicator_update', 'academic_quality',
+        'تحديث مؤشر جودة أكاديمية', 'Academic quality indicator updated',
+        'academic_quality_entity_responses', $indicatorId);
+
     $conn->close();
 
     jsonResponse([

@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     Trash2, Edit3, Eye, X, Loader2, Search, ToggleLeft, ToggleRight, AlertCircle,
-    Plus, Printer, FileDown, FileSpreadsheet, FileText, ChevronDown, Check, Pencil
+    Plus, Printer, FileDown, FileSpreadsheet, FileText, ChevronDown, Check, Pencil,
+    ImageUp
 } from 'lucide-react';
-import { API_BASE_URL } from '../../api';
+import { API_BASE_URL, resolveUploadUrl } from '../../api';
 
 const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const { i18n } = useTranslation();
@@ -22,6 +23,36 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const [addData, setAddData] = useState({});
     const [isAdding, setIsAdding] = useState(false);
     const printRef = useRef(null);
+
+    // ✅ حالة رفع صورة مباشرة (بدل كتابة رابط يدويًا) — key هنا هو col.key الحقل
+    // اسم الحقل الجاري رفع صورته حالياً حتى يقدر أكثر من حقل صورة بنفس المودال
+    // يشتغلوا بدون تداخل، ونفس الحالة تُستخدم لمودالي الإضافة والتعديل معاً.
+    const [uploadingField, setUploadingField] = useState(null);
+    const [uploadError, setUploadError] = useState(null);
+
+    const uploadImageFile = async (fieldKey, file, onSuccess) => {
+        setUploadError(null);
+        if (!file) return;
+        setUploadingField(fieldKey);
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            const res = await fetch(`${API_BASE_URL}/upload_admin_image.php`, {
+                method: 'POST', body: formData, credentials: 'include',
+            });
+            const result = await res.json();
+            if (result.status === 'success') {
+                onSuccess(result.data.image_url);
+            } else {
+                setUploadError(isRTL ? 'تعذّر رفع الصورة، حاول مجدداً' : 'Could not upload the image, try again');
+            }
+        } catch (err) {
+            console.error('Image upload error:', err);
+            setUploadError(isRTL ? 'تعذّر رفع الصورة، حاول مجدداً' : 'Could not upload the image, try again');
+        } finally {
+            setUploadingField(null);
+        }
+    };
 
     // ✅ حالة التعديل السريع داخل الخلية
     const [editingCell, setEditingCell] = useState({ rowId: null, colKey: null, value: '' });
@@ -46,7 +77,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
         setIsLoading(true);
         setFetchError(null);
         try {
-            const res = await fetch(`${API_BASE_URL}/admin_crud.php?action=get&table=${tableName}`);
+            const res = await fetch(`${API_BASE_URL}/admin_crud.php?action=get&table=${tableName}`, { credentials: 'include' });
             const text = await res.text();
             let result;
             try { result = JSON.parse(text); }
@@ -86,7 +117,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             formData.append('table', tableName);
             Object.keys(addData).forEach(key => formData.append(key, addData[key]));
 
-            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData });
+            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData, credentials: 'include' });
             const result = await res.json();
             if (result.status === 'success') {
                 setAddModal({ isOpen: false });
@@ -118,7 +149,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             formData.append('id', rowId);
             formData.append('field', colKey);
             formData.append('value', editingCell.value);
-            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData });
+            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData, credentials: 'include' });
             const text = await res.text();
             let result;
             try { result = JSON.parse(text); }
@@ -148,7 +179,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             const formData = new FormData();
             formData.append('action', 'update_field'); formData.append('table', tableName);
             formData.append('id', id); formData.append('field', field); formData.append('value', newValue);
-            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData });
+            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData, credentials: 'include' });
             const text = await res.text();
             let result;
             try { result = JSON.parse(text); }
@@ -162,7 +193,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const openEditModal = (row) => {
         const values = {};
         columns.forEach(col => {
-            if (col.key !== 'id' && !col.hidden && col.type !== 'boolean' && col.type !== 'image') {
+            if (col.key !== 'id' && !col.hidden && col.type !== 'boolean') {
                 values[col.key] = row[col.key] || '';
             }
         });
@@ -178,7 +209,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             formData.append('id', editModal.data.id);
             Object.keys(editModal.values).forEach(key => formData.append(key, editModal.values[key]));
 
-            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData });
+            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData, credentials: 'include' });
             const text = await res.text();
             let result;
             try { result = JSON.parse(text); }
@@ -202,7 +233,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
         try {
             const formData = new FormData();
             formData.append('action', 'delete'); formData.append('table', tableName); formData.append('id', deleteModal.id);
-            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData });
+            const res = await fetch(`${API_BASE_URL}/admin_crud.php`, { method: 'POST', body: formData, credentials: 'include' });
             const text = await res.text();
             let result;
             try { result = JSON.parse(text); }
@@ -536,7 +567,9 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                 </button>
                                                             </div>
                                                         ) : col.type === 'image' ? (
-                                                            <img src={row[col.key]} className="w-16 h-10 object-cover rounded-lg" alt="" />
+                                                            /* ✅ resolveUploadUrl ضرورية: المسار المخزَّن قد يكون نسبيًا (uploads/admin/...
+                                                               من الرفع المباشر الجديد) وليس رابطًا كاملاً كما كان يُكتب يدويًا سابقًا. */
+                                                            <img src={resolveUploadUrl(row[col.key])} className="w-16 h-10 object-cover rounded-lg bg-gray-50 dark:bg-[#1a1613]" alt="" />
                                                         ) : col.type === 'boolean' ? (
                                                             <button onClick={() => handleToggle(row.id, col.key, row[col.key])} title="Toggle">
                                                                 {row[col.key] == 1
@@ -593,7 +626,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                 <div key={col.key} className="border-b border-gray-100 dark:border-[#3a322c] pb-4">
                                     <p className="text-xs font-bold text-gray-400 dark:text-gray-500 mb-1">{getColLabel(col)}</p>
                                     {col.type === 'image' ? (
-                                        <img src={viewModal.data[col.key]} className="w-40 h-24 object-cover rounded-lg border" alt="" />
+                                        <img src={resolveUploadUrl(viewModal.data[col.key])} className="w-40 h-24 object-cover rounded-lg border" alt="" />
                                     ) : col.type === 'boolean' ? (
                                         <p className="text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1a1613] p-3 rounded-lg text-sm">{viewModal.data[col.key] == 1 ? (isRTL ? 'مفعل' : 'Active') : (isRTL ? 'غير مفعل' : 'Inactive')}</p>
                                     ) : (
@@ -619,11 +652,40 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                             </button>
                         </div>
                         <div className="p-6 space-y-4">
+                            {uploadError && (
+                                <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400 text-sm font-bold px-4 py-3 rounded-xl">
+                                    <AlertCircle className="w-4 h-4 flex-shrink-0" /> {uploadError}
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {columns.filter(c => c.key !== 'id' && !c.hidden && c.type !== 'boolean' && c.type !== 'image').map(col => (
-                                    <div key={col.key} className={col.type === 'longtext' ? 'md:col-span-2' : ''}>
+                                {columns.filter(c => c.key !== 'id' && !c.hidden && c.type !== 'boolean').map(col => (
+                                    <div key={col.key} className={(col.type === 'longtext' || col.type === 'image') ? 'md:col-span-2' : ''}>
                                         <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
-                                        {col.type === 'longtext' ? (
+                                        {col.type === 'image' ? (
+                                            <div>
+                                                {editModal.values[col.key] && (
+                                                    <img src={resolveUploadUrl(editModal.values[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-[#3a322c] mb-2" />
+                                                )}
+                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-[#e8623a] hover:bg-orange-50/50 dark:hover:bg-[#e8623a]/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
+                                                    {uploadingField === col.key ? (
+                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                    ) : (
+                                                        <ImageUp className="w-4 h-4" />
+                                                    )}
+                                                    {uploadingField === col.key ? (isRTL ? 'جاري الرفع...' : 'Uploading...') : (isRTL ? 'رفع صورة جديدة' : 'Upload new image')}
+                                                    <input
+                                                        type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden"
+                                                        disabled={uploadingField === col.key}
+                                                        onChange={(e) => {
+                                                            uploadImageFile(col.key, e.target.files?.[0], (url) =>
+                                                                setEditModal((prev) => ({ ...prev, values: { ...prev.values, [col.key]: url } }))
+                                                            );
+                                                            e.target.value = '';
+                                                        }}
+                                                    />
+                                                </label>
+                                            </div>
+                                        ) : col.type === 'longtext' ? (
                                             <textarea
                                                 rows={6}
                                                 value={editModal.values[col.key] || ''}
@@ -666,9 +728,14 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                             </button>
                         </div>
                         <div className="p-6 space-y-5">
+                            {uploadError && (
+                                <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400 text-sm font-bold px-4 py-3 rounded-xl">
+                                    <AlertCircle className="w-4 h-4 flex-shrink-0" /> {uploadError}
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {columns.filter(c => c.key !== 'id' && !c.hidden).map(col => (
-                                    <div key={col.key} className={col.type === 'longtext' ? 'md:col-span-2' : ''}>
+                                    <div key={col.key} className={(col.type === 'longtext' || col.type === 'image') ? 'md:col-span-2' : ''}>
                                         {col.type === 'boolean' ? (
                                             <label className="flex items-center gap-3 cursor-pointer select-none">
                                                 <input type="checkbox" checked={addData[col.key] == 1}
@@ -679,9 +746,25 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                         ) : col.type === 'image' ? (
                                             <div>
                                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
-                                                <input type="url" value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
-                                                    placeholder="https://example.com/image.jpg" dir="ltr"
-                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" />
+                                                {addData[col.key] && (
+                                                    <img src={resolveUploadUrl(addData[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-[#3a322c] mb-2" />
+                                                )}
+                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-[#e8623a] hover:bg-orange-50/50 dark:hover:bg-[#e8623a]/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
+                                                    {uploadingField === col.key ? (
+                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                    ) : (
+                                                        <ImageUp className="w-4 h-4" />
+                                                    )}
+                                                    {uploadingField === col.key ? (isRTL ? 'جاري الرفع...' : 'Uploading...') : (isRTL ? 'اختر صورة للرفع' : 'Choose image to upload')}
+                                                    <input
+                                                        type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden"
+                                                        disabled={uploadingField === col.key}
+                                                        onChange={(e) => {
+                                                            uploadImageFile(col.key, e.target.files?.[0], (url) => handleAddChange(col.key, url));
+                                                            e.target.value = '';
+                                                        }}
+                                                    />
+                                                </label>
                                             </div>
                                         ) : col.type === 'longtext' ? (
                                             <div>

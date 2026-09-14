@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { 
-  Settings, Image, LayoutDashboard, LogOut, Menu, X, 
+import {
+  Settings, Image, LayoutDashboard, LogOut, Menu, X,
   ShieldCheck, UserCog, KeyRound, Users, Bell,
   Mail, HelpCircle, FileText, Globe, Home, Puzzle,
   Monitor, Lock
 } from 'lucide-react';
+import { API_BASE_URL } from '../../api';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -14,13 +15,46 @@ const AdminLayout = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(true);
 
+  // ✅ Stage A.5: الحارس الفعلي أصبح على الخادم (admin_crud.php يتحقق من
+  // الجلسة عبر require_platform_permission قبل أي عملية) — هذا الفحص هنا
+  // بقي فقط لتجنّب عرض واجهة الإدارة لحظياً لمستخدم لديه قيمة localStorage
+  // قديمة/مزوَّرة قبل أن تفشل أول استدعاء API فعلي؛ لم يعد وحده كافياً أو
+  // معتمَداً عليه أمنياً (كان قابلاً للتجاوز بالكامل من أدوات المطوّر).
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.role !== 'super_admin') navigate('/login');
+    let cancelled = false;
+    const verify = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/me.php`, { credentials: 'include' });
+        const result = await res.json();
+        if (cancelled) return;
+        if (result.status !== 'success' || result.data?.role !== 'super_admin') {
+          navigate('/login');
+          return;
+        }
+        setIsVerifying(false);
+      } catch {
+        if (!cancelled) navigate('/login');
+      }
+    };
+    verify();
+    return () => { cancelled = true; };
   }, [navigate]);
 
-  const handleLogout = () => { localStorage.removeItem('user'); window.location.href = '/'; };
+  const handleLogout = () => {
+    fetch(`${API_BASE_URL}/logout.php`, { method: 'POST', credentials: 'include' }).catch(() => {});
+    localStorage.removeItem('user');
+    window.location.href = '/';
+  };
+
+  if (isVerifying) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-[#1a1613] flex items-center justify-center">
+        <div className="w-8 h-8 border-3 border-[#e8623a] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const isActive = (path, end) => end ? location.pathname === path : location.pathname.startsWith(path);
 

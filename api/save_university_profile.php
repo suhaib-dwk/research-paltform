@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -31,10 +31,19 @@ try {
         jsonResponse(['status' => 'error', 'message' => 'Invalid JSON body']);
     }
 
-    $userId = isset($body['user_id']) ? (int) $body['user_id'] : 0;
-    if ($userId <= 0) {
-        jsonResponse(['status' => 'error', 'message' => 'user_id is required']);
+    require_once('a01_connect.php');
+    $conn = new mysqli($host, $username, $password, $db_name);
+
+    if ($conn->connect_error) {
+        jsonResponse(['status' => 'error', 'message' => 'Database connection failed']);
     }
+    $conn->set_charset('utf8mb4');
+
+    // ===== Stage A.5: userId من الجلسة المُصادَق عليها، لا من حقل
+    // user_id وارد ضمن جسم الطلب (كان يُتيح لأي متصل ادّعاء هوية أي
+    // مستخدم آخر بمجرد تغيير قيمة نصية في JSON) =====
+    require_once('a04_auth.php');
+    $userId = require_authenticated_user($conn);
 
     // ===== الحقول النصية/المفردة =====
     $arabicName = trim((string) ($body['arabic_name'] ?? ''));
@@ -55,14 +64,6 @@ try {
     $colleges = is_array($body['colleges'] ?? null) ? $body['colleges'] : [];
     $departments = is_array($body['departments'] ?? null) ? $body['departments'] : [];
     $researchCenters = is_array($body['research_centers'] ?? null) ? $body['research_centers'] : [];
-
-    require_once('a01_connect.php');
-    $conn = new mysqli($host, $username, $password, $db_name);
-
-    if ($conn->connect_error) {
-        jsonResponse(['status' => 'error', 'message' => 'Database connection failed']);
-    }
-    $conn->set_charset('utf8mb4');
 
     $roleKey = get_user_role_key($conn, $userId);
     if (!$roleKey) {
@@ -117,7 +118,7 @@ try {
     }
     $stmt->close();
 
-    // ===== 1) upsert university_profiles — الآن بمفتاح فريد جديد على
+    // ===== 1) upsert university_profiles — عبر مفتاح فريد على
     // university_id (وليس user_id، الذي بقي عمود تدقيق/توافق تاريخي فقط) =====
     $priorityAreasJson = json_encode($priorityAreas, JSON_UNESCAPED_UNICODE);
     $researchGoalsJson = json_encode($researchGoals, JSON_UNESCAPED_UNICODE);
@@ -149,140 +150,269 @@ try {
     }
     $stmt->close();
 
-    // ===== 2) استراتيجية "استبدال كامل" للسجلات الفرعية — مؤقتة عمدًا لهذه
-    // المرحلة فقط (Stage A). لا تُستخدم كأساس لأي مرجع خارجي مستقر بعد؛
-    // قبل Stage B (Research Data Core) يجب تحويل هذه الجداول الأربعة إلى
-    // إدراج-للجديد/تحديث-للموجود/حذف-فعلي-أو-ناعم-للمحذوف، لأن وحدات لاحقة
-    // (باحثون، مشاريع، أدلة) ستُشير إلى هذه المعرّفات كمفاتيح خارجية ثابتة —
-    // معرّفات تتغيّر بكل حفظ ستكسر تلك الإشارات.
+    // =========================================================================
+    // 2) Stage A.5 / P3: خوارزمية تسوية سطر-بسطر بدل حذف الكل وإعادة الإدراج.
+    //
+    // المشكلة القديمة: كل حفظ كان يحذف كل صفوف الحرم/الكليات/الأقسام/المراكز
+    // البحثية ثم يعيد إدراجها من الصفر — معرّفات جديدة عند كل حفظ، تكسر أي
+    // مرجع خارجي مستقبلي (باحثون، مشاريع، أدلة) قد يشير إليها.
+    //
+    // الخوارزمية الجديدة، لكل جدول من الأربعة (بترتيب الاعتمادية: حرم ثم
+    // كليات ثم أقسام ثم مراكز بحثية):
+    //   - صف وارد بمعرّف id حقيقي ينتمي فعلاً لهذه الجامعة → UPDATE في مكانه
+    //     (شرط WHERE id=? AND university_id=? هو تحقق الملكية بنفسه — أي
+    //     معرّف مزوَّر ينتمي لجامعة أخرى يطابق صفراً من الصفوف، لا يُحدَّث
+    //     أي شيء، ونُبلِّغ عن الخطأ صراحةً بدل الصمت).
+    //   - صف بمعرّف id غير معروف/غير منتمٍ لهذه الجامعة → رفض الحفظ بالكامل
+    //     (invalid_org_unit_reference) بدل معاملته كصف جديد صامتاً.
+    //   - صف بلا id حقيقي (جديد من الواجهة، عبر tempId أو بلا معرّف إطلاقاً)
+    //     → INSERT، مع حفظ خريطة tempId→id الحقيقي الجديد لربط الأبناء
+    //     ضمن نفس الطلب (نفس الأسلوب المُستخدم أصلاً سابقاً).
+    //   - أي صف كان موجوداً في قاعدة البيانات قبل هذا الحفظ ولم يظهر إطلاقاً
+    //     ضمن المصفوفة الواردة → يُعتبر مُزالاً من قِبل المستخدم → soft-delete
+    //     (deleted_at = NOW()) لا حذف فعلي — تمهيداً لمرحلة لاحقة قد تحتاج
+    //     مراجع خارجية مستقرة حتى لسجلات أُزيلت من واجهة الملف.
+    // =========================================================================
 
-    // --- حذف القديم بالترتيب المعاكس للاعتماديات (أبناء أولاً)، الآن عبر university_id ---
-    foreach (['university_research_centers', 'university_departments', 'university_colleges', 'university_campuses'] as $tbl) {
-        $stmt = $conn->prepare("DELETE FROM `$tbl` WHERE university_id = ?");
-        $stmt->bind_param('i', $universityId);
-        if (!$stmt->execute()) {
-            $err = $stmt->error;
-            $stmt->close();
-            $conn->rollback();
-            $conn->close();
-            jsonResponse(['status' => 'error', 'message' => "Clear $tbl failed", 'debug' => $err]);
-        }
+    // ----- تحقق ملكية الوحدة الأب (يُستخدم لكليات/أقسام/مراكز بحثية) -----
+    function verify_parent_ownership($conn, $table, $parentId, $universityId) {
+        if ($parentId === null) return true;
+        $stmt = $conn->prepare("SELECT id FROM `$table` WHERE id = ? AND university_id = ? AND deleted_at IS NULL LIMIT 1");
+        $stmt->bind_param('ii', $parentId, $universityId);
+        $stmt->execute();
+        $found = $stmt->get_result()->fetch_assoc();
         $stmt->close();
+        return (bool) $found;
     }
 
-    // --- إدراج الحرم الجامعي، مع حفظ خريطة المعرف المؤقت (من الواجهة) -> المعرف الحقيقي الجديد ---
-    $campusIdMap = []; // tempId (from client) => new DB id
-    $stmt = $conn->prepare("INSERT INTO university_campuses (user_id, university_id, name, location, sort_order) VALUES (?, ?, ?, ?, ?)");
-    foreach ($campuses as $i => $c) {
-        $name = trim((string) ($c['name'] ?? ''));
-        if ($name === '') continue;
-        $location = trim((string) ($c['location'] ?? ''));
-        $stmt->bind_param('iissi', $userId, $universityId, $name, $location, $i);
-        if (!$stmt->execute()) {
-            $err = $stmt->error;
-            $stmt->close();
-            $conn->rollback();
-            $conn->close();
-            jsonResponse(['status' => 'error', 'message' => 'Insert campus failed', 'debug' => $err]);
+    // ----- تسوية جدول واحد: تُرجع [idMap (tempId/id وارد => id حقيقي), error] -----
+    function reconcile_org_unit_table(
+        $conn, $table, $universityId, $userId, $incomingRows,
+        $mutableCols, $extraColBuilder, $existingRowsErrorCode
+    ) {
+        // جلب المعرّفات الحقيقية الموجودة حالياً لهذه الجامعة في هذا الجدول
+        $existingIds = [];
+        $stmt = $conn->prepare("SELECT id FROM `$table` WHERE university_id = ? AND deleted_at IS NULL");
+        $stmt->bind_param('i', $universityId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        while ($r = $res->fetch_assoc()) { $existingIds[(int) $r['id']] = true; }
+        $stmt->close();
+
+        $seenIds = []; // المعرّفات الحقيقية التي "لمسها" هذا الطلب (تبقى غير محذوفة)
+        $idMap = [];   // tempId/معرّف وارد من العميل => معرّف حقيقي (جديد أو موجود)
+
+        foreach ($incomingRows as $i => $row) {
+            $rawId = $row['id'] ?? null;
+            $isRealExistingId = is_numeric($rawId) && (int) $rawId > 0 && isset($existingIds[(int) $rawId]);
+
+            if ($rawId !== null && $rawId !== '' && is_numeric($rawId) && (int) $rawId > 0 && !$isRealExistingId) {
+                // معرّف رقمي حقيقي لكنه لا ينتمي لهذه الجامعة (مزوَّر/جامعة
+                // أخرى) — رفض صريح، وليس معاملته كصف جديد صامتاً
+                return [null, $existingRowsErrorCode];
+            }
+
+            [$extraCols, $extraTypes, $extraVals] = $extraColBuilder($row, $idMap, $i);
+            if ($extraCols === false) {
+                // مرجع أب لا ينتمي لهذه الجامعة
+                return [null, 'invalid_parent_unit_reference'];
+            }
+
+            if ($isRealExistingId) {
+                $realId = (int) $rawId;
+                $setParts = [];
+                $types = '';
+                $vals = [];
+                foreach ($mutableCols as $col) {
+                    $setParts[] = "`$col` = ?";
+                    $types .= 's';
+                    $vals[] = (string) ($row[$col] ?? '');
+                }
+                foreach ($extraCols as $idx => $col) {
+                    $setParts[] = "`$col` = ?";
+                    $types .= $extraTypes[$idx];
+                    $vals[] = $extraVals[$idx];
+                }
+                $setParts[] = "sort_order = ?";
+                $types .= 'i';
+                $vals[] = $i;
+
+                $types .= 'ii';
+                $vals[] = $realId;
+                $vals[] = $universityId;
+
+                $sql = "UPDATE `$table` SET " . implode(', ', $setParts) . " WHERE id = ? AND university_id = ? AND deleted_at IS NULL";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param($types, ...$vals);
+                if (!$stmt->execute()) {
+                    return [null, 'update_failed:' . $stmt->error];
+                }
+                if ($stmt->affected_rows === 0) {
+                    // كان يُفترض أن يطابق (existingIds تحقّق منه أعلاه) — لو لم
+                    // يحدث ذلك فهذا يعني حالة سباق نادرة، نُعامله كخطأ صريح
+                    // بدل الصمت (القيم قد تكون مطابقة فعلاً فلا يوجد تغيير،
+                    // وهذا مقبول — لا نفشل فقط لعدم تغيّر شيء)
+                }
+                $stmt->close();
+                $seenIds[$realId] = true;
+                $clientKey = (string) ($row['id'] ?? $row['tempId'] ?? $i);
+                $idMap[$clientKey] = $realId;
+            } else {
+                // صف جديد بالكامل
+                $insertCols = array_merge($mutableCols, $extraCols, ['sort_order', 'university_id', 'user_id']);
+                $placeholders = implode(', ', array_fill(0, count($insertCols), '?'));
+                $insertColsQuoted = implode(', ', array_map(fn($c) => "`$c`", $insertCols));
+
+                $types = str_repeat('s', count($mutableCols)) . $extraTypes . 'iii';
+                $vals = [];
+                foreach ($mutableCols as $col) { $vals[] = (string) ($row[$col] ?? ''); }
+                foreach ($extraVals as $v) { $vals[] = $v; }
+                $vals[] = $i;
+                $vals[] = $universityId;
+                $vals[] = $userId;
+
+                $sql = "INSERT INTO `$table` ($insertColsQuoted) VALUES ($placeholders)";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    return [null, 'insert_prepare_failed:' . $conn->error];
+                }
+                $stmt->bind_param($types, ...$vals);
+                if (!$stmt->execute()) {
+                    return [null, 'insert_failed:' . $stmt->error];
+                }
+                $newId = $conn->insert_id;
+                $stmt->close();
+                $clientKey = (string) ($row['id'] ?? $row['tempId'] ?? $i);
+                $idMap[$clientKey] = $newId;
+                $seenIds[$newId] = true;
+            }
         }
-        $clientId = $c['id'] ?? $c['temp_id'] ?? $i;
-        $campusIdMap[(string) $clientId] = $conn->insert_id;
-    }
-    $stmt->close();
 
-    // --- إدراج الكليات، مع ربطها بمعرف الحرم الجامعي الحقيقي (إن وُجد) ---
-    $collegeIdMap = [];
-    $stmt = $conn->prepare("INSERT INTO university_colleges (user_id, university_id, campus_id, name, sort_order) VALUES (?, ?, ?, ?, ?)");
-    foreach ($colleges as $i => $c) {
-        $name = trim((string) ($c['name'] ?? ''));
-        if ($name === '') continue;
-        $campusClientId = $c['campus_id'] ?? null;
-        $campusRealId = ($campusClientId !== null && isset($campusIdMap[(string) $campusClientId]))
-            ? $campusIdMap[(string) $campusClientId]
-            : null;
-        $stmt->bind_param('iiisi', $userId, $universityId, $campusRealId, $name, $i);
-        if (!$stmt->execute()) {
-            $err = $stmt->error;
+        // ===== soft-delete لأي صف كان موجوداً ولم يظهر في هذا الطلب =====
+        $toRemove = array_diff(array_keys($existingIds), array_keys($seenIds));
+        if (!empty($toRemove)) {
+            $placeholders = implode(',', array_fill(0, count($toRemove), '?'));
+            $types = str_repeat('i', count($toRemove)) . 'i';
+            $vals = array_values($toRemove);
+            $vals[] = $universityId;
+            $sql = "UPDATE `$table` SET deleted_at = NOW() WHERE id IN ($placeholders) AND university_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param($types, ...$vals);
+            if (!$stmt->execute()) {
+                return [null, 'soft_delete_failed:' . $stmt->error];
+            }
             $stmt->close();
-            $conn->rollback();
-            $conn->close();
-            jsonResponse(['status' => 'error', 'message' => 'Insert college failed', 'debug' => $err]);
         }
-        $clientId = $c['id'] ?? $c['temp_id'] ?? $i;
-        $collegeIdMap[(string) $clientId] = $conn->insert_id;
-    }
-    $stmt->close();
 
-    // --- إدراج الأقسام، مع ربطها بمعرف الكلية الحقيقي ---
-    $stmt = $conn->prepare("INSERT INTO university_departments (user_id, university_id, college_id, name, sort_order) VALUES (?, ?, ?, ?, ?)");
-    foreach ($departments as $i => $d) {
-        $name = trim((string) ($d['name'] ?? ''));
-        $collegeClientId = $d['college_id'] ?? null;
-        if ($name === '' || $collegeClientId === null || !isset($collegeIdMap[(string) $collegeClientId])) continue;
-        $collegeRealId = $collegeIdMap[(string) $collegeClientId];
-        $stmt->bind_param('iiisi', $userId, $universityId, $collegeRealId, $name, $i);
-        if (!$stmt->execute()) {
-            $err = $stmt->error;
-            $stmt->close();
-            $conn->rollback();
-            $conn->close();
-            jsonResponse(['status' => 'error', 'message' => 'Insert department failed', 'debug' => $err]);
-        }
+        return [$idMap, null];
     }
-    $stmt->close();
 
-    // --- المراكز البحثية: تحقق إلزامي من انتماء الوحدة الأب لنفس الجامعة ---
-    // (يمنع تسرّب مراجع بين جامعات مختلفة — لا يعتمد على ثقة العميل إطلاقًا)
+    $failWith = function ($message) use ($conn) {
+        $conn->rollback();
+        $conn->close();
+        jsonResponse(['status' => 'error', 'message' => $message]);
+    };
+
+    // ----- الحرم الجامعي: name, location -----
+    [$campusIdMap, $err] = reconcile_org_unit_table(
+        $conn, 'university_campuses', $universityId, $userId, $campuses,
+        ['name', 'location'],
+        function ($row, $idMap, $i) { return [[], '', []]; },
+        'invalid_org_unit_reference'
+    );
+    if ($err) { $failWith($err); }
+
+    // ----- الكليات: name + campus_id (اختياري، يُحل عبر campusIdMap أو
+    // معرّف حقيقي موجود مسبقاً — يُتحقَّق من ملكيته لنفس الجامعة) -----
+    [$collegeIdMap, $err] = reconcile_org_unit_table(
+        $conn, 'university_colleges', $universityId, $userId, $colleges,
+        ['name'],
+        function ($row, $idMap, $i) use ($conn, $universityId, $campusIdMap) {
+            $campusClientId = $row['campus_id'] ?? null;
+            if ($campusClientId === null || $campusClientId === '') {
+                return [['campus_id'], 'i', [null]];
+            }
+            $key = (string) $campusClientId;
+            if (isset($campusIdMap[$key])) {
+                return [['campus_id'], 'i', [$campusIdMap[$key]]];
+            }
+            // معرّف حرم جامعي موجود مسبقاً (لم يُلمَس بهذا الطلب) — تحقق ملكيته
+            if (is_numeric($campusClientId) && verify_parent_ownership($conn, 'university_campuses', (int) $campusClientId, $universityId)) {
+                return [['campus_id'], 'i', [(int) $campusClientId]];
+            }
+            return [false, null, null];
+        },
+        'invalid_org_unit_reference'
+    );
+    if ($err) { $failWith($err); }
+
+    // ----- الأقسام: name + college_id (تحقق ملكية مماثل) -----
+    [$departmentIdMap, $err] = reconcile_org_unit_table(
+        $conn, 'university_departments', $universityId, $userId, $departments,
+        ['name'],
+        function ($row, $idMap, $i) use ($conn, $universityId, $collegeIdMap) {
+            $collegeClientId = $row['college_id'] ?? null;
+            if ($collegeClientId === null || $collegeClientId === '') {
+                return [false, null, null]; // college_id إلزامي (NOT NULL في المخطط)
+            }
+            $key = (string) $collegeClientId;
+            if (isset($collegeIdMap[$key])) {
+                return [['college_id'], 'i', [$collegeIdMap[$key]]];
+            }
+            if (is_numeric($collegeClientId) && verify_parent_ownership($conn, 'university_colleges', (int) $collegeClientId, $universityId)) {
+                return [['college_id'], 'i', [(int) $collegeClientId]];
+            }
+            return [false, null, null];
+        },
+        'invalid_org_unit_reference'
+    );
+    if ($err) { $failWith($err); }
+
+    // ----- المراكز البحثية: name + research_areas(json) + parent_unit_type/id -----
     $allowedParentTypes = ['university', 'campus', 'college', 'department'];
     $parentCheckTables = [
         'campus' => 'university_campuses',
         'college' => 'university_colleges',
         'department' => 'university_departments',
     ];
-    foreach ($researchCenters as $rc) {
-        $parentType = trim((string) ($rc['parent_unit_type'] ?? 'university'));
-        if (!in_array($parentType, $allowedParentTypes, true)) $parentType = 'university';
-        if ($parentType === 'university') continue; // لا حاجة لمعرف أب — الجامعة ذاتها مُستنتجة من university_id
-        $parentId = isset($rc['parent_unit_id']) && $rc['parent_unit_id'] !== '' ? (int) $rc['parent_unit_id'] : null;
-        if ($parentId === null) continue;
-        $checkTbl = $parentCheckTables[$parentType];
-        $chk = $conn->prepare("SELECT id FROM `$checkTbl` WHERE id = ? AND university_id = ? LIMIT 1");
-        $chk->bind_param('ii', $parentId, $universityId);
-        $chk->execute();
-        $found = $chk->get_result()->fetch_assoc();
-        $chk->close();
-        if (!$found) {
-            $conn->rollback();
-            $conn->close();
-            jsonResponse(['status' => 'error', 'message' => 'invalid_parent_unit_reference']);
-        }
-    }
+    $parentIdMaps = [
+        'campus' => $campusIdMap,
+        'college' => $collegeIdMap,
+        'department' => $departmentIdMap,
+    ];
 
-    // --- إدراج المراكز البحثية بعد التحقق ---
-    $stmt = $conn->prepare("INSERT INTO university_research_centers (user_id, university_id, parent_unit_type, parent_unit_id, name, research_areas, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    foreach ($researchCenters as $i => $rc) {
-        $name = trim((string) ($rc['name'] ?? ''));
-        if ($name === '') continue;
-        $parentType = trim((string) ($rc['parent_unit_type'] ?? 'university'));
-        if (!in_array($parentType, $allowedParentTypes, true)) $parentType = 'university';
-        // ملاحظة: عند parent_unit_type = 'university' يُفرض parent_unit_id = null
-        // دائمًا — الجامعة ذاتها مُستنتجة أصلًا من عمود university_id على هذا الصف،
-        // فلا حاجة لمعرف بحث إضافي.
-        $parentId = ($parentType === 'university')
-            ? null
-            : (isset($rc['parent_unit_id']) && $rc['parent_unit_id'] !== '' ? (int) $rc['parent_unit_id'] : null);
-        $areas = is_array($rc['research_areas'] ?? null) ? array_values(array_filter(array_map('trim', $rc['research_areas']))) : [];
-        $areasJson = json_encode($areas, JSON_UNESCAPED_UNICODE);
-        $stmt->bind_param('iisissi', $userId, $universityId, $parentType, $parentId, $name, $areasJson, $i);
-        if (!$stmt->execute()) {
-            $err = $stmt->error;
-            $stmt->close();
-            $conn->rollback();
-            $conn->close();
-            jsonResponse(['status' => 'error', 'message' => 'Insert research center failed', 'debug' => $err]);
-        }
-    }
-    $stmt->close();
+    [$researchCenterIdMap, $err] = reconcile_org_unit_table(
+        $conn, 'university_research_centers', $universityId, $userId, $researchCenters,
+        ['name'],
+        function ($row, $idMap, $i) use ($conn, $universityId, $allowedParentTypes, $parentCheckTables, $parentIdMaps) {
+            $parentType = trim((string) ($row['parent_unit_type'] ?? 'university'));
+            if (!in_array($parentType, $allowedParentTypes, true)) $parentType = 'university';
+
+            $areas = is_array($row['research_areas'] ?? null) ? array_values(array_filter(array_map('trim', $row['research_areas']))) : [];
+            $areasJson = json_encode($areas, JSON_UNESCAPED_UNICODE);
+
+            if ($parentType === 'university') {
+                return [['parent_unit_type', 'parent_unit_id', 'research_areas'], 'sis', [$parentType, null, $areasJson]];
+            }
+
+            $parentClientId = $row['parent_unit_id'] ?? null;
+            if ($parentClientId === null || $parentClientId === '') {
+                return [false, null, null];
+            }
+            $key = (string) $parentClientId;
+            $map = $parentIdMaps[$parentType];
+            if (isset($map[$key])) {
+                return [['parent_unit_type', 'parent_unit_id', 'research_areas'], 'sis', [$parentType, $map[$key], $areasJson]];
+            }
+            $checkTbl = $parentCheckTables[$parentType];
+            if (is_numeric($parentClientId) && verify_parent_ownership($conn, $checkTbl, (int) $parentClientId, $universityId)) {
+                return [['parent_unit_type', 'parent_unit_id', 'research_areas'], 'sis', [$parentType, (int) $parentClientId, $areasJson]];
+            }
+            return [false, null, null];
+        },
+        'invalid_org_unit_reference'
+    );
+    if ($err) { $failWith($err); }
 
     log_activity($conn, $userId, 'university_profile_update', 'university_profile', 'تحديث ملف الجامعة البحثية', 'University research profile updated');
 

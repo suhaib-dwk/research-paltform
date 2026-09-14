@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -32,11 +32,9 @@ try {
     }
     $conn->set_charset('utf8mb4');
 
-    $userId = isset($_GET['user_id']) ? (int) $_GET['user_id'] : 0;
-    if ($userId <= 0) {
-        $conn->close();
-        jsonResponse(['status' => 'error', 'message' => 'user_id is required']);
-    }
+    // ===== Stage A.5: userId من الجلسة المُصادَق عليها، لا من ?user_id= =====
+    require_once('a04_auth.php');
+    $userId = require_authenticated_user($conn);
 
     $roleKey = get_user_role_key($conn, $userId);
     if (!$roleKey || $roleKey !== 'university') {
@@ -52,12 +50,16 @@ try {
         jsonResponse(['status' => 'success', 'data' => null]);
     }
 
-    // ===== آخر تقييم محفوظ فقط — لتفادي استدعاء الذكاء الاصطناعي (مدفوع) =====
-    // في كل زيارة للصفحة؛ الاستدعاء الفعلي يحدث فقط عند ضغط المستخدم على الزر.
+    // ===== آخر تحليل تشخيصي محفوظ فقط — لتفادي استدعاء الذكاء الاصطناعي
+    // (مدفوع) في كل زيارة للصفحة؛ الاستدعاء الفعلي يحدث فقط عند ضغط
+    // المستخدم على الزر. Stage A.5: يُقيَّد صراحةً بـ
+    // assessment_type='ai_research_profile_diagnostic' — سجلات
+    // legacy_readiness القديمة (نسب مئوية) لا تُعرَض أبداً هنا كأنها
+    // تشخيص رسمي جديد، حتى لو كانت أحدث زمنياً من عدم وجود أي تشخيص جديد. =====
     $stmt = $conn->prepare(
         "SELECT model, response_json, created_at
          FROM university_readiness_assessments
-         WHERE university_id = ?
+         WHERE university_id = ? AND assessment_type = 'ai_research_profile_diagnostic'
          ORDER BY id DESC
          LIMIT 1"
     );

@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -32,11 +32,11 @@ try {
     }
     $conn->set_charset('utf8mb4');
 
-    $userId = isset($_GET['user_id']) ? (int) $_GET['user_id'] : 0;
-    if ($userId <= 0) {
-        $conn->close();
-        jsonResponse(['status' => 'error', 'message' => 'user_id is required']);
-    }
+    // ===== Stage A.5: userId من الجلسة المُصادَق عليها، لا من ?user_id=
+    // وارد في الرابط (كان يُتيح لأي متصل قراءة ملف أي جامعة أخرى بمجرد
+    // تغيير رقم في شريط العنوان) =====
+    require_once('a04_auth.php');
+    $userId = require_authenticated_user($conn);
 
     $roleKey = get_user_role_key($conn, $userId);
     if (!$roleKey) {

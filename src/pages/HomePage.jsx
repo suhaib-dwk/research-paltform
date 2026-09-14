@@ -9,7 +9,7 @@ import {
   Phone, Mail, MapPin
 } from 'lucide-react';
 import { Link } from "react-router-dom";
-import { API_BASE_URL } from "../api";
+import { API_BASE_URL, resolveUploadUrl } from "../api";
 import { SiteContext } from "../SiteContext";
 import {
   getValidationMessages,
@@ -67,6 +67,10 @@ const HomePage = () => {
   const [isLoadingNews, setIsLoadingNews] = useState(true);
   const [newsError, setNewsError] = useState(null);
 
+  // ✅ فهرس الصورة الحالية بسلايدر الهيرو (انتقال fade تقليدي: صورة ثابتة بمكانها
+  // تختفي تدريجياً لتظهر التالية، بدل الزحف الأفقي المستمر القديم البطيء جداً)
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+
   const heroBadge =
     siteSettings[`hero_badge_${currentLang}`] || t("hero.badge");
   const heroTitle =
@@ -81,6 +85,20 @@ const HomePage = () => {
     { id: 5, image_url: "/Home/home05.jpg" },
   ];
   const bannerSlides = homeSlides.length > 0 ? homeSlides : defaultSlides;
+
+  // ✅ تبديل الصورة الظاهرة كل 5 ثوانٍ (fade)، مع إعادة الفهرس لأول صورة تلقائياً
+  // لو تغيّر عدد الصور (مثلاً الأدمن حذف صورة) حتى لا يبقى الفهرس خارج الحدود.
+  useEffect(() => {
+    if (heroSlideIndex >= bannerSlides.length) setHeroSlideIndex(0);
+  }, [bannerSlides.length, heroSlideIndex]);
+
+  useEffect(() => {
+    if (bannerSlides.length <= 1) return;
+    const timer = setInterval(() => {
+      setHeroSlideIndex((prev) => (prev + 1) % bannerSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [bannerSlides.length]);
 
   const getIconComponent = (iconName) => {
     const iconsMap = {
@@ -148,11 +166,15 @@ const HomePage = () => {
     fetchData();
   }, [currentLang]);
 
+  // ⚠️ أرقام توضيحية مؤقتة (placeholder) بطلب صريح من المستخدم لإرجاع القسم بصريًا
+  // بنفس الشكل المرجعي — ليست مربوطة بمصدر بيانات حقيقي من قاعدة البيانات بعد.
+  // عند توفر endpoint حقيقي (عدد الباحثين المسجَّلين، عدد الجامعات...) استبدل
+  // هذه القيم الثابتة بالنتيجة الفعلية بدل تعديلها يدويًا هنا.
   const statsData = [
-    { count: "12,500+", label: t("stats.researchers") },
-    { count: "85+", label: t("stats.universities") },
-    { count: "45,000+", label: t("stats.publications") },
-    { count: "3,200+", label: t("stats.projects") },
+    { count: "12,500+", label: isRTL ? "باحث مسجل" : "Registered Researchers" },
+    { count: "85+", label: isRTL ? "جامعة ومؤسسة" : "Universities & Institutes" },
+    { count: "45,000+", label: isRTL ? "بحث علمي منشور" : "Published Researches" },
+    { count: "3,200+", label: isRTL ? "مشروع بحثي نشط" : "Active Research Projects" },
   ];
 
   const infoTiles = [
@@ -160,13 +182,11 @@ const HomePage = () => {
       key: "research_system",
       title: t("home.tile1_title"),
       desc: t("home.tile1_desc"),
-      dark: true,
     },
     {
       key: "classification",
       title: t("home.tile2_title"),
       desc: t("home.tile2_desc"),
-      orange: true,
     },
     {
       key: "transparency",
@@ -330,45 +350,59 @@ const HomePage = () => {
         .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0) scale(1); }
       `}</style>
 
-      {/* ═══════ البانر الديناميكي (تحسين البصرية) ═══════ */}
-      <section className="relative h-[85vh] md:h-[90vh] w-full overflow-hidden bg-brand-ink group">
-        <div
-          className={`flex h-full w-[300%] ${isRTL ? "banner-track-rtl" : "banner-track-ltr"}`}
-        >
-          {[...bannerSlides, ...bannerSlides, ...bannerSlides].map(
-            (slide, index) => (
-              <div
-                key={index}
-                className="relative w-1/3 h-full flex-shrink-0 overflow-hidden"
-              >
-                <img
-                  src={slide.image_url}
-                  alt="Research"
-                  className="w-full h-full object-cover ken-burns-effect brightness-75 group-hover:brightness-90 transition-all duration-1000"
-                  loading={index < 3 ? "eager" : "lazy"}
-                />
-                {/* تحسين التدرج اللوني فوق الصورة */}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/60 to-brand-ink/30"></div>
-              </div>
-            ),
-          )}
-        </div>
-        
+      {/* ═══════ البانر الديناميكي (سلايدر fade تقليدي: صورة ثابتة بمكانها تختفي
+           تدريجياً لتظهر التالية، بدل الزحف الأفقي المستمر البطيء جداً سابقاً) ═══════ */}
+      {/* ✅ z-30 صريحة: بدونها كان قسم الإحصائيات تحتها (z-20 مع -mt-16) يتراكب فوق
+          آخر 64px من البانر فعلياً (رغم عدم ظهور ذلك بصرياً) ويبلع نقرات نقاط التنقل. */}
+      <section className="relative z-30 h-[85vh] md:h-[90vh] w-full overflow-hidden bg-brand-ink group">
+        {bannerSlides.map((slide, index) => (
+          <div
+            key={slide.id ?? index}
+            className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+            style={{ opacity: index === heroSlideIndex ? 1 : 0 }}
+            aria-hidden={index !== heroSlideIndex}
+          >
+            <img
+              src={resolveUploadUrl(slide.image_url)}
+              alt="Research"
+              className="w-full h-full object-cover ken-burns-effect brightness-75 group-hover:brightness-90 transition-all duration-1000"
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+            {/* تحسين التدرج اللوني فوق الصورة */}
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/60 to-brand-ink/30"></div>
+          </div>
+        ))}
+
         {/* تأثير Vignette لتركيز الانتباه للمنتصف */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none"></div>
 
+        {/* نقاط التنقل بين الصور (تظهر فقط لو في أكثر من صورة واحدة) */}
+        {bannerSlides.length > 1 && (
+          <div className="absolute bottom-8 inset-x-0 flex items-center justify-center gap-2.5 z-20">
+            {bannerSlides.map((slide, index) => (
+              <button
+                key={slide.id ?? index}
+                onClick={() => setHeroSlideIndex(index)}
+                aria-label={`${t("home.hero_title_line1")} ${index + 1}`}
+                aria-current={index === heroSlideIndex}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === heroSlideIndex ? "w-8 bg-brand-orange" : "w-2 bg-white/40 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-6">
-          <ScrollReveal>
-            <span className="inline-block px-4 py-1.5 rounded-full bg-brand-orange/20 border border-brand-orange/50 text-brand-orange text-xs font-bold tracking-widest uppercase mb-6 backdrop-blur-md animate-[float_4s_ease-in-out_infinite]">
-              {t("home.hero_title_line1")}
-            </span>
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight drop-shadow-2xl max-w-5xl tracking-tight">
+          <ScrollReveal className="flex flex-col items-center w-full">
+            {/* ⏸️ إخفاء البادج الصغير ("المنصة الوطنية للبحث الأكاديمي") فوق العنوان بطلب صريح */}
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight drop-shadow-2xl max-w-5xl mx-auto tracking-tight">
               {t("home.hero_title_line1")}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-yellow-400 drop-shadow-lg">
                 {t("home.hero_title_line2")}
               </span>
             </h1>
-            <p className="text-xl text-gray-200 mb-12 leading-relaxed max-w-3xl drop-shadow-md font-light backdrop-blur-sm bg-black/30 p-6 rounded-2xl border border-white/10">
+            <p className="text-xl text-gray-200 mb-12 leading-relaxed max-w-3xl mx-auto drop-shadow-md font-light backdrop-blur-sm bg-black/30 p-6 rounded-2xl border border-white/10 text-center">
               {heroDesc}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -392,18 +426,19 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══════ شريط الإحصائيات (تحسين الزجاجية) ═══════ */}
-      <section className="bg-brand-ink py-16 relative overflow-hidden -mt-16 z-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-ink/80 to-brand-ink"></div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* ═══════ شريط الإحصائيات (شريط غامق متصل بخطوط فاصلة رأسية، ملتصق مباشرة
+           تحت البانر مع خط علوي بلون البراند يفصلهما — بديل تصميم "البطاقات
+           الطافية" السابق، بطلب صريح لمطابقة نمط مرجعي محدد) ═══════ */}
+      <section className="relative z-20 bg-brand-ink border-t-2 border-brand-orange py-10 md:py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 rtl:divide-x-reverse">
             {statsData.map((stat, index) => (
               <ScrollReveal key={index} delay={index * 100}>
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl text-center hover:bg-white/10 transition-all duration-500 hover:-translate-y-2 hover:border-brand-orange/30 group">
-                  <p className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 mb-2 group-hover:scale-110 transition-transform duration-300">
+                <div className="text-center px-4">
+                  <p className="text-3xl md:text-4xl font-black text-white mb-1.5">
                     {stat.count}
                   </p>
-                  <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-gray-400 group-hover:text-brand-orange transition-colors duration-300">
+                  <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-brand-orange">
                     {stat.label}
                   </p>
                 </div>
@@ -413,61 +448,52 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══════ نبذة عن المنصة (تصميم بطاقات عصري) ═══════ */}
+      {/* ═══════ نبذة عن المنصة (تصميم مسطّح موحّد: عنوان أعلى بعرض كامل + 4 بطاقات
+           متساوية بصف واحد بنفس الستايل، بدل التقسيم عمودين/بطاقات متفاوتة الألوان) ═══════ */}
       <section className="py-24 md:py-32 bg-brand-cream-hero relative">
         <div className="container mx-auto px-6">
-          <ScrollReveal className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="text-brand-orange text-sm font-bold tracking-[0.3em] uppercase mb-6 block flex items-center gap-2">
-                <span className="w-8 h-[2px] bg-brand-orange rounded-full"></span>
-                {t("home.about_label")}
-              </span>
-              <h2 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-8">
-                {t("home.about_title")}
-              </h2>
-              <p className="text-lg text-brand-muted leading-relaxed mb-10">
-                {t("home.about_desc")}
-              </p>
-              <Link
-                to="/about-us"
-                className="inline-flex items-center gap-3 text-brand-ink font-bold text-lg group hover:text-brand-orange transition-colors"
-              >
-                {t("home.explore_features")}{" "}
-                <div className="w-10 h-10 rounded-full bg-brand-orange/10 flex items-center justify-center group-hover:bg-brand-orange group-hover:text-white transition-all duration-300">
-                  <ArrowIcon className="w-4 h-4" />
-                </div>
-              </Link>
-            </div>
+          <ScrollReveal>
+            <span className="text-brand-orange text-sm font-bold tracking-[0.3em] uppercase mb-6 block flex items-center gap-2">
+              <span className="w-8 h-[2px] bg-brand-orange rounded-full"></span>
+              {t("home.about_label")}
+            </span>
+            {/* ✅ mb-4 بدل mb-8 — لا يوجد نص وصفي بين العنوان والبطاقات (حُذف بتصميم
+                سابق)، فمسافة أكبر كانت تترك فراغًا غير منطقي هنا لا يخدم أي محتوى. */}
+            <h2 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4 max-w-3xl">
+              {t("home.about_title")}
+            </h2>
+          </ScrollReveal>
 
-            <div className="grid grid-cols-2 gap-6">
-              {infoTiles.map((tile, index) => (
-                <ScrollReveal key={tile.key} delay={index * 100 + 200}>
-                  <div
-                    className={`p-8 rounded-[2rem] transition-all duration-500 hover:-translate-y-3 cursor-default group relative overflow-hidden ${
-                      tile.dark
-                        ? "bg-brand-ink text-white shadow-2xl"
-                        : tile.orange
-                          ? "bg-gradient-to-br from-brand-orange to-orange-500 text-white shadow-xl"
-                          : "bg-white text-brand-ink border border-gray-100 shadow-lg"
-                    }`}
-                  >
-                    {/* تأثير توهج خفيف */}
-                    {tile.highlight && <div className="absolute -right-10 -top-10 w-32 h-32 bg-white/20 rounded-full blur-3xl"></div>}
-                    
-                    <h3
-                      className={`text-xs font-bold uppercase tracking-widest mb-4 transition-colors ${tile.dark || tile.orange ? "text-white/60" : "text-brand-orange"}`}
-                    >
-                      {tile.title}
-                    </h3>
-                    <p
-                      className={`text-base leading-relaxed font-medium ${tile.dark || tile.orange ? "text-white/90" : "text-gray-600"}`}
-                    >
-                      {tile.desc}
-                    </p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
+          {/* ✅ بطاقات أكبر (padding أعلى + ارتفاع أدنى موحّد) لتطابق الحجم "الممتلئ"
+              بالتصميم المرجعي، بدل بطاقات مضغوطة الارتفاع بفراغ سفلي غير متسق. */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {infoTiles.map((tile, index) => (
+              <ScrollReveal key={tile.key} delay={index * 100 + 100}>
+                <div className="h-full min-h-[168px] p-8 rounded-[1.75rem] bg-white text-brand-ink border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 cursor-default flex flex-col">
+                  <h3 className="text-xs font-bold uppercase tracking-widest mb-4 text-brand-orange">
+                    {tile.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed font-medium text-gray-600">
+                    {tile.desc}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* ✅ text-right صريحة (لا text-end المنطقية) — الصورة المرجعية وضعت الرابط
+              يمين الصفحة بصريًا؛ text-end كانت تضعه يسارًا لأن "end" بالعربي (RTL)
+              هو اليسار منطقيًا، فتُخالف المرجع رغم صحتها التقنية. */}
+          <ScrollReveal className="text-right">
+            <Link
+              to="/about-us"
+              className="inline-flex items-center gap-3 text-brand-ink font-bold text-lg group hover:text-brand-orange transition-colors"
+            >
+              {t("home.explore_features")}{" "}
+              <div className="w-10 h-10 rounded-full bg-brand-orange/10 flex items-center justify-center group-hover:bg-brand-orange group-hover:text-white transition-all duration-300">
+                <ArrowIcon className="w-4 h-4" />
+              </div>
+            </Link>
           </ScrollReveal>
         </div>
       </section>

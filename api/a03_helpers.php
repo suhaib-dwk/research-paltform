@@ -59,6 +59,26 @@ function get_service_table_map() {
     ];
 }
 
+// ===== خريطة دور الحساب → (جدول الملف الشخصي + عمود الاسم)، لاشتقاق اسم
+// العرض عند تسجيل الدخول أو عند جلب هوية الجلسة الحالية (me.php). نفس
+// الخريطة كانت مكررة داخل login.php حرفياً؛ استُخرجت هنا Stage A.5 ليُعاد
+// استخدامها من كلا الملفين بدل نسخة ثانية قد تنحرف عن الأولى لاحقاً. =====
+function get_login_profile_name_map() {
+    return [
+        'undergrad'        => ['table' => 'profiles_undergrad', 'col' => 'full_name'],
+        'grad'             => ['table' => 'profiles_grad',      'col' => 'full_name'],
+        'faculty'          => ['table' => 'profiles_faculty',   'col' => 'name'],
+        'researcher'       => ['table' => 'profiles_researcher','col' => 'full_name'],
+        'reviewer'         => ['table' => 'profiles_reviewer',  'col' => 'full_name'],
+        'university'       => ['table' => 'profiles_entity',    'col' => 'entity_name'],
+        'college'          => ['table' => 'profiles_entity',    'col' => 'entity_name'],
+        'research_center'  => ['table' => 'profiles_entity',    'col' => 'entity_name'],
+        'ministry'         => ['table' => 'profiles_entity',    'col' => 'entity_name'],
+        'employee'         => ['table' => 'profiles_system',    'col' => 'full_name'],
+        'service_provider' => ['table' => 'profiles_service_provider', 'col' => 'full_name'],
+    ];
+}
+
 // ===== جلب role_key لمستخدم عبر id (يُستخدم للتحقق من الصلاحيات في كل endpoint حساس) =====
 function get_user_role_key($conn, $userId) {
     $stmt = $conn->prepare("SELECT r.key AS role_key FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ? AND u.deleted_at IS NULL LIMIT 1");
@@ -200,32 +220,32 @@ function get_university_profile_data($conn, $userId) {
         'research_centers' => [],
     ];
 
-    // ===== الحرم الجامعي =====
-    $stmt = $conn->prepare("SELECT id, name, location FROM university_campuses WHERE university_id = ? ORDER BY sort_order, id");
+    // ===== الحرم الجامعي (Stage A.5: استبعاد الصفوف المحذوفة ناعماً) =====
+    $stmt = $conn->prepare("SELECT id, name, location FROM university_campuses WHERE university_id = ? AND deleted_at IS NULL ORDER BY sort_order, id");
     $stmt->bind_param('i', $universityId);
     $stmt->execute();
     $res = $stmt->get_result();
     while ($r = $res->fetch_assoc()) { $profile['campuses'][] = $r; }
     $stmt->close();
 
-    // ===== الكليات =====
-    $stmt = $conn->prepare("SELECT id, campus_id, name FROM university_colleges WHERE university_id = ? ORDER BY sort_order, id");
+    // ===== الكليات (Stage A.5: استبعاد الصفوف المحذوفة ناعماً) =====
+    $stmt = $conn->prepare("SELECT id, campus_id, name FROM university_colleges WHERE university_id = ? AND deleted_at IS NULL ORDER BY sort_order, id");
     $stmt->bind_param('i', $universityId);
     $stmt->execute();
     $res = $stmt->get_result();
     while ($r = $res->fetch_assoc()) { $profile['colleges'][] = $r; }
     $stmt->close();
 
-    // ===== الأقسام =====
-    $stmt = $conn->prepare("SELECT id, college_id, name FROM university_departments WHERE university_id = ? ORDER BY sort_order, id");
+    // ===== الأقسام (Stage A.5: استبعاد الصفوف المحذوفة ناعماً) =====
+    $stmt = $conn->prepare("SELECT id, college_id, name FROM university_departments WHERE university_id = ? AND deleted_at IS NULL ORDER BY sort_order, id");
     $stmt->bind_param('i', $universityId);
     $stmt->execute();
     $res = $stmt->get_result();
     while ($r = $res->fetch_assoc()) { $profile['departments'][] = $r; }
     $stmt->close();
 
-    // ===== المراكز البحثية =====
-    $stmt = $conn->prepare("SELECT id, parent_unit_type, parent_unit_id, name, research_areas FROM university_research_centers WHERE university_id = ? ORDER BY sort_order, id");
+    // ===== المراكز البحثية (Stage A.5: استبعاد الصفوف المحذوفة ناعماً) =====
+    $stmt = $conn->prepare("SELECT id, parent_unit_type, parent_unit_id, name, research_areas FROM university_research_centers WHERE university_id = ? AND deleted_at IS NULL ORDER BY sort_order, id");
     $stmt->bind_param('i', $universityId);
     $stmt->execute();
     $res = $stmt->get_result();

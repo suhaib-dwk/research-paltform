@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSite } from '../../SiteContext';
 import { API_BASE_URL } from '../../api';
 import {
@@ -58,8 +59,8 @@ const AddButton = ({ onClick, label }) => (
 // =========================================================
 const UniversityProfilePage = () => {
     const { user, currentLang } = useSite();
+    const { t } = useTranslation();
     const isAr = currentLang === 'ar';
-    const entityId = user?.user_id ?? user?.id;
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -86,13 +87,14 @@ const UniversityProfilePage = () => {
 
     // ===== تحميل الملف + آخر تقييم محفوظ (بلا استدعاء ذكاء اصطناعي جديد) =====
     const loadProfile = useCallback(async () => {
-        if (!entityId) return;
         setLoading(true);
         setLoadError(null);
         try {
+            // ✅ Stage A.5: الهوية تُحلّ من الجلسة على الخادم — لا حاجة لإرسال
+            // user_id هنا بعد الآن
             const [profRes, histRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/get_university_profile.php?user_id=${entityId}`).then((r) => r.json()),
-                fetch(`${API_BASE_URL}/get_readiness_assessment_history.php?user_id=${entityId}`).then((r) => r.json()).catch(() => null),
+                fetch(`${API_BASE_URL}/get_university_profile.php`, { credentials: 'include' }).then((r) => r.json()),
+                fetch(`${API_BASE_URL}/get_readiness_assessment_history.php`, { credentials: 'include' }).then((r) => r.json()).catch(() => null),
             ]);
 
             if (profRes.status !== 'success') {
@@ -127,7 +129,7 @@ const UniversityProfilePage = () => {
         } finally {
             setLoading(false);
         }
-    }, [entityId, isAr]);
+    }, [isAr]);
 
     useEffect(() => { loadProfile(); }, [loadProfile]);
 
@@ -138,7 +140,6 @@ const UniversityProfilePage = () => {
         setError(null);
         try {
             const payload = {
-                user_id: entityId,
                 ...form,
                 priority_areas: textareaToArray(priorityAreasText),
                 research_goals: textareaToArray(researchGoalsText),
@@ -158,6 +159,7 @@ const UniversityProfilePage = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
+                credentials: 'include',
             });
             const result = await res.json();
 
@@ -183,7 +185,7 @@ const UniversityProfilePage = () => {
             const res = await fetch(`${API_BASE_URL}/ai_readiness_assessment.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: entityId }),
+                credentials: 'include',
             });
             const result = await res.json();
             if (result.status === 'success') {
@@ -191,7 +193,7 @@ const UniversityProfilePage = () => {
             } else if (result.message === 'ai_not_configured') {
                 setAssessmentError({ type: 'info', text: isAr ? 'ميزة الذكاء الاصطناعي غير مُفعّلة بعد على هذا الخادم (لم يُضبط مفتاح OpenRouter).' : 'AI features are not configured on this server yet (OpenRouter key missing).' });
             } else {
-                setAssessmentError({ type: 'error', text: isAr ? 'تعذّر إجراء تقييم الجاهزية، حاول مرة أخرى لاحقًا.' : 'Failed to run readiness assessment, please try again later.' });
+                setAssessmentError({ type: 'error', text: t('readiness_diagnostic.error') });
             }
         } catch (err) {
             setAssessmentError({ type: 'error', text: isAr ? 'تعذّر الاتصال بالخادم' : 'Failed to connect to server' });
@@ -422,12 +424,14 @@ const UniversityProfilePage = () => {
                 </div>
             </form>
 
-            {/* ===== تقييم الجاهزية بالذكاء الاصطناعي ===== */}
+            {/* ===== Stage A.5 / P5: التحليل الأولي للملف البحثي بالذكاء الاصطناعي
+                (سابقاً "تقييم الجاهزية") — ناتج نوعي فقط (ملاحظات/مقترحات)، لا نسب
+                مئوية أو درجات رسمية؛ إشعار توضيحي دائم أسفل النتائج. ===== */}
             <div className={cardCls}>
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-[#e8623a]" />
-                        {isAr ? 'تقييم الجاهزية بالذكاء الاصطناعي' : 'AI Readiness Assessment'}
+                        {t('readiness_diagnostic.title')}
                     </h2>
                     <button
                         type="button"
@@ -436,9 +440,7 @@ const UniversityProfilePage = () => {
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white text-sm font-bold hover:shadow-lg hover:shadow-[#e8623a]/25 disabled:opacity-60 transition-all"
                     >
                         {assessmentLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                        {assessmentLoading
-                            ? (isAr ? 'جارٍ التحليل... (قد يستغرق حتى 30 ثانية)' : 'Analyzing... (may take up to 30s)')
-                            : (isAr ? 'تشغيل تقييم الجاهزية' : 'Run Readiness Assessment')}
+                        {assessmentLoading ? t('readiness_diagnostic.running') : t('readiness_diagnostic.run_button')}
                     </button>
                 </div>
 
@@ -455,73 +457,68 @@ const UniversityProfilePage = () => {
 
                 {!assessment && !assessmentError && (
                     <p className="text-sm text-gray-400 dark:text-gray-500">
-                        {isAr ? 'لم يتم إجراء أي تقييم بعد. اضغط الزر أعلاه لتحليل ملف جامعتك وتقدير مدى جاهزيتها البحثية.' : 'No assessment has been run yet. Click the button above to analyze your university profile and estimate its research readiness.'}
+                        {isAr ? 'لم يتم إجراء أي تحليل بعد. اضغط الزر أعلاه لتحليل ملف جامعتك أولياً.' : 'No diagnostic has been run yet. Click the button above to analyze your university profile.'}
                     </p>
                 )}
 
                 {assessment && (
                     <div className="space-y-5">
-                        {/* النسبة الإجمالية */}
-                        <div className="flex items-center gap-4 p-4 bg-orange-50 dark:bg-[#e8623a]/10 rounded-2xl">
-                            <TrendingUp className="w-8 h-8 text-[#e8623a] flex-shrink-0" />
-                            <div>
-                                <p className="text-3xl font-black text-gray-900 dark:text-white">{assessment.overall_readiness_percent}%</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{isAr ? 'الجاهزية الإجمالية' : 'Overall Readiness'}</p>
-                            </div>
-                        </div>
-
-                        {/* أبعاد الجاهزية */}
-                        {Array.isArray(assessment.dimensions) && assessment.dimensions.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                {assessment.dimensions.map((d, i) => {
-                                    const badge = statusBadge(d.status, isAr);
-                                    return (
-                                        <div key={i} className="border border-gray-100 dark:border-[#3a322c]/50 rounded-xl p-3.5">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <p className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? d.label_ar : d.label_en}</p>
-                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.cls}`}>{badge.label}</span>
-                                            </div>
-                                            <div className="w-full h-1.5 bg-gray-100 dark:bg-[#1a1613] rounded-full overflow-hidden">
-                                                <div className="h-full bg-[#e8623a] rounded-full" style={{ width: `${d.percent}%` }} />
-                                            </div>
-                                            <p className="text-xs text-gray-400 mt-1.5">{d.percent}%</p>
-                                        </div>
-                                    );
-                                })}
+                        {/* اكتمال الملف — فئة نوعية خشنة (منخفض/متوسط/مرتفع)، ليست نسبة دقيقة */}
+                        {assessment.profile_completeness?.level && (
+                            <div className="flex items-center gap-4 p-4 bg-orange-50 dark:bg-[#e8623a]/10 rounded-2xl">
+                                <TrendingUp className="w-8 h-8 text-[#e8623a] flex-shrink-0" />
+                                <div>
+                                    <p className="text-2xl font-black text-gray-900 dark:text-white">
+                                        {t(`readiness_diagnostic.level_${assessment.profile_completeness.level}`)}
+                                    </p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('readiness_diagnostic.profile_completeness_label')}</p>
+                                </div>
                             </div>
                         )}
 
-                        {/* الفجوات الحرجة والفرص */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {Array.isArray(assessment.critical_gaps) && assessment.critical_gaps.length > 0 && (
-                                <div className="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-800/20 rounded-xl p-4">
-                                    <h3 className="text-sm font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5 mb-2.5">
-                                        <AlertTriangle className="w-4 h-4" /> {isAr ? 'الفجوات الحرجة' : 'Critical Gaps'}
+                        {Array.isArray(assessment.profile_completeness?.observations) && assessment.profile_completeness.observations.length > 0 && (
+                            <ul className="space-y-1.5 list-disc ps-4">
+                                {assessment.profile_completeness.observations.map((o, i) => (
+                                    <li key={i} className="text-xs text-gray-600 dark:text-gray-300">{isAr ? o.ar : o.en}</li>
+                                ))}
+                            </ul>
+                        )}
+
+                        {/* أقسام الملاحظات النوعية — كل قسم قائمة ملاحظات/مقترحات، لا أرقام */}
+                        {[
+                            { key: 'missing_information', icon: AlertTriangle, cls: 'text-amber-600 dark:text-amber-400' },
+                            { key: 'weaknesses', icon: AlertTriangle, cls: 'text-red-600 dark:text-red-400' },
+                            { key: 'suggested_priorities', icon: Sparkles, cls: 'text-[#d4502a] dark:text-[#f0916d]' },
+                            { key: 'suggested_next_steps', icon: Sparkles, cls: 'text-[#d4502a] dark:text-[#f0916d]' },
+                            { key: 'areas_requiring_more_data', icon: Info, cls: 'text-blue-600 dark:text-blue-400' },
+                            { key: 'potential_opportunities', icon: Sparkles, cls: 'text-emerald-600 dark:text-emerald-400' },
+                            { key: 'data_collection_recommendations', icon: Info, cls: 'text-blue-600 dark:text-blue-400' },
+                        ].map(({ key, icon: Icon, cls }) => {
+                            const items = assessment[key];
+                            if (!Array.isArray(items) || items.length === 0) return null;
+                            return (
+                                <div key={key} className="border border-gray-100 dark:border-[#3a322c]/50 rounded-xl p-4">
+                                    <h3 className={`text-sm font-bold flex items-center gap-1.5 mb-2.5 ${cls}`}>
+                                        <Icon className="w-4 h-4" /> {t(`readiness_diagnostic.${key}_title`)}
                                     </h3>
                                     <ul className="space-y-1.5 list-disc ps-4">
-                                        {assessment.critical_gaps.map((g, i) => (
-                                            <li key={i} className="text-xs text-gray-600 dark:text-gray-300">{isAr ? g.ar : g.en}</li>
+                                        {items.map((item, i) => (
+                                            <li key={i} className="text-xs text-gray-600 dark:text-gray-300">{isAr ? item.ar : item.en}</li>
                                         ))}
                                     </ul>
                                 </div>
-                            )}
-                            {Array.isArray(assessment.opportunities) && assessment.opportunities.length > 0 && (
-                                <div className="bg-orange-50 dark:bg-[#e8623a]/10 border border-orange-100 dark:border-[#e8623a]/20 rounded-xl p-4">
-                                    <h3 className="text-sm font-bold text-[#d4502a] dark:text-[#f0916d] flex items-center gap-1.5 mb-2.5">
-                                        <Sparkles className="w-4 h-4" /> {isAr ? 'فرص التحسين' : 'Opportunities'}
-                                    </h3>
-                                    <ul className="space-y-1.5 list-disc ps-4">
-                                        {assessment.opportunities.map((o, i) => (
-                                            <li key={i} className="text-xs text-gray-600 dark:text-gray-300">{isAr ? o.ar : o.en}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
+                            );
+                        })}
+
+                        {/* إشعار توضيحي دائم — لا يُخفى، يظهر أسفل كل نتيجة */}
+                        <div className="flex items-start gap-2.5 p-3.5 bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl">
+                            <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{t('readiness_diagnostic.disclaimer')}</p>
                         </div>
 
                         {assessment.generated_at && (
                             <p className="text-[11px] text-gray-400">
-                                {isAr ? 'تاريخ التقييم: ' : 'Generated at: '}{new Date(assessment.generated_at).toLocaleString(isAr ? 'ar' : 'en')}
+                                {t('readiness_diagnostic.generated_at')}: {new Date(assessment.generated_at).toLocaleString(isAr ? 'ar' : 'en')}
                                 {assessment.model && ` · ${assessment.model}`}
                             </p>
                         )}

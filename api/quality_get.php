@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -31,8 +31,11 @@ try {
     }
     $conn->set_charset('utf8mb4');
 
-    $entityId = isset($_GET['entity_id']) ? (int) $_GET['entity_id'] : 0;
-    $period   = isset($_GET['period']) ? trim($_GET['period']) : '';
+    // ===== Stage A.5: university_id يُحلّ من الجلسة المُصادَق عليها، لا من
+    // entity_id وارد من العميل — يمنع IDOR عبر تغيير هذا المعطى =====
+    require_once('a04_auth.php');
+    $universityId = require_university_access($conn);
+    $period = isset($_GET['period']) ? trim($_GET['period']) : '';
 
     // ===== 1. جلب العناصر =====
     $elements = [];
@@ -66,15 +69,15 @@ try {
 
     // ===== 3. إن طُلبت جهة+فترة معينة، اجلب استجاباتها =====
     $responses = [];
-    if ($entityId > 0 && $period !== '') {
+    if ($period !== '') {
         $stmt = $conn->prepare(
             "SELECT indicator_id, actual_value, target_value, maturity_level, compliance_level,
                     assessment, evidence_quality, score, gap_notes, corrective_action,
                     owner_name, due_date, status, updated_at
              FROM academic_quality_entity_responses
-             WHERE entity_id = ? AND reporting_period = ?"
+             WHERE university_id = ? AND reporting_period = ?"
         );
-        $stmt->bind_param('is', $entityId, $period);
+        $stmt->bind_param('is', $universityId, $period);
         $stmt->execute();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -99,9 +102,9 @@ try {
                 "SELECT ef.response_id, ef.id, ef.file_name, ef.file_path, ef.uploaded_at, er.indicator_id
                  FROM academic_quality_evidence_files ef
                  JOIN academic_quality_entity_responses er ON er.id = ef.response_id
-                 WHERE er.entity_id = ? AND er.reporting_period = ?"
+                 WHERE er.university_id = ? AND er.reporting_period = ?"
             );
-            $stmt2->bind_param('is', $entityId, $period);
+            $stmt2->bind_param('is', $universityId, $period);
             $stmt2->execute();
             $res2 = $stmt2->get_result();
             while ($f = $res2->fetch_assoc()) {
@@ -139,6 +142,15 @@ try {
         ];
     }
 
+    // ===== Stage A.5 / P8: وزن المعيار من قاعدة البيانات بدل ثابت PHP
+    // مكرّر في هذا الملف وquality_summary.php — العمود موجود أصلاً بقيمة
+    // صحيحة (weight_percent INT DEFAULT 24)، فقط كنّا لا نقرأه =====
+    $weightPercent = 24; // احتياطي دفاعي فقط إن أرجع الاستعلام لا شيء
+    $wRes = $conn->query("SELECT weight_percent FROM academic_quality_standard WHERE is_active = 1 LIMIT 1");
+    if ($wRes && ($wRow = $wRes->fetch_assoc())) {
+        $weightPercent = (int) $wRow['weight_percent'];
+    }
+
     $conn->close();
 
     jsonResponse([
@@ -148,7 +160,7 @@ try {
                 'code' => '06',
                 'name_ar' => 'البحث العلمي',
                 'name_en' => 'Scientific Research',
-                'weight_percent' => 24,
+                'weight_percent' => $weightPercent,
                 'indicators_count' => 44,
                 // ⚠️ مجموع max_score لكل المؤشرات الـ44 حسب الدليل الرسمي (54+24+16+8+12+6+42+78)
                 'total_max_score' => 240,

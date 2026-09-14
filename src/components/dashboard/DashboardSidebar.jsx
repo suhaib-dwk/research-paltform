@@ -55,7 +55,7 @@ const getMenuGroups = (role, t, isAr) => {
       ]},
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 3 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -66,7 +66,7 @@ const getMenuGroups = (role, t, isAr) => {
       ]},
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 2 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -77,7 +77,7 @@ const getMenuGroups = (role, t, isAr) => {
       ]},
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 2 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -88,10 +88,10 @@ const getMenuGroups = (role, t, isAr) => {
       ]},
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [
         { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
-        { id: 'reviews', icon: ShieldCheck, label: t('reviews.title'), to: '/dashboard/reviews', badge: 2 },
+        { id: 'reviews', icon: ShieldCheck, label: t('reviews.title'), to: '/dashboard/reviews' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 5 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -104,7 +104,7 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'collaborations', icon: Users, label: t('collabs.title'), to: '/dashboard/collaborations' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 1 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -114,11 +114,11 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'tasks', icon: ListChecks, label: t('tasks.title'), to: '/dashboard/tasks' },
       ]},
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [
-        { id: 'reviews', icon: ShieldCheck, label: t('reviews.title'), to: '/dashboard/reviews', badge: 4 },
+        { id: 'reviews', icon: ShieldCheck, label: t('reviews.title'), to: '/dashboard/reviews' },
         { id: 'reviews-history', icon: BookOpen, label: t('reviews_history.title'), to: '/dashboard/reviews/history' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 1 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
@@ -182,10 +182,10 @@ const getMenuGroups = (role, t, isAr) => {
       { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [
         { id: 'universities', icon: Building2, label: t('employee.universities.title'), to: '/dashboard/universities' },
         { id: 'colleges', icon: GraduationCap, label: t('employee.colleges.title'), to: '/dashboard/colleges' },
-        { id: 'users', icon: UserCog, label: t('employee.users.title'), to: '/dashboard/users', badge: 3 },
+        { id: 'users', icon: UserCog, label: t('employee.users.title'), to: '/dashboard/users' },
       ]},
       { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
-        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages', badge: 2 },
+        { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],

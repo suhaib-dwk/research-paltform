@@ -567,5 +567,25 @@
     "title": "Review History",
     "desc": "Papers you have reviewed",
     "empty": "No review history"
+  },
+  "readiness_diagnostic": {
+    "title": "Initial AI Research Profile Diagnostic",
+    "run_button": "Run Initial Diagnostic",
+    "running": "Analyzing...",
+    "disclaimer": "This diagnostic is based only on the available university research profile. It is not an official accreditation, ranking, or Research Excellence readiness score.",
+    "profile_completeness_label": "Research Profile Completeness",
+    "level_low": "Low",
+    "level_moderate": "Moderate",
+    "level_high": "High",
+    "missing_information_title": "Missing Information",
+    "weaknesses_title": "Areas Needing Improvement",
+    "suggested_priorities_title": "Suggested Priorities",
+    "suggested_next_steps_title": "Suggested Next Steps",
+    "areas_requiring_more_data_title": "Areas Requiring More Data",
+    "potential_opportunities_title": "Potential Opportunities",
+    "data_collection_recommendations_title": "Data Collection Recommendations",
+    "no_data": "No observations in this section",
+    "generated_at": "Diagnostic date",
+    "error": "Failed to run the initial diagnostic"
   }
 }

@@ -157,9 +157,14 @@ const LoginPage = () => {
       // ✅ تشفير البيانات بـ Base64 للتجاوز الآمن لجدار الحماية أونلاين
       const encodedPayload = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 
+      // ✅ credentials: 'include' ضرورية هنا — login.php يرسل كوكي الجلسة
+      // (Set-Cookie: RIS_SESSID) عبر origin مختلف (المتصفح على بورت Vite، الـ API
+      // على بورت Apache/XAMPP)؛ بدونها يتجاهل المتصفح الكوكي بصمت فلا تُخزَّن أي
+      // جلسة، ويفشل كل طلب لاحق (مثل me.php) بلا سبب ظاهر رغم نجاح تسجيل الدخول نفسه.
       const res = await fetch(`${API_BASE_URL}/login.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
+        credentials: 'include',
         body: encodedPayload
       });
 

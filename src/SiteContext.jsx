@@ -57,6 +57,10 @@ export const SiteProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
+    // ✅ Stage A.5: تدمير الجلسة الحقيقية على الخادم أيضاً، وليس فقط مسح
+    // التخزين المحلي — fire-and-forget: مسح localStorage لا يعتمد على نجاح
+    // هذا الطلب حتى لا يتعطّل تسجيل الخروج من واجهة المستخدم عند أي عطل شبكة
+    fetch(`${API_BASE_URL}/logout.php`, { method: 'POST', credentials: 'include' }).catch(() => {});
     localStorage.removeItem('user');
     sessionStorage.removeItem('token');
     setUser(null);

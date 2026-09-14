@@ -5,7 +5,7 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+require_once('a02_cors.php');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -25,13 +25,6 @@ function jsonResponse($data) {
 require_once('a03_helpers.php');
 
 try {
-    $raw = file_get_contents('php://input');
-    $body = json_decode($raw, true);
-    $userId = isset($body['user_id']) ? (int) $body['user_id'] : 0;
-    if ($userId <= 0) {
-        jsonResponse(['status' => 'error', 'message' => 'user_id is required']);
-    }
-
     require_once('a01_connect.php');
     $conn = new mysqli($host, $username, $password, $db_name);
 
@@ -39,6 +32,11 @@ try {
         jsonResponse(['status' => 'error', 'message' => 'Database connection failed']);
     }
     $conn->set_charset('utf8mb4');
+
+    // ===== Stage A.5: userId من الجلسة المُصادَق عليها، لا من حقل user_id
+    // وارد ضمن جسم الطلب =====
+    require_once('a04_auth.php');
+    $userId = require_authenticated_user($conn);
 
     $roleKey = get_user_role_key($conn, $userId);
     if (!$roleKey) {
@@ -97,32 +95,38 @@ try {
     // ===== 2) جلب ملف الجامعة الكامل (نفس منطق get_university_profile.php) =====
     $profile = get_university_profile_data($conn, $userId);
 
-    // ===== 3) بناء الطلب (نفس صيغة OpenAI Chat Completions، متوافقة مع كلا المزوّدين) =====
+    // ===== 3) بناء الطلب — Stage A.5 / P5: تحويل من "تقييم جاهزية" (نسب
+    // مئوية تُعرَض كأنها رسمية) إلى "تحليل أولي تشخيصي" نوعي بحت. لا مكان
+    // في المخرَجات الجديدة لأي overall_readiness_percent أو
+    // category_scores (جودة/إنتاجية/أثر/تمويل/...) — هذه أرقام لا يجوز
+    // أن يُنتجها نموذج ذكاء اصطناعي كنتيجة نهائية. الحقل الرقمي الوحيد
+    // المتبقي (profile_completeness.level) فئوي خشن (منخفض/متوسط/مرتفع)
+    // عمداً، لا نسبة دقيقة، تفادياً لإيحاء الدقة الإحصائية الزائفة. =====
     $schemaInstructions = <<<'SCHEMA'
 أعد فقط كائن JSON بهذا الشكل بالضبط (بدون أي نص خارج الـ JSON):
 {
-  "overall_readiness_percent": <رقم من 0 إلى 100>,
-  "dimensions": [
-    { "key": "data", "label_ar": "جاهزية البيانات", "label_en": "Data Readiness", "percent": <0-100>, "status": "met|partial|not_met" },
-    { "key": "evidence", "label_ar": "جاهزية الأدلة", "label_en": "Evidence Readiness", "percent": <0-100>, "status": "met|partial|not_met" },
-    { "key": "definition", "label_ar": "جاهزية التعريفات", "label_en": "Definition Readiness", "percent": <0-100>, "status": "met|partial|not_met" },
-    { "key": "methodology", "label_ar": "جاهزية المنهجية", "label_en": "Methodology Readiness", "percent": <0-100>, "status": "met|partial|not_met" },
-    { "key": "performance", "label_ar": "جاهزية الأداء", "label_en": "Performance Readiness", "percent": <0-100>, "status": "met|partial|not_met" }
-  ],
-  "category_scores": {
-    "quality": <0-100>, "productivity": <0-100>, "impact": <0-100>,
-    "funding": <0-100>, "internationalization": <0-100>, "governance": <0-100>
+  "diagnostic_version": "1.0",
+  "profile_completeness": {
+    "level": "low|moderate|high",
+    "observations": [ { "ar": "...", "en": "..." } ]
   },
-  "critical_gaps": [ { "ar": "...", "en": "..." } ],
-  "opportunities": [ { "ar": "...", "en": "..." } ]
+  "missing_information": [ { "ar": "...", "en": "..." } ],
+  "weaknesses": [ { "ar": "...", "en": "..." } ],
+  "suggested_priorities": [ { "ar": "...", "en": "..." } ],
+  "suggested_next_steps": [ { "ar": "...", "en": "..." } ],
+  "areas_requiring_more_data": [ { "ar": "...", "en": "..." } ],
+  "potential_opportunities": [ { "ar": "...", "en": "..." } ],
+  "data_collection_recommendations": [ { "ar": "...", "en": "..." } ]
 }
 SCHEMA;
 
-    $systemPrompt = "أنت خبير تقييم جاهزية بحثية أكاديمية ضمن منصة Research Excellence Platform. "
-        . "مهمتك: تحليل ملف بيانات جامعة (الاسم، الهيكل الأكاديمي: الحرم الجامعي/الكليات/الأقسام/المراكز البحثية، "
-        . "استراتيجية البحث، مجالات الأولوية، أهداف البحث) وتقدير مدى جاهزيتها البحثية بشكل تقريبي منطقي "
-        . "استنادًا فقط لاكتمال ووضوح البيانات المُدخلة (وليس بيانات خارجية غير متوفرة لك). "
-        . "كن متحفظًا وواقعيًا: بيانات ناقصة أو فارغة تعني نسبة جاهزية منخفضة في تلك الأبعاد، وليس تخمينًا متفائلًا. "
+    $systemPrompt = "أنت مساعد تحليل أولي لملفات الجامعات البحثية ضمن منصة Research Excellence Platform. "
+        . "مهمتك ليست إصدار تقييم رسمي أو درجة جاهزية — بل تحليل أولي تشخيصي نوعي فقط "
+        . "(observations وليس scores) لملف بيانات جامعة (الاسم، الهيكل الأكاديمي: الحرم "
+        . "الجامعي/الكليات/الأقسام/المراكز البحثية، استراتيجية البحث، مجالات الأولوية، أهداف البحث). "
+        . "استناداً فقط لاكتمال ووضوح البيانات المُدخلة (وليس بيانات خارجية غير متوفرة لك). "
+        . "كن متحفظاً وواقعياً: بيانات ناقصة أو فارغة تعني ملاحظات حول النقص، وليس تخميناً متفائلاً. "
+        . "لا تُخرِج أي نسبة مئوية دقيقة أو درجة رقمية إطلاقاً — فقط ملاحظات نوعية ومقترحات. "
         . $schemaInstructions;
 
     $userPrompt = "بيانات ملف الجامعة (JSON):\n" . json_encode($profile, JSON_UNESCAPED_UNICODE);
@@ -185,7 +189,9 @@ SCHEMA;
     }
 
     $result = json_decode($content, true);
-    if (!is_array($result) || !isset($result['overall_readiness_percent'])) {
+    // ===== Stage A.5: نتحقق من وجود بنية التشخيص النوعي الجديدة، لا من
+    // overall_readiness_percent (لم يعد جزءاً من المخطط المطلوب إطلاقاً) =====
+    if (!is_array($result) || !isset($result['profile_completeness']['level'])) {
         error_log('AI_READINESS could not parse model JSON: ' . substr((string) $content, 0, 2000));
         $conn->close();
         jsonResponse(['status' => 'error', 'message' => 'ai_response_invalid']);
@@ -196,25 +202,30 @@ SCHEMA;
     $result['provider'] = $providerKey;
 
     // ===== 5) حفظ سجل تدقيق (لا يمنع نجاح الاستجابة إن فشل الحفظ) =====
+    // Stage A.5: overall_score يبقى NULL للسجلات الجديدة (لا نسبة رسمية
+    // في هذا المخطط) — assessment_type/diagnostic_version يميّزانها بوضوح
+    // عن السجلات القديمة legacy_readiness ذات النسب المئوية.
     try {
         $stmt = $conn->prepare(
-            "INSERT INTO university_readiness_assessments (user_id, university_id, model, request_payload, response_json, overall_score)
-             VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO university_readiness_assessments
+                (user_id, university_id, assessment_type, diagnostic_version, model, request_payload, response_json)
+             VALUES (?, ?, 'ai_research_profile_diagnostic', ?, ?, ?, ?)"
         );
         if ($stmt) {
             $reqJson = json_encode($profile, JSON_UNESCAPED_UNICODE);
             $respJson = json_encode($result, JSON_UNESCAPED_UNICODE);
-            $overallScore = (float) $result['overall_readiness_percent'];
-            // ملاحظة: bind_param يقبل NULL بأمان لباراميتر من النوع 'i' حتى لو
-            // $universityId = null (حالة دفاعية نادرة) — لن يفشل الإدراج بسببها،
-            // والعمود نفسه NULL-able.
-            $stmt->bind_param('iisssd', $userId, $universityId, $aiModel, $reqJson, $respJson, $overallScore);
+            $diagnosticVersion = (string) ($result['diagnostic_version'] ?? '1.0');
+            $stmt->bind_param('iissss', $userId, $universityId, $diagnosticVersion, $aiModel, $reqJson, $respJson);
             $stmt->execute();
             $stmt->close();
         }
     } catch (Throwable $ignored) {
         // تجاهل فشل حفظ سجل التدقيق فقط، لا نفشل الطلب كاملاً بسببه
     }
+
+    log_activity($conn, $userId, 'ai_diagnostic_run', 'university_profile',
+        'تشغيل التحليل الأولي للملف البحثي بالذكاء الاصطناعي', 'Initial AI research profile diagnostic run',
+        'university_readiness_assessments', $universityId);
 
     $conn->close();
     jsonResponse(['status' => 'success', 'data' => $result]);

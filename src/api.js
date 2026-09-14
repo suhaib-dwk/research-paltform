@@ -6,9 +6,13 @@ export const SERVER_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 // ✅ يحوّل مساراً نسبياً راجعاً من الـ API (مثل "uploads/site_logo_x.png") إلى رابط كامل.
 // - لو كان أصلاً رابطاً كاملاً (http/https) أو data URI، يُرجعه كما هو دون تعديل.
+// - لو كان مساراً محلياً من مجلد public/ بمشروع الفرونت اند نفسه (يبدأ بـ "/" مفردة،
+//   مثل "/Home/home05.jpg" أو "/logo/logo1.png")، يُرجعه كما هو أيضاً — هذه ليست
+//   ملفات مرفوعة من الباك اند، وتحويلها لرابط SERVER_BASE_URL يكسرها.
 // - لو كان فارغاً/null، يُرجع '' حتى تتعامل معه الواجهة كصورة غير موجودة.
 export const resolveUploadUrl = (path) => {
   if (!path) return '';
   if (/^(https?:)?\/\//i.test(path) || path.startsWith('data:')) return path;
+  if (path.startsWith('/') && !path.startsWith('//')) return path;
   return `${SERVER_BASE_URL}/${path.replace(/^\/+/, '')}`;
 };

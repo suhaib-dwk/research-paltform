@@ -10,9 +10,13 @@ export default {
     extend: {
       colors: {
         brand: {
-          orange: '#e8623a',
-          'orange-dark': '#d4502a',
-          'orange-light': '#f0916d',
+          // ✅ مطابقة دقيقة للون شعار SOURCE الفعلي (#F15A24، مُستخرج من بكسلات الشعار
+          // نفسه) بدل اللون القديم #e8623a الذي كان مختلفًا بشكل ملحوظ عنه بصريًا.
+          // درجتا dark/light محسوبتان بنفس نسب التغميق/التفتيح المستخدمة سابقًا حتى
+          // يبقى التدرّج بين الدرجات متسقًا كما كان.
+          orange: '#F15A24',
+          'orange-dark': '#DC491A',
+          'orange-light': '#F98543',
           cream: '#f0e8e0',
           'cream-hero': '#f0e6dd',
           'cream-footer': '#ede4da',
