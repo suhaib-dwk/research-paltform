@@ -18,6 +18,9 @@ api/ai_config.php
 # مفتاح تشفير إعدادات مزوّدي الذكاء الاصطناعي — لا يُرفع أبدًا؛ استخدم api/ai_provider_crypto.example.php كقالب
 api/ai_provider_crypto.php
 
+# ملفات المستخدمين المرفوعة فعلياً (سير ذاتية، أبحاث، شعارات...) — بيانات وليست كوداً
+/uploads/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
