@@ -9,7 +9,10 @@ import {
   Award, Briefcase,
   // أيقونات الخدمات
   Languages, BookMarked, Sparkles,
-  Mail, Send, LayoutTemplate, Shield
+  Mail, Send, LayoutTemplate, Shield,
+  // أيقونات الوزارة والجزء الثالث (Ministry & Part 3)
+  Map, Target, Handshake, FileSignature, Coins, Globe, Database,
+  Network, PieChart, Settings, Layers
 } from 'lucide-react';
 import { useSite } from '../../SiteContext';
 
@@ -42,9 +45,7 @@ export const getVisibleServices = (role) => {
 
 // =========================================================
 // عناصر القائمة حسب الدور — مقسّمة لمجموعات (عام / الخدمات / أخرى)
-// كل مجموعة { id, title_ar, title_en, items: [...] } — عنصر "الخدمات"
-// (رابط فهرس /dashboard/services) يُدرَج داخل مجموعة "الخدمات" بواسطة
-// المكوّن الرئيسي أدناه (getGroupedMenu) وليس هنا، لأنه مشترك بين كل الأدوار.
+// تم تحديث مجموعة ministry لتعكس متطلبات الجزء الثالث (Part 3)
 // =========================================================
 const getMenuGroups = (role, t, isAr) => {
   const groups = {
@@ -164,13 +165,38 @@ const getMenuGroups = (role, t, isAr) => {
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},
     ],
+    // =========================================================
+    // تعديل القائمة الخاصة بالوزارة (Ministry) بناءً على Part 3
+    // =========================================================
     ministry: [
       { id: 'general', title_ar: 'عام', title_en: 'General', items: [
-        { id: 'home', icon: LayoutDashboard, label: t('nav.dashboard'), to: '/dashboard' },
+        { id: 'home', icon: LayoutDashboard, label: isAr ? 'لوحة الوزارة' : 'Ministry Dashboard', to: '/dashboard' },
         { id: 'tasks', icon: ListChecks, label: t('tasks.title'), to: '/dashboard/tasks' },
       ]},
-      { id: 'services', title_ar: 'الخدمات', title_en: 'Services', items: [] },
-      { id: 'other', title_ar: 'أخرى', title_en: 'Other', items: [
+      { id: 'intelligence', title_ar: 'الذكاء البحثي الوطني', title_en: 'Nat. Research Intelligence', items: [
+        { id: 'national-dashboard', icon: BarChart3, label: isAr ? 'اللوحة الوطنية' : 'National Dashboard', to: '/dashboard/ministry/national-dashboard' },
+        { id: 'university-comparison', icon: PieChart, label: isAr ? 'مقارنة الجامعات' : 'University Comparison', to: '/dashboard/ministry/university-comparison' },
+        { id: 'geo-intelligence', icon: Map, label: isAr ? 'الخريطة البحثية' : 'Geographic Map', to: '/dashboard/ministry/geographic-intelligence' },
+        { id: 'research-fields', icon: Layers, label: isAr ? 'المجالات البحثية' : 'Research Fields', to: '/dashboard/ministry/research-fields' },
+        { id: 'policy-intelligence', icon: FileText, label: isAr ? 'الذكاء السياسي' : 'Policy Intelligence', to: '/dashboard/ministry/policy-intelligence' },
+      ]},
+      { id: 'priorities', title_ar: 'الأولويات الوطنية', title_en: 'Nat. Research Priorities', items: [
+        { id: 'sectors', icon: Target, label: isAr ? 'القطاعات والأولويات' : 'Sectors & Priorities', to: '/dashboard/ministry/sectors' },
+        { id: 'gap-analysis', icon: Award, label: isAr ? 'تحليل الفجوات' : 'Gap Analysis', to: '/dashboard/ministry/gap-analysis' },
+        { id: 'coverage-map', icon: Globe, label: isAr ? 'خريطة التغطية' : 'Coverage Map', to: '/dashboard/ministry/coverage-map' },
+      ]},
+      { id: 'partnerships', title_ar: 'الشراكات والاتفاقيات', title_en: 'Partnerships', items: [
+        { id: 'partners-network', icon: Network, label: isAr ? 'شبكة الشركاء' : 'Partners Network', to: '/dashboard/ministry/partners-network' },
+        { id: 'agreements', icon: FileSignature, label: isAr ? 'إدارة الاتفاقيات' : 'Agreements', to: '/dashboard/ministry/agreements' },
+        { id: 'partnership-matching', icon: Handshake, label: isAr ? 'مطابقة الشراكات' : 'Matching Engine', to: '/dashboard/ministry/partnership-matching' },
+      ]},
+      { id: 'funding', title_ar: 'التمويل والفرص', title_en: 'Funding', items: [
+        { id: 'funding-opportunities', icon: Coins, label: isAr ? 'فرص التمويل' : 'Funding Opportunities', to: '/dashboard/ministry/funding-opportunities' },
+        { id: 'funding-matching', icon: Briefcase, label: isAr ? 'توجيه التمويل' : 'Funding Matching', to: '/dashboard/ministry/funding-matching' },
+        { id: 'calls-budget', icon: BarChart3, label: isAr ? 'الدعوات والميزانيات' : 'Calls & Budget', to: '/dashboard/ministry/calls-budget' },
+      ]},
+      { id: 'system', title_ar: 'النظام', title_en: 'System', items: [
+        { id: 'data-governance', icon: Database, label: isAr ? 'حوكمة البيانات' : 'Data Governance', to: '/dashboard/ministry/data-governance' },
         { id: 'messages', icon: MessageSquare, label: t('messages.title'), to: '/dashboard/messages' },
         { id: 'help', icon: HelpCircle, label: t('help.title'), to: '/dashboard/help' },
       ]},

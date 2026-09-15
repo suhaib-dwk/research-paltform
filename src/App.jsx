@@ -56,6 +56,22 @@ import ServicePageLayout from './pages/services/ServicePageLayout';
 import ServicesIndexPage from './pages/services/ServicesIndexPage';
 
 // =========================================================
+// استيراد صفحات الوزارة (Ministry Pages)
+// =========================================================
+import {
+  MinistryNationalDashboard,
+  MinistryUniversityComparison,
+  MinistryGeographicMap,
+  MinistryResearchFields,
+  MinistryPolicyIntelligence,
+  MinistrySectors,
+  MinistryPartnerships,
+  MinistryAgreements,
+  MinistryFunding,
+  MinistryDataGovernance
+} from './pages/ministry/MinistryPages';
+
+// =========================================================
 // حراس المسارات
 // =========================================================
 const ProtectedRoute = ({ children }) => {
@@ -161,6 +177,30 @@ function AppContent() {
               <Route path="university-profile" element={<RoleRoute allowedRoles={['university']}><UniversityProfilePage /></RoleRoute>} />
               <Route path="academic-quality" element={<RoleRoute allowedRoles={['university', 'college', 'research_center']}><AcademicQualityPage /></RoleRoute>} />
               <Route path="provider-requests" element={<RoleRoute allowedRoles={['service_provider']}><ProviderRequestsPage /></RoleRoute>} />
+
+              {/* ========================================================= */}
+              {/* ---- صفحات الوزارة (Ministry Routes - Part 3) ---- */}
+              {/* ========================================================= */}
+              <Route path="ministry/national-dashboard" element={<RoleRoute allowedRoles={['ministry']}><MinistryNationalDashboard /></RoleRoute>} />
+              <Route path="ministry/university-comparison" element={<RoleRoute allowedRoles={['ministry']}><MinistryUniversityComparison /></RoleRoute>} />
+              <Route path="ministry/geographic-intelligence" element={<RoleRoute allowedRoles={['ministry']}><MinistryGeographicMap /></RoleRoute>} />
+              <Route path="ministry/research-fields" element={<RoleRoute allowedRoles={['ministry']}><MinistryResearchFields /></RoleRoute>} />
+              <Route path="ministry/policy-intelligence" element={<RoleRoute allowedRoles={['ministry']}><MinistryPolicyIntelligence /></RoleRoute>} />
+              
+              <Route path="ministry/sectors" element={<RoleRoute allowedRoles={['ministry']}><MinistrySectors /></RoleRoute>} />
+              <Route path="ministry/gap-analysis" element={<RoleRoute allowedRoles={['ministry']}><MinistrySectors /></RoleRoute>} />
+              <Route path="ministry/coverage-map" element={<RoleRoute allowedRoles={['ministry']}><MinistrySectors /></RoleRoute>} />
+              
+              <Route path="ministry/partners-network" element={<RoleRoute allowedRoles={['ministry']}><MinistryPartnerships /></RoleRoute>} />
+              <Route path="ministry/agreements" element={<RoleRoute allowedRoles={['ministry']}><MinistryAgreements /></RoleRoute>} />
+              <Route path="ministry/partnership-matching" element={<RoleRoute allowedRoles={['ministry']}><MinistryPartnerships /></RoleRoute>} />
+              
+              <Route path="ministry/funding-opportunities" element={<RoleRoute allowedRoles={['ministry']}><MinistryFunding /></RoleRoute>} />
+              <Route path="ministry/funding-matching" element={<RoleRoute allowedRoles={['ministry']}><MinistryFunding /></RoleRoute>} />
+              <Route path="ministry/calls-budget" element={<RoleRoute allowedRoles={['ministry']}><MinistryFunding /></RoleRoute>} />
+              
+              <Route path="ministry/data-governance" element={<RoleRoute allowedRoles={['ministry']}><MinistryDataGovernance /></RoleRoute>} />
+
             </Route>
 
             {/* ---- لوحة الإدارة ---- */}

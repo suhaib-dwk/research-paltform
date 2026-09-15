@@ -11,6 +11,10 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGri
 import { useSite } from '../../SiteContext';
 import { API_BASE_URL } from '../../api';
 
+// ✅ استيراد لوحة التحكم الوطنية للوزارة
+// تأكد من المسار الصحيح بناءً على مكان حفظ الملف السابق
+import MinistryNationalDashboard from '../../pages/ministry/MinistryNationalDashboard';
+
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: (i) => ({
@@ -200,6 +204,13 @@ const DashboardHome = () => {
     const { user: userData, currentLang, isRTL } = useSite();
     const isAr = currentLang === 'ar';
 
+    // ✅ التعديل: إذا كان المستخدم من الوزارة، اعرض لوحة التحكم الوطنية مباشرة
+    // بدلاً من لوحة التحكم الشخصية.
+    if (userData?.role === 'ministry') {
+        return <MinistryNationalDashboard />;
+    }
+
+    // ... باقي الكود لبقية الأدوار (يتم الاحتفاظ به كما هو) ...
     const Arrow = isRTL ? ArrowLeft : ArrowRight;
     const greeting = isAr ? 'مرحباً' : 'Welcome';
     const name = userData?.name?.split(' ')[0] || (isAr ? 'المستخدم' : 'User');
