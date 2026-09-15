@@ -2,8 +2,9 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, ArrowRight, CheckCircle, Upload, TrendingUp, HandCoins, Search,
-  FileCheck, PenTool, BarChart3,
+  FileCheck, PenTool, BarChart3, Sparkles, Users, Workflow,
 } from "lucide-react";
+import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES } from "../data/servicesCatalogue";
 
 // =========================================================
 // صفحة تفصيلية مستقلة لكل "خدمة" (منصة أو ذكاء اصطناعي) — بطلب صريح: كانت
@@ -11,6 +12,12 @@ import {
 // الضغط عليها؛ الآن كل بطاقة تفتح صفحة كاملة تشرح الخدمة بالتفصيل، بنفس
 // نمط AudienceDetailPage.jsx تمامًا لكن لقسم "خدمات المنصة/الذكاء
 // الاصطناعي" بدل "الفئات المستفيدة".
+//
+// ✅ تُغطّي الصفحة الآن مسارين بنفس الرابط /platform-service/:key:
+//   1) المفاتيح القديمة السبع (submit_research… ai_gap_insights) من i18n.
+//   2) خدمات كتالوج الباحثين الـ35 (U01…F12) من src/data/servicesCatalogue.js
+//      — تعرض التعريف، وكيف يحصل عليها المستخدم، والمدخلات، والمخرجات،
+//      ونوع التنفيذ، والتنبيه الأخلاقي (قاعدة عرض الخدمة، القسم 2 بالدليل).
 // =========================================================
 
 const SERVICE_ICONS = {
@@ -25,12 +32,177 @@ const SERVICE_ICONS = {
 
 const VALID_KEYS = Object.keys(SERVICE_ICONS);
 
+const EXEC_ICONS = {
+  ai: Sparkles,
+  human: Users,
+  hybrid: Sparkles,
+  workflow: Workflow,
+};
+
+// ✅ عرض خدمة من كتالوج الباحثين (U/P/F)
+const CatalogueServiceDetail = ({ service, isRTL }) => {
+  const lang = isRTL ? "ar" : "en";
+  const BackArrow = isRTL ? ArrowRight : ArrowLeft;
+  const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
+  const level = getServiceLevel(service);
+  const family = SERVICE_FAMILIES.find((f) => f.key === service.family);
+  const exec = EXEC_TYPES[service.exec];
+  const ExecIcon = EXEC_ICONS[service.exec] || Sparkles;
+
+  const labels = isRTL
+    ? {
+        back: "العودة إلى الخدمات",
+        how: "كيف يحصل عليها المستخدم",
+        inputs: "ما الذي يقدمه المستخدم",
+        outputs: "المخرجات",
+        exec: "نوع التنفيذ في سورس",
+        level: "الفئة المستهدفة",
+        family: "العائلة",
+        ethics: "الذكاء الاصطناعي مساعد، والقرار الأكاديمي النهائي يبقى للباحث أو الجهة الأكاديمية. لا تضمن سورس قبول البحث في أي مجلة — قرار القبول للمجلة وهيئة التحرير.",
+        cta: "ابدأ الخدمة",
+        all: "كل الخدمات",
+      }
+    : {
+        back: "Back to services",
+        how: "How the user gets it",
+        inputs: "What the user provides",
+        outputs: "Outputs",
+        exec: "Delivery in SOURCE",
+        level: "Target group",
+        family: "Family",
+        ethics: "AI is assistive; the final academic decision remains with the researcher or academic body. SOURCE does not guarantee acceptance in any journal — that decision belongs to the journal and its editorial board.",
+        cta: "Start the service",
+        all: "All services",
+      };
+
+  // ✅ القوائم التفصيلية (كيف/المدخلات/المخرجات) موجودة بالعربية في الدليل
+  // فقط؛ بالإنجليزية تُعرض الأقسام العامة (الاسم، الوصف، نوع التنفيذ).
+  const showLists = isRTL;
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-6 py-16 md:py-24 max-w-4xl">
+        <Link
+          to="/services"
+          className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-orange font-bold text-sm mb-10 transition-colors"
+        >
+          <BackArrow className="w-4 h-4" />
+          {labels.back}
+        </Link>
+
+        <div className="flex flex-wrap items-center gap-2 mb-5">
+          <span className="text-[11px] font-bold tracking-[0.15em] text-brand-muted border border-gray-200 px-2.5 py-1" dir="ltr">
+            {service.id}
+          </span>
+          <span className="text-[11px] font-bold text-brand-ink bg-brand-cream-hero px-2.5 py-1">
+            {labels.level}: {level[`label_${lang}`]}
+          </span>
+          {family && (
+            <span className="text-[11px] font-bold text-brand-ink bg-gray-100 px-2.5 py-1">
+              {labels.family}: {family[`label_${lang}`]}
+            </span>
+          )}
+        </div>
+
+        <h1 className="text-3xl md:text-5xl font-extrabold text-brand-ink leading-tight mb-3">
+          {service[`name_${lang}`]}
+        </h1>
+        {lang === "ar" && (
+          <p className="text-sm font-semibold text-brand-muted mb-5" dir="ltr">
+            {service.name_en}
+          </p>
+        )}
+        <p className="text-base md:text-lg leading-relaxed text-brand-muted mb-10 max-w-3xl">
+          {service[`desc_${lang}`]}
+        </p>
+
+        {/* نوع التنفيذ — يجب أن يظهر بوضوح متى تتطلب الخدمة خبيرًا بشريًا */}
+        <div className="flex items-start gap-4 bg-brand-ink text-white p-6 mb-10">
+          <span className="w-11 h-11 bg-brand-orange/15 border border-brand-orange/30 flex items-center justify-center flex-shrink-0">
+            <ExecIcon className="w-5 h-5 text-brand-orange" strokeWidth={1.75} />
+          </span>
+          <div>
+            <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-1 block">
+              {labels.exec}
+            </span>
+            <span className="text-lg font-bold">{exec[`label_${lang}`]}</span>
+          </div>
+        </div>
+
+        {showLists && (
+          <div className="grid md:grid-cols-2 gap-6 mb-10">
+            <div className="md:col-span-2 bg-white border border-gray-200 p-6">
+              <h2 className="text-base font-bold text-brand-ink mb-4">{labels.how}</h2>
+              <ol className="flex flex-col gap-3">
+                {service.how_ar.map((step, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="w-7 h-7 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-extrabold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm text-brand-ink font-medium leading-relaxed">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <div className="bg-white border border-gray-200 p-6">
+              <h2 className="text-base font-bold text-brand-ink mb-4">{labels.inputs}</h2>
+              <ul className="flex flex-col gap-2.5">
+                {service.inputs_ar.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-brand-ink font-medium leading-relaxed">
+                    <span className="w-1.5 h-1.5 bg-brand-orange flex-shrink-0 mt-2.5"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white border border-gray-200 p-6">
+              <h2 className="text-base font-bold text-brand-ink mb-4">{labels.outputs}</h2>
+              <ul className="flex flex-col gap-2.5">
+                {service.outputs_ar.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-brand-ink font-medium leading-relaxed">
+                    <CheckCircle className="w-4 h-4 text-brand-orange flex-shrink-0 mt-0.5" strokeWidth={2.5} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        <p className="text-xs leading-relaxed text-brand-muted border-t border-gray-200 pt-5 mb-8">{labels.ethics}</p>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <Link
+            to="/register"
+            className="inline-flex items-center justify-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300"
+          >
+            {labels.cta}
+            <ForwardArrow className="w-4 h-4" />
+          </Link>
+          <Link
+            to="/services"
+            className="inline-flex items-center justify-center gap-2 bg-white text-brand-ink border border-brand-ink/15 px-7 py-3.5 rounded-full font-medium text-sm hover:border-brand-ink/30 transition-all duration-300"
+          >
+            {labels.all}
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PlatformServiceDetailPage = () => {
   const { key } = useParams();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language?.toLowerCase().startsWith("ar") ?? false;
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
   const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
+
+  // ✅ خدمات كتالوج الباحثين (U01…F12) لها عرضها الخاص
+  const catalogueService = getServiceById(key);
+  if (catalogueService) {
+    return <CatalogueServiceDetail service={catalogueService} isRTL={isRTL} />;
+  }
 
   if (!VALID_KEYS.includes(key)) {
     return <Navigate to="/" replace />;

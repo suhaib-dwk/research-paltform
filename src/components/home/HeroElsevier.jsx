@@ -47,19 +47,19 @@ export default function HeroElsevier({ isAr }) {
           >
             {isAr ? (
               <>
-                أنت و <span className="italic text-brand-orange">مستقبل البحث العلمي</span> في العراق
+                أنت و <span className="italic text-brand-orange">مستقبل البحث العلمي</span>
               </>
             ) : (
               <>
-                You & Iraq's <span className="italic text-brand-orange">next research breakthrough</span>
+                You & the <span className="italic text-brand-orange">next research breakthrough</span>
               </>
             )}
           </h1>
 
           <p className="mt-6 max-w-xl text-lg font-normal text-gray-300">
             {isAr
-              ? "المنصة الوطنية العراقية للتميز البحثي، والجاهزية للاعتماد الأكاديمي، والاستعداد للتصنيفات العالمية."
-              : "Iraq's national platform for research excellence, accreditation readiness, and global ranking readiness."}
+              ? "المنصة الوطنية للتميز البحثي، والجاهزية للاعتماد الأكاديمي، والاستعداد للتصنيفات العالمية."
+              : "The national platform for research excellence, accreditation readiness, and global ranking readiness."}
           </p>
 
           <Link
