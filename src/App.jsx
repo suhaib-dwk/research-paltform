@@ -13,6 +13,8 @@ import ContactPage from './pages/ContactPage';
 import HelpPage from './pages/HelpPage';
 import AboutUsPage from './pages/AboutUsPage';
 import TargetAudiencePage from './pages/TargetAudiencePage';
+import AudienceDetailPage from './pages/AudienceDetailPage';
+import PlatformServiceDetailPage from './pages/PlatformServiceDetailPage';
 import Footer from './components/layout/Footer';
 import DynamicHead from './components/layout/DynamicHead';
 
@@ -121,6 +123,8 @@ function AppContent() {
             <Route path="/help" element={<HelpPage />} />
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/target-audience" element={<TargetAudiencePage />} />
+            <Route path="/audience/:key" element={<AudienceDetailPage />} />
+            <Route path="/platform-service/:key" element={<PlatformServiceDetailPage />} />
             <Route path="/page/:slug" element={<DynamicPage />} />
 
             {/* ---- لوحة التحكم ---- */}

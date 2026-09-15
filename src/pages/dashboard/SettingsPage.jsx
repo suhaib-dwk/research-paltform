@@ -10,7 +10,7 @@ const EVENT_STYLES = {
     login: { icon: LogIn, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
     profile_update: { icon: FileText, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     avatar_update: { icon: FileText, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
-    research_submit: { icon: CheckCircle, color: 'text-[#e8623a] bg-[#e8623a]/10 dark:text-[#f0916d] dark:bg-[#e8623a]/15' },
+    research_submit: { icon: CheckCircle, color: 'text-brand-orange bg-brand-orange/10 dark:text-[#f0916d] dark:bg-brand-orange/15' },
     review_submit: { icon: ShieldCheck, color: 'text-violet-500 bg-violet-50 dark:bg-violet-900/20 dark:text-violet-400' },
     task_complete: { icon: CheckCircle, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     message_reply: { icon: MessageSquare, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
@@ -101,7 +101,7 @@ const SettingsPage = () => {
         <button
             type="button"
             onClick={() => onChange(!checked)}
-            className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${checked ? 'bg-[#e8623a]' : 'bg-gray-200 dark:bg-[#3a322c]'}`}
+            className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${checked ? 'bg-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c]'}`}
         >
             <span className={`absolute top-0.5 ${checked ? (isRTL ? 'start-0.5' : 'end-0.5') : (isRTL ? 'end-0.5' : 'start-0.5')} w-5 h-5 bg-white rounded-full shadow transition-all duration-300`} />
         </button>
@@ -110,7 +110,7 @@ const SettingsPage = () => {
     const Section = ({ icon: Icon, title, children }) => (
         <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-50 dark:border-[#3a322c]/50">
-                <div className="w-10 h-10 rounded-xl bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
                     <Icon className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
@@ -139,7 +139,7 @@ const SettingsPage = () => {
                         onClick={() => setActiveTab(tab.key)}
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${
                             activeTab === tab.key
-                                ? 'bg-[#e8623a] text-white shadow'
+                                ? 'bg-brand-orange text-white shadow'
                                 : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e]'
                         }`}
                     >
@@ -153,7 +153,7 @@ const SettingsPage = () => {
             {activeTab === 'settings' && (
                 loading ? (
                     <div className="p-6 flex items-center justify-center min-h-[40vh]">
-                        <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                        <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                     </div>
                 ) : (
                     <div className="space-y-6">
@@ -166,7 +166,7 @@ const SettingsPage = () => {
                                 <select
                                     value={settings.language}
                                     onChange={(e) => setSettings(p => ({ ...p, language: e.target.value }))}
-                                    className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:border-[#e8623a] transition-colors"
+                                    className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors"
                                 >
                                     <option value="ar">العربية</option>
                                     <option value="en">English</option>
@@ -208,7 +208,7 @@ const SettingsPage = () => {
                             disabled={saving}
                             className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-60 ${saved
                                 ? 'bg-emerald-500 text-white'
-                                : 'bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white hover:shadow-lg hover:shadow-[#e8623a]/25'
+                                : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'
                                 }`}
                         >
                             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
@@ -231,7 +231,7 @@ const SettingsPage = () => {
                     <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6">
                         {activityLoading ? (
                             <div className="flex items-center justify-center py-16">
-                                <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                                <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                             </div>
                         ) : logs.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-600">

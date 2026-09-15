@@ -25,12 +25,12 @@ const CollegesPage = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-            <Building2 className="w-6 h-6 text-[#e8623a]" />
+            <Building2 className="w-6 h-6 text-brand-orange" />
             {t('employee.colleges.title')}
           </h1>
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{t('employee.colleges.desc')}</p>
         </div>
-        <button className="flex items-center gap-2 bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#e8623a]/25 transition-all">
+        <button className="flex items-center gap-2 bg-gradient-to-l from-brand-orange to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all">
           <Plus className="w-4 h-4" /> {t('employee.add_btn')}
         </button>
       </div>
@@ -38,11 +38,11 @@ const CollegesPage = () => {
         <div className="p-4 border-b border-gray-100 dark:border-[#3a322c]">
           <div className="relative max-w-sm">
             <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400 dark:text-gray-500" />
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('employee.search')} className="w-full bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c]/60 rounded-xl ps-10 pe-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:border-[#e8623a] transition-colors" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('employee.search')} className="w-full bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c]/60 rounded-xl ps-10 pe-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
           </div>
         </div>
         {loading ? (
-          <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-[#e8623a]" /></div>
+          <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-brand-orange" /></div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -67,8 +67,8 @@ const CollegesPage = () => {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button className="w-8 h-8 rounded-lg bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center hover:bg-[#e8623a]/20 transition-colors"><Eye className="w-4 h-4" /></button>
-                        <button className="w-8 h-8 rounded-lg bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center hover:bg-[#e8623a]/20 transition-colors"><Edit3 className="w-4 h-4" /></button>
+                        <button className="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center hover:bg-brand-orange/20 transition-colors"><Eye className="w-4 h-4" /></button>
+                        <button className="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center hover:bg-brand-orange/20 transition-colors"><Edit3 className="w-4 h-4" /></button>
                         <button className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </td>

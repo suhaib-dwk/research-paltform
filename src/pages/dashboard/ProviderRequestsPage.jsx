@@ -81,11 +81,11 @@ const SubmitResultForm = ({ request, isAr, providerId, onDone, onClose }) => {
                     )}
                     <div>
                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملاحظات النتيجة' : 'Result Notes'}</label>
-                        <textarea rows={4} value={resultNotes} onChange={e => setResultNotes(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-sm text-gray-900 dark:text-white outline-none focus:border-[#e8623a] resize-none" placeholder={isAr ? 'اكتب ملاحظاتك للطالب...' : 'Write your notes for the requester...'} />
+                        <textarea rows={4} value={resultNotes} onChange={e => setResultNotes(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange resize-none" placeholder={isAr ? 'اكتب ملاحظاتك للطالب...' : 'Write your notes for the requester...'} />
                     </div>
                     <div>
                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملف النتيجة (اختياري)' : 'Result File (optional)'}</label>
-                        <label className="flex items-center justify-center h-20 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl cursor-pointer hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5 transition-all">
+                        <label className="flex items-center justify-center h-20 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl cursor-pointer hover:border-brand-orange/50 hover:bg-brand-orange/5 transition-all">
                             <input type="file" className="hidden" accept=".pdf,.doc,.docx,.zip" onChange={e => setResultFile(e.target.files?.[0] || null)} />
                             {resultFile ? (
                                 <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2"><CheckCircle className="w-4 h-4" />{resultFile.name}</span>
@@ -94,7 +94,7 @@ const SubmitResultForm = ({ request, isAr, providerId, onDone, onClose }) => {
                             )}
                         </label>
                     </div>
-                    <button onClick={handleSubmit} disabled={saving} className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white text-sm font-bold hover:brightness-105 disabled:opacity-60 transition">
+                    <button onClick={handleSubmit} disabled={saving} className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-sm font-bold hover:brightness-105 disabled:opacity-60 transition">
                         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         {isAr ? 'إرسال النتيجة' : 'Submit Result'}
                     </button>
@@ -179,7 +179,7 @@ const ProviderRequestsPage = () => {
         <div className="max-w-6xl mx-auto space-y-6">
             <div>
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <Briefcase className="w-6 h-6 text-[#e8623a]" />
+                    <Briefcase className="w-6 h-6 text-brand-orange" />
                     {isAr ? 'طلبات الخدمة' : 'Service Requests'}
                 </h1>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة طلبات الخدمات التي تقدّمها' : 'Manage requests for the services you provide'}</p>
@@ -203,7 +203,7 @@ const ProviderRequestsPage = () => {
                         className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.key ? 'bg-white dark:bg-[#211c18] text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}
                     >
                         {isAr ? tab.label_ar : tab.label_en}
-                        <span className={`ms-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.key ? 'bg-[#e8623a]/15 text-[#e8623a]' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'}`}>{tab.count}</span>
+                        <span className={`ms-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.key ? 'bg-brand-orange/15 text-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'}`}>{tab.count}</span>
                     </button>
                 ))}
             </div>
@@ -224,7 +224,7 @@ const ProviderRequestsPage = () => {
                             { key: 'assigned', label_ar: 'مُسنَد', label_en: 'Assigned' },
                             { key: 'completed', label_ar: 'مكتمل', label_en: 'Completed' },
                         ].map(f => (
-                            <button key={f.key} onClick={() => setStatusFilter(f.key)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${statusFilter === f.key ? 'bg-[#e8623a]/10 text-[#e8623a]' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e]'}`}>
+                            <button key={f.key} onClick={() => setStatusFilter(f.key)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${statusFilter === f.key ? 'bg-brand-orange/10 text-brand-orange' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e]'}`}>
                                 {isAr ? f.label_ar : f.label_en}
                             </button>
                         ))}
@@ -234,7 +234,7 @@ const ProviderRequestsPage = () => {
 
             {loading ? (
                 <div className="flex items-center justify-center py-16">
-                    <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                    <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                 </div>
             ) : error ? (
                 <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-12 text-center">
@@ -251,7 +251,7 @@ const ProviderRequestsPage = () => {
                     {filteredList.map(req => {
                         const sc = statusConfig[req.status] || statusConfig.pending;
                         return (
-                            <div key={`${req.service_slug}-${req.id}`} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-[#e8623a]/30 dark:hover:border-[#e8623a]/20 transition-all">
+                            <div key={`${req.service_slug}-${req.id}`} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-brand-orange/30 dark:hover:border-brand-orange/20 transition-all">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div className="flex items-start gap-3 flex-1 min-w-0">
                                         <div className="w-10 h-10 bg-gray-100 dark:bg-[#2a231e] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -270,18 +270,18 @@ const ProviderRequestsPage = () => {
                                     <div className="flex items-center gap-2 sm:flex-shrink-0">
                                         <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${sc.cls}`}>{isAr ? sc.label_ar : sc.label_en}</span>
                                         {activeTab === 'available' && (
-                                            <button onClick={() => handleAccept(req)} disabled={accepting === req.id + req.service_slug} className="px-3 py-1.5 rounded-lg bg-[#e8623a]/10 text-[#e8623a] text-xs font-bold hover:bg-[#e8623a]/20 disabled:opacity-50 transition-colors flex items-center gap-1.5">
+                                            <button onClick={() => handleAccept(req)} disabled={accepting === req.id + req.service_slug} className="px-3 py-1.5 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-bold hover:bg-brand-orange/20 disabled:opacity-50 transition-colors flex items-center gap-1.5">
                                                 {accepting === req.id + req.service_slug ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                                                 {isAr ? 'استلام' : 'Accept'}
                                             </button>
                                         )}
                                         {activeTab === 'mine' && (req.status === 'assigned' || req.status === 'in_progress') && (
-                                            <button onClick={() => setResultTarget(req)} className="px-3 py-1.5 rounded-lg bg-[#e8623a]/10 text-[#e8623a] text-xs font-bold hover:bg-[#e8623a]/20 transition-colors">
+                                            <button onClick={() => setResultTarget(req)} className="px-3 py-1.5 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-bold hover:bg-brand-orange/20 transition-colors">
                                                 {isAr ? 'رفع النتيجة' : 'Submit Result'}
                                             </button>
                                         )}
                                         {activeTab === 'mine' && req.status === 'completed' && req.result_file_path && (
-                                            <a href={resolveUploadUrl(req.result_file_path)} download className="p-2 rounded-xl text-gray-400 hover:text-[#e8623a] hover:bg-[#e8623a]/10 transition-all">
+                                            <a href={resolveUploadUrl(req.result_file_path)} download className="p-2 rounded-xl text-gray-400 hover:text-brand-orange hover:bg-brand-orange/10 transition-all">
                                                 <Download className="w-4 h-4" />
                                             </a>
                                         )}

@@ -78,10 +78,10 @@ const getStats = (role, lang, stats) => {
             icon: Shield,
             label: lang === 'ar' ? 'طلبات التحكيم' : 'Review Requests',
             value: s.review_total ?? 0,
-            color: 'from-[#e8623a]/20 to-[#e8623a]/5',
-            iconColor: 'text-[#e8623a] dark:text-[#f0916d]',
-            borderColor: 'border-[#e8623a]/20 dark:border-[#e8623a]/20',
-            iconBg: 'bg-[#e8623a]/10 dark:bg-[#e8623a]/10',
+            color: 'from-brand-orange/20 to-brand-orange/5',
+            iconColor: 'text-brand-orange dark:text-[#f0916d]',
+            borderColor: 'border-brand-orange/20 dark:border-brand-orange/20',
+            iconBg: 'bg-brand-orange/10 dark:bg-brand-orange/10',
         },
         {
             icon: Languages,
@@ -117,7 +117,7 @@ const getStats = (role, lang, stats) => {
 const getQuickActions = (role, lang) => {
     if (role === 'employee') {
         return [
-            { icon: Shield, label: lang === 'ar' ? 'التحكيم' : 'Review', to: '../../dashboard/services/review', color: 'hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5 dark:hover:border-[#e8623a]/50 dark:hover:bg-[#e8623a]/5' },
+            { icon: Shield, label: lang === 'ar' ? 'التحكيم' : 'Review', to: '../../dashboard/services/review', color: 'hover:border-brand-orange/50 hover:bg-brand-orange/5 dark:hover:border-brand-orange/50 dark:hover:bg-brand-orange/5' },
             { icon: Languages, label: lang === 'ar' ? 'الترجمة' : 'Translation', to: '../../dashboard/services/translation', color: 'hover:border-blue-500/50 hover:bg-blue-50 dark:hover:border-blue-500/50 dark:hover:bg-blue-500/5' },
             { icon: FileText, label: lang === 'ar' ? 'سجل الطلبات' : 'Requests Log', to: '../../dashboard/dashboard/requests', color: 'hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/5' },
             { icon: BarChart3, label: lang === 'ar' ? 'التقارير' : 'Reports', to: '../../dashboard/dashboard/reports', color: 'hover:border-purple-500/50 hover:bg-purple-50 dark:hover:border-purple-500/50 dark:hover:bg-purple-500/5' },
@@ -125,7 +125,7 @@ const getQuickActions = (role, lang) => {
     }
 
     return [
-        { icon: Shield, label: lang === 'ar' ? 'طلب تحكيم' : 'Request Review', to: '../../dashboard/services/review', color: 'hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5 dark:hover:border-[#e8623a]/50 dark:hover:bg-[#e8623a]/5' },
+        { icon: Shield, label: lang === 'ar' ? 'طلب تحكيم' : 'Request Review', to: '../../dashboard/services/review', color: 'hover:border-brand-orange/50 hover:bg-brand-orange/5 dark:hover:border-brand-orange/50 dark:hover:bg-brand-orange/5' },
         { icon: Languages, label: lang === 'ar' ? 'طلب ترجمة' : 'Request Translation', to: '../../dashboard/services/translation', color: 'hover:border-blue-500/50 hover:bg-blue-50 dark:hover:border-blue-500/50 dark:hover:bg-blue-500/5' },
         { icon: BookOpen, label: lang === 'ar' ? 'سجل الطلبات' : 'Requests Log', to: '../../dashboard/dashboard/requests', color: 'hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:border-emerald-500/50 dark:hover:bg-emerald-500/5' },
         { icon: MessageSquare, label: lang === 'ar' ? 'طلب استشارة' : 'Request Consultation', to: '../../dashboard/services/consultation', color: 'hover:border-purple-500/50 hover:bg-purple-50 dark:hover:border-purple-500/50 dark:hover:bg-purple-500/5' },
@@ -176,9 +176,9 @@ const ActivitySkeleton = () => (
 // get_stats.php (مقاييس نشر البحث: أبحاث/استشهادات/مشاهدات/تحميلات) — مختلف
 // تماماً عن get_dashboard.php أعلاه (مقاييس طلبات الخدمات).
 const PUBLISHING_CARD_DEFS = [
-    { key: 'researches', icon: FileText, color: 'from-[#e8623a] to-[#f0916d]' },
+    { key: 'researches', icon: FileText, color: 'from-brand-orange to-[#f0916d]' },
     { key: 'citations', icon: TrendingUp, color: 'from-emerald-500 to-emerald-400' },
-    { key: 'views', icon: Eye, color: 'from-[#d4502a] to-[#e8623a]' },
+    { key: 'views', icon: Eye, color: 'from-[#d4502a] to-brand-orange' },
     { key: 'downloads', icon: Download, color: 'from-gray-500 to-gray-400' },
 ];
 const PUBLISHING_CARD_LABELS = {
@@ -282,7 +282,7 @@ const DashboardHome = () => {
     };
 
     const serviceBadgeStyles = {
-        review: 'bg-[#e8623a]/10 text-[#e8623a] dark:bg-[#e8623a]/15',
+        review: 'bg-brand-orange/10 text-brand-orange dark:bg-brand-orange/15',
         translation: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400',
     };
 
@@ -291,12 +291,12 @@ const DashboardHome = () => {
 
             {/* ─── الترحيب ─── */}
             <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible" className="relative overflow-hidden rounded-2xl bg-white dark:bg-gradient-to-br dark:from-[#211c18] dark:to-[#1a1613] border border-gray-200 dark:border-[#3a322c]/50 p-6 lg:p-8 shadow-sm dark:shadow-none transition-colors duration-300">
-                <div className="absolute top-0 start-0 w-64 h-64 bg-[#e8623a]/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 hidden dark:block" />
+                <div className="absolute top-0 start-0 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 hidden dark:block" />
                 <div className="absolute bottom-0 end-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2 hidden dark:block" />
 
                 <div className="relative z-10 flex items-start justify-between">
                     <div>
-                        <p className="text-[#e8623a] text-sm font-semibold mb-1">{greeting} 👋</p>
+                        <p className="text-brand-orange text-sm font-semibold mb-1">{greeting} 👋</p>
                         <h1 className="text-gray-900 dark:text-white text-2xl lg:text-3xl font-black mb-2 transition-colors duration-300">{name}</h1>
                         <p className="text-gray-500 dark:text-gray-400 text-sm max-w-lg transition-colors duration-300">
                             {userData?.role === 'employee'
@@ -308,7 +308,7 @@ const DashboardHome = () => {
                     <button
                         onClick={fetchDashboard}
                         disabled={loading}
-                        className="p-2.5 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#211c18] text-gray-400 hover:text-[#e8623a] hover:border-[#e8623a]/30 transition-all disabled:opacity-40"
+                        className="p-2.5 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#211c18] text-gray-400 hover:text-brand-orange hover:border-brand-orange/30 transition-all disabled:opacity-40"
                         title={isAr ? 'تحديث' : 'Refresh'}
                     >
                         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -363,7 +363,10 @@ const DashboardHome = () => {
                                 contentStyle={{ borderRadius: 12, border: '1px solid #f3f4f6', fontSize: 12 }}
                                 labelStyle={{ fontWeight: 700, marginBottom: 4 }}
                             />
-                            <Bar dataKey="requests" fill="#e8623a" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الطلبات' : 'Requests'} />
+                            {/* ⚠️ recharts لا يقبل Tailwind classes على fill (يحتاج قيمة CSS مباشرة) —
+                                هذا وسطر مشابه أدناه هما الاستثناء الوحيد بكامل المشروع غير المربوط
+                                بتوكن brand-orange بـ tailwind.config.js؛ حدّثهما يدويًا لو تغيّر اللون. */}
+                            <Bar dataKey="requests" fill="#FF8710" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الطلبات' : 'Requests'} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -392,7 +395,7 @@ const DashboardHome = () => {
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-gray-900 dark:text-white text-sm font-bold transition-colors duration-300">{isAr ? 'النشاط الأخير' : 'Recent Activity'}</h2>
                         {activity.length > 0 && (
-                            <Link to="/dashboard/settings?tab=activity" className="text-[#e8623a] text-xs font-medium hover:underline flex items-center gap-1">
+                            <Link to="/dashboard/settings?tab=activity" className="text-brand-orange text-xs font-medium hover:underline flex items-center gap-1">
                                 {isAr ? 'عرض الكل' : 'View All'} <Arrow className="w-3 h-3" />
                             </Link>
                         )}
@@ -470,7 +473,7 @@ const DashboardHome = () => {
                     <h3 className="text-gray-900 dark:text-white text-sm font-bold mb-4">{isAr ? 'الأبحاث الشهرية' : 'Monthly Research Submissions'}</h3>
                     {publishingLoading ? (
                         <div className="flex items-center justify-center h-64">
-                            <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                            <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                         </div>
                     ) : (
                         <div className="h-64">
@@ -485,7 +488,7 @@ const DashboardHome = () => {
                                         wrapperClassName="dark:[&_.recharts-default-tooltip]:!bg-[#211c18] dark:[&_.recharts-default-tooltip]:!border-[#3a322c]"
                                         labelStyle={{ fontWeight: 700, marginBottom: 4 }}
                                     />
-                                    <Bar dataKey="total" fill="#e8623a" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الأبحاث' : 'Researches'} />
+                                    <Bar dataKey="total" fill="#FF8710" radius={[6, 6, 0, 0]} maxBarSize={36} name={isAr ? 'الأبحاث' : 'Researches'} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>

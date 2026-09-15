@@ -23,7 +23,7 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
       <div className="relative bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
         <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 pb-4 flex items-start justify-between border-b border-gray-100 dark:border-[#3a322c]">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-[#e8623a]/20">
+            <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-brand-orange/20">
               <Icon className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-xl font-black text-gray-900 dark:text-white">
@@ -93,7 +93,7 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
             </button>
             <button
               onClick={onBegin}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-[#e8623a] rounded-xl hover:bg-[#d4502a] transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-brand-orange rounded-xl hover:bg-[#d4502a] transition-colors"
             >
               {isAr ? 'ابدأ الخدمة' : 'Begin this service'}
             </button>
@@ -125,7 +125,7 @@ const ServicesIndexPage = () => {
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-[#e8623a]" />
+          <BookOpen className="w-6 h-6 text-brand-orange" />
           {isAr ? 'الخدمات' : 'Services'}
         </h1>
         <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
@@ -155,13 +155,13 @@ const ServicesIndexPage = () => {
             {showResearchesCard && (
               <button
                 onClick={() => navigate('/dashboard/researches')}
-                className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-[#e8623a]/40 dark:hover:border-[#e8623a]/30 hover:shadow-lg hover:shadow-[#e8623a]/5 transition-all duration-200 group"
+                className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200 group"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-11 h-11 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-[#e8623a]/20 flex-shrink-0">
+                  <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[#e8623a] transition-colors" />
+                  <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-brand-orange transition-colors" />
                 </div>
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1.5">
                   {isAr ? 'الأبحاث' : 'Researches'}
@@ -177,13 +177,13 @@ const ServicesIndexPage = () => {
                 <button
                   key={svc.id}
                   onClick={() => setActiveService(svc)}
-                  className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-[#e8623a]/40 dark:hover:border-[#e8623a]/30 hover:shadow-lg hover:shadow-[#e8623a]/5 transition-all duration-200 group"
+                  className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200 group"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-11 h-11 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-[#e8623a]/20 flex-shrink-0">
+                    <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
                       <Icon className="w-5 h-5 text-white" />
                     </div>
-                    <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[#e8623a] transition-colors" />
+                    <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-brand-orange transition-colors" />
                   </div>
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1.5">
                     {isAr ? svc.label_ar : svc.label_en}

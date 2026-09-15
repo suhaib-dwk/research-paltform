@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../../../api';
 const roleColors = {
     faculty: 'bg-purple-50 dark:bg-purple-900/15 text-purple-600 dark:text-purple-400',
     grad: 'bg-blue-50 dark:bg-blue-900/15 text-blue-600 dark:text-blue-400',
-    researcher: 'bg-[#e8623a]/10 text-[#e8623a]',
+    researcher: 'bg-brand-orange/10 text-brand-orange',
     undergrad: 'bg-emerald-50 dark:bg-emerald-900/15 text-emerald-600 dark:text-emerald-400',
     reviewer: 'bg-orange-50 dark:bg-orange-900/15 text-orange-600 dark:text-orange-400',
     university: 'bg-indigo-50 dark:bg-indigo-900/15 text-indigo-600 dark:text-indigo-400',
@@ -18,7 +18,7 @@ const roleColors = {
 };
 const statusIcons = {
     active: <CheckCircle className="w-4 h-4 text-emerald-500" />,
-    pending: <UserCheck className="w-4 h-4 text-[#e8623a]" />,
+    pending: <UserCheck className="w-4 h-4 text-brand-orange" />,
     rejected: <UserX className="w-4 h-4 text-red-400" />,
 };
 const statusLabel = (status, isAr) => ({
@@ -107,9 +107,9 @@ const UsersPage = () => {
                 <div className="p-4 border-b border-gray-50 dark:border-[#3a322c]/50 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="relative flex-1 max-w-sm">
                         <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400" />
-                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث بالاسم أو البريد...' : 'Search by name or email...'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-[#e8623a] transition-colors text-gray-900 dark:text-white" />
+                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث بالاسم أو البريد...' : 'Search by name or email...'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
                     </div>
-                    <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)} className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#e8623a] text-gray-900 dark:text-white">
+                    <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)} className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
                         <option value="all">{isAr ? 'جميع الأدوار' : 'All Roles'}</option>
                         {['faculty', 'grad', 'researcher', 'undergrad', 'reviewer', 'university', 'college', 'research_center', 'ministry', 'service_provider'].map(r => (
                             <option key={r} value={r}>{roleLabel(r, isAr)}</option>
@@ -129,7 +129,7 @@ const UsersPage = () => {
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan={5} className="text-center py-16"><Loader2 className="w-6 h-6 text-[#e8623a] animate-spin mx-auto" /></td></tr>
+                                <tr><td colSpan={5} className="text-center py-16"><Loader2 className="w-6 h-6 text-brand-orange animate-spin mx-auto" /></td></tr>
                             ) : filtered.length === 0 ? (
                                 <tr><td colSpan={5} className="text-center py-12 text-gray-400 text-sm">{isAr ? 'لا توجد بيانات' : 'No data available'}</td></tr>
                             ) : filtered.map(u => (
@@ -147,7 +147,7 @@ const UsersPage = () => {
                                     </td>
                                     <td className="px-5 py-3.5">
                                         <div className="flex items-center gap-2">
-                                            <button onClick={() => openDetails(u.id)} className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center hover:bg-orange-100 dark:hover:bg-[#e8623a]/20 transition-colors"><Eye className="w-4 h-4" /></button>
+                                            <button onClick={() => openDetails(u.id)} className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-brand-orange/10 text-brand-orange flex items-center justify-center hover:bg-orange-100 dark:hover:bg-brand-orange/20 transition-colors"><Eye className="w-4 h-4" /></button>
                                             {u.status === 'pending' && (
                                                 <>
                                                     <button
@@ -184,7 +184,7 @@ const UsersPage = () => {
                         </div>
                         <div className="p-5">
                             {loadingDetails ? (
-                                <div className="flex items-center justify-center py-10"><Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" /></div>
+                                <div className="flex items-center justify-center py-10"><Loader2 className="w-6 h-6 text-brand-orange animate-spin" /></div>
                             ) : details && (
                                 <div className="space-y-3 text-sm">
                                     <div><p className="text-xs text-gray-400 mb-1">{isAr ? 'الاسم' : 'Name'}</p><p className="font-semibold text-gray-900 dark:text-white">{details.name || '—'}</p></div>

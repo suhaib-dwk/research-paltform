@@ -96,13 +96,13 @@ const MessagesPage = () => {
                     <div className="p-4 border-b border-gray-50 dark:border-[#3a322c]/50">
                         <div className="relative">
                             <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400" />
-                            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث في الرسائل...' : 'Search messages...'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-[#e8623a] transition-colors text-gray-900 dark:text-white" />
+                            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث في الرسائل...' : 'Search messages...'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto">
                         {loadingThreads ? (
                             <div className="flex items-center justify-center h-full">
-                                <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                                <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                             </div>
                         ) : filtered.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-gray-400">
@@ -111,10 +111,10 @@ const MessagesPage = () => {
                             </div>
                         ) : (
                             filtered.map(msg => (
-                                <button key={msg.id} onClick={() => handleSelect(msg.id)} className={`w-full text-start p-4 border-b border-gray-50 dark:border-[#3a322c]/30 hover:bg-[#f4f6fb] dark:hover:bg-[#1a1613]/60 transition-colors ${selectedId === msg.id ? 'bg-[#e8623a]/5 border-s-4 border-s-[#e8623a]' : ''}`}>
+                                <button key={msg.id} onClick={() => handleSelect(msg.id)} className={`w-full text-start p-4 border-b border-gray-50 dark:border-[#3a322c]/30 hover:bg-[#f4f6fb] dark:hover:bg-[#1a1613]/60 transition-colors ${selectedId === msg.id ? 'bg-brand-orange/5 border-s-4 border-s-brand-orange' : ''}`}>
                                     <div className="flex items-start justify-between gap-2">
                                         <p className={`text-sm font-semibold ${msg.read ? 'text-gray-600 dark:text-gray-400' : 'text-gray-900 dark:text-white'}`}>{isAr ? msg.subject_ar : msg.subject_en}</p>
-                                        {!msg.read && <span className="w-2.5 h-2.5 bg-[#e8623a] rounded-full flex-shrink-0 mt-1.5" />}
+                                        {!msg.read && <span className="w-2.5 h-2.5 bg-brand-orange rounded-full flex-shrink-0 mt-1.5" />}
                                     </div>
                                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{msg.date}</p>
                                 </button>
@@ -133,14 +133,14 @@ const MessagesPage = () => {
                             <div className="flex-1 p-5 overflow-y-auto space-y-3">
                                 {loadingMessages ? (
                                     <div className="flex items-center justify-center h-full">
-                                        <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                                        <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                                     </div>
                                 ) : (
                                     messages.map(m => (
                                         <div key={m.id} className={`flex ${m.sender_type === 'user' ? 'justify-end' : 'justify-start'}`}>
                                             <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                                                 m.sender_type === 'user'
-                                                    ? 'bg-[#e8623a] text-white rounded-tl-sm'
+                                                    ? 'bg-brand-orange text-white rounded-tl-sm'
                                                     : 'bg-gray-100 dark:bg-[#2a231e] text-gray-700 dark:text-gray-300 rounded-tr-sm'
                                             }`}>
                                                 <p>{m.body}</p>
@@ -173,13 +173,13 @@ const MessagesPage = () => {
                                         onChange={(e) => setReplyText(e.target.value)}
                                         onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
                                         placeholder={isAr ? 'اكتب ردك...' : 'Type your reply...'}
-                                        className="flex-1 bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#e8623a] transition-colors text-gray-900 dark:text-white"
+                                        className="flex-1 bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white"
                                     />
                                     <input ref={fileInputRef} type="file" className="hidden" onChange={(e) => setAttachment(e.target.files?.[0] || null)} />
-                                    <button onClick={() => fileInputRef.current?.click()} className="w-11 h-11 bg-[#f4f6fb] dark:bg-[#1a1613] rounded-xl flex items-center justify-center text-gray-400 hover:text-[#e8623a] transition-colors flex-shrink-0">
+                                    <button onClick={() => fileInputRef.current?.click()} className="w-11 h-11 bg-[#f4f6fb] dark:bg-[#1a1613] rounded-xl flex items-center justify-center text-gray-400 hover:text-brand-orange transition-colors flex-shrink-0">
                                         <Paperclip className="w-5 h-5" />
                                     </button>
-                                    <button onClick={handleSend} disabled={sending} className="w-11 h-11 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-xl flex items-center justify-center text-white hover:shadow-lg hover:shadow-[#e8623a]/25 transition-all disabled:opacity-60 flex-shrink-0">
+                                    <button onClick={handleSend} disabled={sending} className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center text-white hover:shadow-lg hover:shadow-brand-orange/25 transition-all disabled:opacity-60 flex-shrink-0">
                                         {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                                     </button>
                                 </div>

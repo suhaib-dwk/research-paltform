@@ -113,7 +113,7 @@ const AccountPage = () => {
                         {avatarPath ? (
                             <img src={resolveUploadUrl(avatarPath)} alt="" className="w-20 h-20 rounded-2xl object-cover" />
                         ) : (
-                            <div className="w-20 h-20 rounded-2xl bg-[#e8623a]/10 text-[#e8623a] flex items-center justify-center text-2xl font-black">
+                            <div className="w-20 h-20 rounded-2xl bg-brand-orange/10 text-brand-orange flex items-center justify-center text-2xl font-black">
                                 {form.full_name?.charAt(0) || 'U'}
                             </div>
                         )}
@@ -121,7 +121,7 @@ const AccountPage = () => {
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
                             disabled={uploadingAvatar}
-                            className="absolute -bottom-1 -end-1 w-7 h-7 bg-[#e8623a] text-white rounded-lg flex items-center justify-center shadow-md hover:bg-[#d4502a] transition-colors disabled:opacity-60"
+                            className="absolute -bottom-1 -end-1 w-7 h-7 bg-brand-orange text-white rounded-lg flex items-center justify-center shadow-md hover:bg-[#d4502a] transition-colors disabled:opacity-60"
                         >
                             {uploadingAvatar ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
                         </button>
@@ -139,27 +139,27 @@ const AccountPage = () => {
                             <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'الاسم الكامل' : 'Full Name'}</label>
                             <div className="relative">
                                 <User className="absolute top-1/2 -translate-y-1/2 start-4 w-4 h-4 text-gray-400" />
-                                <input type="text" value={form.full_name} onChange={(e) => handleChange('full_name', e.target.value)} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-[#e8623a] transition-colors" />
+                                <input type="text" value={form.full_name} onChange={(e) => handleChange('full_name', e.target.value)} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
                             </div>
                         </div>
                         <div>
                             <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'الهاتف' : 'Phone'}</label>
                             <div className="relative">
                                 <Phone className="absolute top-1/2 -translate-y-1/2 start-4 w-4 h-4 text-gray-400" />
-                                <input type="tel" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} dir="ltr" className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-[#e8623a] transition-colors" />
+                                <input type="tel" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} dir="ltr" className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
                             </div>
                         </div>
                         <div className="md:col-span-2">
                             <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'البريد الإلكتروني الشخصي' : 'Personal Email'}</label>
                             <div className="relative">
                                 <Mail className="absolute top-1/2 -translate-y-1/2 start-4 w-4 h-4 text-gray-400" />
-                                <input type="email" value={form.personal_email} onChange={(e) => handleChange('personal_email', e.target.value)} dir="ltr" className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-[#e8623a] transition-colors" />
+                                <input type="email" value={form.personal_email} onChange={(e) => handleChange('personal_email', e.target.value)} dir="ltr" className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
                             </div>
                         </div>
                     </div>
 
                     <div className="pt-4 border-t border-gray-50 dark:border-[#3a322c]/50">
-                        <button type="submit" disabled={loading} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white hover:shadow-lg hover:shadow-[#e8623a]/25'}`}>
+                        <button type="submit" disabled={loading} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                             {saved ? (isAr ? 'تم الحفظ' : 'Saved') : (isAr ? 'حفظ التغييرات' : 'Save Changes')}
                         </button>

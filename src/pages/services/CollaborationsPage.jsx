@@ -140,7 +140,7 @@ const CollaborationsPage = () => {
         </div>
         <button
           onClick={openModal}
-          className="flex items-center gap-2 bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#e8623a]/25 transition-all"
+          className="flex items-center gap-2 bg-gradient-to-l from-brand-orange to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all"
         >
           <Plus className="w-4 h-4" /> {isAr ? 'طلب تعاون' : 'Request Collaboration'}
         </button>
@@ -148,7 +148,7 @@ const CollaborationsPage = () => {
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+          <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
         </div>
       ) : items.length === 0 ? (
         <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-12 text-center">
@@ -244,12 +244,12 @@ const CollaborationsPage = () => {
                     {isAr ? 'الجهة المطلوب التعاون معها' : 'Collaborate with'}
                   </label>
                   {selectedPartner ? (
-                    <div className="flex items-center justify-between bg-[#e8623a]/10 border border-[#e8623a]/30 rounded-xl px-4 py-2.5">
+                    <div className="flex items-center justify-between bg-brand-orange/10 border border-brand-orange/30 rounded-xl px-4 py-2.5">
                       <div>
                         <p className="text-sm font-bold text-gray-900 dark:text-white">{selectedPartner.name}</p>
                         <p className="text-xs text-gray-400">{roleLabel(selectedPartner.role, isAr)}</p>
                       </div>
-                      <button onClick={() => setSelectedPartner(null)} className="text-xs font-bold text-[#e8623a] hover:underline">
+                      <button onClick={() => setSelectedPartner(null)} className="text-xs font-bold text-brand-orange hover:underline">
                         {isAr ? 'تغيير' : 'Change'}
                       </button>
                     </div>
@@ -262,13 +262,13 @@ const CollaborationsPage = () => {
                           value={search}
                           onChange={(e) => setSearch(e.target.value)}
                           placeholder={isAr ? 'ابحث بالاسم...' : 'Search by name...'}
-                          className="w-full ps-9 pe-3 py-2.5 text-sm bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/40"
+                          className="w-full ps-9 pe-3 py-2.5 text-sm bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/40"
                         />
                       </div>
                       <div className="max-h-48 overflow-y-auto space-y-1 rounded-xl">
                         {partnersLoading ? (
                           <div className="flex items-center justify-center py-6">
-                            <Loader2 className="w-5 h-5 text-[#e8623a] animate-spin" />
+                            <Loader2 className="w-5 h-5 text-brand-orange animate-spin" />
                           </div>
                         ) : filteredPartners.length === 0 ? (
                           <p className="text-xs text-gray-400 text-center py-6">{isAr ? 'لا توجد نتائج' : 'No results'}</p>
@@ -297,7 +297,7 @@ const CollaborationsPage = () => {
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder={isAr ? 'مثال: تعاون بحثي حول الذكاء الاصطناعي' : 'e.g. AI research collaboration'}
                     maxLength={300}
-                    className="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/40"
+                    className="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/40"
                   />
                 </div>
 
@@ -309,7 +309,7 @@ const CollaborationsPage = () => {
                     rows={3}
                     maxLength={2000}
                     placeholder={isAr ? 'اشرح باختصار ما تريد التعاون فيه...' : 'Briefly describe what you want to collaborate on...'}
-                    className="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/40 resize-none"
+                    className="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/40 resize-none"
                   />
                 </div>
 
@@ -320,7 +320,7 @@ const CollaborationsPage = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-[#e8623a]/25 transition-all disabled:opacity-60"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-l from-brand-orange to-[#f0916d] text-white py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all disabled:opacity-60"
                 >
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                   {isAr ? 'إرسال الطلب' : 'Send Request'}

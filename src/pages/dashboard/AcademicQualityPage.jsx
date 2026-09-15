@@ -30,7 +30,7 @@ const indicatorTypeLabel = (t, isAr) => ({
 const scoreClasses = (score, maxScore, hasResponse) => {
     if (!hasResponse) return 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400';
     const pct = maxScore > 0 ? (score / maxScore) * 100 : 0;
-    if (pct >= 75) return 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#d4502a] dark:text-[#f0916d]';
+    if (pct >= 75) return 'bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]';
     if (pct >= 40) return 'bg-orange-50 dark:bg-amber-900/15 text-amber-600 dark:text-amber-400';
     return 'bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400';
 };
@@ -68,7 +68,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
     const [saveMsg, setSaveMsg] = useState(null); // { ok: bool, text: string }
     const [evidenceFiles, setEvidenceFiles] = useState(indicator.evidence_files || []);
 
-    const inputCls = "w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e8623a]/30 focus:border-[#e8623a] transition";
+    const inputCls = "w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition";
     const labelCls = "block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1";
 
     const handleSave = async () => {
@@ -167,7 +167,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                                     onClick={() => setComplianceLevel(v)}
                                     className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                                         complianceLevel === v
-                                            ? 'border-[#e8623a] bg-orange-50 dark:bg-[#e8623a]/10 text-[#d4502a] dark:text-[#f0916d]'
+                                            ? 'border-brand-orange bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]'
                                             : 'border-gray-200 dark:border-[#3a322c] text-gray-500 dark:text-gray-400 hover:border-gray-300'
                                     }`}
                                 >
@@ -189,7 +189,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                                     onClick={() => setMaturityLevel(v)}
                                     className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                                         String(maturityLevel) === String(v)
-                                            ? 'border-[#e8623a] bg-orange-50 dark:bg-[#e8623a]/10 text-[#d4502a] dark:text-[#f0916d]'
+                                            ? 'border-brand-orange bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]'
                                             : 'border-gray-200 dark:border-[#3a322c] text-gray-500 dark:text-gray-400 hover:border-gray-300'
                                     }`}
                                 >
@@ -252,7 +252,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                 <label className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium cursor-pointer transition-colors w-fit ${
                     uploading
                         ? 'border-gray-200 dark:border-[#3a322c] text-gray-400 cursor-wait'
-                        : 'border-gray-200 dark:border-[#3a322c] text-gray-600 dark:text-gray-300 hover:border-[#e8623a]/50 hover:bg-orange-50/50 dark:hover:bg-[#e8623a]/5'
+                        : 'border-gray-200 dark:border-[#3a322c] text-gray-600 dark:text-gray-300 hover:border-brand-orange/50 hover:bg-orange-50/50 dark:hover:bg-brand-orange/5'
                 }`}>
                     {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5" />}
                     {uploading ? (isAr ? 'جارٍ الرفع...' : 'Uploading...') : (isAr ? 'رفع ملف' : 'Upload file')}
@@ -287,7 +287,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                     type="button"
                     onClick={handleSave}
                     disabled={saving}
-                    className="px-5 py-2 rounded-lg bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white text-xs font-bold hover:brightness-105 disabled:opacity-60 transition flex items-center gap-2"
+                    className="px-5 py-2 rounded-lg bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-xs font-bold hover:brightness-105 disabled:opacity-60 transition flex items-center gap-2"
                 >
                     {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                     {isAr ? 'حفظ المؤشر' : 'Save indicator'}
@@ -362,7 +362,7 @@ const AcademicQualityPage = () => {
     if (loading && !framework) {
         return (
             <div className="p-6 flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
             </div>
         );
     }
@@ -405,7 +405,7 @@ const AcademicQualityPage = () => {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <div>
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                        <Award className="w-6 h-6 text-[#e8623a]" />
+                        <Award className="w-6 h-6 text-brand-orange" />
                         {isAr ? 'جودة الأكاديمية — معيار البحث العلمي' : 'Academic Quality — Scientific Research Standard'}
                     </h1>
                     <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
@@ -417,7 +417,7 @@ const AcademicQualityPage = () => {
                 <select
                     value={period}
                     onChange={e => { setOpenIndicatorId(null); setPeriod(e.target.value); }}
-                    className="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-white dark:bg-[#211c18] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#e8623a]/30"
+                    className="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-white dark:bg-[#211c18] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
                 >
                     {periodOptions().map(p => (
                         <option key={p} value={p}>{(isAr ? 'الفترة ' : 'Period ') + p}</option>
@@ -451,13 +451,13 @@ const AcademicQualityPage = () => {
                                 onClick={() => { setActiveElementId(el.id); setOpenIndicatorId(null); }}
                                 className={`w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium text-start transition-all ${
                                     active
-                                        ? 'bg-orange-50 dark:bg-[#e8623a]/10 text-[#d4502a] dark:text-[#f0916d]'
+                                        ? 'bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]'
                                         : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e]/60'
                                 }`}
                             >
                                 <span className="truncate">{isAr ? el.name_ar : (el.name_en || el.name_ar)}</span>
                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
-                                    active ? 'bg-[#e8623a]/20 text-[#d4502a] dark:text-[#f0916d]' : 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400'
+                                    active ? 'bg-brand-orange/20 text-[#d4502a] dark:text-[#f0916d]' : 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400'
                                 }`}>{badge}</span>
                             </button>
                         );

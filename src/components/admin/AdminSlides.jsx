@@ -97,14 +97,14 @@ const AdminSlides = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Image className="w-7 h-7 text-[#e8623a]" /> 
+            <Image className="w-7 h-7 text-brand-orange" /> 
             {currentLang === 'ar' ? 'إدارة صور البانر' : 'Manage Hero Slides'}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {currentLang === 'ar' ? 'هذه الصور تظهر متحركة في أعلى الصفحة الرئيسية' : 'These images appear as a slideshow on the homepage'}
           </p>
         </div>
-        <label className="cursor-pointer bg-[#e8623a] text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors relative shadow-sm">
+        <label className="cursor-pointer bg-brand-orange text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors relative shadow-sm">
           {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
           {currentLang === 'ar' ? 'إضافة صورة جديدة' : 'Add New Slide'}
           <input type="file" accept="image/*" onChange={handleAdd} className="hidden" disabled={isUploading} />

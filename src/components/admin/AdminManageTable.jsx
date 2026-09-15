@@ -24,7 +24,7 @@ const AdminManageTable = () => {
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-          <Database className="w-7 h-7 text-[#e8623a]" />
+          <Database className="w-7 h-7 text-brand-orange" />
           {isRTL ? config.title_ar : config.title_en}
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">

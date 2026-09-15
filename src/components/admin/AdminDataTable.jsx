@@ -381,13 +381,13 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                 <div className="relative w-full sm:max-w-md">
                     <Search className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-4' : 'left-4'} w-5 h-5 text-gray-400`} />
                     <input type="text" placeholder={isRTL ? 'ابحث في الجدول...' : 'Search in table...'} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full border border-gray-200 dark:border-[#3a322c] rounded-xl ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 focus:ring-2 focus:ring-[#e8623a] outline-none bg-white dark:bg-[#211c18]`}
+                        className={`w-full border border-gray-200 dark:border-[#3a322c] rounded-xl ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 focus:ring-2 focus:ring-brand-orange outline-none bg-white dark:bg-[#211c18]`}
                     />
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     {!readOnly && (
-                        <button onClick={openAddModal} className="flex items-center justify-center gap-2 bg-[#e8623a] text-white px-5 py-3 rounded-xl font-bold hover:bg-[#d4502a] transition-colors shadow-sm">
+                        <button onClick={openAddModal} className="flex items-center justify-center gap-2 bg-brand-orange text-white px-5 py-3 rounded-xl font-bold hover:bg-[#d4502a] transition-colors shadow-sm">
                             <Plus className="w-5 h-5" />
                             {isRTL ? 'إضافة جديد' : 'Add New'}
                         </button>
@@ -410,8 +410,8 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                     <Printer className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                                     {isRTL ? 'طباعة' : 'Print'}
                                 </button>
-                                <button onClick={handleExportWord} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-[#e8623a]/10 transition-colors">
-                                    <FileText className="w-4 h-4 text-[#e8623a]" />
+                                <button onClick={handleExportWord} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-brand-orange/10 transition-colors">
+                                    <FileText className="w-4 h-4 text-brand-orange" />
                                     {isRTL ? 'تصدير Word' : 'Export Word'}
                                     <span className="text-[10px] text-gray-400 dark:text-gray-500 mr-auto">.doc</span>
                                 </button>
@@ -448,7 +448,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             )}
 
             {isLoading ? (
-                <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-[#e8623a]" /></div>
+                <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-brand-orange" /></div>
             ) : (
                 <>
                     {/* جدول مخفي للتصدير */}
@@ -541,7 +541,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                             if (e.key === 'Enter' && e.ctrlKey) handleInlineSave(row.id, col.key);
                                                                             if (e.key === 'Escape') handleInlineCancel();
                                                                         }}
-                                                                        className="w-full border-2 border-[#e8623a] rounded-lg p-2 text-sm focus:ring-2 focus:ring-[#e8623a] outline-none bg-orange-50 dark:bg-[#e8623a]/10 resize-none"
+                                                                        className="w-full border-2 border-brand-orange rounded-lg p-2 text-sm focus:ring-2 focus:ring-brand-orange outline-none bg-orange-50 dark:bg-brand-orange/10 resize-none"
                                                                     />
                                                                 ) : (
                                                                     <input
@@ -554,7 +554,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                             if (e.key === 'Escape') handleInlineCancel();
                                                                         }}
                                                                         dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                                        className="w-full border-2 border-[#e8623a] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[#e8623a] outline-none bg-orange-50 dark:bg-[#e8623a]/10"
+                                                                        className="w-full border-2 border-brand-orange rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-brand-orange outline-none bg-orange-50 dark:bg-brand-orange/10"
                                                                     />
                                                                 )}
                                                                 <button onClick={() => handleInlineSave(row.id, col.key)} disabled={isSavingCell}
@@ -584,7 +584,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                 {canInlineEdit(col) && (
                                                                     <button
                                                                         onClick={() => setEditingCell({ rowId: row.id, colKey: col.key, value: row[col.key] || '' })}
-                                                                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-300 hover:text-[#e8623a] transition-all duration-150 flex-shrink-0"
+                                                                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-300 hover:text-brand-orange transition-all duration-150 flex-shrink-0"
                                                                         title={isRTL ? 'تعديل سريع' : 'Quick Edit'}
                                                                     >
                                                                         <Pencil className="w-3.5 h-3.5" />
@@ -597,7 +597,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 {!readOnly && (
                                                     <td className="px-6 py-4 text-end">
                                                         <div className="flex items-center justify-end gap-2">
-                                                            <button onClick={() => setViewModal({ isOpen: true, data: row })} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-orange-50 dark:bg-[#e8623a]/10 hover:text-[#e8623a] rounded-lg"><Eye className="w-4 h-4" /></button>
+                                                            <button onClick={() => setViewModal({ isOpen: true, data: row })} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-orange-50 dark:bg-brand-orange/10 hover:text-brand-orange rounded-lg"><Eye className="w-4 h-4" /></button>
                                                             <button onClick={() => openEditModal(row)} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-amber-50 dark:hover:bg-amber-900/15 hover:text-amber-600 dark:hover:text-amber-400 rounded-lg"><Edit3 className="w-4 h-4" /></button>
                                                             <button onClick={() => setDeleteModal({ isOpen: true, id: row.id, isLoading: false })} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                                                         </div>
@@ -666,7 +666,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 {editModal.values[col.key] && (
                                                     <img src={resolveUploadUrl(editModal.values[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-[#3a322c] mb-2" />
                                                 )}
-                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-[#e8623a] hover:bg-orange-50/50 dark:hover:bg-[#e8623a]/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
+                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-brand-orange hover:bg-orange-50/50 dark:hover:bg-brand-orange/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
                                                     {uploadingField === col.key ? (
                                                         <Loader2 className="w-4 h-4 animate-spin" />
                                                     ) : (
@@ -690,7 +690,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 rows={6}
                                                 value={editModal.values[col.key] || ''}
                                                 onChange={e => setEditModal({ ...editModal, values: { ...editModal.values, [col.key]: e.target.value } })}
-                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl p-3 focus:ring-2 focus:ring-[#e8623a] outline-none resize-none"
+                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl p-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none"
                                             />
                                         ) : (
                                             <input
@@ -698,7 +698,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 value={editModal.values[col.key] || ''}
                                                 onChange={e => setEditModal({ ...editModal, values: { ...editModal.values, [col.key]: e.target.value } })}
                                                 dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none"
+                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none"
                                             />
                                         )}
                                     </div>
@@ -709,7 +709,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                             <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="px-6 py-2.5 bg-gray-100 dark:bg-[#2a231e] rounded-xl text-sm font-bold hover:bg-gray-200">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
-                            <button onClick={handleSaveEdit} className="px-6 py-2.5 bg-[#e8623a] text-white rounded-xl text-sm font-bold hover:bg-[#d4502a]">
+                            <button onClick={handleSaveEdit} className="px-6 py-2.5 bg-brand-orange text-white rounded-xl text-sm font-bold hover:bg-[#d4502a]">
                                 {isRTL ? 'حفظ التعديلات' : 'Save Changes'}
                             </button>
                         </div>
@@ -740,7 +740,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                             <label className="flex items-center gap-3 cursor-pointer select-none">
                                                 <input type="checkbox" checked={addData[col.key] == 1}
                                                     onChange={(e) => handleAddChange(col.key, e.target.checked ? '1' : '0')}
-                                                    className="w-5 h-5 rounded text-[#e8623a] focus:ring-[#e8623a] cursor-pointer" />
+                                                    className="w-5 h-5 rounded text-brand-orange focus:ring-brand-orange cursor-pointer" />
                                                 <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{getColLabel(col)}</span>
                                             </label>
                                         ) : col.type === 'image' ? (
@@ -749,7 +749,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 {addData[col.key] && (
                                                     <img src={resolveUploadUrl(addData[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-[#3a322c] mb-2" />
                                                 )}
-                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-[#e8623a] hover:bg-orange-50/50 dark:hover:bg-[#e8623a]/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
+                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-brand-orange hover:bg-orange-50/50 dark:hover:bg-brand-orange/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
                                                     {uploadingField === col.key ? (
                                                         <Loader2 className="w-4 h-4 animate-spin" />
                                                     ) : (
@@ -771,7 +771,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                                 <textarea rows={5} value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder={isRTL ? 'اكتب النص هنا...' : 'Type text here...'}
-                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none resize-none" />
+                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none" />
                                             </div>
                                         ) : (
                                             <div>
@@ -779,7 +779,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 <input type="text" value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder={isRTL ? 'أدخل القيمة...' : 'Enter value...'}
                                                     dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" />
+                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" />
                                             </div>
                                         )}
                                     </div>
@@ -790,7 +790,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                             <button onClick={() => setAddModal({ isOpen: false })} className="px-6 py-2.5 bg-gray-100 dark:bg-[#2a231e] rounded-xl text-sm font-bold hover:bg-gray-200">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
-                            <button onClick={handleAddSubmit} disabled={isAdding} className="px-6 py-2.5 bg-[#e8623a] text-white rounded-xl text-sm font-bold hover:bg-[#d4502a] flex items-center gap-2 disabled:bg-[#e8623a]/50">
+                            <button onClick={handleAddSubmit} disabled={isAdding} className="px-6 py-2.5 bg-brand-orange text-white rounded-xl text-sm font-bold hover:bg-[#d4502a] flex items-center gap-2 disabled:bg-brand-orange/50">
                                 <Loader2 className={`w-5 h-5 animate-spin ${isAdding ? 'block' : 'hidden'}`} />
                                 {isAdding ? (isRTL ? 'جاري الحفظ...' : 'Saving...') : (isRTL ? 'حفظ السجل' : 'Save Record')}
                             </button>

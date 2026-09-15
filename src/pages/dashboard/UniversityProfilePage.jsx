@@ -18,7 +18,7 @@ const textareaToArray = (text) =>
 
 const arrayToTextarea = (arr) => (Array.isArray(arr) ? arr.join('\n') : '');
 
-const inputCls = "w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-[#e8623a] transition-colors";
+const inputCls = "w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors";
 const labelCls = "text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block";
 const cardCls = "bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6";
 
@@ -48,7 +48,7 @@ const AddButton = ({ onClick, label }) => (
     <button
         type="button"
         onClick={onClick}
-        className="flex items-center gap-1.5 text-xs font-bold text-[#e8623a] hover:text-[#d4502a] transition-colors"
+        className="flex items-center gap-1.5 text-xs font-bold text-brand-orange hover:text-[#d4502a] transition-colors"
     >
         <Plus className="w-3.5 h-3.5" /> {label}
     </button>
@@ -222,7 +222,7 @@ const UniversityProfilePage = () => {
     if (loading) {
         return (
             <div className="p-6 flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
             </div>
         );
     }
@@ -242,7 +242,7 @@ const UniversityProfilePage = () => {
         <div className="p-6 max-w-6xl mx-auto space-y-6">
             <div>
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <Building2 className="w-6 h-6 text-[#e8623a]" />
+                    <Building2 className="w-6 h-6 text-brand-orange" />
                     {isAr ? 'ملف الجامعة البحثية' : 'University Research Profile'}
                 </h1>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
@@ -261,7 +261,7 @@ const UniversityProfilePage = () => {
                 {/* ===== البيانات الأساسية ===== */}
                 <div className={cardCls}>
                     <h2 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                        <Info className="w-4 h-4 text-[#e8623a]" />
+                        <Info className="w-4 h-4 text-brand-orange" />
                         {isAr ? 'البيانات الأساسية' : 'Basic Information'}
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -292,7 +292,7 @@ const UniversityProfilePage = () => {
                 {/* ===== الملف البحثي ===== */}
                 <div className={cardCls}>
                     <h2 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                        <FlaskConical className="w-4 h-4 text-[#e8623a]" />
+                        <FlaskConical className="w-4 h-4 text-brand-orange" />
                         {isAr ? 'الملف البحثي' : 'Research Profile'}
                     </h2>
                     <div className="space-y-5">
@@ -324,7 +324,7 @@ const UniversityProfilePage = () => {
                 <div className={cardCls}>
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <MapPin className="w-4 h-4 text-[#e8623a]" />
+                            <MapPin className="w-4 h-4 text-brand-orange" />
                             {isAr ? 'الحرم الجامعي' : 'Campuses'}
                         </h2>
                         <AddButton onClick={addCampus} label={isAr ? 'إضافة حرم جامعي' : 'Add Campus'} />
@@ -345,7 +345,7 @@ const UniversityProfilePage = () => {
                 <div className={cardCls}>
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <School className="w-4 h-4 text-[#e8623a]" />
+                            <School className="w-4 h-4 text-brand-orange" />
                             {isAr ? 'الكليات' : 'Colleges'}
                         </h2>
                         <AddButton onClick={addCollege} label={isAr ? 'إضافة كلية' : 'Add College'} />
@@ -371,7 +371,7 @@ const UniversityProfilePage = () => {
                 <div className={cardCls}>
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <Layers className="w-4 h-4 text-[#e8623a]" />
+                            <Layers className="w-4 h-4 text-brand-orange" />
                             {isAr ? 'الأقسام' : 'Departments'}
                         </h2>
                         <AddButton onClick={addDepartment} label={isAr ? 'إضافة قسم' : 'Add Department'} />
@@ -397,7 +397,7 @@ const UniversityProfilePage = () => {
                 <div className={cardCls}>
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <FlaskConical className="w-4 h-4 text-[#e8623a]" />
+                            <FlaskConical className="w-4 h-4 text-brand-orange" />
                             {isAr ? 'المراكز البحثية' : 'Research Centers'}
                         </h2>
                         <AddButton onClick={addResearchCenter} label={isAr ? 'إضافة مركز بحثي' : 'Add Research Center'} />
@@ -417,7 +417,7 @@ const UniversityProfilePage = () => {
                 </div>
 
                 <div className="pt-2">
-                    <button type="submit" disabled={saving} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white hover:shadow-lg hover:shadow-[#e8623a]/25'}`}>
+                    <button type="submit" disabled={saving} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
                         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                         {saved ? (isAr ? 'تم الحفظ' : 'Saved') : (isAr ? 'حفظ الملف' : 'Save Profile')}
                     </button>
@@ -430,14 +430,14 @@ const UniversityProfilePage = () => {
             <div className={cardCls}>
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-[#e8623a]" />
+                        <Sparkles className="w-4 h-4 text-brand-orange" />
                         {t('readiness_diagnostic.title')}
                     </h2>
                     <button
                         type="button"
                         onClick={runAssessment}
                         disabled={assessmentLoading}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-l from-[#e8623a] to-[#f0916d] text-white text-sm font-bold hover:shadow-lg hover:shadow-[#e8623a]/25 disabled:opacity-60 transition-all"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-sm font-bold hover:shadow-lg hover:shadow-brand-orange/25 disabled:opacity-60 transition-all"
                     >
                         {assessmentLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                         {assessmentLoading ? t('readiness_diagnostic.running') : t('readiness_diagnostic.run_button')}
@@ -465,8 +465,8 @@ const UniversityProfilePage = () => {
                     <div className="space-y-5">
                         {/* اكتمال الملف — فئة نوعية خشنة (منخفض/متوسط/مرتفع)، ليست نسبة دقيقة */}
                         {assessment.profile_completeness?.level && (
-                            <div className="flex items-center gap-4 p-4 bg-orange-50 dark:bg-[#e8623a]/10 rounded-2xl">
-                                <TrendingUp className="w-8 h-8 text-[#e8623a] flex-shrink-0" />
+                            <div className="flex items-center gap-4 p-4 bg-orange-50 dark:bg-brand-orange/10 rounded-2xl">
+                                <TrendingUp className="w-8 h-8 text-brand-orange flex-shrink-0" />
                                 <div>
                                     <p className="text-2xl font-black text-gray-900 dark:text-white">
                                         {t(`readiness_diagnostic.level_${assessment.profile_completeness.level}`)}

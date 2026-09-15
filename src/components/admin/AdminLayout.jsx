@@ -51,7 +51,7 @@ const AdminLayout = () => {
   if (isVerifying) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-[#1a1613] flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-[#e8623a] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-3 border-brand-orange border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -125,7 +125,7 @@ const AdminLayout = () => {
           item.disabled
             ? 'text-slate-600 cursor-not-allowed'
             : isActive(item.path, item.end)
-              ? 'bg-[#e8623a] text-white shadow-lg shadow-[#e8623a]/30'
+              ? 'bg-brand-orange text-white shadow-lg shadow-brand-orange/30'
               : 'text-slate-300 hover:bg-white/10 hover:text-white'
         }`}
       >
@@ -148,7 +148,7 @@ const AdminLayout = () => {
         {/* الهيدر */}
         <div className="p-6 border-b border-[#3a322c]/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-[#e8623a]/20">
+            <div className="w-10 h-10 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>

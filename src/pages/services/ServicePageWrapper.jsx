@@ -83,7 +83,7 @@ const ServicePageWrapper = ({
     const ScIcon = sc.icon || Clock;
 
     return (
-      <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-[#e8623a]/20 dark:hover:border-[#e8623a]/15 transition-all">
+      <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-brand-orange/20 dark:hover:border-brand-orange/15 transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3 flex-1 min-w-0">
             <div className="w-10 h-10 bg-gray-100 dark:bg-[#2a231e] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -102,7 +102,7 @@ const ServicePageWrapper = ({
           <div className="flex items-center gap-2 sm:flex-shrink-0">
             {req.score != null && (
               <div className="text-center px-2">
-                <div className="text-lg font-black text-[#e8623a]">{req.score}%</div>
+                <div className="text-lg font-black text-brand-orange">{req.score}%</div>
                 <div className="text-[10px] text-gray-400">{isAr ? 'النتيجة' : 'Score'}</div>
               </div>
             )}
@@ -111,7 +111,7 @@ const ServicePageWrapper = ({
               {isAr ? sc.label_ar : sc.label_en}
             </span>
             {req.status === 'completed' && (
-              <button className="p-2 rounded-xl text-gray-400 hover:text-[#e8623a] hover:bg-[#e8623a]/10 transition-all">
+              <button className="p-2 rounded-xl text-gray-400 hover:text-brand-orange hover:bg-brand-orange/10 transition-all">
                 <Eye className="w-4 h-4" />
               </button>
             )}
@@ -197,7 +197,7 @@ const ServicePageWrapper = ({
                                 <a
                                     href={resolveUploadUrl(req.result_file_path || req.file_path)}
                                     download={req.result_file_name || req.file_name}
-                                    className="flex items-center gap-1.5 text-xs font-semibold text-[#e8623a] hover:text-[#d4502a] bg-[#e8623a]/10 hover:bg-[#e8623a]/20 px-3 py-2 rounded-lg transition-colors"
+                                    className="flex items-center gap-1.5 text-xs font-semibold text-brand-orange hover:text-[#d4502a] bg-brand-orange/10 hover:bg-brand-orange/20 px-3 py-2 rounded-lg transition-colors"
                                 >
                                     <FileText className="w-4 h-4" />
                                     {req.result_file_path
@@ -265,7 +265,7 @@ const ServicePageWrapper = ({
             {isAr ? tab.label_ar : tab.label_en}
             {tab.key === 'requests' && mockRequests.length > 0 && (
               <span className={`ms-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                activeTab === tab.key ? 'bg-[#e8623a]/15 text-[#e8623a]' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'
+                activeTab === tab.key ? 'bg-brand-orange/15 text-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'
               }`}>
                 {mockRequests.length}
               </span>
@@ -359,7 +359,7 @@ const ServicePageWrapper = ({
           {/* ✅ حالة التحميل */}
           {loadingRequests ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
-              <div className="w-8 h-8 border-2 border-[#e8623a]/30 border-t-[#e8623a] rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-brand-orange/30 border-t-brand-orange rounded-full animate-spin" />
               <p className="text-sm text-gray-400">{isAr ? 'جارٍ تحميل الطلبات...' : 'Loading requests...'}</p>
             </div>
           ) : mockRequests.length === 0 ? (
@@ -370,7 +370,7 @@ const ServicePageWrapper = ({
               </p>
               <button
                 onClick={() => setActiveTab('service')}
-                className="px-4 py-2 bg-[#e8623a]/10 text-[#e8623a] text-sm font-semibold rounded-xl hover:bg-[#e8623a]/20 transition-colors"
+                className="px-4 py-2 bg-brand-orange/10 text-brand-orange text-sm font-semibold rounded-xl hover:bg-brand-orange/20 transition-colors"
               >
                 {isAr ? 'ابدأ الآن' : 'Start Now'} →
               </button>
@@ -389,7 +389,7 @@ const ServicePageWrapper = ({
                       onClick={() => setFilterStatus(key)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         filterStatus === key
-                          ? 'bg-[#e8623a]/10 text-[#e8623a]'
+                          ? 'bg-brand-orange/10 text-brand-orange'
                           : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e]'
                       }`}
                     >

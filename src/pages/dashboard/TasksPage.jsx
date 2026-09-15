@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../../api';
 
 const statusStyle = {
     pending: { bg: 'bg-orange-50 dark:bg-orange-900/15', text: 'text-orange-600 dark:text-orange-400', icon: Clock },
-    in_progress: { bg: 'bg-[#e8623a]/10', text: 'text-[#e8623a]', icon: AlertCircle },
+    in_progress: { bg: 'bg-brand-orange/10', text: 'text-brand-orange', icon: AlertCircle },
     completed: { bg: 'bg-emerald-50 dark:bg-emerald-900/15', text: 'text-emerald-500 dark:text-emerald-400', icon: CheckCircle },
 };
 
@@ -64,7 +64,7 @@ const TasksPage = () => {
 
             {loading ? (
                 <div className="flex items-center justify-center py-16">
-                    <Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" />
+                    <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                 </div>
             ) : tasks.length === 0 ? (
                 <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-12 text-center">

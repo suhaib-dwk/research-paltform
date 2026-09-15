@@ -63,17 +63,17 @@
     "hero_title_line1": "The National Platform for Academic Research",
     "hero_title_line2": "& Classification.",
     "about_label": "About SOURCE",
-    "about_title": "Transforming how  manages its scientific research.",
+    "about_title": "SOURCE: where scientific research meets digital intelligence.",
     "about_desc": "SOURCE is 's strategic, sovereign digital platform designed to unify and elevate research quality, institutional performance, and national research intelligence within the higher education ecosystem. Operating as a national integration layer connecting researchers, universities, and the Ministry, the platform streamlines the entire academic lifecycle — from methodological conception and governed AI-assisted expert review to publication and ranking indicator monitoring.",
     "explore_features": "Explore All Features",
-    "tile1_title": "Research System",
-    "tile1_desc": "National-scale infrastructure for academic research management.",
-    "tile2_title": "Classification",
-    "tile2_desc": "Standards-compliant indexing across all academic fields.",
-    "tile3_title": "Transparency",
-    "tile3_desc": "Full audit trail and ministerial oversight of all research activity.",
-    "tile4_title": "Integration",
-    "tile4_desc": "Connected to all 47+  higher education institutions.",
+    "tile1_title": "Digital Transformation",
+    "tile1_desc": "Every research process — submission, review, publication, archiving — moved off paper and into one connected system.",
+    "tile2_title": "Artificial Intelligence",
+    "tile2_desc": "AI drafts, matches, and flags for review, cutting the time between an idea and a decision — with a human always making the final call.",
+    "tile3_title": "Automation",
+    "tile3_desc": "Approvals, notifications, and reports run automatically in the background, so nothing waits on manual follow-up.",
+    "tile4_title": "Security & Privacy",
+    "tile4_desc": "Role-based access, full audit trails, and encrypted storage protect every researcher's data and every institution's records.",
     "how_label": "How It Works",
     "how_title": "From registration to publication.",
     "how_desc": "SOURCE is designed for ease of adoption across institutions of all sizes — from large public universities to specialized research centres. The onboarding process is structured and supported at every stage.",
@@ -84,7 +84,13 @@
     "step3_title": "Research Submission",
     "step3_desc": "Researchers submit papers, theses, and journal contributions directly through the platform. Submissions are automatically classified and queued for review.",
     "step4_title": "Review & Publication",
-    "step4_desc": "Editorial teams manage peer review workflows within the system. Approved research is published in the national index and made discoverable across the network."
+    "step4_desc": "Editorial teams manage peer review workflows within the system. Approved research is published in the national index and made discoverable across the network.",
+    "search_placeholder": "Search journals, books, products and solutions",
+    "about_lines1": "SOURCE is one national platform connecting universities, researchers, and the Ministry.",
+    "about_lines2": "It manages the full research lifecycle — from first idea to publication and archiving.",
+    "about_lines3": "AI suggests and accelerates, while every final decision stays firmly human.",
+    "about_lines4": "Unified, transparent data supports university and Ministry decisions in real time.",
+    "about_lines5": "A step toward global academic readiness, and a stronger place for Iraqi research."
   },
   "audience": {
     "hero_label": "Who Is SOURCE For",
@@ -95,7 +101,6 @@
     "tab2": "Universities",
     "tab3": "Scientifics",
     "tab4": "Ministrys",
-
     "a1_title": "Academic Researchers",
     "a1_subtitle": "Faculty, postdoctoral fellows & PhD candidates",
     "a1_desc": "Individual researchers across all  universities use SOURCE to register their publications, build verified academic profiles, and connect their work to the national research index.",
@@ -106,7 +111,6 @@
     "a1_p4": "Submission portal for papers, theses, and conference proceedings",
     "a1_p5": "Discovery by ministry reviewers and funding committees",
     "a1_p6": "Integration with ORCID and international researcher IDs",
-
     "a2_title": "Universities & Colleges",
     "a2_subtitle": "Administrators, deans & department heads",
     "a2_desc": "Institutions across  use SOURCE to manage their entire research output — from departmental submissions to ministerial reporting — through a single administrative portal.",
@@ -117,7 +121,6 @@
     "a2_p4": "Faculty research activity tracking and benchmarking",
     "a2_p5": "Role-based access for administrators, deans, and heads of department",
     "a2_p6": "Annual research output certificates for accreditation submissions",
-
     "a3_title": "Scientific Journals",
     "a3_subtitle": "Editors-in-chief, editorial boards & reviewers",
     "a3_desc": "Scientific journals published by  universities and research centres use SOURCE to manage the full editorial cycle — from manuscript submission through peer review to publication and archiving.",
@@ -127,7 +130,6 @@
     "a3_p3": "Editorial decision tools with audit trail",
     "a3_p4": "DOI registration and metadata management",
     "a3_p5": "Journal performance analytics and indexing status",
-
     "a4_title": "Ministry & Policy Officials",
     "a4_subtitle": "Ministerial staff, directors & policy teams",
     "a4_desc": "The Ministry of Higher Education and Scientific Research uses SOURCE as its primary tool for national oversight — monitoring research output, evaluating institutional performance, and informing policy decisions.",
@@ -189,6 +191,9 @@
     "title": "Platform Services",
     "title_badge_small": "Platform Services",
     "subtitle": "Quick access to the most important services we provide to researchers and academic institutions",
+    "section_heading": "Every service, one click away",
+    "tab_services": "Services",
+    "tab_ai": "AI",
     "submit_research": "Submit Research",
     "submit_research_desc": "Upload your scientific research and articles for review and publication in accredited journals.",
     "track_status": "Track Status",
@@ -197,7 +202,65 @@
     "funding_desc": "Apply for research grants to support your innovative scientific projects.",
     "collaboration": "Research Collaboration",
     "collaboration_desc": "Find opportunities to collaborate with researchers and institutions from various universities.",
-    "explore": "Explore"
+    "explore": "Explore",
+    "cta": "Discover the Service",
+    "types": {
+      "submit_research": {
+        "tagline": "From first draft to publication, a clear path carries your research every step of the way to the readers who deserve it.",
+        "detail1": "Upload your paper directly in multiple formats, no hassle.",
+        "detail2": "Choose the journal or field that best fits your research.",
+        "detail3": "Your paper undergoes rigorous peer review by qualified specialists.",
+        "detail4": "Receive reviewer feedback and resubmit easily whenever needed."
+      },
+      "track_status": {
+        "tagline": "No more waiting in the dark — watch your research journey unfold moment by moment from a single dashboard.",
+        "detail1": "See each request's current stage the moment it's updated.",
+        "detail2": "Get instant notifications whenever your research status changes.",
+        "detail3": "Review a complete history of every past action and decision.",
+        "detail4": "Communicate directly with the responsible party, no middleman."
+      },
+      "funding": {
+        "tagline": "Turn your research idea into a funded reality, backed by support that opens doors for ideas worth investing in.",
+        "detail1": "Browse available grants by field or funding body.",
+        "detail2": "Submit your funding request with a project plan directly on the platform.",
+        "detail3": "Track your application through evaluation until the final decision.",
+        "detail4": "Manage your project's budget and periodic reports in one place."
+      },
+      "collaboration": {
+        "tagline": "Bring diverse expertise together under one roof, and build research partnerships that reach beyond your own university.",
+        "detail1": "Discover researchers with skills and specialties that complement your project.",
+        "detail2": "Browse open collaboration calls from other universities and institutions.",
+        "detail3": "Form a joint research team and coordinate tasks between members with ease.",
+        "detail4": "Share files and findings securely with every team member."
+      },
+      "ai_evidence_match": {
+        "title": "Smart Evidence Matching",
+        "desc": "AI automatically links your documents to accreditation standards and flags gaps instantly.",
+        "tagline": "Instead of sifting through hundreds of files by hand, AI reads your documents and matches them to the right standard within seconds.",
+        "detail1": "Scans uploaded documents and automatically maps them to required accreditation standards.",
+        "detail2": "Flags missing or incomplete evidence well before the submission deadline.",
+        "detail3": "Suggests how to prioritize evidence by standard to save preparation time.",
+        "detail4": "AI only suggests — the final decision always stays with your team."
+      },
+      "ai_writing_assistant": {
+        "title": "AI Writing Assistant",
+        "desc": "An AI tool that helps you draft and refine your research in sharper academic language.",
+        "tagline": "A writing companion that works with you sentence by sentence, polishing style and sharpening argument without changing your scientific voice.",
+        "detail1": "Suggests clearer phrasing that better fits academic conventions.",
+        "detail2": "Checks linguistic and structural consistency across every section of the paper.",
+        "detail3": "Flags vague statements or conclusions unsupported by evidence.",
+        "detail4": "Every suggested edit remains yours to accept or reject."
+      },
+      "ai_gap_insights": {
+        "title": "Readiness & Gap Insights",
+        "desc": "AI analyzes your university's data to surface weak points before accreditation and ranking cycles.",
+        "tagline": "Get ahead of ranking and accreditation results with smart analysis that shows where your institution stands and where the real opportunities to improve lie.",
+        "detail1": "Benchmarks your university's indicators against local and international ranking standards.",
+        "detail2": "Pinpoints the highest-impact gaps affecting your final outcome, clearly prioritized.",
+        "detail3": "Surfaces potential improvement opportunities based on comparable historical data.",
+        "detail4": "All recommendations remain guidance only — the strategic decision always rests with people, not the algorithm."
+      }
+    }
   },
   "news": {
     "title": "Latest News",
@@ -232,7 +295,7 @@
     "category": "Category",
     "basic": "Basic Info",
     "details": "Details"
-  },  
+  },
   "roles": {
     "employee": "Employee",
     "undergrad": "Bachelor Student",
@@ -587,5 +650,144 @@
     "no_data": "No observations in this section",
     "generated_at": "Diagnostic date",
     "error": "Failed to run the initial diagnostic"
+  },
+  "audiences": {
+    "badge": "One Platform, Every Level",
+    "title": "Built for how each level actually works",
+    "subtitle": "From the Ministry's national view down to a single researcher's next submission — the same data, shaped for what each level needs to decide.",
+    "tab_ministry": "Ministry",
+    "tab_university": "University",
+    "tab_student": "Researchers & Students",
+    "tab_employee": "Platform Staff",
+    "ministry_title": "One national view for evidence-based decisions",
+    "ministry_desc": "A live picture of the country's research activity — used to direct funding, partnerships, and policy.",
+    "ministry_point1": "Live national dashboards — researchers, output, funding and international rankings in one place.",
+    "ministry_point2": "National research priorities, with a running gap analysis between what the country needs and what is actually being produced.",
+    "ministry_point3": "A partnership and funding network matched to each priority and field of research.",
+    "ministry_point4": "Every recommendation ships with its evidence and source — the decision always stays with the Ministry.",
+    "university_title": "Research quality and accreditation, in one place",
+    "university_desc": "Everything a university needs to manage, prove, and improve its research performance.",
+    "university_point1": "A complete institutional research profile — researchers, publications and projects gathered automatically.",
+    "university_point2": "Readiness indicators for local accreditation and international rankings such as QS and THE.",
+    "university_point3": "Benchmark your performance against peer universities and the national average.",
+    "university_point4": "Improvement plans grounded in data, not guesswork.",
+    "student_title": "From research idea to publication — one clear path",
+    "student_desc": "Every stage of the research journey, supported end to end.",
+    "student_point1": "Submit research and track its review status with full transparency.",
+    "student_point2": "An AI assistant that suggests titles, refines academic writing, and reviews drafts with you.",
+    "student_point3": "Funding and grant opportunities matched to your research field.",
+    "student_point4": "A collaboration network with researchers and institutions across Iraq.",
+    "employee_title": "Reliable operating tools, day to day",
+    "employee_desc": "The controls the platform's own team relies on to keep it running smoothly and fairly.",
+    "employee_point1": "Manage universities, colleges and user accounts from one control panel.",
+    "employee_point2": "Review and action requests coming in from researchers and universities.",
+    "employee_point3": "Data-quality checks before information moves up to any higher level.",
+    "employee_point4": "A full audit trail for every action, to keep the whole system accountable.",
+    "cta": "Register for this level",
+    "types": {
+      "ministry": {
+        "tagline": "One national vantage point over every university, in real time.",
+        "detail1": "Live cross-university dashboards — researchers, output, funding, and international rankings.",
+        "detail2": "Continuous gap analysis between national research priorities and what is actually produced.",
+        "detail3": "A partnership and funding network matched to each priority and field.",
+        "detail4": "Certified readiness reports that support policy decisions."
+      },
+      "university": {
+        "tagline": "A single dashboard for every college, researcher, and readiness score.",
+        "detail1": "One dashboard covering all colleges, researchers, and published output.",
+        "detail2": "Accreditation and international ranking readiness indicators (QS, THE).",
+        "detail3": "Manage review and publication requests for the whole university.",
+        "detail4": "Improvement plans grounded in real data, not guesswork."
+      },
+      "college": {
+        "tagline": "Track every department's research output, ready to escalate.",
+        "detail1": "Track research output for every academic department.",
+        "detail2": "Performance reports ready to escalate to the university level.",
+        "detail3": "Manage faculty and student requests from one place.",
+        "detail4": "Match research against local accreditation standards."
+      },
+      "research_center": {
+        "tagline": "Document your center's output and find the right partners.",
+        "detail1": "Document your research center's projects and outputs.",
+        "detail2": "Build research partnerships with universities and institutions.",
+        "detail3": "Track available funding and grant opportunities.",
+        "detail4": "Publish results and match them to relevant specialized journals."
+      },
+      "undergrad": {
+        "tagline": "Everything for your graduation research, in one place.",
+        "detail1": "Submit your graduation research and track its review status.",
+        "detail2": "An AI assistant to help shape your title and introduction.",
+        "detail3": "A library of ready academic templates and formats.",
+        "detail4": "Direct communication with your academic supervisor."
+      },
+      "grad": {
+        "tagline": "From thesis research to a published, credible paper.",
+        "detail1": "Match your thesis research to suitable, credible journals.",
+        "detail2": "Language review and academic proofreading before submission.",
+        "detail3": "Funding and grant opportunities for graduate research.",
+        "detail4": "A collaboration network with researchers in your field."
+      },
+      "phd": {
+        "tagline": "Manage your dissertation from first idea to publication.",
+        "detail1": "Manage your dissertation's path from idea to publication.",
+        "detail2": "Advanced academic guidance and evaluation.",
+        "detail3": "Matching with credible international journals in your field.",
+        "detail4": "Collaboration tools with research centers worldwide."
+      },
+      "faculty": {
+        "tagline": "Supervise, review, and publish — all from one account.",
+        "detail1": "Supervise and track student research digitally.",
+        "detail2": "Provide academic consultations and peer reviews.",
+        "detail3": "Publish your own research output linked to your university.",
+        "detail4": "Join collaborative research projects across universities."
+      },
+      "researcher": {
+        "tagline": "An independent, professional research profile.",
+        "detail1": "Publish and document independent research.",
+        "detail2": "Collaborate with research centers and institutions.",
+        "detail3": "Apply for research funding and grant opportunities.",
+        "detail4": "Build a verified, professional research profile."
+      },
+      "employee": {
+        "tagline": "The controls that keep the whole platform running fairly.",
+        "detail1": "Manage universities, colleges, and user accounts in one panel.",
+        "detail2": "Review and action requests from researchers and universities.",
+        "detail3": "Data-quality checks before information is approved.",
+        "detail4": "A full audit trail for every action on the platform."
+      },
+      "service_provider": {
+        "tagline": "Receive requests, deliver work, build your track record.",
+        "detail1": "Receive translation, proofreading, or review requests.",
+        "detail2": "Deliver and track your work from a dedicated panel.",
+        "detail3": "Build a performance record and reliability score.",
+        "detail4": "Direct communication with researchers and universities."
+      }
+    },
+    "show_details": "View details",
+    "hide_details": "Hide details"
+  },
+  "ai_showcase": {
+    "badge": "Responsible AI",
+    "title": "AI proposes the evidence. The decision always stays human.",
+    "subtitle": "Every AI feature on this platform is built the same way: it surfaces patterns, drafts, and options for a person to review — it never makes the call on its own.",
+    "live_label": "Available today",
+    "roadmap_label": "On the national roadmap",
+    "roadmap_note": "Part of the national research-intelligence vision — rolling out to the Ministry layer in upcoming phases.",
+    "live1_title": "AI Research Assistant",
+    "live1_desc": "Suggests research titles, refines academic writing, and answers questions in plain conversation.",
+    "live2_title": "Journal Evaluation & Selection",
+    "live2_desc": "AI-assisted matching of your paper to suitable, credible journals for your field.",
+    "live3_title": "Review & Proofreading",
+    "live3_desc": "AI-supported language review and academic proofreading before submission.",
+    "roadmap1_title": "Trend Detection",
+    "roadmap1_desc": "Spotting emerging and declining research fields across the whole country.",
+    "roadmap2_title": "Priority Gap Analysis",
+    "roadmap2_desc": "Comparing national research priorities against what is actually being researched.",
+    "roadmap3_title": "Partner & Funding Matching",
+    "roadmap3_desc": "Suggesting the right collaborators and funding opportunities — with the reasoning shown.",
+    "roadmap4_title": "Data-Quality & Anomaly Detection",
+    "roadmap4_desc": "Flagging inconsistent or unusual figures for human review before they reach a dashboard.",
+    "roadmap5_title": "Policy Evidence Packs",
+    "roadmap5_desc": "Drafting an evidence-based brief for a specific policy question — for officials to review and decide."
   }
 }

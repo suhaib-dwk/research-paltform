@@ -190,7 +190,7 @@ const AdminSettings = () => {
           { id: 'hero', ar: 'البانر', en: 'Hero' },
           { id: 'ai', ar: 'الذكاء الاصطناعي', en: 'AI' }
         ].map(tab => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === tab.id ? 'bg-[#e8623a] text-white shadow' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e]'}`}>
+          <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === tab.id ? 'bg-brand-orange text-white shadow' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e]'}`}>
             {currentLang === 'ar' ? tab.ar : tab.en}
           </button>
         ))}
@@ -198,18 +198,18 @@ const AdminSettings = () => {
 
       {activeTab === 'general' && (
         <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-sm border border-gray-200 dark:border-[#3a322c]/60 p-6 md:p-8">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><Settings className="w-6 h-6 text-[#e8623a]" /> الإعدادات العامة</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2"><Settings className="w-6 h-6 text-brand-orange" /> الإعدادات العامة</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">اسم الموقع (عربي)</label><input value={formData.site_name_ar || ''} onChange={e => handleTextChange('site_name_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" /></div>
-            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Site Name (English)</label><input value={formData.site_name_en || ''} onChange={e => handleTextChange('site_name_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" /></div>
-            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">الاسم الفرعي (عربي)</label><input value={formData.site_tagline_ar || ''} onChange={e => handleTextChange('site_tagline_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" /></div>
-            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Tagline (English)</label><input value={formData.site_tagline_en || ''} onChange={e => handleTextChange('site_tagline_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">اسم الموقع (عربي)</label><input value={formData.site_name_ar || ''} onChange={e => handleTextChange('site_name_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Site Name (English)</label><input value={formData.site_name_en || ''} onChange={e => handleTextChange('site_name_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">الاسم الفرعي (عربي)</label><input value={formData.site_tagline_ar || ''} onChange={e => handleTextChange('site_tagline_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Tagline (English)</label><input value={formData.site_tagline_en || ''} onChange={e => handleTextChange('site_tagline_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" /></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             {['site_logo', 'site_favicon'].map(key => (
               <div key={key} className="space-y-3">
                 <label className="text-sm font-bold text-gray-600 dark:text-gray-400">{key === 'site_logo' ? 'شعار الموقع (Logo)' : 'أيقونة التبويب (Favicon)'}</label>
-                <div className="border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl p-4 text-center hover:border-[#e8623a] transition-colors relative">
+                <div className="border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl p-4 text-center hover:border-brand-orange transition-colors relative">
                   <img src={previews[key] || resolveUploadUrl(formData[key]) || 'https://via.placeholder.com/100'} alt="" className={`${key === 'site_logo' ? 'w-24 h-24' : 'w-16 h-16'} object-contain mx-auto mb-3 rounded-lg bg-gray-50 dark:bg-[#1a1613] p-1`} />
                   <input type="file" accept="image/*" onChange={e => handleFileChange(e, key)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1"><Upload className="w-4 h-4" /> اضغط للرفع</p>
@@ -217,7 +217,7 @@ const AdminSettings = () => {
               </div>
             ))}
           </div>
-          <button onClick={handleSave} disabled={isSaving} className="mt-8 bg-[#e8623a] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors disabled:bg-[#e8623a]/50">
+          <button onClick={handleSave} disabled={isSaving} className="mt-8 bg-brand-orange text-white px-8 py-3 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors disabled:bg-brand-orange/50">
             {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} حفظ الإعدادات
           </button>
         </div>
@@ -228,14 +228,14 @@ const AdminSettings = () => {
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">نصوص البانر الرئيسي</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 -mt-4 mb-6">هذه النصوص تظهر فوق صور البانر المتحركة في الصفحة الرئيسية</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">الشارة الصغيرة (عربي)</label><input value={formData.hero_badge_ar || ''} onChange={e => handleTextChange('hero_badge_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" /></div>
-            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Badge (English)</label><input value={formData.hero_badge_en || ''} onChange={e => handleTextChange('hero_badge_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">الشارة الصغيرة (عربي)</label><input value={formData.hero_badge_ar || ''} onChange={e => handleTextChange('hero_badge_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Badge (English)</label><input value={formData.hero_badge_en || ''} onChange={e => handleTextChange('hero_badge_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" /></div>
           </div>
-          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">العنوان الرئيسي (عربي)</label><input value={formData.hero_title_ar || ''} onChange={e => handleTextChange('hero_title_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none text-lg font-bold" /></div>
-          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Main Title (English)</label><input value={formData.hero_title_en || ''} onChange={e => handleTextChange('hero_title_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none text-lg font-bold" /></div>
-          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">الوصف (عربي)</label><textarea rows={4} value={formData.hero_desc_ar || ''} onChange={e => handleTextChange('hero_desc_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none resize-none" /></div>
-          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Description (English)</label><textarea rows={4} value={formData.hero_desc_en || ''} onChange={e => handleTextChange('hero_desc_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none resize-none" /></div>
-          <button onClick={handleSave} disabled={isSaving} className="bg-[#e8623a] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors disabled:bg-[#e8623a]/50">
+          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">العنوان الرئيسي (عربي)</label><input value={formData.hero_title_ar || ''} onChange={e => handleTextChange('hero_title_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none text-lg font-bold" /></div>
+          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Main Title (English)</label><input value={formData.hero_title_en || ''} onChange={e => handleTextChange('hero_title_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none text-lg font-bold" /></div>
+          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">الوصف (عربي)</label><textarea rows={4} value={formData.hero_desc_ar || ''} onChange={e => handleTextChange('hero_desc_ar', e.target.value)} className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none" /></div>
+          <div className="space-y-2"><label className="text-sm font-bold text-gray-600 dark:text-gray-400">Description (English)</label><textarea rows={4} value={formData.hero_desc_en || ''} onChange={e => handleTextChange('hero_desc_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none" /></div>
+          <button onClick={handleSave} disabled={isSaving} className="bg-brand-orange text-white px-8 py-3 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors disabled:bg-brand-orange/50">
             {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} حفظ النصوص
           </button>
         </div>
@@ -243,8 +243,8 @@ const AdminSettings = () => {
 
       {activeTab === 'ai' && (
         <div className="space-y-6">
-          <div className="bg-orange-50 dark:bg-[#e8623a]/10 border border-orange-200 dark:border-[#e8623a]/20 rounded-xl p-4 flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-[#e8623a] mt-0.5 flex-shrink-0" />
+          <div className="bg-orange-50 dark:bg-brand-orange/10 border border-orange-200 dark:border-brand-orange/20 rounded-xl p-4 flex items-start gap-3">
+            <Sparkles className="w-5 h-5 text-brand-orange mt-0.5 flex-shrink-0" />
             <p className="text-sm text-orange-700 dark:text-[#f0916d]">
               {currentLang === 'ar'
                 ? 'فعّل مزوّد ذكاء اصطناعي واحد على الأقل وأدخل مفتاح API خاصته لتفعيل ميزات الذكاء الاصطناعي بالمنصة (مثل تقييم جاهزية الجامعة). المفاتيح تُخزَّن مشفّرة ولا تُعرض مجددًا بعد الحفظ.'
@@ -253,7 +253,7 @@ const AdminSettings = () => {
           </div>
 
           {aiLoading ? (
-            <div className="flex items-center justify-center p-12"><Loader2 className="w-6 h-6 text-[#e8623a] animate-spin" /></div>
+            <div className="flex items-center justify-center p-12"><Loader2 className="w-6 h-6 text-brand-orange animate-spin" /></div>
           ) : (
             AI_PROVIDER_DEFS.map((def) => {
               const provider = aiProviders[def.key] || {};
@@ -263,7 +263,7 @@ const AdminSettings = () => {
                 <div key={def.key} className="bg-white dark:bg-[#211c18] rounded-2xl shadow-sm border border-gray-200 dark:border-[#3a322c]/60 p-6 md:p-8">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <KeyRound className="w-5 h-5 text-[#e8623a]" /> {def.label}
+                      <KeyRound className="w-5 h-5 text-brand-orange" /> {def.label}
                     </h2>
                     <label className="inline-flex items-center gap-2.5 cursor-pointer select-none">
                       <span className="text-sm font-bold text-gray-600 dark:text-gray-400">
@@ -271,7 +271,7 @@ const AdminSettings = () => {
                       </span>
                       <span
                         onClick={() => handleAiToggle(def.key)}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${provider.is_enabled ? 'bg-[#e8623a]' : 'bg-gray-300 dark:bg-[#3a322c]'}`}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${provider.is_enabled ? 'bg-brand-orange' : 'bg-gray-300 dark:bg-[#3a322c]'}`}
                       >
                         <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${provider.is_enabled ? (currentLang === 'ar' ? '-translate-x-6' : 'translate-x-6') : (currentLang === 'ar' ? '-translate-x-1' : 'translate-x-1')}`} />
                       </span>
@@ -295,7 +295,7 @@ const AdminSettings = () => {
                           value={aiKeyInputs[def.key] || ''}
                           onChange={(e) => handleAiKeyInputChange(def.key, e.target.value)}
                           placeholder={provider.has_key ? (currentLang === 'ar' ? 'اتركه فارغًا للإبقاء على المفتاح الحالي' : 'Leave empty to keep current key') : def.keyHint}
-                          className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 pe-11 focus:ring-2 focus:ring-[#e8623a] outline-none font-mono text-sm"
+                          className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 pe-11 focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
                         />
                         <button
                           type="button"
@@ -315,7 +315,7 @@ const AdminSettings = () => {
                         value={provider.model ?? def.defaultModel}
                         onChange={(e) => handleAiModelChange(def.key, e.target.value)}
                         placeholder={def.defaultModel}
-                        className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#e8623a] outline-none font-mono text-sm"
+                        className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none font-mono text-sm"
                       />
                       <p className="text-xs text-gray-400 dark:text-gray-500">{def.modelHint}</p>
                     </div>
@@ -325,7 +325,7 @@ const AdminSettings = () => {
                     <button
                       onClick={() => handleSaveAiProvider(def.key)}
                       disabled={aiSavingKey === def.key}
-                      className="bg-[#e8623a] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors disabled:bg-[#e8623a]/50"
+                      className="bg-brand-orange text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors disabled:bg-brand-orange/50"
                     >
                       {aiSavingKey === def.key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                       {currentLang === 'ar' ? 'حفظ' : 'Save'}

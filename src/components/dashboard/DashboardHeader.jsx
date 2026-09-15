@@ -75,10 +75,10 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
           />
           {/* البديل (يظهر عند فشل تحميل الصورة) */}
           <div style={{ display: 'none' }} className="items-center gap-2.5">
-            <div className="w-9 h-9 bg-gradient-to-br from-[#e8623a] to-[#f0916d] rounded-lg flex items-center justify-center shadow-md shadow-[#e8623a]/20">
+            <div className="w-9 h-9 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-lg flex items-center justify-center shadow-md shadow-brand-orange/20">
               <GraduationCap className="w-5 h-5 text-white" />
             </div>
-            <span className="hidden sm:block text-gray-900 dark:text-white font-bold text-sm group-hover:text-[#e8623a] transition-colors">
+            <span className="hidden sm:block text-gray-900 dark:text-white font-bold text-sm group-hover:text-brand-orange transition-colors">
               {siteName}
             </span>
           </div>
@@ -109,7 +109,7 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
           className="relative p-2.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-xl transition-colors"
         >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-2 end-2 w-2 h-2 bg-[#e8623a] rounded-full ring-2 ring-white dark:ring-[#1a1613]" />
+          <span className="absolute top-2 end-2 w-2 h-2 bg-brand-orange rounded-full ring-2 ring-white dark:ring-[#1a1613]" />
         </button>
 
         <div className="w-px h-8 bg-gray-200 dark:bg-[#3a322c] hidden sm:block" />
@@ -121,14 +121,14 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
             aria-haspopup="true"
             className={`flex items-center gap-2.5 p-1.5 pe-2.5 rounded-2xl transition-all duration-200 ${showUserMenu ? 'bg-gray-100 dark:bg-[#2a231e] shadow-xl shadow-black/10 dark:shadow-black/30' : 'hover:bg-gray-100 dark:hover:bg-[#2a231e]/50'}`}
           >
-            <div className="w-9 h-9 bg-gradient-to-br from-[#e8623a] to-[#f0916d] text-white rounded-xl flex items-center justify-center text-sm font-black shadow-sm">
+            <div className="w-9 h-9 bg-gradient-to-br from-brand-orange to-[#f0916d] text-white rounded-xl flex items-center justify-center text-sm font-black shadow-sm">
               {userInitial}
             </div>
             <div className="hidden sm:block text-start">
               <p className="text-gray-900 dark:text-white text-xs font-bold leading-tight max-w-[130px] truncate">{userData?.name || 'User'}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#e8623a]" />
-                <p className="text-[10px] text-[#e8623a] font-semibold leading-tight">{roleName}</p>
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-orange" />
+                <p className="text-[10px] text-brand-orange font-semibold leading-tight">{roleName}</p>
               </div>
             </div>
             <ChevronDown className={`w-4 h-4 text-gray-400 dark:text-gray-500 hidden sm:block transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} />
@@ -146,7 +146,7 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
               >
                 <div className="p-4 border-b border-gray-100 dark:border-[#3a322c]">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 bg-gradient-to-br from-[#e8623a] to-[#f0916d] text-white rounded-xl flex items-center justify-center text-base font-black">{userInitial}</div>
+                    <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] text-white rounded-xl flex items-center justify-center text-base font-black">{userInitial}</div>
                     <div className="flex-1 min-w-0">
                       <p className="text-gray-900 dark:text-white text-sm font-bold truncate">{userData?.name || 'User'}</p>
                       <p className="text-gray-500 dark:text-gray-400 text-xs truncate" dir="ltr">{userData?.email || ''}</p>
@@ -155,11 +155,11 @@ const DashboardHeader = ({ onMenuToggle, onLogout }) => {
                 </div>
 
                 <div className="p-2">
-                  <Link ref={firstItemRef} to="/dashboard/account" role="menuitem" tabIndex={0} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
-                    <User className="w-4 h-4 text-[#e8623a]" />
+                  <Link ref={firstItemRef} to="/dashboard/account" role="menuitem" tabIndex={0} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-orange">
+                    <User className="w-4 h-4 text-brand-orange" />
                     {t('account.title')}
                   </Link>
-                  <Link to="/dashboard/settings" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#e8623a]">
+                  <Link to="/dashboard/settings" role="menuitem" tabIndex={-1} onClick={() => setShowUserMenu(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e] hover:text-gray-900 dark:hover:text-white rounded-xl transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brand-orange">
                     <Settings className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     {t('settings.title')}
                   </Link>

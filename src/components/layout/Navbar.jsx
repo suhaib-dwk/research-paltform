@@ -58,8 +58,11 @@ const Navbar = () => {
 
   return (
     // تم التعديل هنا: إضافة sticky top-0 z-50 لتثبيت القائمة
-    <header className="sticky top-0 z-50 w-full bg-brand-cream-hero py-4 px-4 md:px-8 transition-all duration-300">
-      <div className="max-w-7xl mx-auto bg-brand-cream rounded-full shadow-sm px-4 sm:px-6 h-16 flex items-center justify-between">
+    // ✅ الهيدر على كامل عرض الشاشة الآن — لا max-w-7xl/mx-auto يحصر الشريط
+    // بعرض جزئي، ولا py/px خارجي يترك هامشاً حول حافته، ولا rounded-full
+    // (زوايا قائمة الآن) — بطلب صريح.
+    <header className="sticky top-0 z-50 w-full bg-white transition-all duration-300">
+      <div className="w-full bg-white shadow-sm border-b border-gray-100 px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between">
         {/* اللوجو */}
         <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0">
           <img
@@ -102,15 +105,10 @@ const Navbar = () => {
           })}
         </nav>
 
-        {/* أزرار - ديسكتوب */}
+        {/* ✅ أزرار - ديسكتوب — زر "إنشاء حساب" محذوف بطلب صريح (يبقى "تسجيل
+            الدخول" فقط)، وزر اللغة انتقل ليصير بعد أزرار الدخول/لوحة التحكم
+            بدل قبلها. */}
         <div className="hidden lg:flex items-center gap-2.5">
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-brand-muted hover:text-brand-ink rounded-full transition-all duration-200"
-          >
-            <Globe className="w-3.5 h-3.5" />
-          </button>
-
           {isAdmin ? (
             <>
               <Link
@@ -129,21 +127,20 @@ const Navbar = () => {
               </button>
             </>
           ) : (
-            <>
-              <Link
-                to="/login"
-                className="px-5 py-2 text-sm font-medium text-brand-ink bg-white border border-brand-ink/15 rounded-full hover:border-brand-ink/30 transition-all duration-200"
-              >
-                {t('nav.login')}
-              </Link>
-              <Link
-                to="/register"
-                className="bg-brand-orange text-white px-5 py-2 text-sm font-semibold rounded-full hover:bg-brand-orange-dark transition-all duration-300"
-              >
-                {t('nav.register')}
-              </Link>
-            </>
+            <Link
+              to="/login"
+              className="px-5 py-2 text-sm font-medium text-brand-ink bg-white border border-brand-ink/15 rounded-full hover:border-brand-ink/30 transition-all duration-200"
+            >
+              {t('nav.login')}
+            </Link>
           )}
+
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-brand-muted hover:text-brand-ink rounded-full transition-all duration-200"
+          >
+            <Globe className="w-3.5 h-3.5" />
+          </button>
         </div>
 
         {/* زر القائمة - موبايل */}
@@ -157,7 +154,7 @@ const Navbar = () => {
 
       {/* قائمة الموبايل */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden max-w-7xl mx-auto mt-2 rounded-3xl bg-brand-cream shadow-sm z-40 relative">
+        <div className="lg:hidden max-w-7xl mx-auto mt-2 rounded-3xl bg-white shadow-sm border border-gray-100 z-40 relative">
           <div className="px-6 py-6 space-y-5">
             {/* لوجو موبايل */}
             <div className="flex items-center gap-3 pb-4 border-b border-brand-ink/10">
@@ -217,22 +214,13 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={closeMobileMenu}
-                    className="text-center border border-brand-ink/15 text-brand-ink bg-white px-4 py-3 text-sm font-medium rounded-xl hover:border-brand-ink/30 transition-colors"
-                  >
-                    {t('nav.login')}
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={closeMobileMenu}
-                    className="text-center bg-brand-orange text-white px-4 py-3 text-sm font-semibold rounded-xl hover:bg-brand-orange-dark transition-all"
-                  >
-                    {t('nav.register')}
-                  </Link>
-                </>
+                <Link
+                  to="/login"
+                  onClick={closeMobileMenu}
+                  className="text-center border border-brand-ink/15 text-brand-ink bg-white px-4 py-3 text-sm font-medium rounded-xl hover:border-brand-ink/30 transition-colors"
+                >
+                  {t('nav.login')}
+                </Link>
               )}
               <button
                 onClick={() => { toggleLanguage(); closeMobileMenu(); }}

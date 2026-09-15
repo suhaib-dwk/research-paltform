@@ -365,17 +365,17 @@ const ReviewServicePage = () => {
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
                 <div className="bg-white dark:bg-[#211c18] w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-[#3a322c] overflow-hidden animate-in zoom-in-95 duration-200">
                     {/* Header */}
-                    <div className="relative p-6 bg-gradient-to-r from-[#e8623a]/10 to-transparent border-b border-gray-100 dark:border-white/5">
+                    <div className="relative p-6 bg-gradient-to-r from-brand-orange/10 to-transparent border-b border-gray-100 dark:border-white/5">
                         <button onClick={onClose} className="absolute top-4 end-4 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                             <X className="w-5 h-5" />
                         </button>
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-[#e8623a] text-white flex items-center justify-center shadow-lg shadow-[#e8623a]/20">
+                            <div className="w-12 h-12 rounded-xl bg-brand-orange text-white flex items-center justify-center shadow-lg shadow-brand-orange/20">
                                 <service.icon className="w-6 h-6" />
                             </div>
                             <div className="flex-1 pt-1">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-xs font-bold text-[#e8623a] bg-[#e8623a]/10 px-2 py-0.5 rounded">{service.code}</span>
+                                    <span className="text-xs font-bold text-brand-orange bg-brand-orange/10 px-2 py-0.5 rounded">{service.code}</span>
                                     {renderExecutionType(service.execution_type)}
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -408,7 +408,7 @@ const ReviewServicePage = () => {
                                 <ul className="space-y-2">
                                     {(isAr ? service.inputs_ar : service.inputs_en).map((item, i) => (
                                         <li key={i} className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
-                                            <span className="w-1 h-1 rounded-full bg-[#e8623a] mt-1.5 flex-shrink-0" />
+                                            <span className="w-1 h-1 rounded-full bg-brand-orange mt-1.5 flex-shrink-0" />
                                             {item}
                                         </li>
                                     ))}
@@ -437,7 +437,7 @@ const ReviewServicePage = () => {
                                 {isAr ? 'المدة المتوقعة' : 'Expected Duration'}
                             </span>
                             <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900 dark:text-white">
-                                <Clock className="w-3.5 h-3.5 text-[#e8623a]" />
+                                <Clock className="w-3.5 h-3.5 text-brand-orange" />
                                 {isAr ? service.duration_ar : service.duration_en}
                             </div>
                         </div>
@@ -488,15 +488,15 @@ const ReviewServicePage = () => {
                         <button 
                             key={svc.id} 
                             onClick={() => setActiveServiceModal(svc)}
-                            className="group text-start p-4 rounded-xl border border-gray-100 dark:border-[#3a322c] hover:border-[#e8623a]/50 hover:shadow-lg hover:shadow-[#e8623a]/10 transition-all bg-gray-50/50 dark:bg-[#1a1613]/50"
+                            className="group text-start p-4 rounded-xl border border-gray-100 dark:border-[#3a322c] hover:border-brand-orange/50 hover:shadow-lg hover:shadow-brand-orange/10 transition-all bg-gray-50/50 dark:bg-[#1a1613]/50"
                         >
                             <div className="flex items-start justify-between mb-3">
-                                <div className="w-10 h-10 rounded-lg bg-white dark:bg-[#2a231e] flex items-center justify-center border border-gray-200 dark:border-[#3a322c] text-gray-600 dark:text-gray-300 group-hover:text-[#e8623a] group-hover:border-[#e8623a]/20 transition-colors">
+                                <div className="w-10 h-10 rounded-lg bg-white dark:bg-[#2a231e] flex items-center justify-center border border-gray-200 dark:border-[#3a322c] text-gray-600 dark:text-gray-300 group-hover:text-brand-orange group-hover:border-brand-orange/20 transition-colors">
                                     <svc.icon className="w-5 h-5" />
                                 </div>
                                 <span className="text-[10px] font-mono font-bold text-gray-400">{svc.code}</span>
                             </div>
-                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1 group-hover:text-[#e8623a] transition-colors line-clamp-1">
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1 group-hover:text-brand-orange transition-colors line-clamp-1">
                                 {isAr ? svc.title_ar : svc.title_en}
                             </h3>
                             <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
@@ -514,7 +514,7 @@ const ReviewServicePage = () => {
             {/* ─── نموذج طلب التحكيم (الجزء الأصلي) ─── */}
             <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-[#e8623a]" />
+                    <Shield className="w-5 h-5 text-brand-orange" />
                     {isAr ? 'طلب تحكيم بحثي' : 'Research Review Request'}
                 </h2>
 
@@ -547,12 +547,12 @@ const ReviewServicePage = () => {
                             const isLocked = !isActive;
                             return (
                                 <div key={level.id}
-                                    className={`relative p-4 rounded-xl border-2 text-center transition-all ${isActive ? 'border-[#e8623a] bg-[#e8623a]/5' : 'border-gray-100 dark:border-[#3a322c]/20 opacity-35 cursor-not-allowed'}`}>
+                                    className={`relative p-4 rounded-xl border-2 text-center transition-all ${isActive ? 'border-brand-orange bg-brand-orange/5' : 'border-gray-100 dark:border-[#3a322c]/20 opacity-35 cursor-not-allowed'}`}>
                                     <span className="text-3xl block mb-2">{level.icon}</span>
-                                    <span className={`text-sm font-bold block ${isActive ? 'text-[#e8623a]' : 'text-gray-500 dark:text-gray-500'}`}>
+                                    <span className={`text-sm font-bold block ${isActive ? 'text-brand-orange' : 'text-gray-500 dark:text-gray-500'}`}>
                                         {isAr ? level.label_ar : level.label_en}
                                     </span>
-                                    {isActive && <div className="absolute top-2 end-2 w-5 h-5 bg-[#e8623a] rounded-full flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>}
+                                    {isActive && <div className="absolute top-2 end-2 w-5 h-5 bg-brand-orange rounded-full flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>}
                                     {isLocked && <div className="absolute inset-0 flex items-center justify-center"><div className="w-7 h-7 bg-gray-200 dark:bg-[#3a322c] rounded-full flex items-center justify-center"><Lock className="w-3 h-3 text-gray-400" /></div></div>}
                                 </div>
                             );
@@ -627,8 +627,8 @@ const ReviewServicePage = () => {
                                             onClick={() => setShowParentDropdown(!showParentDropdown)}
                                             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 text-sm transition-all ${
                                                 selectedParentId
-                                                    ? 'border-[#e8623a] bg-[#e8623a]/5 text-gray-900 dark:text-white'
-                                                    : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-400 dark:text-gray-600 hover:border-[#e8623a]/40'
+                                                    ? 'border-brand-orange bg-brand-orange/5 text-gray-900 dark:text-white'
+                                                    : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-400 dark:text-gray-600 hover:border-brand-orange/40'
                                             }`}>
                                             <span className="truncate">
                                                 {selectedParentReq
@@ -648,13 +648,13 @@ const ReviewServicePage = () => {
                                                         onClick={() => handleSelectParent(req)}
                                                         className={`w-full text-start px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-[#3a322c]/30 last:border-0 ${
                                                             String(req.id) === selectedParentId
-                                                                ? 'bg-[#e8623a]/10 text-[#e8623a] font-semibold'
+                                                                ? 'bg-brand-orange/10 text-brand-orange font-semibold'
                                                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2a231e]'
                                                         }`}>
                                                         <p className="truncate font-medium">{req.title_ar || req.title_en}</p>
                                                         <p className="text-[10px] text-gray-400 mt-0.5">
                                                             {req.meta_ar || req.meta_en} · {req.date}
-                                                            {req.score != null && <span className="ms-2 text-[#e8623a] font-bold">{req.score}/100</span>}
+                                                            {req.score != null && <span className="ms-2 text-brand-orange font-bold">{req.score}/100</span>}
                                                         </p>
                                                     </button>
                                                 ))}
@@ -688,7 +688,7 @@ const ReviewServicePage = () => {
                                 className={`w-full px-4 py-3 rounded-xl border text-sm transition ${
                                     needsParentSelection
                                         ? 'border-gray-200 dark:border-[#3a322c] bg-gray-100 dark:bg-[#1a1613]/60 text-gray-700 dark:text-gray-400 cursor-not-allowed'
-                                        : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/30 focus:border-[#e8623a]'
+                                        : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange'
                                 }`}
                             />
                         </div>
@@ -699,7 +699,7 @@ const ReviewServicePage = () => {
                                 <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                                     {isAr ? 'رفع الملف' : 'Upload File'} <span className="text-rose-500">*</span>
                                 </label>
-                                <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-[#3a322c] hover:border-[#e8623a]/50 hover:bg-[#e8623a]/5'}`}>
+                                <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-[#3a322c] hover:border-brand-orange/50 hover:bg-brand-orange/5'}`}>
                                     <input type="file" className="hidden"
                                         onChange={(e) => {
                                             const selected = e.target.files[0];
@@ -732,7 +732,7 @@ const ReviewServicePage = () => {
                                         </div>
                                     ) : (
                                         <>
-                                            <Upload className="w-7 h-7 text-gray-300 dark:text-gray-600 group-hover:text-[#e8623a] transition-colors mb-2" />
+                                            <Upload className="w-7 h-7 text-gray-300 dark:text-gray-600 group-hover:text-brand-orange transition-colors mb-2" />
                                             <span className="text-xs text-gray-400 font-medium">{isAr ? 'اسحب الملف أو انقر للاختيار' : 'Drag file or click to browse'}</span>
                                             <span className="text-[10px] text-gray-300 dark:text-gray-600 mt-1">PDF, DOC, DOCX — Max 20MB</span>
                                         </>
@@ -764,7 +764,7 @@ const ReviewServicePage = () => {
                             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملاحظات (اختياري)' : 'Notes (Optional)'}</label>
                             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
                                 placeholder={isAr ? 'أي تفاصيل إضافية تود إيصالها للمحكم...' : 'Any additional details for the reviewer...'}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#e8623a]/30 focus:border-[#e8623a] transition resize-none"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition resize-none"
                             />
                         </div>
 
@@ -791,14 +791,14 @@ const ReviewServicePage = () => {
                                 {needsParentSelection && selectedParentReq && (
                                     <div className="col-span-2">
                                         <span className="text-gray-400">{isAr ? 'مبني على:' : 'Based on:'}</span>
-                                        <span className="ms-1 font-semibold text-[#e8623a]">#{selectedParentReq.id} — {selectedParentReq.title_ar || selectedParentReq.title_en}</span>
+                                        <span className="ms-1 font-semibold text-brand-orange">#{selectedParentReq.id} — {selectedParentReq.title_ar || selectedParentReq.title_en}</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
                         <button type="submit" disabled={!isFormValid || submitting}
-                            className="w-full py-3.5 bg-gradient-to-l from-[#e8623a] to-[#f0916d] hover:from-[#b8953e] hover:to-[#d6b95e] disabled:from-gray-300 disabled:to-gray-300 disabled:dark:from-gray-600 disabled:dark:to-gray-600 text-white disabled:text-gray-500 dark:disabled:text-gray-500 font-bold text-sm rounded-xl transition-all shadow-lg shadow-[#e8623a]/25 disabled:shadow-none flex items-center justify-center gap-2.5">
+                            className="w-full py-3.5 bg-gradient-to-l from-brand-orange to-[#f0916d] hover:from-[#b8953e] hover:to-[#d6b95e] disabled:from-gray-300 disabled:to-gray-300 disabled:dark:from-gray-600 disabled:dark:to-gray-600 text-white disabled:text-gray-500 dark:disabled:text-gray-500 font-bold text-sm rounded-xl transition-all shadow-lg shadow-brand-orange/25 disabled:shadow-none flex items-center justify-center gap-2.5">
                             {submitting
                                 ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</>
                                 : <><Send className="w-4 h-4" />{isAr ? 'إرسال طلب التحكيم' : 'Submit Review Request'}</>
@@ -816,8 +816,8 @@ const ReviewServicePage = () => {
                 icon={Shield}
                 title={{ ar: 'خدمة التحكيم', en: 'Review Service' }}
                 description={{ ar: 'احصل على تحكيم أكاديمي موثوق لبحثك من متخصصين', en: 'Get reliable academic review from specialists' }}
-                gradient="from-[#e8623a] to-[#f0916d]"
-                shadowColor="shadow-[#e8623a]/20"
+                gradient="from-brand-orange to-[#f0916d]"
+                shadowColor="shadow-brand-orange/20"
                 // تمرير دليل فارغ أو بسيط لأننا صممنا دليلنا الخاص (U01-U06) داخل formContent
                 guideSections={[]} 
                 mockRequests={requests}

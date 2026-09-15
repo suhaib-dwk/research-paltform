@@ -61,7 +61,7 @@ const InitialReviewPage = () => {
         <div className="h-2 bg-gradient-to-l from-emerald-500 to-emerald-700" />
         <div className="p-6">
           <div className="flex items-center gap-2 mb-4 flex-wrap text-xs">
-            <Link to="/dashboard" className="text-gray-400 hover:text-[#e8623a]">{isAr ? 'الرئيسية' : 'Home'}</Link>
+            <Link to="/dashboard" className="text-gray-400 hover:text-brand-orange">{isAr ? 'الرئيسية' : 'Home'}</Link>
             <ChevronRight className={`w-3 h-3 text-gray-300 ${isRTL ? 'rotate-180' : ''}`} />
             <span className="text-emerald-600 font-semibold">{title}</span>
           </div>
