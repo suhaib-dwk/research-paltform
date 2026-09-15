@@ -66,11 +66,16 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
         <img
           src={image}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover ${dark ? "brightness-[0.35]" : "opacity-[0.16]"}`}
+          className={`absolute inset-0 w-full h-full object-cover ${dark ? "brightness-[0.35]" : "opacity-[0.6]"}`}
         />
       )}
       {dark && (
         <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/60 to-brand-ink/20 pointer-events-none"></div>
+      )}
+      {/* ✅ الهيرو الفاتح: الصورة أوضح (بلا طبقة بيضاء ثقيلة) مع تدرّج أبيض خفيف على
+          جهة النص فقط لضمان قراءته (بطلب صريح) */}
+      {!dark && image && (
+        <div className="absolute inset-0 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-white/75 via-white/35 to-white/0 pointer-events-none"></div>
       )}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute top-10 end-10 h-20 w-20 bg-brand-orange/20" />

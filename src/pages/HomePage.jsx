@@ -8,6 +8,8 @@ import {
 import { Link } from "react-router-dom";
 import { API_BASE_URL, resolveUploadUrl } from "../api";
 import { SiteContext } from "../SiteContext";
+import PillarsAccordion from "../components/home/PillarsAccordion";
+import { PILLARS, LAYERS, LAYER_ORDER } from "../data/pillarsContent";
 import {
   SERVICE_FAMILIES,
   SERVICES_CATALOGUE,
@@ -83,11 +85,12 @@ const HomePage = () => {
   // ✅ عائلة الخدمات النشطة بقسم "الخدمات" — مفاتيح SERVICE_FAMILIES
   const [activeFamily, setActiveFamily] = useState("journal");
 
+  // ✅ الشرائح الافتراضية (عند خلو home_slides): الرسوم المتحركة الأربع (SVG)
   const defaultSlides = [
-    { id: 1, image_url: "/Home/home03.jpg" },
-    { id: 2, image_url: "/Home/home05.jpg" },
-    { id: 3, image_url: "/Home/home04.png" },
-    { id: 4, image_url: "/Home/04.jpg" },
+    { id: 1, image_url: "/Home/anim/lab.svg" },
+    { id: 2, image_url: "/Home/anim/molecules.svg" },
+    { id: 3, image_url: "/Home/anim/books.svg" },
+    { id: 4, image_url: "/Home/anim/office.svg" },
   ];
   const bannerSlides = homeSlides.length > 0 ? homeSlides : defaultSlides;
 
@@ -170,19 +173,14 @@ const HomePage = () => {
     },
   ];
 
-  // ✅ حقائق من ملفات المنصة بدل الأرقام الوهمية السابقة
-  const facts = [
-    { value: "3", label: t("home.fact1_label") },
-    { value: "4", label: t("home.fact2_label") },
-    { value: String(SERVICES_CATALOGUE.length), label: t("home.fact3_label") },
-    { value: "2025–2035", label: t("home.fact4_label"), accent: true, ltr: true },
-  ];
+  // ✅ الإحصائيات في الشريط العائم على حافة الهيرو (الأرقام والعناوين بطلب صريح)
+  const stats = [1, 2, 3, 4].map((n) => ({ value: t(`home.stat${n}_value`), label: t(`home.stat${n}_label`) }));
 
   // ✅ المكونات الثلاثة للمنصة بترتيب الاحتياج (المقترح، القسم 2)
   const components = [
     {
       number: "01",
-      image: "/Home/home01.jpg",
+      image: "/Home/anim/office.svg",
       to: "/audience/ministry",
       title: t("home.comp1_title"),
       desc: t("home.comp1_desc"),
@@ -191,7 +189,7 @@ const HomePage = () => {
     },
     {
       number: "02",
-      image: "/Home/home04.png",
+      image: "/Home/anim/books.svg",
       to: "/audience/university",
       title: t("home.comp2_title"),
       desc: t("home.comp2_desc"),
@@ -200,7 +198,7 @@ const HomePage = () => {
     },
     {
       number: "03",
-      image: "/Home/04.jpg",
+      image: "/Home/anim/lab.svg",
       to: "/services",
       title: t("home.comp3_title"),
       desc: t("home.comp3_desc"),
@@ -211,11 +209,23 @@ const HomePage = () => {
 
   // ✅ الركائز التقنية الأربع — صف مضغوط تحت المكونات، كل بطاقة تفتح صفحة
   // الركيزة المستقلة (/pillar/:key — PillarPage.jsx)
+  // ✅ رسوم SVG متحركة (public/Home/anim) بدل الصور الثابتة — بطلب صريح
+  const ANIM = { digital: "/Home/anim/office.svg", ai: "/Home/anim/molecules.svg", automation: "/Home/anim/lab.svg", security: PILLARS.security?.image };
   const pillars = ["digital", "ai", "automation", "security"].map((key, i) => ({
     key,
     number: `0${i + 1}`,
+    image: ANIM[key],
     title: t(`home.tile${i + 1}_title`),
     desc: t(`home.tile${i + 1}_desc`),
+  }));
+
+  // ✅ الطبقات التشغيلية الثلاث بعناوين المقترح ووصفه (المنصة الرقمية / خدمات
+  // الذكاء الاصطناعي / شبكة الخبراء) — أكورديون "عن SOURCE"، ولكل طبقة صفحتها /pillar/:key
+  const operatingLayers = LAYER_ORDER.map((key) => ({
+    key,
+    image: LAYERS[key].image,
+    title: LAYERS[key][`name_${lang}`],
+    desc: LAYERS[key][`card_desc_${lang}`],
   }));
 
   // ✅ الطبقات التشغيلية الثلاث (المقترح: المنصة الرقمية / خدمات الذكاء
@@ -305,16 +315,20 @@ const HomePage = () => {
           <div className="container mx-auto px-6 w-full">
             {/* ✅ الهيرو = العنوان فقط، في الوسط — الشعار الصغير والوصف والزر محذوفة بطلب صريح */}
             <ScrollReveal className="flex flex-col items-center text-center">
-              <h1
-                className="text-[30px] sm:text-[38px] md:text-[52px] font-bold leading-[1.45] text-white max-w-4xl mx-auto [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
-                style={{ fontFamily: displayFont }}
-              >
-                {t("home.hero_title_pre")}
-                <span className="text-brand-orange">{t("home.hero_title_em")}</span>
-                {t("home.hero_title_post") && (
-                  <span className="block">{t("home.hero_title_post")}</span>
-                )}
-              </h1>
+              {/* ✅ بوكس أبيض شفاف خفيف (مع تمويه) خلف العنوان لإبرازه فوق الصورة — بطلب صريح */}
+              <div className="bg-black/30 backdrop-blur-[6px] border border-white/15 rounded-2xl px-7 sm:px-10 md:px-12 py-5 md:py-7 max-w-5xl">
+                {/* ✅ النص أبيض (ما عدا الكلمة البرتقالية) مع ظل خفيف للقراءة فوق البوكس الشفاف */}
+                <h1
+                  className="text-[30px] sm:text-[38px] md:text-[52px] font-bold leading-[1.45] text-white [text-shadow:0_2px_18px_rgba(0,0,0,0.45)]"
+                  style={{ fontFamily: displayFont }}
+                >
+                  {t("home.hero_title_pre")}
+                  <span className="text-brand-orange whitespace-nowrap">{t("home.hero_title_em")}</span>
+                  {t("home.hero_title_post") && (
+                    <span className="block">{t("home.hero_title_post")}</span>
+                  )}
+                </h1>
+              </div>
             </ScrollReveal>
           </div>
         </div>
@@ -348,9 +362,62 @@ const HomePage = () => {
       {/* ✅ flow-root يمنع انهيار الهامش السالب للشريط مع القسم (margin
           collapsing): بدونه كان القسم كله بخلفيته الرمادية ينسحب 32px فوق
           الهيرو فيبدو الشريط ملتصقًا بحافة الهيرو بدل أن يطفو عليها. */}
-      <section className="flow-root bg-gray-50 pb-16 md:pb-20 relative z-30">
+      <section className="flow-root bg-white relative z-30">
         <div className="container mx-auto px-6">
-          <div className="relative -mt-9 bg-white border border-gray-200 shadow-[0_16px_40px_-24px_rgba(31,26,23,0.35)] grid grid-cols-3">
+          {/* ✅ الشريط العائم على حافة الهيرو = إحصائيات (رقم + عنوان) بنفس تصميم
+              المستطيل الأبيض — بطلب صريح */}
+          <div className="relative -mt-9 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-[0_28px_50px_-18px_rgba(36,27,20,0.45),0_8px_18px_-8px_rgba(36,27,20,0.2)] grid grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className={`h-14 lg:h-16 px-4 md:px-6 flex flex-col items-center justify-center gap-1 border-gray-200 ${
+                  ["border-e border-b lg:border-b-0", "border-b lg:border-b-0 lg:border-e", "border-e", ""][index]
+                }`}
+              >
+                {/* ✅ ارتفاع البوكس = ارتفاع الهيدر (64px) — الرقم فوق العنوان، في الوسط */}
+                <span dir="ltr" className="text-xl md:text-2xl font-bold leading-none text-brand-ink">{stat.value}</span>
+                <span className="text-[11px] md:text-xs font-bold tracking-[0.08em] leading-none text-brand-orange whitespace-nowrap">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ═══════ 2ب) عن SOURCE — عنوان + شرح عن المنصة، تحت الإحصائيات مباشرة (بطلب صريح) ═══════ */}
+      <section className="bg-white py-16 md:py-20">
+        <div className="container mx-auto px-6">
+          {/* ✅ العنوان وتحته الشرح في عمود واحد، وفي العمود الآخر أكورديون الركائز (بطلب صريح) */}
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            <ScrollReveal className="lg:col-span-5 flex flex-col items-start gap-5">
+              <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase block">{t("home.about_kicker")}</span>
+              <h2 className="text-3xl md:text-[40px] font-bold leading-[1.35] text-brand-ink">{t("home.about_title")}</h2>
+              <p className="text-base md:text-lg leading-[1.9] text-brand-ink/85">{t("home.about_desc")}</p>
+              <p className="text-[15px] md:text-base leading-[1.9] text-brand-muted">{t("home.about_desc2")}</p>
+              <Link
+                to="/about-us"
+                className="inline-flex items-center gap-3 text-brand-ink font-bold text-sm group hover:text-brand-orange transition-colors"
+              >
+                {t("home.about_cta")}
+                <span className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-all duration-300">
+                  <ArrowIcon className="w-3.5 h-3.5" />
+                </span>
+              </Link>
+            </ScrollReveal>
+            {/* ✅ أكورديون الركائز (الشرائح المتحركة) بجانب النص — ثلاث شرائح فقط
+                (التحول الرقمي / الذكاء الاصطناعي / الأتمتة) بلا "الأمن وسيادة البيانات" — بطلب صريح */}
+            <ScrollReveal delay={100} className="lg:col-span-7">
+              <PillarsAccordion items={operatingLayers} isRTL={isRTL} moreLabel={t("home.pillars_more")} />
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════ 2د) تابات الفئات (الوزارة / الجامعات / الباحثون والطلبة) —
+           نفس التصميم السابق تمامًا + بطاقات المستوى النشط ═══════ */}
+      <section className="bg-gray-50 py-16 md:py-20">
+        <div className="container mx-auto px-6">
+          <div className="relative bg-white border border-gray-200 shadow-[0_16px_40px_-24px_rgba(31,26,23,0.35)] grid grid-cols-3">
             {levelTabs.map((level, index) => {
               const isActive = index === activeLevel;
               return (
@@ -401,32 +468,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══════ 3) شريط الحقائق — من ملفات المنصة (المقترح ودليل الخدمات)
-           بدل الأرقام الوهمية السابقة (12,500 باحث...). ═══════ */}
-      <section className="bg-white border-y border-gray-200 py-7">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-8">
-            {facts.map((fact, index) => (
-              <div
-                key={index}
-                className={`flex items-baseline gap-3 ${
-                  index < facts.length - 1 ? "lg:border-e lg:border-gray-200 lg:pe-6" : ""
-                }`}
-              >
-                <span
-                  dir={fact.ltr ? "ltr" : undefined}
-                  className={`font-black leading-none whitespace-nowrap ${
-                    fact.ltr ? "text-2xl" : "text-4xl"
-                  } ${fact.accent ? "text-brand-orange" : "text-brand-ink"}`}
-                >
-                  {fact.value}
-                </span>
-                <span className="text-sm font-semibold text-brand-muted leading-snug">{fact.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ═══════ 4) المكونات الثلاثة (نمط "Innovative solutions" — بطاقات مصوّرة
            بقائمة تحت كل بطاقة) بترتيب الاحتياج من المقترح. ═══════ */}
@@ -472,41 +513,6 @@ const HomePage = () => {
                     </div>
                     <CardArrow Icon={ArrowIcon} />
                   </div>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════ 4ب) الركائز التقنية الأربع — صف مضغوط تحت المكونات ═══════ */}
-      <section className="bg-white pb-20 md:pb-24">
-        <div className="container mx-auto px-6">
-          <ScrollReveal className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 mb-5">
-            <h3 className="text-xl font-bold text-brand-ink">{t("home.pillars_title")}</h3>
-            <Link
-              to="/about-us"
-              className="inline-flex items-center gap-3 text-brand-ink font-bold text-sm group hover:text-brand-orange transition-colors"
-            >
-              {t("home.explore_features")}
-              <span className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-all duration-300">
-                <ArrowIcon className="w-3.5 h-3.5" />
-              </span>
-            </Link>
-          </ScrollReveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pillars.map((pillar, index) => (
-              <ScrollReveal key={pillar.key} delay={index * 80}>
-                <Link
-                  to={`/pillar/${pillar.key}`}
-                  className="group block h-full bg-gray-50 border border-gray-200 hover:border-brand-orange/40 hover:bg-white hover:shadow-lg transition-all duration-300 p-6 flex flex-col gap-2"
-                >
-                  <span className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold tracking-[0.1em] text-brand-orange">{pillar.number}</span>
-                    <ArrowIcon className="w-3.5 h-3.5 text-brand-orange" />
-                  </span>
-                  <span className="text-base font-bold text-brand-ink">{pillar.title}</span>
-                  <span className="text-[13px] leading-relaxed text-brand-muted">{pillar.desc}</span>
                 </Link>
               </ScrollReveal>
             ))}

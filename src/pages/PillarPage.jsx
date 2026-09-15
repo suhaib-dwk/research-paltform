@@ -1,6 +1,6 @@
 import { useParams, Link, Navigate } from "react-router-dom";
-import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark } from "lucide-react";
-import { PILLARS, PILLAR_ORDER, PILLAR_AUDIENCE_LABELS } from "../data/pillarsContent";
+import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark, Users } from "lucide-react";
+import { PILLARS, PILLAR_ORDER, LAYERS, LAYER_ORDER, PILLAR_AUDIENCE_LABELS } from "../data/pillarsContent";
 import { useInnerLang, pick, Breadcrumb, CtaBand } from "../components/inner/InnerBlocks";
 
 // =========================================================
@@ -11,24 +11,33 @@ import { useInnerLang, pick, Breadcrumb, CtaBand } from "../components/inner/Inn
 // المحتوى من src/data/pillarsContent.js (المقترح + مواصفة الوزارة + الدليل).
 // =========================================================
 
-const PILLAR_ICONS = { digital: Layers, ai: Sparkles, automation: Workflow, security: ShieldCheck };
+// ✅ الصفحة تخدم الركائز التقنية الأربع والطبقات التشغيلية الثلاث (المنصة الرقمية /
+// خدمات الذكاء الاصطناعي / شبكة الخبراء) بنفس القالب — المحتوى من pillarsContent.js
+const ALL = { ...PILLARS, ...LAYERS };
+const PILLAR_ICONS = { digital: Layers, ai: Sparkles, automation: Workflow, security: ShieldCheck, platform: Layers, ai_services: Sparkles, experts: Users };
 const AUDIENCE_ICONS = { researcher: GraduationCap, university: Building2, ministry: Landmark };
 
 const PillarPage = () => {
   const { key } = useParams();
   const { t, lang, isRTL, ArrowIcon, BackIcon, displayFont } = useInnerLang();
 
-  if (!PILLARS[key]) return <Navigate to="/" replace />;
-  const p = PILLARS[key];
-  const index = PILLAR_ORDER.indexOf(key);
-  const prevKey = PILLAR_ORDER[(index - 1 + PILLAR_ORDER.length) % PILLAR_ORDER.length];
-  const nextKey = PILLAR_ORDER[(index + 1) % PILLAR_ORDER.length];
+  if (!ALL[key]) return <Navigate to="/" replace />;
+  const p = ALL[key];
+  const isLayer = p.group === "layer";
+  const ORDER = isLayer ? LAYER_ORDER : PILLAR_ORDER;
+  const index = ORDER.indexOf(key);
+  const prevKey = ORDER[(index - 1 + ORDER.length) % ORDER.length];
+  const nextKey = ORDER[(index + 1) % ORDER.length];
   const name = pick(p, "name", lang);
-  const total = PILLAR_ORDER.length;
+  const total = ORDER.length;
 
   const L = isRTL
-    ? { section: "الركائز التقنية", pillar: "الركيزة", chapter: "الفصل", ch1: "ما هو", ch2: "المكونات", ch3: "كيف يعمل", ch4: "الضمانة", who: "لمن يفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الركيزة السابقة", next: "الركيزة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "أربع ركائز تقنية تحت المكونات الثلاثة — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" }
-    : { section: "Technical pillars", pillar: "Pillar", chapter: "Chapter", ch1: "What it is", ch2: "Components", ch3: "How it works", ch4: "The guarantee", who: "Who benefits", whoTitle: "What changes for each role?", prev: "Previous pillar", next: "Next pillar", register: "Sign in", contact: "Contact us", ctaTitle: "A step towards global academic readiness.", ctaDesc: "Four technical pillars beneath the three components — in one national system.", chapters: "The four chapters", all: "All features" };
+    ? (isLayer
+        ? { section: "طبقات التشغيل", pillar: "الطبقة", chapter: "الفصل", ch1: "ما هي", ch2: "المكونات", ch3: "كيف تعمل", ch4: "الضمانة", who: "لمن تفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الطبقة السابقة", next: "الطبقة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "ثلاث طبقات تشغيلية — المنصة الرقمية وخدمات الذكاء الاصطناعي وشبكة الخبراء — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" }
+        : { section: "الركائز التقنية", pillar: "الركيزة", chapter: "الفصل", ch1: "ما هو", ch2: "المكونات", ch3: "كيف يعمل", ch4: "الضمانة", who: "لمن يفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الركيزة السابقة", next: "الركيزة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "أربع ركائز تقنية تحت المكونات الثلاثة — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" })
+    : (isLayer
+        ? { section: "Operating layers", pillar: "Layer", chapter: "Chapter", ch1: "What it is", ch2: "Components", ch3: "How it works", ch4: "The guarantee", who: "Who benefits", whoTitle: "What changes for each role?", prev: "Previous layer", next: "Next layer", register: "Sign in", contact: "Contact us", ctaTitle: "A step towards global academic readiness.", ctaDesc: "Three operating layers — the digital platform, AI services and the expert network — in one national system.", chapters: "The four chapters", all: "All features" }
+        : { section: "Technical pillars", pillar: "Pillar", chapter: "Chapter", ch1: "What it is", ch2: "Components", ch3: "How it works", ch4: "The guarantee", who: "Who benefits", whoTitle: "What changes for each role?", prev: "Previous pillar", next: "Next pillar", register: "Sign in", contact: "Contact us", ctaTitle: "A step towards global academic readiness.", ctaDesc: "Four technical pillars beneath the three components — in one national system.", chapters: "The four chapters", all: "All features" });
 
   const chapters = [
     { id: "what", n: "01", label: L.ch1 },
@@ -209,15 +218,15 @@ const PillarPage = () => {
           <div className="mt-16 grid md:grid-cols-2 border border-gray-200">
             <Link to={`/pillar/${prevKey}`} className="group p-8 flex items-center justify-between gap-6 md:border-e border-b md:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors">
               <span className="flex flex-col gap-1.5">
-                <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.prev} — {PILLARS[prevKey].number}</span>
-                <span className="text-2xl font-bold text-brand-ink">{pick(PILLARS[prevKey], "name", lang)}</span>
+                <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.prev} — {ALL[prevKey].number}</span>
+                <span className="text-2xl font-bold text-brand-ink">{pick(ALL[prevKey], "name", lang)}</span>
               </span>
               <span className="w-11 h-11 rounded-full border border-brand-orange/40 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-all"><BackIcon className="w-4 h-4" /></span>
             </Link>
             <Link to={`/pillar/${nextKey}`} className="group p-8 flex items-center justify-between gap-6 hover:bg-gray-50 transition-colors">
               <span className="flex flex-col gap-1.5">
-                <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.next} — {PILLARS[nextKey].number}</span>
-                <span className="text-2xl font-bold text-brand-ink">{pick(PILLARS[nextKey], "name", lang)}</span>
+                <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.next} — {ALL[nextKey].number}</span>
+                <span className="text-2xl font-bold text-brand-ink">{pick(ALL[nextKey], "name", lang)}</span>
               </span>
               <span className="w-11 h-11 rounded-full bg-brand-orange flex items-center justify-center text-white"><ArrowIcon className="w-4 h-4" /></span>
             </Link>

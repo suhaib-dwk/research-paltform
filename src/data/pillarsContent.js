@@ -188,6 +188,160 @@ export const PILLARS = {
   },
 };
 
+// =========================================================
+// الطبقات التشغيلية الثلاث (المقترح، جدول "طبقة التشغيل / الدور"):
+// المنصة الرقمية · خدمات الذكاء الاصطناعي · شبكة الخبراء.
+// تُعرض في الصفحة الرئيسية (أكورديون "عن SOURCE") ولكل طبقة صفحتها
+// الداخلية على نفس قالب الركائز (/pillar/:key).
+// =========================================================
+export const LAYER_ORDER = ["platform", "ai_services", "experts"];
+
+export const LAYERS = {
+  platform: {
+    group: "layer",
+    number: "01",
+    image: "/Home/anim/office.svg",
+    name_ar: "المنصة الرقمية", name_en: "Digital platform",
+    card_desc_ar: "بيئة التشغيل الأساسية للمستخدمين والسجلات البحثية والمشاريع ومسارات النشر والخدمات والمستودعات ولوحات المعلومات والتحليلات والتكاملات.",
+    card_desc_en: "The core operating environment for users, research records, projects, publication pipelines, services, repositories, dashboards, analytics and integrations.",
+    title_pre_ar: "بيئة تشغيل واحدة ", title_em_ar: "لكل ما هو بحثي.",
+    title_pre_en: "One operating environment ", title_em_en: "for everything research.",
+    intro_ar: "المنصة الرقمية هي الطبقة التي يعمل عليها الجميع: حسابات المستخدمين بأدوارها، السجلات البحثية والمشاريع، مسارات النشر والخدمات، المستودعات، ولوحات المعلومات والتحليلات والتكاملات — في مكان واحد يربط الباحث بجامعته والجامعة بالوزارة.",
+    intro_en: "The digital platform is the layer everyone works on: user accounts and roles, research records and projects, publication pipelines and services, repositories, dashboards, analytics and integrations — in one place linking the researcher to their university and the university to the Ministry.",
+    what_title_ar: "الطبقة التي يعمل عليها الباحث والجامعة والوزارة معًا.",
+    what_title_en: "The layer researchers, universities and the Ministry all work on.",
+    what_desc_ar: "بيئة التشغيل الأساسية للمستخدمين والسجلات البحثية والمشاريع ومسارات النشر والخدمات والمستودعات ولوحات المعلومات والتحليلات والتكاملات — لا تستبدل أنظمة الجامعات القائمة، بل تعمل كطبقة تكامل وطنية فوقها.",
+    what_desc_en: "The core operating environment for users, research records, projects, publication pipelines, services, repositories, dashboards, analytics and integrations — it does not replace existing university systems; it works as a national integration layer above them.",
+    verbs: [
+      { verb_ar: "يستضيف", verb_en: "Hosts", label_ar: "المستخدمين والسجلات البحثية", label_en: "Users and research records", desc_ar: "حساب لكل دور (طالب، باحث، كلية، جامعة، وزارة) وسجل بحثي واحد ينتقل مع صاحبه عبر كل مرحلة.", desc_en: "An account for every role (student, researcher, college, university, Ministry) and one research record that travels with its owner through every stage." },
+      { verb_ar: "يشغّل", verb_en: "Runs", label_ar: "المشاريع ومسارات النشر والخدمات", label_en: "Projects, publication pipelines and services", desc_ar: "سير عمل ينقل الحالة تلقائيًا بين المراحل، وخدمات تتفعّل حسب مستوى الباحث ومرحلة البحث.", desc_en: "Workflows that move status automatically between stages, and services that activate by the researcher's level and the research stage." },
+      { verb_ar: "يعرض", verb_en: "Surfaces", label_ar: "المستودعات واللوحات والتحليلات", label_en: "Repositories, dashboards and analytics", desc_ar: "مستودعات موثقة، ولوحات للجامعة والكلية والقسم والباحث، وتكاملات مع أنظمة الوزارة والجامعات ومعرّفات الباحثين.", desc_en: "Documented repositories, dashboards for university, college, department and researcher, and integrations with Ministry and university systems and researcher identifiers." },
+    ],
+    components_title_ar: "ما الذي تحتويه المنصة الرقمية.", components_title_en: "What the digital platform contains.",
+    components: [
+      { title_ar: "المستخدمون والسجلات والمشاريع", title_en: "Users, records & projects", desc_ar: "حسابات بأدوار وصلاحيات، ملفات بحثية موثقة، ومشاريع بمراحل وحالات واضحة.", desc_en: "Accounts with roles and permissions, verified research profiles, and projects with clear stages and statuses." },
+      { title_ar: "مسارات النشر والخدمات", title_en: "Publication pipelines & services", desc_ar: "مسار نشر كامل من المسودة إلى ما بعد النشر، وكتالوج خدمات يتدرّج مع مستوى الباحث.", desc_en: "A full publication pipeline from draft to post-publication, and a services catalogue that scales with the researcher's level." },
+      { title_ar: "المستودعات واللوحات والتكاملات", title_en: "Repositories, dashboards & integrations", desc_ar: "تخزين آمن للمستندات، لوحات معلومات وتحليلات لكل مستوى، وواجهات برمجية موثقة للتكامل.", desc_en: "Secure document storage, dashboards and analytics for every level, and documented APIs for integration." },
+    ],
+    how_title_ar: "من الحساب إلى اللوحة — في بيئة واحدة.", how_title_en: "From account to dashboard — in one environment.",
+    steps: [
+      { title_ar: "الحساب والدور", title_en: "Account & role", desc_ar: "يسجّل المستخدم بدوره فتُفتح له أدواته وصلاحياته.", desc_en: "The user registers with their role and gets their tools and permissions." },
+      { title_ar: "السجل البحثي", title_en: "Research record", desc_ar: "فكرة → مشروع → مخطوطة → منشور، في سجل واحد.", desc_en: "Idea → project → manuscript → publication, in one record." },
+      { title_ar: "المسار والخدمة", title_en: "Pipeline & service", desc_ar: "تتفعّل الخدمات حسب المرحلة وتُوثَّق نتائجها في السجل.", desc_en: "Services activate by stage and their outcomes are documented in the record." },
+      { title_ar: "اللوحة والتحليل", title_en: "Dashboard & analytics", desc_ar: "يتدفق السجل إلى لوحات الكلية والجامعة والوزارة بلا إعادة إدخال.", desc_en: "The record flows into college, university and Ministry dashboards with no re-entry.", highlight: true },
+    ],
+    guarantee_kicker_ar: "الضمانة", guarantee_kicker_en: "The guarantee",
+    guarantee_title_ar: "بيانات كل مستوى تبقى في مكانها، ويُشارَك منها المصرّح به فقط.", guarantee_title_en: "Each level's data stays where it is; only what is authorised is shared.",
+    split_a_label_ar: "المنصة", split_a_label_en: "The platform", split_a_word_ar: "تستضيف", split_a_word_en: "Hosts",
+    split_a_desc_ar: "السجلات والخدمات واللوحات في بيئة واحدة بصلاحيات حسب الدور ومسارات تدقيق كاملة.", split_a_desc_en: "Records, services and dashboards in one environment with role-based permissions and full audit trails.",
+    split_b_label_ar: "أنظمة الجامعات", split_b_label_en: "University systems", split_b_word_ar: "تتكامل", split_b_word_en: "Integrate",
+    split_b_desc_ar: "تبقى أنظمة الجامعات القائمة كما هي، وتتصل بالمنصة عبر واجهات برمجية ومزامنة مضبوطة.", split_b_desc_en: "Existing university systems remain as they are and connect to the platform through APIs and controlled synchronisation.",
+    quote_ar: "المنصة الرقمية هي بيئة التشغيل الأساسية للمستخدمين والسجلات البحثية والمشاريع ومسارات النشر والخدمات والمستودعات ولوحات المعلومات والتحليلات والتكاملات.",
+    quote_en: "The digital platform is the core operating environment for users, research records, projects, publication pipelines, services, repositories, dashboards, analytics and integrations.",
+    audiences: [
+      { key: "researcher", items_ar: ["حساب واحد وملف بحثي واحد لكل ما ينشره ويطلبه", "مسار نشر تتفعّل خدماته حسب المرحلة"], items_en: ["One account and one research profile for everything they publish and request", "A publication pipeline whose services activate by stage"] },
+      { key: "university", items_ar: ["لوحات للجامعة والكلية والقسم من السجل نفسه", "تكامل مع الأنظمة القائمة بلا استبدال"], items_en: ["University, college and department dashboards from the same record", "Integration with existing systems, no replacement"] },
+      { key: "ministry", items_ar: ["صورة وطنية تصل من الجامعات عبر التكاملات", "مستودعات وتحليلات موثقة المصدر"], items_en: ["A national picture arriving from universities through integrations", "Repositories and analytics with documented sources"] },
+    ],
+  },
+
+  ai_services: {
+    group: "layer",
+    number: "02",
+    image: "/Home/anim/molecules.svg",
+    name_ar: "خدمات الذكاء الاصطناعي", name_en: "AI services",
+    card_desc_ar: "مساعدون بحثيون ووكلاء تحليليون ضمن حوكمة واضحة يدعمون تطوير البحث وتقييم الجودة ومواءمة المجلات وتحليل الأداء ودعم القرار، مع إشراف بشري عند الحاجة.",
+    card_desc_en: "Research assistants and analytical agents under clear governance that support research development, quality assessment, journal matching, performance analysis and decision support — with human oversight where needed.",
+    title_pre_ar: "مساعدون بحثيون ووكلاء تحليليون — ", title_em_ar: "والإنسان صاحب الكلمة الأخيرة.",
+    title_pre_en: "Research assistants and analytical agents — ", title_em_en: "with people having the final say.",
+    intro_ar: "طبقة ذكاء اصطناعي محكومة: تقترح وتحلّل وتقيّم الجاهزية وتوائم المجلات وتحلّل الأداء وتدعم القرار — ضمن حوكمة واضحة، ومع إشراف بشري عند الحاجة. لا نتيجة ذكاء اصطناعي تُعرض كحكم أكاديمي نهائي.",
+    intro_en: "A governed AI layer: it suggests, analyses, assesses readiness, matches journals, analyses performance and supports decisions — under clear governance and with human oversight where needed. No AI output is ever presented as a final academic verdict.",
+    what_title_ar: "ذكاء اصطناعي يخدم كل مستوى — ولا يقرر عن أحد.",
+    what_title_en: "AI that serves every level — and decides for no one.",
+    what_desc_ar: "مساعدون بحثيون للباحث (الفكرة، الفجوة، المنهجية، الجاهزية، مواءمة المجلات)، ووكلاء تحليليون للجامعة والوزارة (تحليل الأداء والفجوات ودعم القرار) — كلهم ضمن حوكمة واضحة، وكل نتيجة تعود إلى مصدرها.",
+    what_desc_en: "Research assistants for the researcher (idea, gap, methodology, readiness, journal matching) and analytical agents for the university and the Ministry (performance and gap analysis, decision support) — all under clear governance, with every output traceable to its source.",
+    verbs: [
+      { verb_ar: "يطوّر", verb_en: "Develops", label_ar: "البحث من الفكرة إلى المخطوطة", label_en: "Research from idea to manuscript", desc_ar: "تحليل الفكرة والفجوة البحثية، مراجعة المنهجية والمراجع واللغة، وتقييم أولي قبل استثمار وقت إضافي.", desc_en: "Idea and research-gap analysis, methodology, references and language review, and an early assessment before investing more time." },
+      { verb_ar: "يقيّم", verb_en: "Assesses", label_ar: "الجودة والجاهزية ومواءمة المجلات", label_en: "Quality, readiness and journal fit", desc_ar: "درجة جاهزية واحدة للإرسال، مطابقة المجلات بدرجة ملاءمة، وفحص التوافق مع متطلبات المجلة.", desc_en: "A single submission-readiness score, journal matching with a fit score, and compliance checks against journal requirements." },
+      { verb_ar: "يدعم", verb_en: "Supports", label_ar: "تحليل الأداء ودعم القرار", label_en: "Performance analysis and decision support", desc_ar: "للجامعة: مؤشرات وخطط تحسين مبنية على بيانات. للوزارة: تحليل فجوات الأولويات وتوصيات قابلة للتتبع.", desc_en: "For the university: data-driven indicators and improvement plans. For the Ministry: priority-gap analysis and traceable recommendations." },
+    ],
+    components_title_ar: "مكوّنات طبقة الذكاء الاصطناعي.", components_title_en: "The components of the AI layer.",
+    components: [
+      { title_ar: "المساعدون البحثيون", title_en: "Research assistants", desc_ar: "مساعد ذكي في حساب الباحث لصياغة العنوان والمقدمة، وتحليل الفجوة، وتقييم الجاهزية، ومواءمة المجلات.", desc_en: "An assistant inside the researcher's account for titles and introductions, gap analysis, readiness assessment and journal matching." },
+      { title_ar: "الوكلاء التحليليون", title_en: "Analytical agents", desc_ar: "تحليل أداء الجامعة والكلية والقسم، وتحليل الصورة الوطنية والفجوات بين الأولويات وما يُنتَج فعليًا.", desc_en: "Analysis of university, college and department performance, and of the national picture and the gaps between priorities and actual output." },
+      { title_ar: "الحوكمة والإشراف البشري", title_en: "Governance & human oversight", desc_ar: "صلاحيات واضحة، سجل لكل نتيجة ومصدرها، ومراجعة بشرية من خبير عند الحاجة قبل أي إجراء.", desc_en: "Clear permissions, a log of every output and its source, and expert human review where needed before any action." },
+    ],
+    how_title_ar: "من الطلب إلى النتيجة الموثقة.", how_title_en: "From request to documented result.",
+    steps: [
+      { title_ar: "الطلب", title_en: "Request", desc_ar: "يطلب الباحث أو الجامعة تحليلًا أو تقييمًا من داخل المنصة.", desc_en: "The researcher or university requests an analysis or assessment from inside the platform." },
+      { title_ar: "التحليل الآلي", title_en: "Automated analysis", desc_ar: "يعمل المساعد أو الوكيل على البيانات المصرّح بها ويُنتج نتيجة مسبَّبة.", desc_en: "The assistant or agent works on authorised data and produces a reasoned result." },
+      { title_ar: "الإشراف البشري", title_en: "Human oversight", desc_ar: "تُراجَع النتيجة من خبير عند الحاجة أو عندما تمسّ قرارًا أكاديميًا.", desc_en: "The result is reviewed by an expert where needed or when it touches an academic decision." },
+      { title_ar: "النتيجة الموثقة", title_en: "Documented result", desc_ar: "تُحفظ النتيجة في السجل البحثي مع مصدرها وتاريخها — بلا حكم نهائي.", desc_en: "The result is saved in the research record with its source and date — never as a final verdict.", highlight: true },
+    ],
+    guarantee_kicker_ar: "الضمانة", guarantee_kicker_en: "The guarantee",
+    guarantee_title_ar: "لا نتيجة ذكاء اصطناعي تُعرض كحكم أكاديمي نهائي.", guarantee_title_en: "No AI output is ever presented as a final academic verdict.",
+    split_a_label_ar: "الذكاء الاصطناعي", split_a_label_en: "The AI", split_a_word_ar: "يقترح", split_a_word_en: "Suggests",
+    split_a_desc_ar: "يرشّح ويحلّل ويقيّم ويوائم — ويشرح سبب كل نتيجة ويربطها بمصدرها.", split_a_desc_en: "It recommends, analyses, assesses and matches — explaining every result and linking it to its source.",
+    split_b_label_ar: "الخبير والمشرف", split_b_label_en: "Experts & supervisors", split_b_word_ar: "يقرر", split_b_word_en: "Decides",
+    split_b_desc_ar: "القرار الأكاديمي للمشرف والمحكم وهيئة التحرير، وقبول البحث للمجلة — لا تضمنه المنصة ولا يقرره الذكاء الاصطناعي.", split_b_desc_en: "Academic decisions belong to the supervisor, reviewer and editorial board, and acceptance to the journal — the platform never guarantees it and the AI never decides it.",
+    quote_ar: "لا تُعرض أي نتيجة ذكاء اصطناعي كحكم أكاديمي نهائي، ولا تضمن سورس قبول البحث في أي مجلة — قرار القبول للمجلة وهيئة التحرير.",
+    quote_en: "No AI output is presented as a final academic verdict, and SOURCE never guarantees acceptance in any journal — acceptance is the journal's and its editorial board's decision.",
+    audiences: [
+      { key: "researcher", items_ar: ["تقييم مبكر للفكرة والمنهجية قبل استثمار وقت إضافي", "مطابقة المجلات ودرجة جاهزية واحدة للإرسال"], items_en: ["Early assessment of idea and methodology before investing more time", "Journal matching and a single submission-readiness score"] },
+      { key: "university", items_ar: ["تحليل أداء وخطط تحسين مبنية على بيانات فعلية", "مؤشرات جاهزية الاعتماد والتصنيف"], items_en: ["Performance analysis and data-driven improvement plans", "Accreditation and ranking readiness indicators"] },
+      { key: "ministry", items_ar: ["تحليل الفجوة بين الأولويات وما يُنتَج فعليًا", "توصيات قابلة للتتبع تدعم القرار"], items_en: ["Gap analysis between priorities and actual output", "Traceable recommendations that support decisions"] },
+    ],
+  },
+
+  experts: {
+    group: "layer",
+    number: "03",
+    image: "/Home/anim/lab.svg",
+    name_ar: "شبكة الخبراء", name_en: "Expert network",
+    card_desc_ar: "وصول مُدار إلى المراجعين والخبراء المتخصصين وخبراء المنهجية والإحصائيين والمحررين والمترجمين ومستشاري النشر وخبراء الابتكار والملكية الفكرية.",
+    card_desc_en: "Managed access to reviewers, subject experts, methodologists, statisticians, editors, translators, publication advisors and innovation & IP experts.",
+    title_pre_ar: "شبكة خبراء مُدارة، ", title_em_ar: "لا قائمة أسماء.",
+    title_pre_en: "A managed expert network, ", title_em_en: "not a list of names.",
+    intro_ar: "الخبرة البشرية المتخصصة تصل إلى الباحث والجامعة من داخل المنصة: مراجعون وخبراء متخصصون، خبراء منهجية وإحصائيون، محررون ومترجمون، مستشارو نشر، وخبراء ابتكار وملكية فكرية — كل خبير مسجَّل ومعتمد ومقيَّم، والوصول إليه مُدار بمعايير واضحة.",
+    intro_en: "Specialised human expertise reaches the researcher and the university from inside the platform: reviewers and subject experts, methodologists and statisticians, editors and translators, publication advisors, and innovation & IP experts — every expert registered, accredited and rated, with access managed by clear criteria.",
+    what_title_ar: "الطبقة التي تقدّم الخبرة بعد الذكاء الاصطناعي — عند الحاجة.",
+    what_title_en: "The layer that adds human expertise after AI — where it is needed.",
+    what_desc_ar: "وصول مُدار إلى المراجعين والخبراء المتخصصين وخبراء المنهجية والإحصائيين والمحررين والمترجمين ومستشاري النشر وخبراء الابتكار والملكية الفكرية — يُطابَق الخبير المناسب مع الطلب، ويُنفَّذ العمل ويُتابَع من لوحة الخبير، ويُبنى سجل موثوقية عبر الوقت.",
+    what_desc_en: "Managed access to reviewers, subject experts, methodologists, statisticians, editors, translators, publication advisors and innovation & IP experts — the right expert is matched to the request, the work is delivered and tracked from the expert's dashboard, and a reliability record builds over time.",
+    verbs: [
+      { verb_ar: "يحكّم", verb_en: "Reviews", label_ar: "مراجعون وخبراء متخصصون ومنهجيون وإحصائيون", label_en: "Reviewers, subject experts, methodologists and statisticians", desc_ar: "تحكيم علمي متخصص، تقييم المنهجية، وتحليل إحصائي بإشراف خبير.", desc_en: "Specialised scientific review, methodology assessment, and statistician-supervised analysis." },
+      { verb_ar: "يحرّر", verb_en: "Edits", label_ar: "محررون ومترجمون ومستشارو نشر", label_en: "Editors, translators and publication advisors", desc_ar: "تدقيق لغوي وتحرير علمي، ترجمة أكاديمية تحافظ على المصطلحات، واستراتيجية نشر ومحفظة مجلات.", desc_en: "Language editing and scientific editing, academic translation that preserves terminology, and a publication strategy with a journal portfolio." },
+      { verb_ar: "يحمي", verb_en: "Protects", label_ar: "خبراء الابتكار والملكية الفكرية", label_en: "Innovation and IP experts", desc_ar: "توجيه في براءات الاختراع وحماية المخرجات البحثية وتحويلها إلى ابتكار.", desc_en: "Guidance on patents, protecting research outputs and turning them into innovation." },
+    ],
+    components_title_ar: "من تضم شبكة الخبراء.", components_title_en: "Who the expert network includes.",
+    components: [
+      { title_ar: "التحكيم والمنهجية والإحصاء", title_en: "Review, methodology & statistics", desc_ar: "مراجعون في كل تخصص، خبراء منهجية، وإحصائيون يشرفون على التحليل.", desc_en: "Reviewers in every field, methodologists, and statisticians supervising analysis." },
+      { title_ar: "التحرير والترجمة والنشر", title_en: "Editing, translation & publishing", desc_ar: "محررون علميون ولغويون، مترجمون أكاديميون، ومستشارو نشر يرافقون الباحث حتى القبول.", desc_en: "Scientific and language editors, academic translators, and publication advisors accompanying the researcher to acceptance." },
+      { title_ar: "الابتكار والملكية الفكرية", title_en: "Innovation & IP", desc_ar: "خبراء براءات اختراع وملكية فكرية وتحويل المخرجات البحثية إلى قيمة.", desc_en: "Patent and IP experts and specialists in turning research outputs into value." },
+    ],
+    how_title_ar: "من الطلب إلى التسليم — والوصول مُدار من المنصة.", how_title_en: "From request to delivery — with access managed by the platform.",
+    steps: [
+      { title_ar: "الطلب", title_en: "Request", desc_ar: "يطلب الباحث أو الجامعة خدمة خبير من كتالوج الخدمات.", desc_en: "The researcher or university requests an expert service from the services catalogue." },
+      { title_ar: "المطابقة", title_en: "Matching", desc_ar: "تُطابق المنصة الخبير المناسب حسب التخصص والخبرة وسجل الأداء.", desc_en: "The platform matches the right expert by field, experience and performance record." },
+      { title_ar: "التنفيذ والمتابعة", title_en: "Delivery & tracking", desc_ar: "ينفّذ الخبير العمل من لوحته الخاصة وتُتابَع الحالة داخل المنصة.", desc_en: "The expert delivers from their own dashboard and the status is tracked inside the platform." },
+      { title_ar: "التسليم والتقييم", title_en: "Handover & rating", desc_ar: "يُسلَّم العمل ويُقيَّم، ويُبنى للخبير سجل موثوقية عبر الوقت.", desc_en: "The work is handed over and rated, building the expert's reliability record over time.", highlight: true },
+    ],
+    guarantee_kicker_ar: "الضمانة", guarantee_kicker_en: "The guarantee",
+    guarantee_title_ar: "كل خبير مسجَّل ومعتمد ومقيَّم — والوصول مُدار من داخل المنصة لا خارجها.", guarantee_title_en: "Every expert is registered, accredited and rated — and access is managed inside the platform, not outside it.",
+    split_a_label_ar: "المنصة", split_a_label_en: "The platform", split_a_word_ar: "تدير", split_a_word_en: "Manages",
+    split_a_desc_ar: "تسجيل الخبراء واعتمادهم، مطابقة الطلبات، متابعة الحالة، والتقييم وسجل الموثوقية.", split_a_desc_en: "Expert registration and accreditation, request matching, status tracking, rating and the reliability record.",
+    split_b_label_ar: "الخبير", split_b_label_en: "The expert", split_b_word_ar: "ينفّذ", split_b_word_en: "Delivers",
+    split_b_desc_ar: "يستقبل الطلبات ويسلّم العمل من لوحة مخصصة، ويتواصل مباشرة مع الباحث والجامعة داخل المنصة.", split_b_desc_en: "Receives requests and delivers work from a dedicated dashboard, communicating directly with the researcher and university inside the platform.",
+    quote_ar: "القيمة تصل إلى الباحث عبر ثلاثة مستويات من التمكين: القدرة عبر التدريب، والخبرة عبر الكتابة والتحكيم، والفرص عبر التشبيك والنشر.",
+    quote_en: "Value reaches the researcher through three levels of enablement: capability through training, expertise through writing and review, and opportunity through networking and publishing.",
+    audiences: [
+      { key: "researcher", items_ar: ["تحكيم وتحرير وترجمة من خبراء معتمدين في تخصصه", "مستشار نشر يرافقه حتى القبول"], items_en: ["Review, editing and translation from accredited experts in their field", "A publication advisor accompanying them to acceptance"] },
+      { key: "university", items_ar: ["خبراء منهجية وإحصاء لدعم أبحاث الكليات", "متابعة طلبات الخبراء لكل الجامعة من مكان واحد"], items_en: ["Methodologists and statisticians supporting college research", "Expert requests for the whole university tracked in one place"] },
+      { key: "ministry", items_ar: ["شبكة خبراء وطنية موثقة الأداء", "خبراء ابتكار وملكية فكرية لتحويل المخرجات إلى قيمة"], items_en: ["A national expert network with documented performance", "Innovation and IP experts turning outputs into value"] },
+    ],
+  },
+};
+
 export const PILLAR_AUDIENCE_LABELS = {
   researcher: { ar: "الباحث", en: "Researcher" },
   university: { ar: "الجامعة", en: "University" },
