@@ -16,6 +16,7 @@ import TargetAudiencePage from './pages/TargetAudiencePage';
 import AudienceDetailPage from './pages/AudienceDetailPage';
 import PlatformServiceDetailPage from './pages/PlatformServiceDetailPage';
 import ServicesCataloguePage from './pages/ServicesCataloguePage';
+import PillarPage from './pages/PillarPage';
 import Footer from './components/layout/Footer';
 import DynamicHead from './components/layout/DynamicHead';
 
@@ -126,6 +127,7 @@ function AppContent() {
             <Route path="/target-audience" element={<TargetAudiencePage />} />
             <Route path="/audience/:key" element={<AudienceDetailPage />} />
             <Route path="/services" element={<ServicesCataloguePage />} />
+            <Route path="/pillar/:key" element={<PillarPage />} />
             <Route path="/platform-service/:key" element={<PlatformServiceDetailPage />} />
             <Route path="/page/:slug" element={<DynamicPage />} />
 

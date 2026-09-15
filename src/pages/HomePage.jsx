@@ -217,12 +217,13 @@ const HomePage = () => {
     },
   ];
 
-  // ✅ الركائز التقنية الأربع — صف مضغوط تحت المكونات (تفتح صفحة "من نحن"
-  // إلى حين اعتماد صفحة الركيزة المستقلة)
-  const pillars = [1, 2, 3, 4].map((n) => ({
-    number: `0${n}`,
-    title: t(`home.tile${n}_title`),
-    desc: t(`home.tile${n}_desc`),
+  // ✅ الركائز التقنية الأربع — صف مضغوط تحت المكونات، كل بطاقة تفتح صفحة
+  // الركيزة المستقلة (/pillar/:key — PillarPage.jsx)
+  const pillars = ["digital", "ai", "automation", "security"].map((key, i) => ({
+    key,
+    number: `0${i + 1}`,
+    title: t(`home.tile${i + 1}_title`),
+    desc: t(`home.tile${i + 1}_desc`),
   }));
 
   // ✅ الطبقات التشغيلية الثلاث (المقترح: المنصة الرقمية / خدمات الذكاء
@@ -316,7 +317,9 @@ const HomePage = () => {
               >
                 {t("home.hero_title_pre")}
                 <span className="italic text-brand-orange">{t("home.hero_title_em")}</span>
-                {t("home.hero_title_post") ? ` ${t("home.hero_title_post")}` : ""}
+                {t("home.hero_title_post") && (
+                  <span className="block">{t("home.hero_title_post")}</span>
+                )}
               </h1>
               <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl mb-8">
                 {heroDesc}
@@ -517,9 +520,9 @@ const HomePage = () => {
           </ScrollReveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {pillars.map((pillar, index) => (
-              <ScrollReveal key={pillar.number} delay={index * 80}>
+              <ScrollReveal key={pillar.key} delay={index * 80}>
                 <Link
-                  to="/about-us"
+                  to={`/pillar/${pillar.key}`}
                   className="group block h-full bg-gray-50 border border-gray-200 hover:border-brand-orange/40 hover:bg-white hover:shadow-lg transition-all duration-300 p-6 flex flex-col gap-2"
                 >
                   <span className="flex items-center justify-between">
@@ -723,7 +726,7 @@ const HomePage = () => {
               {ministrySpaces.map((space, index) => (
                 <div
                   key={space.number}
-                  className={`grid grid-cols-[32px,1fr] gap-4 py-4 border-t border-gray-200 ${
+                  className={`grid grid-cols-[32px_1fr] gap-4 py-4 border-t border-gray-200 ${
                     index === ministrySpaces.length - 1 ? "border-b" : ""
                   }`}
                 >
