@@ -363,7 +363,7 @@ const ReviewServicePage = () => {
         if (!service) return null;
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                <div className="bg-white dark:bg-[#211c18] w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-[#3a322c] overflow-hidden animate-in zoom-in-95 duration-200">
+                <div className="bg-white dark:bg-brand-dark-card w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-brand-dark-border overflow-hidden animate-in zoom-in-95 duration-200">
                     {/* Header */}
                     <div className="relative p-6 bg-gradient-to-r from-brand-orange/10 to-transparent border-b border-gray-100 dark:border-white/5">
                         <button onClick={onClose} className="absolute top-4 end-4 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
@@ -400,7 +400,7 @@ const ReviewServicePage = () => {
 
                         {/* Grid: Inputs & Outputs */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="bg-gray-50 dark:bg-[#1a1613] p-4 rounded-xl border border-gray-100 dark:border-white/5">
+                            <div className="bg-gray-50 dark:bg-brand-dark p-4 rounded-xl border border-gray-100 dark:border-white/5">
                                 <h4 className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 mb-3">
                                     <Upload className="w-3.5 h-3.5" />
                                     {isAr ? 'ما تحتاج لتقديمه' : 'Required Inputs'}
@@ -415,7 +415,7 @@ const ReviewServicePage = () => {
                                 </ul>
                             </div>
 
-                            <div className="bg-gray-50 dark:bg-[#1a1613] p-4 rounded-xl border border-gray-100 dark:border-white/5">
+                            <div className="bg-gray-50 dark:bg-brand-dark p-4 rounded-xl border border-gray-100 dark:border-white/5">
                                 <h4 className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 mb-3">
                                     <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
                                     {isAr ? 'ما ستحصل عليه' : 'Deliverables'}
@@ -466,7 +466,7 @@ const ReviewServicePage = () => {
         <div className="space-y-6">
             
             {/* ─── قسم الخدمات (دليل الخدمات الجديد) ─── */}
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-6">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h2 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -488,10 +488,10 @@ const ReviewServicePage = () => {
                         <button 
                             key={svc.id} 
                             onClick={() => setActiveServiceModal(svc)}
-                            className="group text-start p-4 rounded-xl border border-gray-100 dark:border-[#3a322c] hover:border-brand-orange/50 hover:shadow-lg hover:shadow-brand-orange/10 transition-all bg-gray-50/50 dark:bg-[#1a1613]/50"
+                            className="group text-start p-4 rounded-xl border border-gray-100 dark:border-brand-dark-border hover:border-brand-orange/50 hover:shadow-lg hover:shadow-brand-orange/10 transition-all bg-gray-50/50 dark:bg-brand-dark/50"
                         >
                             <div className="flex items-start justify-between mb-3">
-                                <div className="w-10 h-10 rounded-lg bg-white dark:bg-[#2a231e] flex items-center justify-center border border-gray-200 dark:border-[#3a322c] text-gray-600 dark:text-gray-300 group-hover:text-brand-orange group-hover:border-brand-orange/20 transition-colors">
+                                <div className="w-10 h-10 rounded-lg bg-white dark:bg-brand-dark-hover flex items-center justify-center border border-gray-200 dark:border-brand-dark-border text-gray-600 dark:text-gray-300 group-hover:text-brand-orange group-hover:border-brand-orange/20 transition-colors">
                                     <svc.icon className="w-5 h-5" />
                                 </div>
                                 <span className="text-[10px] font-mono font-bold text-gray-400">{svc.code}</span>
@@ -512,7 +512,7 @@ const ReviewServicePage = () => {
             </div>
 
             {/* ─── نموذج طلب التحكيم (الجزء الأصلي) ─── */}
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-6">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                     <Shield className="w-5 h-5 text-brand-orange" />
                     {isAr ? 'طلب تحكيم بحثي' : 'Research Review Request'}
@@ -536,7 +536,7 @@ const ReviewServicePage = () => {
                 <div className="mb-6">
                     <div className="flex items-center justify-between mb-3">
                         <h3 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? 'المرحلة الدراسية' : 'Academic Level'}</h3>
-                        <span className="flex items-center gap-1 text-[10px] text-gray-400 bg-gray-100 dark:bg-[#2a231e] px-2 py-0.5 rounded-full">
+                        <span className="flex items-center gap-1 text-[10px] text-gray-400 bg-gray-100 dark:bg-brand-dark-hover px-2 py-0.5 rounded-full">
                             <Lock className="w-3 h-3" />
                             {isAr ? 'محددة حسب دورك' : 'Fixed by your role'}
                         </span>
@@ -547,13 +547,13 @@ const ReviewServicePage = () => {
                             const isLocked = !isActive;
                             return (
                                 <div key={level.id}
-                                    className={`relative p-4 rounded-xl border-2 text-center transition-all ${isActive ? 'border-brand-orange bg-brand-orange/5' : 'border-gray-100 dark:border-[#3a322c]/20 opacity-35 cursor-not-allowed'}`}>
+                                    className={`relative p-4 rounded-xl border-2 text-center transition-all ${isActive ? 'border-brand-orange bg-brand-orange/5' : 'border-gray-100 dark:border-brand-dark-border/20 opacity-35 cursor-not-allowed'}`}>
                                     <span className="text-3xl block mb-2">{level.icon}</span>
                                     <span className={`text-sm font-bold block ${isActive ? 'text-brand-orange' : 'text-gray-500 dark:text-gray-500'}`}>
                                         {isAr ? level.label_ar : level.label_en}
                                     </span>
                                     {isActive && <div className="absolute top-2 end-2 w-5 h-5 bg-brand-orange rounded-full flex items-center justify-center"><CheckCircle className="w-3 h-3 text-white" /></div>}
-                                    {isLocked && <div className="absolute inset-0 flex items-center justify-center"><div className="w-7 h-7 bg-gray-200 dark:bg-[#3a322c] rounded-full flex items-center justify-center"><Lock className="w-3 h-3 text-gray-400" /></div></div>}
+                                    {isLocked && <div className="absolute inset-0 flex items-center justify-center"><div className="w-7 h-7 bg-gray-200 dark:bg-brand-dark-border rounded-full flex items-center justify-center"><Lock className="w-3 h-3 text-gray-400" /></div></div>}
                                 </div>
                             );
                         })}
@@ -580,10 +580,10 @@ const ReviewServicePage = () => {
                                 <button key={rt.id} onClick={() => !isDisabled && handleTypeChange(rt)} disabled={isDisabled}
                                     className={`text-start p-4 rounded-2xl border-2 transition-all relative ${
                                         isDisabled
-                                            ? 'border-gray-100 dark:border-[#3a322c]/20 opacity-40 cursor-not-allowed'
+                                            ? 'border-gray-100 dark:border-brand-dark-border/20 opacity-40 cursor-not-allowed'
                                             : selectedType?.id === rt.id
                                                 ? rt.color + ' ' + rt.bg + ' shadow-lg'
-                                                : 'border-gray-200 dark:border-[#3a322c] hover:' + rt.color + ' hover:shadow-md'
+                                                : 'border-gray-200 dark:border-brand-dark-border hover:' + rt.color + ' hover:shadow-md'
                                     }`}>
                                     {isDisabled && <div className="absolute top-2 end-2"><Lock className="w-4 h-4 text-gray-300 dark:text-gray-600" /></div>}
                                     <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">{isAr ? rt.label_ar : rt.label_en}</h4>
@@ -611,7 +611,7 @@ const ReviewServicePage = () => {
                                 </label>
 
                                 {parentOptions.length === 0 ? (
-                                    <div className="flex items-center gap-2.5 p-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613]">
+                                    <div className="flex items-center gap-2.5 p-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark">
                                         <AlertCircle className="w-5 h-5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
                                         <p className="text-sm text-gray-400">
                                             {selectedType.id === 'expert'
@@ -628,7 +628,7 @@ const ReviewServicePage = () => {
                                             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 text-sm transition-all ${
                                                 selectedParentId
                                                     ? 'border-brand-orange bg-brand-orange/5 text-gray-900 dark:text-white'
-                                                    : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-400 dark:text-gray-600 hover:border-brand-orange/40'
+                                                    : 'border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-400 dark:text-gray-600 hover:border-brand-orange/40'
                                             }`}>
                                             <span className="truncate">
                                                 {selectedParentReq
@@ -640,16 +640,16 @@ const ReviewServicePage = () => {
                                         </button>
 
                                         {showParentDropdown && (
-                                            <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-[#211c18] border border-gray-200 dark:border-[#4a4038] rounded-xl shadow-xl z-30 max-h-60 overflow-y-auto">
+                                            <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-[#4a4038] rounded-xl shadow-xl z-30 max-h-60 overflow-y-auto">
                                                 {parentOptions.map(req => (
                                                     <button
                                                         key={req.id}
                                                         type="button"
                                                         onClick={() => handleSelectParent(req)}
-                                                        className={`w-full text-start px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-[#3a322c]/30 last:border-0 ${
+                                                        className={`w-full text-start px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-brand-dark-border/30 last:border-0 ${
                                                             String(req.id) === selectedParentId
                                                                 ? 'bg-brand-orange/10 text-brand-orange font-semibold'
-                                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2a231e]'
+                                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-brand-dark-hover'
                                                         }`}>
                                                         <p className="truncate font-medium">{req.title_ar || req.title_en}</p>
                                                         <p className="text-[10px] text-gray-400 mt-0.5">
@@ -687,8 +687,8 @@ const ReviewServicePage = () => {
                                 maxLength={500}
                                 className={`w-full px-4 py-3 rounded-xl border text-sm transition ${
                                     needsParentSelection
-                                        ? 'border-gray-200 dark:border-[#3a322c] bg-gray-100 dark:bg-[#1a1613]/60 text-gray-700 dark:text-gray-400 cursor-not-allowed'
-                                        : 'border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange'
+                                        ? 'border-gray-200 dark:border-brand-dark-border bg-gray-100 dark:bg-brand-dark/60 text-gray-700 dark:text-gray-400 cursor-not-allowed'
+                                        : 'border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange'
                                 }`}
                             />
                         </div>
@@ -699,7 +699,7 @@ const ReviewServicePage = () => {
                                 <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">
                                     {isAr ? 'رفع الملف' : 'Upload File'} <span className="text-rose-500">*</span>
                                 </label>
-                                <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-[#3a322c] hover:border-brand-orange/50 hover:bg-brand-orange/5'}`}>
+                                <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-brand-dark-border hover:border-brand-orange/50 hover:bg-brand-orange/5'}`}>
                                     <input type="file" className="hidden"
                                         onChange={(e) => {
                                             const selected = e.target.files[0];
@@ -764,12 +764,12 @@ const ReviewServicePage = () => {
                             <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملاحظات (اختياري)' : 'Notes (Optional)'}</label>
                             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
                                 placeholder={isAr ? 'أي تفاصيل إضافية تود إيصالها للمحكم...' : 'Any additional details for the reviewer...'}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition resize-none"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition resize-none"
                             />
                         </div>
 
                         {/* Summary */}
-                        <div className="bg-gray-50 dark:bg-[#1a1613] rounded-xl p-3.5 space-y-2">
+                        <div className="bg-gray-50 dark:bg-brand-dark rounded-xl p-3.5 space-y-2">
                             <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{isAr ? 'ملخص الطلب' : 'Request Summary'}</h4>
                             <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
@@ -798,7 +798,7 @@ const ReviewServicePage = () => {
                         </div>
 
                         <button type="submit" disabled={!isFormValid || submitting}
-                            className="w-full py-3.5 bg-gradient-to-l from-brand-orange to-[#f0916d] hover:from-[#b8953e] hover:to-[#d6b95e] disabled:from-gray-300 disabled:to-gray-300 disabled:dark:from-gray-600 disabled:dark:to-gray-600 text-white disabled:text-gray-500 dark:disabled:text-gray-500 font-bold text-sm rounded-xl transition-all shadow-lg shadow-brand-orange/25 disabled:shadow-none flex items-center justify-center gap-2.5">
+                            className="w-full py-3.5 bg-gradient-to-l from-brand-orange to-brand-orange-light hover:from-brand-orange-dark hover:to-brand-orange disabled:from-gray-300 disabled:to-gray-300 disabled:dark:from-gray-600 disabled:dark:to-gray-600 text-white disabled:text-gray-500 dark:disabled:text-gray-500 font-bold text-sm rounded-xl transition-all shadow-lg shadow-brand-orange/25 disabled:shadow-none flex items-center justify-center gap-2.5">
                             {submitting
                                 ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</>
                                 : <><Send className="w-4 h-4" />{isAr ? 'إرسال طلب التحكيم' : 'Submit Review Request'}</>
@@ -816,7 +816,7 @@ const ReviewServicePage = () => {
                 icon={Shield}
                 title={{ ar: 'خدمة التحكيم', en: 'Review Service' }}
                 description={{ ar: 'احصل على تحكيم أكاديمي موثوق لبحثك من متخصصين', en: 'Get reliable academic review from specialists' }}
-                gradient="from-brand-orange to-[#f0916d]"
+                gradient="from-brand-orange to-brand-orange-light"
                 shadowColor="shadow-brand-orange/20"
                 // تمرير دليل فارغ أو بسيط لأننا صممنا دليلنا الخاص (U01-U06) داخل formContent
                 guideSections={[]} 

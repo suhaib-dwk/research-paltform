@@ -125,22 +125,22 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
       
       {/* ✅ الشريط الجانبي للكمبيوتر */}
-      <aside className="hidden lg:flex w-72 bg-[#0a1628] text-white flex-col flex-shrink-0">
-        <div className="p-6 border-b border-[#1e3050]">
-          <h1 className="text-xl font-bold flex items-center gap-2"><Settings className="w-6 h-6 text-[#c8a44e]" /> {currentLang === 'ar' ? 'لوحة التحكم' : 'Dashboard'}</h1>
+      <aside className="hidden lg:flex w-72 bg-brand-ink text-white flex-col flex-shrink-0">
+        <div className="p-6 border-b border-brand-dark-border">
+          <h1 className="text-xl font-bold flex items-center gap-2"><Settings className="w-6 h-6 text-brand-orange" /> {currentLang === 'ar' ? 'لوحة التحكم' : 'Dashboard'}</h1>
           <p className="text-gray-500 text-xs mt-1">{currentLang === 'ar' ? 'إدارة إعدادات النظام' : 'System Settings Management'}</p>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           {menuItems.map(item => (
-            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === item.id ? 'bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] shadow-lg shadow-[#c8a44e]/20' : 'text-gray-400 hover:bg-[#1a2744] hover:text-gray-200'}`}>
+            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === item.id ? 'bg-gradient-to-l from-brand-orange to-brand-orange-light text-brand-ink shadow-lg shadow-brand-orange/20' : 'text-gray-400 hover:bg-brand-dark-hover hover:text-gray-200'}`}>
               <item.icon className="w-5 h-5" /> {currentLang === 'ar' ? item.label_ar : item.label_en}
             </button>
           ))}
         </nav>
-        <div className="p-4 border-t border-[#1e3050]">
+        <div className="p-4 border-t border-brand-dark-border">
           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-900/20 transition-all">
             <LogOut className="w-5 h-5" /> {currentLang === 'ar' ? 'تسجيل الخروج' : 'Logout'}
           </button>
@@ -158,14 +158,14 @@ const AdminDashboard = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div className="bg-black/50 flex-1" onClick={() => setIsMobileMenuOpen(false)}></div>
-          <div className="w-72 bg-[#0a1628] text-white flex flex-col animate-[slideIn_0.3s_ease-out]">
-            <div className="p-6 flex items-center justify-between border-b border-[#1e3050]">
+          <div className="w-72 bg-brand-ink text-white flex flex-col animate-[slideIn_0.3s_ease-out]">
+            <div className="p-6 flex items-center justify-between border-b border-brand-dark-border">
               <h1 className="text-lg font-bold">القائمة</h1>
               <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-500 hover:text-white"><X className="w-6 h-6" /></button>
             </div>
             <nav className="flex-1 p-4 space-y-2">
               {menuItems.map(item => (
-                <button key={item.id} onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === item.id ? 'bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628]' : 'text-gray-400 hover:bg-[#1a2744]'}`}>
+                <button key={item.id} onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === item.id ? 'bg-gradient-to-l from-brand-orange to-brand-orange-light text-brand-ink' : 'text-gray-400 hover:bg-brand-dark-hover'}`}>
                   <item.icon className="w-5 h-5" /> {currentLang === 'ar' ? item.label_ar : item.label_en}
                 </button>
               ))}
@@ -188,25 +188,25 @@ const AdminDashboard = () => {
         {/* --- تبويب الإعدادات العامة --- */}
         {activeTab === 'general' && (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 max-w-4xl">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2"><Settings className="w-7 h-7 text-[#c8a44e]" /> {currentLang === 'ar' ? 'الإعدادات العامة' : 'General Settings'}</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2"><Settings className="w-7 h-7 text-brand-orange" /> {currentLang === 'ar' ? 'الإعدادات العامة' : 'General Settings'}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-600">اسم الموقع (عربي)</label>
-                <input value={formData.site_name_ar || ''} onChange={e => handleTextChange('site_name_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all" />
+                <input value={formData.site_name_ar || ''} onChange={e => handleTextChange('site_name_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-600">Site Name (English)</label>
-                <input value={formData.site_name_en || ''} onChange={e => handleTextChange('site_name_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all" />
+                <input value={formData.site_name_en || ''} onChange={e => handleTextChange('site_name_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all" />
               </div>
               
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-600">الاسم الفرعي (عربي)</label>
-                <input value={formData.site_tagline_ar || ''} onChange={e => handleTextChange('site_tagline_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all" />
+                <input value={formData.site_tagline_ar || ''} onChange={e => handleTextChange('site_tagline_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-600">Tagline (English)</label>
-                <input value={formData.site_tagline_en || ''} onChange={e => handleTextChange('site_tagline_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all" />
+                <input value={formData.site_tagline_en || ''} onChange={e => handleTextChange('site_tagline_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all" />
               </div>
             </div>
 
@@ -214,7 +214,7 @@ const AdminDashboard = () => {
               {/* رفع اللوجو */}
               <div className="space-y-3">
                 <label className="text-sm font-bold text-gray-600">شعار الموقع (Logo)</label>
-                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#c8a44e] transition-colors relative">
+                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-brand-orange transition-colors relative">
                   <img src={previews.site_logo || resolveUploadUrl(formData.site_logo) || 'https://via.placeholder.com/150'} alt="Logo" className="w-24 h-24 object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-2" />
                   <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'site_logo')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <p className="text-xs text-gray-400 flex items-center justify-center gap-1"><Upload className="w-4 h-4" /> {currentLang === 'ar' ? 'اضغط لرفع صورة جديدة' : 'Click to upload'}</p>
@@ -224,7 +224,7 @@ const AdminDashboard = () => {
               {/* رفع الفافيكون */}
               <div className="space-y-3">
                 <label className="text-sm font-bold text-gray-600">أيقونة التبويب (Favicon)</label>
-                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-[#c8a44e] transition-colors relative">
+                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-brand-orange transition-colors relative">
                   <img src={previews.site_favicon || resolveUploadUrl(formData.site_favicon) || 'https://via.placeholder.com/50'} alt="Favicon" className="w-16 h-16 object-contain mx-auto mb-3 rounded-lg bg-gray-50 p-1" />
                   <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'site_favicon')} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <p className="text-xs text-gray-400 flex items-center justify-center gap-1"><Upload className="w-4 h-4" /> {currentLang === 'ar' ? 'اضغط لرفع أيقونة جديدة' : 'Click to upload'}</p>
@@ -232,7 +232,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <button onClick={handleSaveSettings} disabled={isSaving} className="mt-8 bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-2">
+            <button onClick={handleSaveSettings} disabled={isSaving} className="mt-8 bg-gradient-to-l from-brand-orange to-brand-orange-light text-brand-ink px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-brand-orange/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-2">
               {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               {currentLang === 'ar' ? 'حفظ الإعدادات' : 'Save Settings'}
             </button>
@@ -242,39 +242,39 @@ const AdminDashboard = () => {
         {/* --- تبويب نصوص البانر --- */}
         {activeTab === 'hero' && (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 max-w-4xl space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2"><Layout className="w-7 h-7 text-[#c8a44e]" /> {currentLang === 'ar' ? 'نصوص البانر الرئيسي' : 'Hero Section Texts'}</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2"><Layout className="w-7 h-7 text-brand-orange" /> {currentLang === 'ar' ? 'نصوص البانر الرئيسي' : 'Hero Section Texts'}</h2>
             <p className="text-sm text-gray-500 -mt-4 mb-6">{currentLang === 'ar' ? 'هذه النصوص تظهر فوق صور البانر المتحركة' : 'These texts appear over the sliding banner images'}</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-600">الشارة الصغيرة (عربي)</label>
-                <input value={formData.hero_badge_ar || ''} onChange={e => handleTextChange('hero_badge_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all" />
+                <input value={formData.hero_badge_ar || ''} onChange={e => handleTextChange('hero_badge_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-600">Badge (English)</label>
-                <input value={formData.hero_badge_en || ''} onChange={e => handleTextChange('hero_badge_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all" />
+                <input value={formData.hero_badge_en || ''} onChange={e => handleTextChange('hero_badge_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all" />
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-600">العنوان الرئيسي (عربي)</label>
-              <input value={formData.hero_title_ar || ''} onChange={e => handleTextChange('hero_title_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all text-lg font-bold" />
+              <input value={formData.hero_title_ar || ''} onChange={e => handleTextChange('hero_title_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all text-lg font-bold" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-600">Main Title (English)</label>
-              <input value={formData.hero_title_en || ''} onChange={e => handleTextChange('hero_title_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none transition-all text-lg font-bold" />
+              <input value={formData.hero_title_en || ''} onChange={e => handleTextChange('hero_title_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none transition-all text-lg font-bold" />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-600">الوصف (عربي)</label>
-              <textarea rows={4} value={formData.hero_desc_ar || ''} onChange={e => handleTextChange('hero_desc_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none resize-none transition-all" />
+              <textarea rows={4} value={formData.hero_desc_ar || ''} onChange={e => handleTextChange('hero_desc_ar', e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none resize-none transition-all" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-600">Description (English)</label>
-              <textarea rows={4} value={formData.hero_desc_en || ''} onChange={e => handleTextChange('hero_desc_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c8a44e]/20 focus:border-[#c8a44e] outline-none resize-none transition-all" />
+              <textarea rows={4} value={formData.hero_desc_en || ''} onChange={e => handleTextChange('hero_desc_en', e.target.value)} dir="ltr" className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange outline-none resize-none transition-all" />
             </div>
 
-            <button onClick={handleSaveSettings} disabled={isSaving} className="bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-2">
+            <button onClick={handleSaveSettings} disabled={isSaving} className="bg-gradient-to-l from-brand-orange to-brand-orange-light text-brand-ink px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-brand-orange/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-2">
               {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               {currentLang === 'ar' ? 'حفظ النصوص' : 'Save Texts'}
             </button>
@@ -285,8 +285,8 @@ const AdminDashboard = () => {
         {activeTab === 'slides' && (
           <div className="max-w-5xl">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2"><Image className="w-7 h-7 text-[#c8a44e]" /> {currentLang === 'ar' ? 'صور البانر' : 'Hero Slides'}</h2>
-              <label className="cursor-pointer bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-5 py-2.5 rounded-xl font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300 flex items-center gap-2 relative">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2"><Image className="w-7 h-7 text-brand-orange" /> {currentLang === 'ar' ? 'صور البانر' : 'Hero Slides'}</h2>
+              <label className="cursor-pointer bg-gradient-to-l from-brand-orange to-brand-orange-light text-brand-ink px-5 py-2.5 rounded-xl font-bold hover:shadow-lg hover:shadow-brand-orange/25 transition-all duration-300 flex items-center gap-2 relative">
                 {isUploadingSlide ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
                 {currentLang === 'ar' ? 'إضافة صورة' : 'Add Slide'}
                 <input type="file" accept="image/*" onChange={handleAddSlide} className="hidden" disabled={isUploadingSlide} />

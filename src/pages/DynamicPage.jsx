@@ -43,16 +43,16 @@ const DynamicPage = () => {
 
   // حالات التحميل والخطأ
   if (isLoading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f4f6fb]">
-      <div className="w-16 h-16 border-4 border-[#c8a44e]/20 border-t-[#c8a44e] rounded-full animate-spin"></div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-16 h-16 border-4 border-brand-orange/20 border-t-brand-orange rounded-full animate-spin"></div>
     </div>
   );
 
   if (!pageData) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#f4f6fb] text-center px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center px-6">
       <h1 className="text-5xl font-black text-gray-300 mb-4">404</h1>
       <p className="text-gray-500 mb-8">الصفحة غير موجودة</p>
-      <Link to="/" className="text-[#c8a44e] font-bold hover:underline flex items-center gap-2">
+      <Link to="/" className="text-brand-orange font-bold hover:underline flex items-center gap-2">
         <ArrowIcon className="w-4 h-4" /> العودة للرئيسية
       </Link>
     </div>
@@ -61,13 +61,13 @@ const DynamicPage = () => {
   const DynamicIcon = getIcon(pageData.icon_name);
     // قائمة الألوان المسموح بها (لمنع الألوان القديمة من الظهور)
   const allowedGradients = [
-    'from-[#0a1628] to-[#1a2744]',
-    'from-[#0a1628] to-[#c8a44e]',
-    'from-[#c8a44e] to-[#0a1628]',
+    'from-brand-ink to-brand-dark-hover',
+    'from-brand-ink to-brand-orange',
+    'from-brand-orange to-brand-ink',
   ];
   const gradientColor = (pageData.color_class && allowedGradients.includes(pageData.color_class)) 
     ? pageData.color_class 
-    : 'from-[#0a1628] to-[#1a2744]';
+    : 'from-brand-ink to-brand-dark-hover';
 
   return (
     <>
@@ -75,7 +75,7 @@ const DynamicPage = () => {
       <section className={`relative bg-gradient-to-br ${gradientColor} py-24 overflow-hidden`}>
         {/* أشكال خلفية متحركة */}
         <motion.div 
-          className="absolute -top-20 -end-20 w-80 h-80 bg-[#c8a44e]/10 rounded-full blur-3xl"
+          className="absolute -top-20 -end-20 w-80 h-80 bg-brand-orange/10 rounded-full blur-3xl"
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 6, repeat: Infinity }}
         />
@@ -86,8 +86,8 @@ const DynamicPage = () => {
             transition={{ duration: 0.6 }}
             className="flex flex-col items-center text-center"
           >
-            <div className="w-20 h-20 bg-[#c8a44e]/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 border border-[#c8a44e]/30">
-              <DynamicIcon className="w-10 h-10 text-[#c8a44e]" />
+            <div className="w-20 h-20 bg-brand-orange/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 border border-brand-orange/30">
+              <DynamicIcon className="w-10 h-10 text-brand-orange" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
               {lang === 'ar' ? pageData.title_ar : pageData.title_en}
@@ -102,7 +102,7 @@ const DynamicPage = () => {
       </section>
 
       {/* محتوى الصفحة */}
-      <section className="py-20 bg-[#f4f6fb]">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
@@ -131,7 +131,7 @@ const DynamicPage = () => {
                   className="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-shadow group"
                 >
                   <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-3">
-                    <span className="w-8 h-8 bg-[#c8a44e]/10 text-[#c8a44e] rounded-lg flex items-center justify-center text-sm font-black group-hover:bg-[#c8a44e] group-hover:text-[#0a1628] transition-colors">{index + 1}</span>
+                    <span className="w-8 h-8 bg-brand-orange/10 text-brand-orange rounded-lg flex items-center justify-center text-sm font-black group-hover:bg-brand-orange group-hover:text-brand-ink transition-colors">{index + 1}</span>
                     {lang === 'ar' ? section.title_ar : section.title_en}
                   </h3>
                   <p className="text-gray-500 text-sm leading-relaxed">

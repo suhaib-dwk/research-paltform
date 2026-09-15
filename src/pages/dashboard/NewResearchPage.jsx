@@ -106,23 +106,23 @@ const NewResearchPage = () => {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6 space-y-5">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-6 space-y-5">
                 <div>
                     <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'عنوان البحث' : 'Research Title'}</label>
-                    <input type="text" value={form.title} onChange={(e) => handleChange('title', e.target.value)} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
+                    <input type="text" value={form.title} onChange={(e) => handleChange('title', e.target.value)} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
                 </div>
                 <div>
                     <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'الملخص' : 'Abstract'}</label>
-                    <textarea rows={5} value={form.abstract} onChange={(e) => handleChange('abstract', e.target.value)} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors resize-none text-gray-900 dark:text-white" />
+                    <textarea rows={5} value={form.abstract} onChange={(e) => handleChange('abstract', e.target.value)} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors resize-none text-gray-900 dark:text-white" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'الكلمات المفتاحية' : 'Keywords'}</label>
-                        <input type="text" value={form.keywords} onChange={(e) => handleChange('keywords', e.target.value)} placeholder={isAr ? 'كلمة 1, كلمة 2, كلمة 3' : 'keyword 1, keyword 2, keyword 3'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
+                        <input type="text" value={form.keywords} onChange={(e) => handleChange('keywords', e.target.value)} placeholder={isAr ? 'كلمة 1, كلمة 2, كلمة 3' : 'keyword 1, keyword 2, keyword 3'} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
                     </div>
                     <div>
                         <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'المجال العلمي' : 'Scientific Field'}</label>
-                        <select value={form.field} onChange={(e) => handleChange('field', e.target.value)} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
+                        <select value={form.field} onChange={(e) => handleChange('field', e.target.value)} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
                             <option value="">{isAr ? 'اختر...' : 'Select...'}</option>
                             <option value="cs">Computer Science</option>
                             <option value="eng">Engineering</option>
@@ -135,7 +135,7 @@ const NewResearchPage = () => {
                         {isAr ? 'ملف البحث' : 'Research File'} <span className="text-rose-500">*</span>
                     </label>
                     <label className={`flex flex-col items-center justify-center h-36 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
-                        file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-[#3a322c] hover:border-brand-orange'
+                        file ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-200 dark:border-brand-dark-border hover:border-brand-orange'
                     }`}>
                         <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={handleFileChange} />
                         {file ? (
@@ -152,8 +152,8 @@ const NewResearchPage = () => {
                         )}
                     </label>
                 </div>
-                <div className="pt-4 border-t border-gray-50 dark:border-[#3a322c]/50">
-                    <button type="submit" disabled={loading || !isFormValid} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
+                <div className="pt-4 border-t border-gray-50 dark:border-brand-dark-border/50">
+                    <button type="submit" disabled={loading || !isFormValid} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-brand-orange-light text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                         {saved ? (isAr ? 'تم الإرسال' : 'Submitted') : (isAr ? 'إرسال البحث' : 'Submit Research')}
                     </button>

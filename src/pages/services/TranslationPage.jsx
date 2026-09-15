@@ -241,7 +241,7 @@ const TranslationPage = () => {
                 </div>
             )}
 
-            <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 space-y-4">
 
                 {/* ─── اللغات ─── */}
                 <div>
@@ -252,7 +252,7 @@ const TranslationPage = () => {
                             <select
                                 value={sourceLang}
                                 onChange={(e) => { setSourceLang(e.target.value); setSubmitError(null); }}
-                                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
+                                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
                             >
                                 {LANGS.map(l => (
                                     <option key={l.code} value={l.code}>{l.flag} {isAr ? l.label_ar : l.label_en}</option>
@@ -263,7 +263,7 @@ const TranslationPage = () => {
                         <button
                             type="button"
                             onClick={handleSwapLangs}
-                            className="mt-5 p-2.5 rounded-xl bg-gray-100 dark:bg-[#1a2744] text-gray-500 hover:bg-gray-200 dark:hover:bg-[#243352] hover:text-blue-500 transition-colors"
+                            className="mt-5 p-2.5 rounded-xl bg-gray-100 dark:bg-brand-dark-hover text-gray-500 hover:bg-gray-200 dark:hover:bg-brand-dark-hover hover:text-blue-500 transition-colors"
                             title={isAr ? 'تبديل اللغتين' : 'Swap languages'}
                         >
                             <ArrowRightLeft className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} />
@@ -279,7 +279,7 @@ const TranslationPage = () => {
                                     setShowVariantDropdown(false);
                                     setSubmitError(null);
                                 }}
-                                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
+                                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
                             >
                                 {LANGS.filter(l => l.code !== sourceLang).map(l => (
                                     <option key={l.code} value={l.code}>{l.flag} {isAr ? l.label_ar : l.label_en}</option>
@@ -303,7 +303,7 @@ const TranslationPage = () => {
                                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 text-sm transition-all ${
                                     englishVariant
                                         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-gray-900 dark:text-white'
-                                        : 'border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-400 dark:text-gray-600 hover:border-blue-400'
+                                        : 'border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-400 dark:text-gray-600 hover:border-blue-400'
                                 }`}
                             >
                                 <span className="flex items-center gap-2 truncate">
@@ -316,7 +316,7 @@ const TranslationPage = () => {
                             </button>
 
                             {showVariantDropdown && (
-                                <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-[#111d33] border border-gray-200 dark:border-[#2a3a5c] rounded-xl shadow-xl z-30">
+                                <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border rounded-xl shadow-xl z-30">
                                     {EN_VARIANTS.map(v => (
                                         <button
                                             key={v.code}
@@ -326,10 +326,10 @@ const TranslationPage = () => {
                                                 setShowVariantDropdown(false);
                                                 setSubmitError(null);
                                             }}
-                                            className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-[#1e3050]/30 last:border-0 ${
+                                            className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors border-b border-gray-50 dark:border-brand-dark-border/30 last:border-0 ${
                                                 v.code === englishVariant
                                                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold'
-                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a2744]'
+                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-brand-dark-hover'
                                             }`}
                                         >
                                             <span className="text-xl">{v.flag}</span>
@@ -353,7 +353,7 @@ const TranslationPage = () => {
                     <label className={`flex flex-col items-center justify-center h-40 border-2 border-dashed rounded-2xl cursor-pointer transition-all group ${
                         file
                             ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10'
-                            : 'border-gray-200 dark:border-[#1e3050] hover:border-blue-400/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/10'
+                            : 'border-gray-200 dark:border-brand-dark-border hover:border-blue-400/50 hover:bg-blue-50/50 dark:hover:bg-blue-900/10'
                     }`}>
                         <input
                             type="file"
@@ -409,7 +409,7 @@ const TranslationPage = () => {
                                 className={`flex-1 py-2.5 px-3 rounded-xl border text-center transition-all ${
                                     urgency === o.k
                                         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
-                                        : 'border-gray-200 dark:border-[#1e3050] text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-[#2a3a5c]'
+                                        : 'border-gray-200 dark:border-brand-dark-border text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-brand-dark-border'
                                 }`}
                             >
                                 <span className="block text-sm font-semibold">{isAr ? o.ar : o.en}</span>
@@ -429,12 +429,12 @@ const TranslationPage = () => {
                         onChange={(e) => setNotes(e.target.value)}
                         rows={2}
                         placeholder={isAr ? 'مصطلحات خاصة أو متطلبات تنسيق...' : 'Special terms or formatting requirements...'}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition resize-none"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition resize-none"
                     />
                 </div>
 
                 {/* ─── ملخص الطلب ─── */}
-                <div className="bg-gray-50 dark:bg-[#0a1628] rounded-xl p-3.5 space-y-2">
+                <div className="bg-gray-50 dark:bg-brand-dark rounded-xl p-3.5 space-y-2">
                     <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{isAr ? 'ملخص الطلب' : 'Request Summary'}</h4>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>

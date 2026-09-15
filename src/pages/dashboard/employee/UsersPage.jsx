@@ -13,7 +13,7 @@ const roleColors = {
     college: 'bg-teal-50 dark:bg-teal-900/15 text-teal-600 dark:text-teal-400',
     research_center: 'bg-cyan-50 dark:bg-cyan-900/15 text-cyan-600 dark:text-cyan-400',
     ministry: 'bg-rose-50 dark:bg-rose-900/15 text-rose-600 dark:text-rose-400',
-    employee: 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400',
+    employee: 'bg-gray-100 dark:bg-brand-dark-hover text-gray-500 dark:text-gray-400',
     service_provider: 'bg-amber-50 dark:bg-amber-900/15 text-amber-600 dark:text-amber-400',
 };
 const statusIcons = {
@@ -103,13 +103,13 @@ const UsersPage = () => {
                 <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'المستخدمون' : 'Users'}</h1>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة حسابات المستخدمين والموافقة عليها' : 'Manage and approve user accounts'}</p>
             </div>
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 overflow-hidden">
-                <div className="p-4 border-b border-gray-50 dark:border-[#3a322c]/50 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 overflow-hidden">
+                <div className="p-4 border-b border-gray-50 dark:border-brand-dark-border/50 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="relative flex-1 max-w-sm">
                         <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400" />
-                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث بالاسم أو البريد...' : 'Search by name or email...'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
+                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث بالاسم أو البريد...' : 'Search by name or email...'} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
                     </div>
-                    <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)} className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
+                    <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)} className="bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-2.5 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
                         <option value="all">{isAr ? 'جميع الأدوار' : 'All Roles'}</option>
                         {['faculty', 'grad', 'researcher', 'undergrad', 'reviewer', 'university', 'college', 'research_center', 'ministry', 'service_provider'].map(r => (
                             <option key={r} value={r}>{roleLabel(r, isAr)}</option>
@@ -119,7 +119,7 @@ const UsersPage = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-gray-50 dark:border-[#3a322c]/50">
+                            <tr className="border-b border-gray-50 dark:border-brand-dark-border/50">
                                 <th className="text-start text-xs font-bold text-gray-400 uppercase tracking-wider px-5 py-3">{isAr ? 'الاسم' : 'Name'}</th>
                                 <th className="text-start text-xs font-bold text-gray-400 uppercase tracking-wider px-5 py-3">{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                 <th className="text-start text-xs font-bold text-gray-400 uppercase tracking-wider px-5 py-3">{isAr ? 'الدور' : 'Role'}</th>
@@ -133,7 +133,7 @@ const UsersPage = () => {
                             ) : filtered.length === 0 ? (
                                 <tr><td colSpan={5} className="text-center py-12 text-gray-400 text-sm">{isAr ? 'لا توجد بيانات' : 'No data available'}</td></tr>
                             ) : filtered.map(u => (
-                                <tr key={u.id} className="border-b border-gray-50 dark:border-[#3a322c]/30 hover:bg-[#f4f6fb] dark:hover:bg-[#1a1613]/40 transition-colors">
+                                <tr key={u.id} className="border-b border-gray-50 dark:border-brand-dark-border/30 hover:bg-gray-50 dark:hover:bg-brand-dark/40 transition-colors">
                                     <td className="px-5 py-3.5">
                                         <div className="flex items-center gap-3">
                                             <div className="w-9 h-9 rounded-full bg-gray-900/10 dark:bg-white/10 text-gray-900 dark:text-white flex items-center justify-center text-xs font-bold">{(isAr ? u.name_ar : u.name_en).charAt(0)}</div>
@@ -141,7 +141,7 @@ const UsersPage = () => {
                                         </div>
                                     </td>
                                     <td className="px-5 py-3.5 text-sm text-gray-500 dark:text-gray-400" dir="ltr">{u.email}</td>
-                                    <td className="px-5 py-3.5"><span className={`text-xs font-bold px-3 py-1 rounded-full ${roleColors[u.role] || 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400'}`}>{roleLabel(u.role, isAr)}</span></td>
+                                    <td className="px-5 py-3.5"><span className={`text-xs font-bold px-3 py-1 rounded-full ${roleColors[u.role] || 'bg-gray-100 dark:bg-brand-dark-hover text-gray-500 dark:text-gray-400'}`}>{roleLabel(u.role, isAr)}</span></td>
                                     <td className="px-5 py-3.5">
                                         <div className="flex items-center gap-1.5">{statusIcons[u.status]}<span className="text-xs font-medium text-gray-500 dark:text-gray-400">{statusLabel(u.status, isAr)}</span></div>
                                     </td>
@@ -177,8 +177,8 @@ const UsersPage = () => {
 
             {detailsId && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setDetailsId(null)}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 max-w-md w-full" onClick={e => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-[#3a322c]/50">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 max-w-md w-full" onClick={e => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-brand-dark-border/50">
                             <h3 className="font-bold text-gray-900 dark:text-white">{isAr ? 'تفاصيل المستخدم' : 'User Details'}</h3>
                             <button onClick={() => setDetailsId(null)} className="text-gray-400 hover:text-gray-700 dark:hover:text-white"><X className="w-5 h-5" /></button>
                         </div>

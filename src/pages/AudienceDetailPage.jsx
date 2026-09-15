@@ -27,6 +27,23 @@ const GROUP_NAMES = {
   research_center: { ar: "المراكز البحثية", en: "Research centres" },
 };
 
+// ✅ أدوار التسجيل التي تفتحها كل صفحة فئة — نموذج التسجيل يُفتح بالدور مباشرة
+// (/register?role=…) بلا عرض كل أنواع الحسابات
+const REGISTER_ROLES = {
+  undergrad: ["undergrad"],
+  grad: ["grad", "phd"],
+  faculty: ["faculty", "researcher"],
+  university: ["university"],
+  college: ["college"],
+  research_center: ["research_center"],
+  ministry: ["ministry"],
+};
+const registerLinks = (audienceKey, t, isRTL) =>
+  (REGISTER_ROLES[audienceKey] || []).map((role) => ({
+    to: `/register?role=${role}`,
+    label: `${isRTL ? "إنشاء حساب" : "Create account"} — ${t(`roles.${role}`)}`,
+  }));
+
 const FAMILY_ICONS = { assessment: FileCheck, development: Search, editing: FileCheck, review: Users, journal: Search, revision: RefreshCw, post: Award };
 const VALID_KEYS = Object.keys(AUDIENCES);
 
@@ -63,9 +80,10 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
   const families = SERVICE_FAMILIES.filter((f) => services.some((s) => s.family === f.key));
   const title = `${pick(data, "title_pre", lang)}${pick(data, "title_em", lang)}${pick(data, "title_post", lang)}`;
   const labels = isRTL
-    ? { levels: "ما تحصل عليه", services: "خدمات المرحلة", journey: "رحلتك", related: "المراحل الأخرى", stage: "المرحلة", of: "من 3", count: "خدمة في هذه المرحلة", decision: "القرار الأكاديمي النهائي يبقى لك", levelsTitle: "ثلاثة مستويات من التمكين", levelsKicker: "ما تحصل عليه", servicesKicker: "خدمات هذه المرحلة", journeyKicker: "رحلتك في هذه المرحلة", journeyTitle: "خطوة بخطوة — وكل خدمة في مكانها من الرحلة.", allServices: "كل الخدمات", register: "إنشاء حساب", contact: "للتواصل معنا", ctaTitle: "ابدأ من مرحلتك الآن.", ctaDesc: "حساب واحد يرافقك عبر المراحل الثلاث.", relatedTitle: "المراحل الأخرى وكتالوج الخدمات", catalogue: "كتالوج الخدمات", catalogueDesc: "35 خدمة بحثية بسبع عائلات، بفلتر المرحلة ونوع التنفيذ." }
-    : { levels: "What you get", services: "Stage services", journey: "Your journey", related: "Other stages", stage: "Stage", of: "of 3", count: "services in this stage", decision: "The final academic decision stays with you", levelsTitle: "Three levels of enablement", levelsKicker: "What you get", servicesKicker: "Services for this stage", journeyKicker: "Your journey in this stage", journeyTitle: "Step by step — and every service in its place on the journey.", allServices: "All services", register: "Create an account", contact: "Contact us", ctaTitle: "Start from your stage now.", ctaDesc: "One account accompanies you across all three stages.", relatedTitle: "Other stages and the services catalogue", catalogue: "Services catalogue", catalogueDesc: "35 research services in seven families, filterable by stage and delivery type." };
+    ? { levels: "ما تحصل عليه", services: "خدمات المرحلة", journey: "رحلتك", related: "المراحل الأخرى", stage: "المرحلة", of: "من 3", count: "خدمة في هذه المرحلة", decision: "القرار الأكاديمي النهائي يبقى لك", levelsTitle: "ثلاثة مستويات من التمكين", levelsKicker: "ما تحصل عليه", servicesKicker: "خدمات هذه المرحلة", journeyKicker: "رحلتك في هذه المرحلة", journeyTitle: "خطوة بخطوة — وكل خدمة في مكانها من الرحلة.", allServices: "كل الخدمات", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "ابدأ من مرحلتك الآن.", ctaDesc: "حساب واحد يرافقك عبر المراحل الثلاث.", relatedTitle: "المراحل الأخرى وكتالوج الخدمات", catalogue: "كتالوج الخدمات", catalogueDesc: "35 خدمة بحثية بسبع عائلات، بفلتر المرحلة ونوع التنفيذ." }
+    : { levels: "What you get", services: "Stage services", journey: "Your journey", related: "Other stages", stage: "Stage", of: "of 3", count: "services in this stage", decision: "The final academic decision stays with you", levelsTitle: "Three levels of enablement", levelsKicker: "What you get", servicesKicker: "Services for this stage", journeyKicker: "Your journey in this stage", journeyTitle: "Step by step — and every service in its place on the journey.", allServices: "All services", register: "Sign in", contact: "Contact us", ctaTitle: "Start from your stage now.", ctaDesc: "One account accompanies you across all three stages.", relatedTitle: "Other stages and the services catalogue", catalogue: "Services catalogue", catalogueDesc: "35 research services in seven families, filterable by stage and delivery type." };
 
+  const regLinks = registerLinks(audienceKey, t, isRTL);
   const related = ["undergrad", "grad", "faculty"]
     .filter((k) => k !== audienceKey)
     .map((k) => ({ to: `/audience/${k}`, kicker: pick(AUDIENCES[k], "kicker", lang).split(" — ")[0], title: t(`home.stage_${k}_title`), desc: t(`home.stage_${k}_desc`) }))
@@ -81,8 +99,8 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
         titleEm={pick(data, "title_em", lang)}
         titlePost={pick(data, "title_post", lang)}
         intro={pick(data, "intro", lang)}
-        primary={{ to: "/register", label: labels.register }}
-        secondary={{ to: "#services", label: labels.services }}
+        primary={regLinks[0]}
+        secondary={regLinks[1] || { to: "#services", label: labels.services }}
       >
         <div className="bg-white p-6 md:p-7 flex flex-col gap-5 shadow-[0_32px_56px_-28px_rgba(0,0,0,0.6)]">
           <div className="flex items-baseline gap-3">
@@ -103,7 +121,7 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
       </InnerHero>
       <AnchorNav
         items={[{ href: "#levels", label: labels.levels }, { href: "#services", label: labels.services }, { href: "#journey", label: labels.journey }, { href: "#related", label: labels.related }]}
-        cta={{ to: "/register", label: labels.register }}
+        cta={regLinks[0]}
       />
 
       {/* المستويات الثلاثة: القدرة / الخبرة / الفرص */}
@@ -184,7 +202,7 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
       <div id="related" className="scroll-mt-28">
         <RelatedCards title={labels.relatedTitle} items={related} />
       </div>
-      <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={{ to: "/register", label: labels.register }} secondary={{ to: "/contact-us", label: labels.contact }} />
+      <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={regLinks[0]} secondary={regLinks[1] || { to: "/login", label: labels.register }} />
     </>
   );
 };
@@ -193,9 +211,10 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
 const QualityLayout = ({ audienceKey, data, L }) => {
   const { t, lang, isRTL } = L;
   const labels = isRTL
-    ? { tracks: "المساران", areas: "مجالات الأداء", flow: "تدفق البيانات", related: "صفحات ذات صلة", focus: "ما تحصل عليه", tracksKicker: "المكون الثاني — الجودة والاعتماد والتصنيفات", tracksTitle: "مساران متوازيان، وملف بحثي واحد يغذيهما.", areasKicker: "ما الذي يُقاس", areasTitle: "مجالات الأداء التي تراقبها المؤسسة.", areasDesc: "أمثلة على المؤشرات من المقترح — يمكن للنظام دعم أطر مثل QS وTimes Higher Education وSCImago وLeiden CWTS متى توافرت البيانات.", flowKicker: "من المؤسسة إلى الوزارة", flowTitle: "بياناتك تُدخل مرة واحدة، وتصل إلى الوزارة عبر طبقة مشاركة وحوكمة.", register: "إنشاء حساب", contact: "للتواصل معنا", ctaTitle: "انضم كمؤسسة وابدأ من ملفك البحثي.", ctaDesc: "التسجيل المؤسسي ثم تسجيل الباحثين، ثم تتدفق البيانات.", relatedTitle: "صفحات ذات صلة", quote: "لا يُعدّ ارتفاع عدد المنشورات وحده دليلًا على جودة البحث — كل رقم يجب أن يعود إلى مصدر وفترة وتعريف.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض" }
-    : { tracks: "The two tracks", areas: "Performance areas", flow: "Data flow", related: "Related pages", focus: "What you get", tracksKicker: "Component two — Quality, accreditation & rankings", tracksTitle: "Two parallel tracks, fed by one research profile.", areasKicker: "What is measured", areasTitle: "The performance areas an institution monitors.", areasDesc: "Example indicators from the proposal — the system can support frameworks such as QS, Times Higher Education, SCImago and Leiden CWTS where data is available.", flowKicker: "From institution to Ministry", flowTitle: "Your data is entered once and reaches the Ministry through a sharing and governance layer.", register: "Create an account", contact: "Contact us", ctaTitle: "Join as an institution and start from your research profile.", ctaDesc: "Institutional registration, then researcher enrolment, then the data flows.", relatedTitle: "Related pages", quote: "A rising publication count alone is never evidence of research quality — every figure must trace back to a source, a period and a definition.", quoteSource: "Ministry layer specification — non-negotiable rules" };
+    ? { tracks: "المساران", areas: "مجالات الأداء", flow: "تدفق البيانات", related: "صفحات ذات صلة", focus: "ما تحصل عليه", tracksKicker: "المكون الثاني — الجودة والاعتماد والتصنيفات", tracksTitle: "مساران متوازيان، وملف بحثي واحد يغذيهما.", areasKicker: "ما الذي يُقاس", areasTitle: "مجالات الأداء التي تراقبها المؤسسة.", areasDesc: "أمثلة على المؤشرات من المقترح — يمكن للنظام دعم أطر مثل QS وTimes Higher Education وSCImago وLeiden CWTS متى توافرت البيانات.", flowKicker: "من المؤسسة إلى الوزارة", flowTitle: "بياناتك تُدخل مرة واحدة، وتصل إلى الوزارة عبر طبقة مشاركة وحوكمة.", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "انضم كمؤسسة وابدأ من ملفك البحثي.", ctaDesc: "التسجيل المؤسسي ثم تسجيل الباحثين، ثم تتدفق البيانات.", relatedTitle: "صفحات ذات صلة", quote: "لا يُعدّ ارتفاع عدد المنشورات وحده دليلًا على جودة البحث — كل رقم يجب أن يعود إلى مصدر وفترة وتعريف.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض" }
+    : { tracks: "The two tracks", areas: "Performance areas", flow: "Data flow", related: "Related pages", focus: "What you get", tracksKicker: "Component two — Quality, accreditation & rankings", tracksTitle: "Two parallel tracks, fed by one research profile.", areasKicker: "What is measured", areasTitle: "The performance areas an institution monitors.", areasDesc: "Example indicators from the proposal — the system can support frameworks such as QS, Times Higher Education, SCImago and Leiden CWTS where data is available.", flowKicker: "From institution to Ministry", flowTitle: "Your data is entered once and reaches the Ministry through a sharing and governance layer.", register: "Sign in", contact: "Contact us", ctaTitle: "Join as an institution and start from your research profile.", ctaDesc: "Institutional registration, then researcher enrolment, then the data flows.", relatedTitle: "Related pages", quote: "A rising publication count alone is never evidence of research quality — every figure must trace back to a source, a period and a definition.", quoteSource: "Ministry layer specification — non-negotiable rules" };
 
+  const regLinks = registerLinks(audienceKey, t, isRTL);
   const related = ["university", "college", "research_center"]
     .filter((k) => k !== audienceKey)
     .map((k) => ({ to: `/audience/${k}`, kicker: pick(AUDIENCES[k], "kicker", lang).split(" — ")[0], title: GROUP_NAMES[k][lang], desc: pick(AUDIENCES[k], "intro", lang).slice(0, 110) + "…" }))
@@ -212,7 +231,7 @@ const QualityLayout = ({ audienceKey, data, L }) => {
         titleEm={pick(data, "title_em", lang)}
         titlePost={pick(data, "title_post", lang)}
         intro={pick(data, "intro", lang)}
-        primary={{ to: "/register", label: labels.register }}
+        primary={regLinks[0]}
         secondary={{ to: "#tracks", label: labels.tracks }}
       >
         <div className="bg-white border border-gray-200 p-6 md:p-7">
@@ -229,7 +248,7 @@ const QualityLayout = ({ audienceKey, data, L }) => {
       </InnerHero>
       <AnchorNav
         items={[{ href: "#tracks", label: labels.tracks }, { href: "#areas", label: labels.areas }, { href: "#flow", label: labels.flow }, { href: "#related", label: labels.related }]}
-        cta={{ to: "/register", label: labels.register }}
+        cta={regLinks[0]}
       />
 
       {/* المساران */}
@@ -295,7 +314,7 @@ const QualityLayout = ({ audienceKey, data, L }) => {
       <div id="related" className="scroll-mt-28">
         <RelatedCards title={labels.relatedTitle} items={related} />
       </div>
-      <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={{ to: "/register", label: labels.register }} secondary={{ to: "/contact-us", label: labels.contact }} />
+      <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={regLinks[0]} secondary={{ to: "/login", label: labels.register }} />
     </>
   );
 };
@@ -389,6 +408,7 @@ const IntelligenceLayout = ({ data, L }) => {
     ? { spaces: "المساحات الأربع", policy: "رحلة القرار", principles: "القواعد", roles: "لمن", reports: "التقارير", spacesKicker: "المكون الأول — لوحات الوزارة والذكاء البحثي الوطني", spacesTitle: "أربع مساحات مستقلة وظيفيًا، مترابطة بياناتيًا.", spacesDesc: "البيانات تتحول إلى أولويات، والأولويات إلى شراكات وتمويل، ثم تنتج مشاريع ومخرجات تعود إلى قاعدة البيانات لقياس الأثر.", policyKicker: "الاستخدام الأهم", policyTitle: "من «عرض الأرقام» إلى «فهم الواقع ثم اختيار التدخل».", policyDesc: "المخرج النهائي ليس رقمًا؛ بل ملف قرار يوضح الأدلة والخيارات والمخاطر والمؤشرات التي ستُستخدم لمتابعته.", principlesKicker: "قواعد غير قابلة للتفاوض", principlesTitle: "ما الذي يضمنه النظام للوزارة.", rolesKicker: "لمن هذه الطبقة", rolesTitle: "صلاحيات بحسب الدور داخل الوزارة.", reportsKicker: "التقارير الوطنية", reportsTitle: "تقارير دورية تُبنى من الأرقام نفسها التي تراها في اللوحة.", contact: "للتواصل معنا", ctaTitle: "الخطوة التالية: مرحلة تأسيس واكتشاف تقني مشتركة.", ctaDesc: "تبدأ باعتماد لوحات الوزارة ومؤشراتها الأساسية، ثم النطاق والحوكمة والمؤسسات المشاركة.", relatedTitle: "صفحات ذات صلة", quote: "لا تجعلوا الوزارة مجرد شاشة تقارير.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض", question: "السؤال" }
     : { spaces: "The four spaces", policy: "Decision journey", principles: "Rules", roles: "Who", reports: "Reports", spacesKicker: "Component one — Ministry dashboards & national research intelligence", spacesTitle: "Four functionally independent spaces, linked by data.", spacesDesc: "Data becomes priorities, priorities become partnerships and funding, which produce projects and outputs that return to the database to measure impact.", policyKicker: "The most important use", policyTitle: "From “showing numbers” to “understanding reality, then choosing the intervention”.", policyDesc: "The final output is not a number; it is a decision file showing evidence, options, risks and the indicators that will track the decision.", principlesKicker: "Non-negotiable rules", principlesTitle: "What the system guarantees the Ministry.", rolesKicker: "Who this layer is for", rolesTitle: "Role-based access inside the Ministry.", reportsKicker: "National reports", reportsTitle: "Periodic reports built from the same figures you see on the dashboard.", contact: "Contact us", ctaTitle: "Next step: a joint foundation and technical discovery phase.", ctaDesc: "It starts by approving the Ministry dashboards and core indicators, then scope, governance and participating institutions.", relatedTitle: "Related pages", quote: "Do not turn the Ministry into a mere reporting screen.", quoteSource: "Ministry layer specification — non-negotiable rules", question: "The question" };
 
+  const regLinks = registerLinks("ministry", t, isRTL);
   const related = [
     { to: "/audience/university", kicker: isRTL ? "المكون الثاني" : "Component two", title: t("home.comp2_title"), desc: t("home.comp2_desc").slice(0, 120) + "…" },
     { to: "/services", kicker: isRTL ? "المكون الثالث" : "Component three", title: t("home.comp3_title"), desc: t("home.comp3_desc").slice(0, 120) + "…" },
@@ -405,12 +425,12 @@ const IntelligenceLayout = ({ data, L }) => {
         titleEm={pick(data, "title_em", lang)}
         titlePost={pick(data, "title_post", lang)}
         intro={pick(data, "intro", lang)}
-        primary={{ to: "/contact-us", label: labels.contact }}
+        primary={regLinks[0]}
         secondary={{ to: "#spaces", label: labels.spaces }}
       />
       <AnchorNav
         items={[{ href: "#spaces", label: labels.spaces }, { href: "#policy", label: labels.policy }, { href: "#principles", label: labels.principles }, { href: "#roles", label: labels.roles }, { href: "#reports", label: labels.reports }]}
-        cta={{ to: "/contact-us", label: labels.contact }}
+        cta={regLinks[0]}
       />
 
       {/* المساحات الأربع — صفوف متناوبة نص/لوحة */}
@@ -506,7 +526,7 @@ const IntelligenceLayout = ({ data, L }) => {
 
       <QuoteBand quote={labels.quote} source={labels.quoteSource} />
       <RelatedCards title={labels.relatedTitle} items={related} />
-      <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={{ to: "/contact-us", label: labels.contact }} secondary={{ to: "/about-us", label: t("nav.about_us") }} />
+      <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={regLinks[0]} secondary={{ to: "/contact-us", label: labels.contact }} />
     </>
   );
 };

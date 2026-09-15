@@ -64,11 +64,9 @@ const HomePage = () => {
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const currentLang = i18n.language;
   const lang = isRTL ? "ar" : "en";
-  // ✅ خط نسخ عربي أنيق لعنوان الهيرو والعبارات الكبيرة (أسلوب Elsevier) —
-  // بالإنجليزية يسقط إلى serif قياسي بمقاييس قريبة.
-  const serifFont = isRTL
-    ? "'Noto Naskh Arabic', 'Cairo', serif"
-    : "Georgia, 'Times New Roman', serif";
+  // ✅ خط الهوية (Brand Guidelines): العناوين الكبيرة بخط البراند Bold — العربية
+  // Bahij TheSansArabic (أو بديله IBM Plex Sans Arabic) والإنجليزية DM Sans.
+  const displayFont = isRTL ? "var(--font-ar)" : "var(--font-en)";
 
   const { siteSettings, homeSlides } = useContext(SiteContext);
 
@@ -84,13 +82,6 @@ const HomePage = () => {
 
   // ✅ عائلة الخدمات النشطة بقسم "الخدمات" — مفاتيح SERVICE_FAMILIES
   const [activeFamily, setActiveFamily] = useState("journal");
-
-  // ✅ نص الهيرو من الترجمة (home.hero_*) — النص المصحَّح من ملفات المنصة.
-  // تجاوُز الأدمن القديم (site_settings.hero_desc_*) كان يحمل الوصف العام
-  // للنسخة السابقة فيُظهر نصًا غير مطابق للتصميم الجديد؛ يُستخدم الآن فقط
-  // عند تفعيله صراحةً بمفتاح hero_desc_override_* من لوحة الأدمن.
-  const heroDesc =
-    siteSettings[`hero_desc_override_${currentLang}`] || t("home.hero_desc");
 
   const defaultSlides = [
     { id: 1, image_url: "/Home/home03.jpg" },
@@ -159,9 +150,10 @@ const HomePage = () => {
       key: "university",
       icon: Building2,
       label: t("home.tab_university"),
+      // ✅ الكلية تابعة للجامعة: كل بطاقة تحمل موقعها في التسلسل (المؤسسة الأم / تابعة / مستقل أو تابع)
       cards: ["university", "college", "research_center"].map((key) => ({
         key,
-        kicker: t("home.card_kicker_institution"),
+        kicker: t(`home.card_kicker_${key}`),
         title: t(`roles.${key}`),
         desc: t(`audiences.types.${key}.tagline`),
       })),
@@ -279,7 +271,9 @@ const HomePage = () => {
       {/* ═══════ 1) الهيرو — صورة داكنة + عنوان نسخ بمائل برتقالي واحد (أسلوب
            Elsevier) بدل النص المتدرّج السابق، مع مربعات برتقالية شفافة من
            هوية الصفحة، وزر أساسي واحد + دخول شبحي. ═══════ */}
-      <section className="relative z-30 h-[78vh] md:h-[680px] w-full overflow-hidden bg-brand-ink">
+      {/* ✅ ارتفاع الهيرو كمرجع Elsevier (~500px على الديسكتوب) والصورة فاتحة
+          (بلا تعتيم قوي) مع تدرّج خفيف فقط لقراءة النص — بطلب صريح */}
+      <section className="relative z-30 h-[500px] md:h-[460px] w-full overflow-hidden bg-brand-ink">
         {bannerSlides.map((slide, index) => (
           <div
             key={slide.id ?? index}
@@ -290,12 +284,12 @@ const HomePage = () => {
             <img
               src={resolveUploadUrl(slide.image_url)}
               alt=""
-              className="w-full h-full object-cover ken-burns-effect brightness-[0.38]"
+              className="w-full h-full object-cover ken-burns-effect brightness-[0.9]"
               loading={index === 0 ? "eager" : "lazy"}
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/55 to-brand-ink/15 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/75 via-brand-ink/25 to-brand-ink/10 pointer-events-none"></div>
 
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute top-10 end-10 h-24 w-24 bg-brand-orange/20" />
@@ -305,40 +299,22 @@ const HomePage = () => {
           <div className="absolute top-1/2 end-[5%] h-14 w-56 bg-brand-orange/10" />
         </div>
 
-        <div className="absolute inset-0 flex flex-col justify-end pb-20 md:pb-24 z-10">
+        {/* ✅ نص الهيرو في وسط السلايدر — أفقيًا وعموديًا (بطلب صريح)، مع هامش سفلي
+            يترك مكانًا لشريط التابات العائم ونقاط السلايدر */}
+        <div className="absolute inset-0 flex flex-col justify-center pt-2 pb-10 z-10">
           <div className="container mx-auto px-6 w-full">
-            <ScrollReveal className="flex flex-col items-start">
-              <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">
-                {t("home.hero_kicker")}
-              </span>
+            {/* ✅ الهيرو = العنوان فقط، في الوسط — الشعار الصغير والوصف والزر محذوفة بطلب صريح */}
+            <ScrollReveal className="flex flex-col items-center text-center">
               <h1
-                className="text-4xl sm:text-5xl md:text-[68px] font-normal leading-[1.3] text-white max-w-4xl mb-5"
-                style={{ fontFamily: serifFont }}
+                className="text-[30px] sm:text-[38px] md:text-[52px] font-bold leading-[1.45] text-white max-w-4xl mx-auto [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
+                style={{ fontFamily: displayFont }}
               >
                 {t("home.hero_title_pre")}
-                <span className="italic text-brand-orange">{t("home.hero_title_em")}</span>
+                <span className="text-brand-orange">{t("home.hero_title_em")}</span>
                 {t("home.hero_title_post") && (
                   <span className="block">{t("home.hero_title_post")}</span>
                 )}
               </h1>
-              <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl mb-8">
-                {heroDesc}
-              </p>
-              <div className="flex flex-wrap items-center gap-4">
-                <Link
-                  to="/register"
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm md:text-[15px] font-bold text-white hover:bg-brand-orange-dark transition-colors"
-                >
-                  {t("nav.register")}
-                  <ArrowIcon className="w-4 h-4" />
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center rounded-full border border-white/30 px-6 py-3 text-sm md:text-[15px] font-bold text-white hover:bg-white hover:text-brand-ink transition-colors"
-                >
-                  {t("nav.login")}
-                </Link>
-              </div>
             </ScrollReveal>
           </div>
         </div>
@@ -547,11 +523,11 @@ const HomePage = () => {
               {t("home.ai_kicker")}
             </span>
             <h2
-              className="text-3xl md:text-[44px] md:leading-[1.4] font-normal text-brand-ink mb-5"
-              style={{ fontFamily: serifFont }}
+              className="text-3xl md:text-[44px] md:leading-[1.3] font-bold text-brand-ink mb-5"
+              style={{ fontFamily: displayFont }}
             >
               {t("home.ai_title_pre")}
-              <span className="italic text-white">{t("home.ai_title_em")}</span>
+              <span className="text-white">{t("home.ai_title_em")}</span>
             </h2>
             <p className="text-base leading-relaxed text-brand-ink/80 max-w-xl mb-8">{t("home.ai_desc")}</p>
             <Link
@@ -919,10 +895,10 @@ const HomePage = () => {
           </ScrollReveal>
           <ScrollReveal className="flex flex-wrap items-center gap-4 flex-shrink-0" delay={100}>
             <Link
-              to="/register"
+              to="/login"
               className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300"
             >
-              {t("nav.register")}
+              {t("nav.login")}
             </Link>
             <Link
               to="/contact-us"

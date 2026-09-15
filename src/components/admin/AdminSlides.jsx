@@ -104,7 +104,7 @@ const AdminSlides = () => {
             {currentLang === 'ar' ? 'هذه الصور تظهر متحركة في أعلى الصفحة الرئيسية' : 'These images appear as a slideshow on the homepage'}
           </p>
         </div>
-        <label className="cursor-pointer bg-brand-orange text-white px-5 py-2.5 rounded-xl font-bold hover:bg-[#d4502a] flex items-center gap-2 transition-colors relative shadow-sm">
+        <label className="cursor-pointer bg-brand-orange text-white px-5 py-2.5 rounded-xl font-bold hover:bg-brand-orange-dark flex items-center gap-2 transition-colors relative shadow-sm">
           {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
           {currentLang === 'ar' ? 'إضافة صورة جديدة' : 'Add New Slide'}
           <input type="file" accept="image/*" onChange={handleAdd} className="hidden" disabled={isUploading} />
@@ -120,7 +120,7 @@ const AdminSlides = () => {
       )}
 
       {slides.length === 0 ? (
-        <div className="bg-white dark:bg-[#211c18] rounded-2xl border-2 border-dashed border-gray-200 dark:border-[#3a322c] p-16 text-center text-gray-400 dark:text-gray-500">
+        <div className="bg-white dark:bg-brand-dark-card rounded-2xl border-2 border-dashed border-gray-200 dark:border-brand-dark-border p-16 text-center text-gray-400 dark:text-gray-500">
           <Image className="w-20 h-20 mx-auto mb-4 opacity-30" />
           <p className="font-bold text-lg">{currentLang === 'ar' ? 'لا توجد صور بعد' : 'No slides yet'}</p>
           <p className="text-sm mt-1">{currentLang === 'ar' ? 'اضغط على زر "إضافة صورة جديدة" لبدء رفع الشرائح' : 'Click "Add New Slide" to start uploading'}</p>
@@ -128,11 +128,11 @@ const AdminSlides = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {slides.map((slide, index) => (
-            <div key={slide.id} className="bg-white dark:bg-[#211c18] rounded-2xl shadow-sm border border-gray-200 dark:border-[#3a322c]/60 overflow-hidden group relative">
-              <div className="aspect-video overflow-hidden bg-gray-100 dark:bg-[#1a1613]">
+            <div key={slide.id} className="bg-white dark:bg-brand-dark-card rounded-2xl shadow-sm border border-gray-200 dark:border-brand-dark-border/60 overflow-hidden group relative">
+              <div className="aspect-video overflow-hidden bg-gray-100 dark:bg-brand-dark">
                 <img src={slide.image_url} alt={`Slide ${index + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
-              <div className="p-4 flex items-center justify-between border-t border-gray-100 dark:border-[#3a322c]">
+              <div className="p-4 flex items-center justify-between border-t border-gray-100 dark:border-brand-dark-border">
                 <span className="text-sm font-bold text-gray-600 dark:text-gray-400">{currentLang === 'ar' ? 'شريحة رقم' : 'Slide'} {index + 1}</span>
                 {/* ✅ زر الحذف الجديد يفتح النافذة */}
                 <button 
@@ -155,10 +155,10 @@ const AdminSlides = () => {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeDeleteModal}></div>
           
           {/* محتوى النافذة */}
-          <div className="relative bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-[fadeInUp_0.3s_ease-out]">
+          <div className="relative bg-white dark:bg-brand-dark-card rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-[fadeInUp_0.3s_ease-out]">
 
             {/* معاينة الصورة المراد حذفها */}
-            <div className="relative h-48 bg-gray-100 dark:bg-[#1a1613] overflow-hidden">
+            <div className="relative h-48 bg-gray-100 dark:bg-brand-dark overflow-hidden">
               <img 
                 src={deleteModal.slide?.image_url} 
                 alt="Preview" 
@@ -188,7 +188,7 @@ const AdminSlides = () => {
                 <button
                   onClick={closeDeleteModal}
                   disabled={deleteModal.isLoading}
-                  className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-[#1a1613] rounded-xl hover:bg-gray-200 dark:hover:bg-[#2a231e] transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-brand-dark rounded-xl hover:bg-gray-200 dark:hover:bg-brand-dark-hover transition-colors disabled:opacity-50"
                 >
                   {currentLang === 'ar' ? 'إلغاء الأمر' : 'Cancel'}
                 </button>

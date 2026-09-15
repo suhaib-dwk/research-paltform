@@ -11,7 +11,7 @@ export default function AIShowcase({ isAr }) {
           </span>
           <h2
             className="text-3xl md:text-4xl font-normal text-brand-ink mt-3 mb-4"
-            style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+            style={{ fontFamily: "var(--font-ar)" }}
           >
             {isAr
               ? "ذكاء اصطناعي يفهم البحث العلمي"

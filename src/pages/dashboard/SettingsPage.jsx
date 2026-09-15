@@ -10,11 +10,11 @@ const EVENT_STYLES = {
     login: { icon: LogIn, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
     profile_update: { icon: FileText, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     avatar_update: { icon: FileText, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
-    research_submit: { icon: CheckCircle, color: 'text-brand-orange bg-brand-orange/10 dark:text-[#f0916d] dark:bg-brand-orange/15' },
+    research_submit: { icon: CheckCircle, color: 'text-brand-orange bg-brand-orange/10 dark:text-brand-orange-light dark:bg-brand-orange/15' },
     review_submit: { icon: ShieldCheck, color: 'text-violet-500 bg-violet-50 dark:bg-violet-900/20 dark:text-violet-400' },
     task_complete: { icon: CheckCircle, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     message_reply: { icon: MessageSquare, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
-    settings_update: { icon: FileText, color: 'text-gray-500 bg-gray-100 dark:bg-[#2a231e] dark:text-gray-400' },
+    settings_update: { icon: FileText, color: 'text-gray-500 bg-gray-100 dark:bg-brand-dark-hover dark:text-gray-400' },
     account_approved: { icon: UserPlus, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' },
     account_rejected: { icon: UserPlus, color: 'text-red-500 bg-red-50 dark:bg-red-900/20 dark:text-red-400' },
 };
@@ -101,15 +101,15 @@ const SettingsPage = () => {
         <button
             type="button"
             onClick={() => onChange(!checked)}
-            className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${checked ? 'bg-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c]'}`}
+            className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${checked ? 'bg-brand-orange' : 'bg-gray-200 dark:bg-brand-dark-border'}`}
         >
             <span className={`absolute top-0.5 ${checked ? (isRTL ? 'start-0.5' : 'end-0.5') : (isRTL ? 'end-0.5' : 'start-0.5')} w-5 h-5 bg-white rounded-full shadow transition-all duration-300`} />
         </button>
     );
 
     const Section = ({ icon: Icon, title, children }) => (
-        <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-50 dark:border-[#3a322c]/50">
+        <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-6">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-50 dark:border-brand-dark-border/50">
                 <div className="w-10 h-10 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center">
                     <Icon className="w-5 h-5" />
                 </div>
@@ -132,7 +132,7 @@ const SettingsPage = () => {
             </div>
 
             {/* ---- التبويبات ---- */}
-            <div className="flex gap-2 bg-white dark:bg-[#211c18] p-1.5 rounded-xl border border-gray-200 dark:border-[#3a322c]/60 w-fit shadow-sm">
+            <div className="flex gap-2 bg-white dark:bg-brand-dark-card p-1.5 rounded-xl border border-gray-200 dark:border-brand-dark-border/60 w-fit shadow-sm">
                 {TABS.map((tab) => (
                     <button
                         key={tab.key}
@@ -140,7 +140,7 @@ const SettingsPage = () => {
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${
                             activeTab === tab.key
                                 ? 'bg-brand-orange text-white shadow'
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e]'
+                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-brand-dark-hover'
                         }`}
                     >
                         <tab.icon className="w-4 h-4" />
@@ -166,7 +166,7 @@ const SettingsPage = () => {
                                 <select
                                     value={settings.language}
                                     onChange={(e) => setSettings(p => ({ ...p, language: e.target.value }))}
-                                    className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors"
+                                    className="bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors"
                                 >
                                     <option value="ar">العربية</option>
                                     <option value="en">English</option>
@@ -183,7 +183,7 @@ const SettingsPage = () => {
                                     </div>
                                     <Toggle checked={settings.notifications_email} onChange={(v) => setSettings(p => ({ ...p, notifications_email: v }))} />
                                 </div>
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-[#3a322c]/50">
+                                <div className="flex items-center justify-between pt-4 border-t border-gray-50 dark:border-brand-dark-border/50">
                                     <div>
                                         <p className="font-semibold text-gray-900 dark:text-white text-sm">{isAr ? 'إشعارات الرسائل النصية' : 'SMS Notifications'}</p>
                                         <p className="text-xs text-gray-400 mt-0.5">{isAr ? 'استلام إشعارات عبر الرسائل النصية' : 'Receive notifications via SMS'}</p>
@@ -208,7 +208,7 @@ const SettingsPage = () => {
                             disabled={saving}
                             className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-60 ${saved
                                 ? 'bg-emerald-500 text-white'
-                                : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'
+                                : 'bg-gradient-to-l from-brand-orange to-brand-orange-light text-white hover:shadow-lg hover:shadow-brand-orange/25'
                                 }`}
                         >
                             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
@@ -228,7 +228,7 @@ const SettingsPage = () => {
                         </div>
                     )}
 
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-6">
                         {activityLoading ? (
                             <div className="flex items-center justify-center py-16">
                                 <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
@@ -240,7 +240,7 @@ const SettingsPage = () => {
                             </div>
                         ) : (
                             <div className="relative">
-                                <div className="absolute start-5 top-0 bottom-0 w-px bg-gray-100 dark:bg-[#3a322c]" />
+                                <div className="absolute start-5 top-0 bottom-0 w-px bg-gray-100 dark:bg-brand-dark-border" />
                                 <div className="space-y-6">
                                     {logs.map((log) => {
                                         const style = EVENT_STYLES[log.event_type] || DEFAULT_STYLE;

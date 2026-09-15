@@ -127,7 +127,7 @@ export default function FourLevelsSection({ isAr }) {
           </p>
           <h2
             className="font-normal text-3xl md:text-5xl text-brand-ink leading-tight mb-5"
-            style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+            style={{ fontFamily: "var(--font-ar)" }}
           >
             {isAr ? 'من يستخدم المنصة؟' : 'Who is the platform for?'}
           </h2>
@@ -163,7 +163,7 @@ export default function FourLevelsSection({ isAr }) {
                     </div>
                     <h3
                       className="text-xl md:text-2xl text-brand-ink font-normal mb-3"
-                      style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+                      style={{ fontFamily: "var(--font-ar)" }}
                     >
                       {isAr ? level.title.ar : level.title.en}
                     </h3>
@@ -209,7 +209,7 @@ export default function FourLevelsSection({ isAr }) {
                 </div>
                 <h3
                   className="text-xl text-brand-ink font-normal mb-2"
-                  style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+                  style={{ fontFamily: "var(--font-ar)" }}
                 >
                   {isAr ? level.title.ar : level.title.en}
                 </h3>

@@ -100,7 +100,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* عمود IR SOURCE */}
+          {/* عمود SOURCE */}
           <div className="md:col-span-3">
             <h4 className="text-brand-orange text-xs font-bold tracking-[0.15em] uppercase mb-6">
               {t('footer.ir_source_col')}

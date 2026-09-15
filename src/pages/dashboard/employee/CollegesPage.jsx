@@ -30,15 +30,15 @@ const CollegesPage = () => {
           </h1>
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{t('employee.colleges.desc')}</p>
         </div>
-        <button className="flex items-center gap-2 bg-gradient-to-l from-brand-orange to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all">
+        <button className="flex items-center gap-2 bg-gradient-to-l from-brand-orange to-brand-orange-light text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all">
           <Plus className="w-4 h-4" /> {t('employee.add_btn')}
         </button>
       </div>
-      <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 overflow-hidden">
-        <div className="p-4 border-b border-gray-100 dark:border-[#3a322c]">
+      <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 overflow-hidden">
+        <div className="p-4 border-b border-gray-100 dark:border-brand-dark-border">
           <div className="relative max-w-sm">
             <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400 dark:text-gray-500" />
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('employee.search')} className="w-full bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c]/60 rounded-xl ps-10 pe-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('employee.search')} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-200 dark:border-brand-dark-border/60 rounded-xl ps-10 pe-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
           </div>
         </div>
         {loading ? (
@@ -47,7 +47,7 @@ const CollegesPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-[#3a322c]">
+                <tr className="border-b border-gray-100 dark:border-brand-dark-border">
                   <th className="text-start text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-5 py-3">#</th>
                   <th className="text-start text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-5 py-3">{t('employee.name')}</th>
                   <th className="text-start text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-5 py-3">{t('employee.actions')}</th>
@@ -57,7 +57,7 @@ const CollegesPage = () => {
                 {filtered.length === 0 ? (
                   <tr><td colSpan={3} className="text-center py-12 text-gray-400 dark:text-gray-500 text-sm">{t('employee.no_data')}</td></tr>
                 ) : filtered.map((item, i) => (
-                  <tr key={item.id} className="border-b border-gray-100 dark:border-[#3a322c] hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
+                  <tr key={item.id} className="border-b border-gray-100 dark:border-brand-dark-border hover:bg-gray-50 dark:hover:bg-brand-dark-hover transition-colors">
                     <td className="px-5 py-3.5 text-sm text-gray-400 dark:text-gray-500">{i + 1}</td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">

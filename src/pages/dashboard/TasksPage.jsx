@@ -67,7 +67,7 @@ const TasksPage = () => {
                     <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                 </div>
             ) : tasks.length === 0 ? (
-                <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-12 text-center">
+                <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-12 text-center">
                     <CheckCircle className="w-12 h-12 text-gray-200 dark:text-gray-700 mx-auto mb-3" />
                     <p className="text-gray-400 font-medium text-sm">{isAr ? 'لا توجد مهام حالياً' : 'No tasks yet'}</p>
                 </div>
@@ -77,7 +77,7 @@ const TasksPage = () => {
                         const style = statusStyle[task.status] || statusStyle.pending;
                         const Icon = style.icon;
                         return (
-                            <div key={task.id} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                            <div key={task.id} className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
                                 <div className={`w-11 h-11 rounded-xl ${style.bg} ${style.text} flex items-center justify-center flex-shrink-0`}>
                                     <Icon className="w-5 h-5" />
                                 </div>

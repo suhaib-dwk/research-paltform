@@ -114,9 +114,9 @@ const CorrespondencePage = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div className="lg:col-span-2 space-y-3">
         {!selectedType ? (
-          <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-8 text-center"><Mail className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" /><p className="text-gray-400">{isAr ? 'اختر نوع الرسالة' : 'Select a letter type'}</p></div>
+          <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-8 text-center"><Mail className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" /><p className="text-gray-400">{isAr ? 'اختر نوع الرسالة' : 'Select a letter type'}</p></div>
         ) : (
-          <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-3">
+          <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? selectedType.label_ar : selectedType.label_en}</h2>
               <div className="flex items-center gap-1">
@@ -125,13 +125,13 @@ const CorrespondencePage = () => {
               </div>
             </div>
             {showTpl && TPL_CONTENT[selectedType.id] && (
-              <div className="pb-3 border-b border-gray-100 dark:border-[#1e3050]/30">
-                <button onClick={() => setContent(isAr ? TPL_CONTENT[selectedType.id].ar : TPL_CONTENT[selectedType.id].en)} className="w-full text-start p-3 rounded-xl bg-gray-50 dark:bg-[#0a1628] border border-gray-100 dark:border-[#1e3050]/30 hover:border-pink-300 transition-all">
+              <div className="pb-3 border-b border-gray-100 dark:border-brand-dark-border/30">
+                <button onClick={() => setContent(isAr ? TPL_CONTENT[selectedType.id].ar : TPL_CONTENT[selectedType.id].en)} className="w-full text-start p-3 rounded-xl bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border/30 hover:border-pink-300 transition-all">
                   <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{isAr ? 'استخدام القالب الجاهز' : 'Use ready template'}</p>
                 </button>
               </div>
             )}
-            <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={16} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-pink-500/30 focus:border-pink-500 transition resize-none font-mono" dir="auto" />
+            <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={16} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-pink-500/30 focus:border-pink-500 transition resize-none font-mono" dir="auto" />
             <div className="flex gap-3">
               <button onClick={handleSubmit} disabled={!content.trim() || submitting} className="flex-1 py-3 bg-gradient-to-l from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-pink-500/25 disabled:shadow-none flex items-center justify-center gap-2">
                 {submitting ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</> : <><Send className="w-4 h-4" />{isAr ? 'حفظ وإرسال' : 'Save & Send'}</>}
@@ -142,7 +142,7 @@ const CorrespondencePage = () => {
       </div>
       <div className="space-y-2">
         {TYPES.map(lt => (
-          <button key={lt.id} onClick={() => handleSelect(lt)} className={`w-full text-start p-3.5 rounded-xl border transition-all ${selectedType?.id === lt.id ? 'border-pink-400 dark:border-pink-500/50 bg-pink-50 dark:bg-pink-900/15' : 'border-gray-200 dark:border-[#1e3050] bg-white dark:bg-[#0c1425] hover:border-pink-300 dark:hover:border-pink-500/30'}`}>
+          <button key={lt.id} onClick={() => handleSelect(lt)} className={`w-full text-start p-3.5 rounded-xl border transition-all ${selectedType?.id === lt.id ? 'border-pink-400 dark:border-pink-500/50 bg-pink-50 dark:bg-pink-900/15' : 'border-gray-200 dark:border-brand-dark-border bg-white dark:bg-brand-dark-card hover:border-pink-300 dark:hover:border-pink-500/30'}`}>
             <p className={`text-sm font-semibold mb-0.5 ${selectedType?.id === lt.id ? 'text-pink-700 dark:text-pink-400' : 'text-gray-800 dark:text-gray-200'}`}>{isAr ? lt.label_ar : lt.label_en}</p>
             <p className="text-[12px] text-gray-500 dark:text-gray-400">{isAr ? lt.desc_ar : lt.desc_en}</p>
           </button>

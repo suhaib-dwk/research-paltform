@@ -70,7 +70,7 @@ const InitialReviewPage = () => {
               <CheckCircle className="w-7 h-7" />
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-black text-[#1a1613] mb-2">{title}</h1>
+              <h1 className="text-2xl font-black text-brand-dark mb-2">{title}</h1>
               <p className="text-sm text-gray-500 leading-relaxed">{longDesc}</p>
             </div>
           </div>
@@ -79,7 +79,7 @@ const InitialReviewPage = () => {
 
       {/* التعليمات */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h2 className="text-lg font-black text-[#1a1613] mb-5 flex items-center gap-2">
+        <h2 className="text-lg font-black text-brand-dark mb-5 flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-emerald-500" />
           {isAr ? 'كيف تستخدم الخدمة؟' : 'How to Use This Service?'}
         </h2>
@@ -91,7 +91,7 @@ const InitialReviewPage = () => {
               </div>
               <div>
                 <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full mb-1 inline-block">{isAr ? `الخطوة ${i + 1}` : `Step ${i + 1}`}</span>
-                <h3 className="text-sm font-bold text-[#1a1613] mb-0.5">{isAr ? step.title_ar : step.title_en}</h3>
+                <h3 className="text-sm font-bold text-brand-dark mb-0.5">{isAr ? step.title_ar : step.title_en}</h3>
                 <p className="text-xs text-gray-400 leading-relaxed">{isAr ? step.desc_ar : step.desc_en}</p>
               </div>
             </div>
@@ -101,7 +101,7 @@ const InitialReviewPage = () => {
 
       {/* نموذج الطلب */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h2 className="text-lg font-black text-[#1a1613] mb-5 flex items-center gap-2">
+        <h2 className="text-lg font-black text-brand-dark mb-5 flex items-center gap-2">
           <Send className="w-5 h-5 text-emerald-500" />
           {isAr ? 'استخدم الخدمة الآن' : 'Use the Service Now'}
         </h2>
@@ -109,11 +109,11 @@ const InitialReviewPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-semibold text-gray-600 mb-1.5 block">{isAr ? 'التخصص الدقيق' : 'Exact Specialty'} <span className="text-red-400">*</span></label>
-              <input type="text" required placeholder={isAr ? 'مثال: ذكاء اصطناعي - تعلم عميق' : 'e.g., AI - Deep Learning'} className="w-full bg-[#f4f6fb] border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1a1613] outline-none focus:border-emerald-500 transition-colors" />
+              <input type="text" required placeholder={isAr ? 'مثال: ذكاء اصطناعي - تعلم عميق' : 'e.g., AI - Deep Learning'} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-brand-dark outline-none focus:border-emerald-500 transition-colors" />
             </div>
             <div>
               <label className="text-sm font-semibold text-gray-600 mb-1.5 block">{isAr ? 'المجلة المستهدفة (اختياري)' : 'Target Journal (Optional)'}</label>
-              <input type="text" placeholder="e.g., IEEE Access" dir="ltr" className="w-full bg-[#f4f6fb] border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1a1613] outline-none focus:border-emerald-500 transition-colors" />
+              <input type="text" placeholder="e.g., IEEE Access" dir="ltr" className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-brand-dark outline-none focus:border-emerald-500 transition-colors" />
             </div>
           </div>
 
@@ -144,7 +144,7 @@ const InitialReviewPage = () => {
 
           <div>
             <label className="text-sm font-semibold text-gray-600 mb-1.5 block">{isAr ? 'ملاحظات إضافية (اختياري)' : 'Additional Notes (Optional)'}</label>
-            <textarea rows={3} placeholder={isAr ? 'أضف أي ملاحظات...' : 'Add any notes...'} className="w-full bg-[#f4f6fb] border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1a1613] outline-none focus:border-emerald-500 transition-colors resize-none" />
+            <textarea rows={3} placeholder={isAr ? 'أضف أي ملاحظات...' : 'Add any notes...'} className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-brand-dark outline-none focus:border-emerald-500 transition-colors resize-none" />
           </div>
 
           <div className="flex items-start gap-3 p-3 bg-orange-50 border border-amber-200 rounded-xl">
@@ -164,7 +164,7 @@ const InitialReviewPage = () => {
 
       {/* الأسئلة الشائعة */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h2 className="text-lg font-black text-[#1a1613] mb-5 flex items-center gap-2">
+        <h2 className="text-lg font-black text-brand-dark mb-5 flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-emerald-500" />
           {isAr ? 'أسئلة شائعة' : 'FAQ'}
         </h2>
@@ -172,7 +172,7 @@ const InitialReviewPage = () => {
           {FAQS.map((faq, i) => (
             <div key={i} className={`border rounded-xl overflow-hidden transition-colors ${openFaq === i ? 'border-emerald-200 bg-emerald-50/30' : 'border-gray-100'}`}>
               <button type="button" onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between gap-3 p-4 text-start">
-                <span className="text-sm font-bold text-[#1a1613]">{isAr ? faq.q_ar : faq.q_en}</span>
+                <span className="text-sm font-bold text-brand-dark">{isAr ? faq.q_ar : faq.q_en}</span>
                 <motion.span animate={{ rotate: openFaq === i ? 180 : 0 }} transition={{ duration: 0.2 }}><ChevronDown className="w-4 h-4 text-gray-400" /></motion.span>
               </button>
               <AnimatePresence initial={false}>

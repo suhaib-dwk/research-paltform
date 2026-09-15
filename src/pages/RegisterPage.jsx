@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   GraduationCap, BookOpen, UserCheck, Microscope, Building2,
   Landmark, FlaskConical, ShieldCheck, UserCog, Briefcase,
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { API_BASE_URL } from '../api';
 import { getAllServices } from '../data/servicesConfig';
+import { RegisterCategoryChooser } from '../components/RegisterCategoryChooser';
 
 // =========================================================
 // 1. الفئات
@@ -403,6 +404,9 @@ const getFormFields = (role, step, dropdowns = {}) => {
       loginEmailField: 'official_email',
       fields: [
         { labelKey: 'form.entity_name', name: 'entity_name', colSpan: 'md:col-span-2' },
+        // ✅ الكلية تابعة لجامعة: تختار جامعتها الأم عند التسجيل (يُحفظ في
+        // profiles_entity.parent_university_id ← ref_universities.id)
+        ...(role === 'college' ? [{ labelKey: 'form.parent_university', name: 'parent_university_id', type: 'select', options: dropdowns.universities || [], colSpan: 'md:col-span-2' }] : []),
         { labelKey: 'form.entity_type', name: 'entity_type', type: 'select', options: [{ value: 'gov', label: 'form.gov' }, { value: 'private', label: 'form.private' }, { value: 'international', label: 'form.international' }] },
         { labelKey: 'form.website', name: 'website', type: 'url' },
         { labelKey: 'form.official_email', name: 'official_email', type: 'email' },
@@ -456,8 +460,15 @@ const RegisterPage = () => {
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
   const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
 
-  const [selectedRole, setSelectedRole] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1);
+  // ✅ الدور يأتي من الرابط (/register?role=undergrad) عبر صفحة الفئة التعريفية —
+  // فيُفتح نموذج هذا الدور مباشرة بلا عرض كل أنواع الحسابات. بدون دور صالح
+  // تُعرض الفئات الثلاث الرئيسية فقط.
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const roleParam = searchParams.get('role');
+  const presetRole = categories.some((c) => c.key === roleParam) ? roleParam : null;
+  const [selectedRole, setSelectedRole] = useState(presetRole);
+  const [currentStep, setCurrentStep] = useState(presetRole ? 2 : 1);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -560,6 +571,8 @@ const RegisterPage = () => {
   };
 
   const handleBack = () => {
+    // ✅ مع دور محدد من الرابط، الرجوع من الخطوة الأولى يعيد إلى صفحة الفئة (لا إلى شبكة الأدوار)
+    if (currentStep === 2 && presetRole) { if (window.history.length > 1) navigate(-1); else navigate('/login'); return; }
     if (currentStep === 2) setCurrentStep(1);
     else if (currentStep > 2) setCurrentStep(prev => prev - 1);
     setApiError(null);
@@ -686,35 +699,19 @@ const RegisterPage = () => {
 
             {currentStep === 1 && (
               <div>
-                <div className="text-center mb-10">
+                <div className="text-center mb-8">
                   <h2 className="text-3xl font-black text-brand-ink mb-3">{t('register.title')}</h2>
-                  <p className="text-brand-muted text-sm">{t('register.subtitle')}</p>
-                </div>
-                
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {categories.map((cat) => (
-                    <RoleCard key={cat.key} icon={cat.icon} roleKey={cat.key} label={t(`roles.${cat.key}`)} selected={selectedRole} onClick={handleRoleSelect} />
-                  ))}
+                  <p className="text-brand-muted text-sm">{isAr ? 'اختر فئتك لتقرأ ما تقدمه لك المنصة، ثم أنشئ حسابك من صفحتها.' : 'Pick your category to see what the platform offers you, then create your account from its page.'}</p>
                 </div>
 
-                <div className="mt-12">
-                  <button 
-                    onClick={handleNext} 
-                    disabled={!selectedRole}
-                    className={`w-full group flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg ${
-                      selectedRole 
-                        ? 'bg-gradient-to-r from-brand-orange to-orange-500 text-white hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-1' 
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
-                  >
-                    {t('register.next')} <ForwardArrow className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                  <p className="text-center text-sm text-gray-500 mt-6">
-                    <Link to="/login" className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
-                      {t('register.go_to_login')}
-                    </Link>
-                  </p>
-                </div>
+                {/* ✅ ثلاث فئات رئيسية فقط — كل فئة تفتح صفحتها التعريفية ومنها نموذج الدور */}
+                <RegisterCategoryChooser compact />
+
+                <p className="text-center text-sm text-gray-500 mt-8">
+                  <Link to="/login" className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
+                    {t('register.go_to_login')}
+                  </Link>
+                </p>
               </div>
             )}
 

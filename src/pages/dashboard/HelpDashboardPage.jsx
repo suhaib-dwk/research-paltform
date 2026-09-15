@@ -23,30 +23,30 @@ const HelpDashboardPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 flex items-start gap-4 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200">
-          <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0"><BookOpen className="w-5 h-5 text-white" /></div>
+        <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 p-5 flex items-start gap-4 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200">
+          <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0"><BookOpen className="w-5 h-5 text-white" /></div>
           <div><h3 className="font-bold text-gray-900 dark:text-white text-sm">{t('help.guide')}</h3><p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{t('help.guide_desc')}</p></div>
         </div>
-        <Link to="/contact-us" className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 flex items-start gap-4 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200">
+        <Link to="/contact-us" className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 p-5 flex items-start gap-4 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200">
           <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0"><MessageCircle className="w-5 h-5" /></div>
           <div><h3 className="font-bold text-gray-900 dark:text-white text-sm">{t('help.contact')}</h3><p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{t('help.contact_desc')}</p></div>
         </Link>
-        <Link to="/help" className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 flex items-start gap-4 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200">
+        <Link to="/help" className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 p-5 flex items-start gap-4 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200">
           <div className="w-11 h-11 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0"><ExternalLink className="w-5 h-5" /></div>
           <div><h3 className="font-bold text-gray-900 dark:text-white text-sm">{t('help.faq_page')}</h3><p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{t('help.faq_page_desc')}</p></div>
         </Link>
       </div>
 
-      <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-6">
+      <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 p-6">
         <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">{t('help.faq_title')}</h2>
         <div className="space-y-4">
           {faqItems.map((item, i) => (
-            <details key={i} className="group border border-gray-100 dark:border-[#3a322c] rounded-xl overflow-hidden">
-              <summary className="flex items-center justify-between p-4 cursor-pointer bg-white dark:bg-[#211c18] hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors text-sm font-semibold text-gray-900 dark:text-white">
+            <details key={i} className="group border border-gray-100 dark:border-brand-dark-border rounded-xl overflow-hidden">
+              <summary className="flex items-center justify-between p-4 cursor-pointer bg-white dark:bg-brand-dark-card hover:bg-gray-50 dark:hover:bg-brand-dark-hover transition-colors text-sm font-semibold text-gray-900 dark:text-white">
                 {isRTL ? item.q_ar : item.q_en}
                 <span className="text-brand-orange text-lg group-open:rotate-45 transition-transform">+</span>
               </summary>
-              <div className="px-4 pb-4 text-sm text-gray-500 dark:text-gray-400 leading-relaxed bg-white dark:bg-[#211c18]">{isRTL ? item.a_ar : item.a_en}</div>
+              <div className="px-4 pb-4 text-sm text-gray-500 dark:text-gray-400 leading-relaxed bg-white dark:bg-brand-dark-card">{isRTL ? item.a_ar : item.a_en}</div>
             </details>
           ))}
         </div>

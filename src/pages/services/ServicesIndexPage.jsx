@@ -20,10 +20,10 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 pb-4 flex items-start justify-between border-b border-gray-100 dark:border-[#3a322c]">
+      <div className="relative bg-white dark:bg-brand-dark-card rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white dark:bg-brand-dark-card p-6 pb-4 flex items-start justify-between border-b border-gray-100 dark:border-brand-dark-border">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-brand-orange/20">
+            <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-brand-orange/20">
               <Icon className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-xl font-black text-gray-900 dark:text-white">
@@ -32,7 +32,7 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg transition-colors flex-shrink-0"
+            className="p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg transition-colors flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
@@ -49,7 +49,7 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
           </div>
 
           <div className="grid grid-cols-3 gap-2.5">
-            <div className="bg-gray-50 dark:bg-[#1a1613] rounded-xl p-3">
+            <div className="bg-gray-50 dark:bg-brand-dark rounded-xl p-3">
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
                 {isAr ? 'الصيغة' : 'Format'}
               </p>
@@ -57,7 +57,7 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
                 {isAr ? details.format_ar : details.format_en}
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-[#1a1613] rounded-xl p-3">
+            <div className="bg-gray-50 dark:bg-brand-dark rounded-xl p-3">
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
                 {isAr ? 'التركيز' : 'Focus'}
               </p>
@@ -65,7 +65,7 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
                 {isAr ? details.focus_ar : details.focus_en}
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-[#1a1613] rounded-xl p-3">
+            <div className="bg-gray-50 dark:bg-brand-dark rounded-xl p-3">
               <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
                 {isAr ? 'الخطوة التالية' : 'Next'}
               </p>
@@ -87,13 +87,13 @@ const ServiceDetailModal = ({ service, onClose, onBegin, isAr }) => {
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-[#1a1613] rounded-xl hover:bg-gray-200 dark:hover:bg-[#2a231e] transition-colors"
+              className="flex-1 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-brand-dark rounded-xl hover:bg-gray-200 dark:hover:bg-brand-dark-hover transition-colors"
             >
               {isAr ? 'العودة للفهرس' : 'Back to catalogue'}
             </button>
             <button
               onClick={onBegin}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-brand-orange rounded-xl hover:bg-[#d4502a] transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-brand-orange rounded-xl hover:bg-brand-orange-dark transition-colors"
             >
               {isAr ? 'ابدأ الخدمة' : 'Begin this service'}
             </button>
@@ -136,7 +136,7 @@ const ServicesIndexPage = () => {
       </div>
 
       {visibleServices.length === 0 && !showResearchesCard ? (
-        <div className="bg-white dark:bg-[#211c18] rounded-2xl border-2 border-dashed border-gray-200 dark:border-[#3a322c] p-16 text-center text-gray-400 dark:text-gray-500">
+        <div className="bg-white dark:bg-brand-dark-card rounded-2xl border-2 border-dashed border-gray-200 dark:border-brand-dark-border p-16 text-center text-gray-400 dark:text-gray-500">
           <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-30" />
           <p className="font-bold text-lg">{isAr ? 'لا توجد خدمات متاحة لدورك حالياً' : 'No services available for your role yet'}</p>
         </div>
@@ -155,10 +155,10 @@ const ServicesIndexPage = () => {
             {showResearchesCard && (
               <button
                 onClick={() => navigate('/dashboard/researches')}
-                className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200 group"
+                className="text-start bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 p-5 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200 group"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
+                  <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-brand-orange transition-colors" />
@@ -177,10 +177,10 @@ const ServicesIndexPage = () => {
                 <button
                   key={svc.id}
                   onClick={() => setActiveService(svc)}
-                  className="text-start bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 p-5 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200 group"
+                  className="text-start bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 p-5 hover:border-brand-orange/40 dark:hover:border-brand-orange/30 hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-200 group"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
+                    <div className="w-11 h-11 bg-gradient-to-br from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20 flex-shrink-0">
                       <Icon className="w-5 h-5 text-white" />
                     </div>
                     <ArrowUpRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-brand-orange transition-colors" />

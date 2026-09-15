@@ -83,10 +83,10 @@ const ServicePageWrapper = ({
     const ScIcon = sc.icon || Clock;
 
     return (
-      <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-brand-orange/20 dark:hover:border-brand-orange/15 transition-all">
+      <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 hover:border-brand-orange/20 dark:hover:border-brand-orange/15 transition-all">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3 flex-1 min-w-0">
-            <div className="w-10 h-10 bg-gray-100 dark:bg-[#2a231e] rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 bg-gray-100 dark:bg-brand-dark-hover rounded-xl flex items-center justify-center flex-shrink-0">
               <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500" />
             </div>
             <div className="min-w-0 flex-1">
@@ -120,7 +120,7 @@ const ServicePageWrapper = ({
 
         {/* صندوق "بحاجة إلى معلومات" */}
         {req.status === 'needs_info' && req.info_needed_ar && (
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#3a322c]/30">
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-brand-dark-border/30">
             <div className="flex items-start gap-2 p-3 rounded-xl bg-orange-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/30">
               <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
               <div>
@@ -140,7 +140,7 @@ const ServicePageWrapper = ({
 
         {/* صندوق "بحاجة إلى تعديل" */}
         {req.status === 'revision_needed' && req.revision_note_ar && (
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#3a322c]/30">
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-brand-dark-border/30">
             <div className="flex items-start gap-2 p-3 rounded-xl bg-orange-50 dark:bg-orange-900/15 border border-orange-200 dark:border-orange-800/30">
               <AlertCircle className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
               <div>
@@ -161,12 +161,12 @@ const ServicePageWrapper = ({
         {/* شريط تقدم لقيد التنفيذ */}
                         {/* شريط التقدم لقيد التنفيذ */}
                 {req.status === 'in_progress' && (
-                    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#3a322c]/30">
+                    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-brand-dark-border/30">
                         <div className="flex items-center justify-between mb-1.5">
                             <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">{isAr ? 'التقدم' : 'Progress'}</span>
                             <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">{req.progress || 0}%</span>
                         </div>
-                        <div className="w-full h-1.5 bg-gray-100 dark:bg-[#3a322c] rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-gray-100 dark:bg-brand-dark-border rounded-full overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${req.progress || 0}%` }}
@@ -179,7 +179,7 @@ const ServicePageWrapper = ({
 
                 {/* ✅ ملاحظات المحكم + مرفق الملف — للطلبات المكتملة */}
                 {req.status === 'completed' && (
-                    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#3a322c]/30 space-y-3">
+                    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-brand-dark-border/30 space-y-3">
                         {/* ملاحظات المحكم */}
                         {req.reviewer_notes && (
                             <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30">
@@ -197,7 +197,7 @@ const ServicePageWrapper = ({
                                 <a
                                     href={resolveUploadUrl(req.result_file_path || req.file_path)}
                                     download={req.result_file_name || req.file_name}
-                                    className="flex items-center gap-1.5 text-xs font-semibold text-brand-orange hover:text-[#d4502a] bg-brand-orange/10 hover:bg-brand-orange/20 px-3 py-2 rounded-lg transition-colors"
+                                    className="flex items-center gap-1.5 text-xs font-semibold text-brand-orange hover:text-brand-orange-dark bg-brand-orange/10 hover:bg-brand-orange/20 px-3 py-2 rounded-lg transition-colors"
                                 >
                                     <FileText className="w-4 h-4" />
                                     {req.result_file_path
@@ -251,21 +251,21 @@ const ServicePageWrapper = ({
       </div>
 
       {/* ---- شريط التبويبات ---- */}
-      <div className="flex gap-1 p-1 bg-gray-100 dark:bg-[#1a1613] rounded-xl overflow-x-auto">
+      <div className="flex gap-1 p-1 bg-gray-100 dark:bg-brand-dark rounded-xl overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
               activeTab === tab.key
-                ? 'bg-white dark:bg-[#211c18] text-gray-900 dark:text-white shadow-sm'
+                ? 'bg-white dark:bg-brand-dark-card text-gray-900 dark:text-white shadow-sm'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
             {isAr ? tab.label_ar : tab.label_en}
             {tab.key === 'requests' && mockRequests.length > 0 && (
               <span className={`ms-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                activeTab === tab.key ? 'bg-brand-orange/15 text-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'
+                activeTab === tab.key ? 'bg-brand-orange/15 text-brand-orange' : 'bg-gray-200 dark:bg-brand-dark-border text-gray-500 dark:text-gray-400'
               }`}>
                 {mockRequests.length}
               </span>
@@ -281,7 +281,7 @@ const ServicePageWrapper = ({
       {activeTab === 'guide' && (
         <div className="space-y-3">
           {guideSections.length === 0 ? (
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-10 text-center">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-10 text-center">
               <HelpCircle className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
               <p className="text-gray-400 dark:text-gray-500">{isAr ? 'لا يوجد دليل متاح حالياً' : 'No guide available yet'}</p>
             </div>
@@ -289,13 +289,13 @@ const ServicePageWrapper = ({
             guideSections.map(section => {
               const isOpen = openSections.includes(section.id);
               return (
-                <div key={section.id} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 overflow-hidden">
+                <div key={section.id} className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 overflow-hidden">
                   <button
                     onClick={() => toggleSection(section.id)}
-                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-gray-50 dark:hover:bg-[#2a231e]/30 transition-colors"
+                    className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-gray-50 dark:hover:bg-brand-dark-hover/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-gray-100 dark:bg-[#2a231e] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-9 h-9 bg-gray-100 dark:bg-brand-dark-hover rounded-lg flex items-center justify-center flex-shrink-0">
                         <section.icon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       </div>
                       <span className="text-sm font-bold text-gray-900 dark:text-white text-start">
@@ -320,7 +320,7 @@ const ServicePageWrapper = ({
                         className="overflow-hidden"
                       >
                         <div className="px-5 pb-5 pt-0">
-                          <div className="border-t border-gray-100 dark:border-[#3a322c]/30 pt-4">
+                          <div className="border-t border-gray-100 dark:border-brand-dark-border/30 pt-4">
                             {/* قائمة عناصر */}
                             {section.items_ar && (
                               <ul className="space-y-2.5">
@@ -363,7 +363,7 @@ const ServicePageWrapper = ({
               <p className="text-sm text-gray-400">{isAr ? 'جارٍ تحميل الطلبات...' : 'Loading requests...'}</p>
             </div>
           ) : mockRequests.length === 0 ? (
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-12 text-center">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-12 text-center">
               <FileText className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
               <p className="text-gray-400 dark:text-gray-500 mb-4">
                 {isAr ? 'لا توجد طلبات سابقة' : 'No previous requests'}
@@ -390,7 +390,7 @@ const ServicePageWrapper = ({
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                         filterStatus === key
                           ? 'bg-brand-orange/10 text-brand-orange'
-                          : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e]'
+                          : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-brand-dark-hover'
                       }`}
                     >
                       {isAr ? sc.label_ar : sc.label_en}

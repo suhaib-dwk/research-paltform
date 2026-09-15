@@ -28,9 +28,9 @@ const indicatorTypeLabel = (t, isAr) => ({
 // ⚠️ score/maxScore نقاط فعلية من سقف حقيقي مختلف لكل مؤشر (نظام الدرجات الموزون)،
 // لذا نقارن بالنسبة المئوية (score/maxScore) وليس بقيمة score الخام.
 const scoreClasses = (score, maxScore, hasResponse) => {
-    if (!hasResponse) return 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400';
+    if (!hasResponse) return 'bg-gray-100 dark:bg-brand-dark-hover text-gray-500 dark:text-gray-400';
     const pct = maxScore > 0 ? (score / maxScore) * 100 : 0;
-    if (pct >= 75) return 'bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]';
+    if (pct >= 75) return 'bg-orange-50 dark:bg-brand-orange/10 text-brand-orange-dark dark:text-brand-orange-light';
     if (pct >= 40) return 'bg-orange-50 dark:bg-amber-900/15 text-amber-600 dark:text-amber-400';
     return 'bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400';
 };
@@ -68,7 +68,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
     const [saveMsg, setSaveMsg] = useState(null); // { ok: bool, text: string }
     const [evidenceFiles, setEvidenceFiles] = useState(indicator.evidence_files || []);
 
-    const inputCls = "w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition";
+    const inputCls = "w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition";
     const labelCls = "block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1";
 
     const handleSave = async () => {
@@ -144,9 +144,9 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
     };
 
     return (
-        <div className="p-4 border-t border-gray-100 dark:border-[#3a322c]/50 space-y-4">
+        <div className="p-4 border-t border-gray-100 dark:border-brand-dark-border/50 space-y-4">
             {/* معلومات المؤشر */}
-            <div className="bg-gray-50 dark:bg-[#1a1613] rounded-xl p-3.5 space-y-1.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+            <div className="bg-gray-50 dark:bg-brand-dark rounded-xl p-3.5 space-y-1.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                 <div><b className="text-gray-700 dark:text-gray-300">{isAr ? 'الدرجة القصوى لهذا المؤشر: ' : 'Maximum score for this indicator: '}</b>{indicator.max_score}</div>
                 <div><b className="text-gray-700 dark:text-gray-300">{isAr ? 'معنى المؤشر: ' : 'Meaning: '}</b>{indicator.description || '—'}</div>
                 {indicator.required_inputs && <div><b className="text-gray-700 dark:text-gray-300">{isAr ? 'البيانات المطلوبة: ' : 'Required data: '}</b>{indicator.required_inputs}</div>}
@@ -167,8 +167,8 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                                     onClick={() => setComplianceLevel(v)}
                                     className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                                         complianceLevel === v
-                                            ? 'border-brand-orange bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]'
-                                            : 'border-gray-200 dark:border-[#3a322c] text-gray-500 dark:text-gray-400 hover:border-gray-300'
+                                            ? 'border-brand-orange bg-orange-50 dark:bg-brand-orange/10 text-brand-orange-dark dark:text-brand-orange-light'
+                                            : 'border-gray-200 dark:border-brand-dark-border text-gray-500 dark:text-gray-400 hover:border-gray-300'
                                     }`}
                                 >
                                     {complianceLabel(v, isAr)}
@@ -189,8 +189,8 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                                     onClick={() => setMaturityLevel(v)}
                                     className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                                         String(maturityLevel) === String(v)
-                                            ? 'border-brand-orange bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]'
-                                            : 'border-gray-200 dark:border-[#3a322c] text-gray-500 dark:text-gray-400 hover:border-gray-300'
+                                            ? 'border-brand-orange bg-orange-50 dark:bg-brand-orange/10 text-brand-orange-dark dark:text-brand-orange-light'
+                                            : 'border-gray-200 dark:border-brand-dark-border text-gray-500 dark:text-gray-400 hover:border-gray-300'
                                     }`}
                                 >
                                     {v}
@@ -245,14 +245,14 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
             </div>
 
             {/* الأدلة */}
-            <div className="border border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl p-3.5">
+            <div className="border border-dashed border-gray-200 dark:border-brand-dark-border rounded-xl p-3.5">
                 <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
                     <Paperclip className="w-3.5 h-3.5" />{isAr ? 'الأدلة المرفوعة' : 'Uploaded evidence'}
                 </label>
                 <label className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium cursor-pointer transition-colors w-fit ${
                     uploading
-                        ? 'border-gray-200 dark:border-[#3a322c] text-gray-400 cursor-wait'
-                        : 'border-gray-200 dark:border-[#3a322c] text-gray-600 dark:text-gray-300 hover:border-brand-orange/50 hover:bg-orange-50/50 dark:hover:bg-brand-orange/5'
+                        ? 'border-gray-200 dark:border-brand-dark-border text-gray-400 cursor-wait'
+                        : 'border-gray-200 dark:border-brand-dark-border text-gray-600 dark:text-gray-300 hover:border-brand-orange/50 hover:bg-orange-50/50 dark:hover:bg-brand-orange/5'
                 }`}>
                     {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5" />}
                     {uploading ? (isAr ? 'جارٍ الرفع...' : 'Uploading...') : (isAr ? 'رفع ملف' : 'Upload file')}
@@ -287,7 +287,7 @@ const IndicatorForm = ({ indicator, isAr, period, onSaved }) => {
                     type="button"
                     onClick={handleSave}
                     disabled={saving}
-                    className="px-5 py-2 rounded-lg bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-xs font-bold hover:brightness-105 disabled:opacity-60 transition flex items-center gap-2"
+                    className="px-5 py-2 rounded-lg bg-gradient-to-l from-brand-orange to-brand-orange-light text-white text-xs font-bold hover:brightness-105 disabled:opacity-60 transition flex items-center gap-2"
                 >
                     {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                     {isAr ? 'حفظ المؤشر' : 'Save indicator'}
@@ -346,7 +346,7 @@ const AcademicQualityPage = () => {
     if (!user || !ALLOWED_ROLES.includes(user.role)) {
         return (
             <div className="p-6 flex items-center justify-center min-h-[60vh]">
-                <div className="max-w-md text-center bg-white dark:bg-[#211c18] border border-gray-200 dark:border-[#3a322c]/50 rounded-2xl p-8">
+                <div className="max-w-md text-center bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border/50 rounded-2xl p-8">
                     <Award className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{isAr ? 'جودة الأكاديمية' : 'Academic Quality'}</h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
@@ -410,14 +410,14 @@ const AcademicQualityPage = () => {
                     </h1>
                     <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
                         {isAr
-                            ? `المعيار ${std.code} · الوزن في الاعتماد المؤسسي العراقي ${std.weight_percent}% · ${std.indicators_count} مؤشرًا ضمن 8 عناصر`
-                            : `Standard ${std.code} · Weight in Iraqi institutional accreditation ${std.weight_percent}% · ${std.indicators_count} indicators across 8 elements`}
+                            ? `المعيار ${std.code} · الوزن في الاعتماد المؤسسي ${std.weight_percent}% · ${std.indicators_count} مؤشرًا ضمن 8 عناصر`
+                            : `Standard ${std.code} · Weight in institutional accreditation ${std.weight_percent}% · ${std.indicators_count} indicators across 8 elements`}
                     </p>
                 </div>
                 <select
                     value={period}
                     onChange={e => { setOpenIndicatorId(null); setPeriod(e.target.value); }}
-                    className="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-[#3a322c] bg-white dark:bg-[#211c18] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
+                    className="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-white dark:bg-brand-dark-card text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
                 >
                     {periodOptions().map(p => (
                         <option key={p} value={p}>{(isAr ? 'الفترة ' : 'Period ') + p}</option>
@@ -428,7 +428,7 @@ const AcademicQualityPage = () => {
             {/* بطاقات الإحصائيات */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {statCards.map((s, i) => (
-                    <div key={i} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5">
+                    <div key={i} className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5">
                         <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">{s.label}</p>
                         <p className="text-2xl font-black text-gray-900 dark:text-white">
                             {s.value}<small className="text-sm font-medium text-gray-400 dark:text-gray-500">{s.suffix}</small>
@@ -439,7 +439,7 @@ const AcademicQualityPage = () => {
 
             {/* التخطيط: قائمة العناصر + لوحة المؤشرات */}
             <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5 items-start">
-                <nav className="bg-white dark:bg-[#211c18] border border-gray-200 dark:border-[#3a322c]/50 rounded-2xl p-2.5 space-y-1 lg:sticky lg:top-6">
+                <nav className="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border/50 rounded-2xl p-2.5 space-y-1 lg:sticky lg:top-6">
                     {framework.elements.map(el => {
                         const es = elementScoreMap[el.id];
                         const badge = es && es.answered_indicators > 0 ? `${es.element_score}/100` : `0/${el.indicators.length}`;
@@ -451,20 +451,20 @@ const AcademicQualityPage = () => {
                                 onClick={() => { setActiveElementId(el.id); setOpenIndicatorId(null); }}
                                 className={`w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium text-start transition-all ${
                                     active
-                                        ? 'bg-orange-50 dark:bg-brand-orange/10 text-[#d4502a] dark:text-[#f0916d]'
-                                        : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e]/60'
+                                        ? 'bg-orange-50 dark:bg-brand-orange/10 text-brand-orange-dark dark:text-brand-orange-light'
+                                        : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-brand-dark-hover/60'
                                 }`}
                             >
                                 <span className="truncate">{isAr ? el.name_ar : (el.name_en || el.name_ar)}</span>
                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
-                                    active ? 'bg-brand-orange/20 text-[#d4502a] dark:text-[#f0916d]' : 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400'
+                                    active ? 'bg-brand-orange/20 text-brand-orange-dark dark:text-brand-orange-light' : 'bg-gray-100 dark:bg-brand-dark-hover text-gray-500 dark:text-gray-400'
                                 }`}>{badge}</span>
                             </button>
                         );
                     })}
                 </nav>
 
-                <section className="bg-white dark:bg-[#211c18] border border-gray-200 dark:border-[#3a322c]/50 rounded-2xl p-5 min-h-[300px]">
+                <section className="bg-white dark:bg-brand-dark-card border border-gray-200 dark:border-brand-dark-border/50 rounded-2xl p-5 min-h-[300px]">
                     {activeElement && (
                         <>
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{isAr ? activeElement.name_ar : (activeElement.name_en || activeElement.name_ar)}</h2>
@@ -481,11 +481,11 @@ const AcademicQualityPage = () => {
                                     const score = r ? r.score : 0;
                                     const isOpen = openIndicatorId === ind.id;
                                     return (
-                                        <div key={ind.id} className="border border-gray-100 dark:border-[#3a322c]/50 rounded-xl overflow-hidden">
+                                        <div key={ind.id} className="border border-gray-100 dark:border-brand-dark-border/50 rounded-xl overflow-hidden">
                                             <button
                                                 type="button"
                                                 onClick={() => setOpenIndicatorId(isOpen ? null : ind.id)}
-                                                className="w-full flex items-center justify-between gap-3 px-4 py-3.5 bg-gray-50/70 dark:bg-[#1a1613]/60 text-start"
+                                                className="w-full flex items-center justify-between gap-3 px-4 py-3.5 bg-gray-50/70 dark:bg-brand-dark/60 text-start"
                                             >
                                                 <span className="flex items-baseline gap-2.5 min-w-0">
                                                     <span className="text-[11px] text-gray-400 dark:text-gray-500 flex-shrink-0">{ind.code}</span>

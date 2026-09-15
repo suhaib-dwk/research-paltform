@@ -11,7 +11,7 @@ const DashboardFooter = () => {
   const { siteSettings } = useContext(SiteContext);
 
   return (
-    <footer className="mt-auto border-t border-gray-200 dark:border-[#3a322c]/30 bg-white dark:bg-[#1a1613]/30 backdrop-blur-sm transition-colors duration-300">
+    <footer className="mt-auto border-t border-gray-200 dark:border-brand-dark-border/30 bg-white dark:bg-brand-dark/30 backdrop-blur-sm transition-colors duration-300">
       <div className="px-6 py-5">
         <div className="max-w-6xl mx-auto">
           {/* روابط سريعة */}
@@ -30,7 +30,7 @@ const DashboardFooter = () => {
           </div>
 
           {/* فاصل */}
-          <div className="border-t border-gray-200 dark:border-[#3a322c]/30 pt-4 mb-4" />
+          <div className="border-t border-gray-200 dark:border-brand-dark-border/30 pt-4 mb-4" />
 
           {/* معلومات التواصل */}
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-5 text-gray-500 dark:text-gray-500">
@@ -53,7 +53,7 @@ const DashboardFooter = () => {
           </div>
 
           {/* فاصل + حقوق */}
-          <div className="border-t border-gray-200 dark:border-[#3a322c]/30 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="border-t border-gray-200 dark:border-brand-dark-border/30 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               {siteSettings?.site_logo ? (
                 <img src={resolveUploadUrl(siteSettings.site_logo)} alt="Logo" className="h-5 w-auto max-w-[20px] object-contain rounded opacity-40" />

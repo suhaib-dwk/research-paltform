@@ -70,8 +70,8 @@ const SubmitResultForm = ({ request, isAr, providerId, onDone, onClose }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 max-w-lg w-full" onClick={e => e.stopPropagation()}>
-                <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-[#3a322c]/50">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 max-w-lg w-full" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-brand-dark-border/50">
                     <h3 className="font-bold text-gray-900 dark:text-white">{isAr ? 'رفع نتيجة الخدمة' : 'Submit Service Result'}</h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-700 dark:hover:text-white"><X className="w-5 h-5" /></button>
                 </div>
@@ -81,11 +81,11 @@ const SubmitResultForm = ({ request, isAr, providerId, onDone, onClose }) => {
                     )}
                     <div>
                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملاحظات النتيجة' : 'Result Notes'}</label>
-                        <textarea rows={4} value={resultNotes} onChange={e => setResultNotes(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange resize-none" placeholder={isAr ? 'اكتب ملاحظاتك للطالب...' : 'Write your notes for the requester...'} />
+                        <textarea rows={4} value={resultNotes} onChange={e => setResultNotes(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange resize-none" placeholder={isAr ? 'اكتب ملاحظاتك للطالب...' : 'Write your notes for the requester...'} />
                     </div>
                     <div>
                         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملف النتيجة (اختياري)' : 'Result File (optional)'}</label>
-                        <label className="flex items-center justify-center h-20 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl cursor-pointer hover:border-brand-orange/50 hover:bg-brand-orange/5 transition-all">
+                        <label className="flex items-center justify-center h-20 border-2 border-dashed border-gray-200 dark:border-brand-dark-border rounded-xl cursor-pointer hover:border-brand-orange/50 hover:bg-brand-orange/5 transition-all">
                             <input type="file" className="hidden" accept=".pdf,.doc,.docx,.zip" onChange={e => setResultFile(e.target.files?.[0] || null)} />
                             {resultFile ? (
                                 <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2"><CheckCircle className="w-4 h-4" />{resultFile.name}</span>
@@ -94,7 +94,7 @@ const SubmitResultForm = ({ request, isAr, providerId, onDone, onClose }) => {
                             )}
                         </label>
                     </div>
-                    <button onClick={handleSubmit} disabled={saving} className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-sm font-bold hover:brightness-105 disabled:opacity-60 transition">
+                    <button onClick={handleSubmit} disabled={saving} className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-l from-brand-orange to-brand-orange-light text-white text-sm font-bold hover:brightness-105 disabled:opacity-60 transition">
                         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         {isAr ? 'إرسال النتيجة' : 'Submit Result'}
                     </button>
@@ -192,7 +192,7 @@ const ProviderRequestsPage = () => {
             )}
 
             {/* ---- تبويبات ---- */}
-            <div className="flex gap-1 p-1 bg-gray-100 dark:bg-[#1a1613] rounded-xl w-fit">
+            <div className="flex gap-1 p-1 bg-gray-100 dark:bg-brand-dark rounded-xl w-fit">
                 {[
                     { key: 'available', label_ar: 'الطلبات المتاحة', label_en: 'Available Requests', count: data.available_requests.length },
                     { key: 'mine', label_ar: 'طلباتي', label_en: 'My Requests', count: data.my_requests.length },
@@ -200,10 +200,10 @@ const ProviderRequestsPage = () => {
                     <button
                         key={tab.key}
                         onClick={() => { setActiveTab(tab.key); setStatusFilter('all'); }}
-                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.key ? 'bg-white dark:bg-[#211c18] text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.key ? 'bg-white dark:bg-brand-dark-card text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}
                     >
                         {isAr ? tab.label_ar : tab.label_en}
-                        <span className={`ms-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.key ? 'bg-brand-orange/15 text-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'}`}>{tab.count}</span>
+                        <span className={`ms-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.key ? 'bg-brand-orange/15 text-brand-orange' : 'bg-gray-200 dark:bg-brand-dark-border text-gray-500 dark:text-gray-400'}`}>{tab.count}</span>
                     </button>
                 ))}
             </div>
@@ -211,7 +211,7 @@ const ProviderRequestsPage = () => {
             {/* ---- فلاتر ---- */}
             <div className="flex flex-wrap items-center gap-2">
                 <Filter className="w-4 h-4 text-gray-400" />
-                <select value={serviceFilter} onChange={e => setServiceFilter(e.target.value)} className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 dark:border-[#3a322c] bg-white dark:bg-[#211c18] text-gray-600 dark:text-gray-300 outline-none">
+                <select value={serviceFilter} onChange={e => setServiceFilter(e.target.value)} className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 dark:border-brand-dark-border bg-white dark:bg-brand-dark-card text-gray-600 dark:text-gray-300 outline-none">
                     <option value="all">{isAr ? 'كل الخدمات' : 'All Services'}</option>
                     {data.qualified_services.map(slug => (
                         <option key={slug} value={slug}>{serviceLabel(slug)}</option>
@@ -224,7 +224,7 @@ const ProviderRequestsPage = () => {
                             { key: 'assigned', label_ar: 'مُسنَد', label_en: 'Assigned' },
                             { key: 'completed', label_ar: 'مكتمل', label_en: 'Completed' },
                         ].map(f => (
-                            <button key={f.key} onClick={() => setStatusFilter(f.key)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${statusFilter === f.key ? 'bg-brand-orange/10 text-brand-orange' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e]'}`}>
+                            <button key={f.key} onClick={() => setStatusFilter(f.key)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${statusFilter === f.key ? 'bg-brand-orange/10 text-brand-orange' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-brand-dark-hover'}`}>
                                 {isAr ? f.label_ar : f.label_en}
                             </button>
                         ))}
@@ -237,12 +237,12 @@ const ProviderRequestsPage = () => {
                     <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                 </div>
             ) : error ? (
-                <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-12 text-center">
+                <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-12 text-center">
                     <XCircle className="w-10 h-10 text-red-300 dark:text-red-700 mx-auto mb-3" />
                     <p className="text-gray-400 dark:text-gray-500">{error}</p>
                 </div>
             ) : filteredList.length === 0 ? (
-                <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-12 text-center">
+                <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-12 text-center">
                     <Inbox className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 dark:text-gray-500">{isAr ? 'لا توجد طلبات' : 'No requests found'}</p>
                 </div>
@@ -251,17 +251,17 @@ const ProviderRequestsPage = () => {
                     {filteredList.map(req => {
                         const sc = statusConfig[req.status] || statusConfig.pending;
                         return (
-                            <div key={`${req.service_slug}-${req.id}`} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-brand-orange/30 dark:hover:border-brand-orange/20 transition-all">
+                            <div key={`${req.service_slug}-${req.id}`} className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 hover:border-brand-orange/30 dark:hover:border-brand-orange/20 transition-all">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div className="flex items-start gap-3 flex-1 min-w-0">
-                                        <div className="w-10 h-10 bg-gray-100 dark:bg-[#2a231e] rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <div className="w-10 h-10 bg-gray-100 dark:bg-brand-dark-hover rounded-xl flex items-center justify-center flex-shrink-0">
                                             <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1 truncate">{req.meta || serviceLabel(req.service_slug)}</h3>
                                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400 dark:text-gray-500">
                                                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{req.created_at?.split(' ')[0]}</span>
-                                                <span className="px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-[#2a231e] font-semibold">{serviceLabel(req.service_slug)}</span>
+                                                <span className="px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-brand-dark-hover font-semibold">{serviceLabel(req.service_slug)}</span>
                                             </div>
                                             {req.notes && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 line-clamp-2">{req.notes}</p>}
                                         </div>
@@ -288,7 +288,7 @@ const ProviderRequestsPage = () => {
                                     </div>
                                 </div>
                                 {activeTab === 'mine' && req.status === 'completed' && req.result_notes && (
-                                    <div className="mt-3 pt-3 border-t border-gray-100 dark:border-[#3a322c]/30 text-xs text-gray-600 dark:text-gray-400">
+                                    <div className="mt-3 pt-3 border-t border-gray-100 dark:border-brand-dark-border/30 text-xs text-gray-600 dark:text-gray-400">
                                         <span className="font-semibold text-gray-500 dark:text-gray-400">{isAr ? 'ملاحظاتك: ' : 'Your notes: '}</span>{req.result_notes}
                                     </div>
                                 )}

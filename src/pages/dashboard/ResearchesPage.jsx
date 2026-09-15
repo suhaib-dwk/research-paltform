@@ -7,7 +7,7 @@ import { API_BASE_URL, resolveUploadUrl } from '../../api';
 const statusColors = {
     published: 'bg-emerald-50 dark:bg-emerald-900/15 text-emerald-600 dark:text-emerald-400',
     under_review: 'bg-brand-orange/10 text-brand-orange',
-    draft: 'bg-gray-100 dark:bg-[#2a231e] text-gray-500 dark:text-gray-400',
+    draft: 'bg-gray-100 dark:bg-brand-dark-hover text-gray-500 dark:text-gray-400',
     rejected: 'bg-red-50 dark:bg-red-900/15 text-red-600 dark:text-red-400',
 };
 
@@ -66,25 +66,25 @@ const ResearchesPage = () => {
                     <h1 className="text-2xl font-black text-gray-900 dark:text-white">{isAr ? 'الأبحاث' : 'Researches'}</h1>
                     <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">{isAr ? 'إدارة أبحاثك ومنشوراتك' : 'Manage your research and publications'}</p>
                 </div>
-                <Link to="/dashboard/researches/new" className="flex items-center gap-2 bg-gradient-to-l from-brand-orange to-[#f0916d] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all">
+                <Link to="/dashboard/researches/new" className="flex items-center gap-2 bg-gradient-to-l from-brand-orange to-brand-orange-light text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-brand-orange/25 transition-all">
                     <Plus className="w-4 h-4" /> {isAr ? 'بحث جديد' : 'New Research'}
                 </Link>
             </div>
 
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 overflow-hidden">
-                <div className="p-4 border-b border-gray-50 dark:border-[#3a322c]/50 flex flex-col sm:flex-row gap-3">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 overflow-hidden">
+                <div className="p-4 border-b border-gray-50 dark:border-brand-dark-border/50 flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1 max-w-sm">
                         <Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400" />
-                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث في الأبحاث...' : 'Search researches...'} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
+                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={isAr ? 'بحث في الأبحاث...' : 'Search researches...'} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl ps-10 pe-4 py-2.5 text-sm outline-none focus:border-brand-orange transition-colors text-gray-900 dark:text-white" />
                     </div>
-                    <select value={filter} onChange={(e) => setFilter(e.target.value)} className="bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
+                    <select value={filter} onChange={(e) => setFilter(e.target.value)} className="bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-2.5 text-sm outline-none focus:border-brand-orange text-gray-900 dark:text-white">
                         <option value="all">{isAr ? 'جميع الحالات' : 'All Status'}</option>
                         <option value="published">{isAr ? 'منشور' : 'Published'}</option>
                         <option value="under_review">{isAr ? 'قيد المراجعة' : 'Under Review'}</option>
                         <option value="draft">{isAr ? 'مسودة' : 'Draft'}</option>
                     </select>
                 </div>
-                <div className="divide-y divide-gray-50 dark:divide-[#3a322c]/30">
+                <div className="divide-y divide-gray-50 dark:divide-brand-dark-border/30">
                     {loading ? (
                         <div className="flex items-center justify-center py-16">
                             <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
@@ -92,7 +92,7 @@ const ResearchesPage = () => {
                     ) : filtered.length === 0 ? (
                         <div className="text-center py-12 text-gray-400 text-sm">{isAr ? 'لا توجد بيانات' : 'No data available'}</div>
                     ) : filtered.map(r => (
-                        <div key={r.id} className="flex items-center gap-4 p-5 hover:bg-[#f4f6fb] dark:hover:bg-[#1a1613]/40 transition-colors">
+                        <div key={r.id} className="flex items-center gap-4 p-5 hover:bg-gray-50 dark:hover:bg-brand-dark/40 transition-colors">
                             <div className="w-11 h-11 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0"><FileText className="w-5 h-5" /></div>
                             <div className="flex-1 min-w-0">
                                 <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{isAr ? r.title_ar : (r.title_en || r.title_ar)}</p>
@@ -107,8 +107,8 @@ const ResearchesPage = () => {
 
             {detailsId && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setDetailsId(null)}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-[#3a322c]/50">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-brand-dark-border/50">
                             <h3 className="font-bold text-gray-900 dark:text-white">{isAr ? 'تفاصيل البحث' : 'Research Details'}</h3>
                             <button onClick={() => setDetailsId(null)} className="text-gray-400 hover:text-gray-700 dark:hover:text-white"><X className="w-5 h-5" /></button>
                         </div>

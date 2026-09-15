@@ -43,7 +43,7 @@ export default function HeroElsevier({ isAr }) {
         <div className="relative z-10 flex h-full min-h-[600px] md:min-h-[85vh] w-full flex-col items-start justify-end px-6 pb-16 pt-24 md:px-16 md:pb-24">
           <h1
             className="max-w-3xl text-4xl font-normal leading-tight text-white md:text-6xl"
-            style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+            style={{ fontFamily: "var(--font-ar)" }}
           >
             {isAr ? (
               <>

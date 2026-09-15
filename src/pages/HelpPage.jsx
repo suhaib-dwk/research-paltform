@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Phone, Mail, MapPin, Loader2, CheckCircle, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import { SiteContext } from '../SiteContext';
@@ -165,21 +166,38 @@ const HelpPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="space-y-4"
+              className="space-y-5"
             >
-              <p className="text-brand-muted italic leading-relaxed">
-                {t('help.hero_quote')}
-              </p>
               <p className="text-brand-muted leading-relaxed">
                 {t('help.hero_desc')}
               </p>
+              {/* ✅ روابط سريعة لأقسام الصفحة — بدل اقتباس صفحة "من نحن" المكرر */}
+              <div className="grid sm:grid-cols-3 gap-3">
+                {[
+                  { href: '#faq', title: t('help.faq_page'), desc: t('help.faq_page_desc') },
+                  { href: '#contact', title: t('help.contact'), desc: t('help.contact_desc') },
+                  { href: '/target-audience', title: t('help.guide'), desc: t('help.guide_desc'), route: true },
+                ].map((q) => (
+                  q.route ? (
+                    <Link key={q.href} to={q.href} className="group bg-white border border-gray-200 hover:border-brand-orange/50 p-4 transition-colors">
+                      <span className="block text-sm font-bold text-brand-ink mb-1 group-hover:text-brand-orange transition-colors">{q.title}</span>
+                      <span className="block text-xs text-brand-muted leading-relaxed">{q.desc}</span>
+                    </Link>
+                  ) : (
+                    <a key={q.href} href={q.href} className="group bg-white border border-gray-200 hover:border-brand-orange/50 p-4 transition-colors">
+                      <span className="block text-sm font-bold text-brand-ink mb-1 group-hover:text-brand-orange transition-colors">{q.title}</span>
+                      <span className="block text-xs text-brand-muted leading-relaxed">{q.desc}</span>
+                    </a>
+                  )
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* ✅ قسم الأسئلة الشائعة */}
-      <section className="py-16 md:py-20 bg-[#faf7f4]">
+      <section id="faq" className="py-16 md:py-20 bg-gray-50 scroll-mt-20">
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             {/* صورة توضيحية */}
@@ -268,7 +286,7 @@ const HelpPage = () => {
       </section>
 
       {/* ✅ قسم تواصل معنا */}
-      <section className="py-16 px-4 md:px-8">
+      <section id="contact" className="py-16 px-4 md:px-8 scroll-mt-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -6,7 +6,7 @@ export default function StatsPunctuation({ isAr }) {
       <div className="container mx-auto px-6">
         <p
           className="text-white font-normal text-2xl md:text-4xl max-w-4xl mx-auto leading-relaxed"
-          style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+          style={{ fontFamily: "var(--font-ar)" }}
         >
           {isAr
             ? "منصة وطنية واحدة، توحّد جودة البحث العلمي، وتفتح الطريق نحو الاعتماد والتصنيف العالمي."

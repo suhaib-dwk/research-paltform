@@ -198,20 +198,20 @@ const ServiceCard = ({ service, currentLang, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.08 }}
-      className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg hover:border-[#c8a44e]/30 transition-all duration-300 flex flex-col"
+      className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg hover:border-brand-orange/30 transition-all duration-300 flex flex-col"
     >
-      <div className={`h-3 bg-gradient-to-l ${service.color_class || 'from-[#0a1628] to-[#1a2744]'}`} />
+      <div className={`h-3 bg-gradient-to-l ${service.color_class || 'from-brand-ink to-brand-dark-hover'}`} />
       <div className="p-6 flex-1 flex flex-col">
-        <div className="w-12 h-12 bg-[#c8a44e]/10 text-[#c8a44e] rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#c8a44e] group-hover:text-white transition-colors duration-300">
+        <div className="w-12 h-12 bg-brand-orange/10 text-brand-orange rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300">
           <Icon className="w-6 h-6" />
         </div>
-        <h3 className="text-base font-bold text-gray-800 mb-2 group-hover:text-[#0a1628] transition-colors">
+        <h3 className="text-base font-bold text-gray-800 mb-2 group-hover:text-brand-ink transition-colors">
           {title}
         </h3>
         <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 flex-1 mb-4">
           {desc}
         </p>
-        <div className="flex items-center gap-1.5 text-xs font-bold text-[#c8a44e] group-hover:gap-2.5 transition-all">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-brand-orange group-hover:gap-2.5 transition-all">
           <span>{currentLang === 'ar' ? 'استكشف الخدمة' : 'Explore'}</span>
           <ExternalLink className="w-3.5 h-3.5" />
         </div>
@@ -245,10 +245,10 @@ const StatCard = ({ icon: Icon, label, value, color }) => (
 // =========================================================
 const PlaceholderPage = ({ title, icon: Icon, description }) => (
   <div className="flex-1 flex flex-col items-center justify-center py-20 px-6 text-center">
-    <div className="w-20 h-20 bg-[#c8a44e]/10 text-[#c8a44e] rounded-2xl flex items-center justify-center mb-6">
+    <div className="w-20 h-20 bg-brand-orange/10 text-brand-orange rounded-2xl flex items-center justify-center mb-6">
       <Icon className="w-10 h-10" />
     </div>
-    <h2 className="text-2xl font-black text-[#0a1628] mb-3">{title}</h2>
+    <h2 className="text-2xl font-black text-brand-ink mb-3">{title}</h2>
     <p className="text-sm text-gray-500 max-w-md">{description}</p>
   </div>
 );
@@ -304,16 +304,16 @@ const DashboardPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-l from-[#0a1628] to-[#1a2744] rounded-2xl p-8 text-white relative overflow-hidden"
+          className="bg-gradient-to-l from-brand-ink to-brand-dark-hover rounded-2xl p-8 text-white relative overflow-hidden"
         >
-          <div className="absolute top-0 end-0 w-60 h-60 bg-[#c8a44e]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute top-0 end-0 w-60 h-60 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
           <div className="relative z-10">
-            <p className="text-[#c8a44e] text-sm font-bold mb-1">
+            <p className="text-brand-orange text-sm font-bold mb-1">
               {currentLang === 'ar' ? 'مرحباً بك في' : 'Welcome to'}
             </p>
             <h1 className="text-2xl md:text-3xl font-black mb-2">{userData?.name}</h1>
             <p className="text-gray-400 text-sm flex items-center gap-2 flex-wrap">
-              <span className="bg-[#c8a44e]/20 text-[#c8a44e] px-2.5 py-0.5 rounded-full text-xs font-bold">
+              <span className="bg-brand-orange/20 text-brand-orange px-2.5 py-0.5 rounded-full text-xs font-bold">
                 {getRoleName(userData?.role)}
               </span>
               <span>•</span>
@@ -328,7 +328,7 @@ const DashboardPage = () => {
             icon={BookOpen}
             label={currentLang === 'ar' ? 'خدمات المنصة' : 'Platform Services'}
             value={visibleServices.length || 0}
-            color="bg-[#c8a44e]/10 text-[#c8a44e]"
+            color="bg-brand-orange/10 text-brand-orange"
           />
           <StatCard
             icon={FileText}
@@ -352,7 +352,7 @@ const DashboardPage = () => {
 
         {/* قسم الخدمات */}
         <div>
-          <h2 className="text-xl font-black text-[#0a1628] mb-5 flex items-center gap-2">
+          <h2 className="text-xl font-black text-brand-ink mb-5 flex items-center gap-2">
             {currentLang === 'ar' ? 'استكشف خدماتنا' : 'Explore Our Services'}
           </h2>
 
@@ -390,7 +390,7 @@ const DashboardPage = () => {
   // ✅ محتوى صفحة الخدمات
   const ServicesContent = ({ services: visibleServices }) => (
     <div>
-      <h2 className="text-xl font-black text-[#0a1628] mb-5">
+      <h2 className="text-xl font-black text-brand-ink mb-5">
         {currentLang === 'ar' ? 'جميع الخدمات' : 'All Services'}
       </h2>
       {isLoadingServices ? (

@@ -49,8 +49,8 @@ const ServiceDetailPage = () => {
   // حالة التحميل
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#f4f6fb] flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#c8a44e] animate-spin" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-brand-orange animate-spin" />
       </div>
     );
   }
@@ -58,9 +58,9 @@ const ServiceDetailPage = () => {
   // حالة الخطأ
   if (error || !service) {
     return (
-      <div className="min-h-screen bg-[#f4f6fb] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
         <h2 className="text-2xl font-bold text-gray-800">{error || 'الصفحة غير موجودة'}</h2>
-        <Link to="/" className="text-[#c8a44e] hover:text-[#a8872e] flex items-center gap-2 font-medium transition-colors">
+        <Link to="/" className="text-brand-orange hover:text-brand-orange-dark flex items-center gap-2 font-medium transition-colors">
           <BackArrow className="w-4 h-4" /> {t('nav.home')}
         </Link>
       </div>
@@ -68,15 +68,15 @@ const ServiceDetailPage = () => {
   }
 
   const DynamicIcon = iconMap[service.icon_name] || BookOpen;
-  const gradientColor = service.color_class || 'from-[#0a1628] to-[#1a2744]';
+  const gradientColor = service.color_class || 'from-brand-ink to-brand-dark-hover';
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb] flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="flex-grow py-16 px-6">
         <div className="container mx-auto max-w-4xl">
           
           {/* زر العودة للرئيسية */}
-          <Link to="/" className="inline-flex items-center gap-2 text-[#c8a44e] hover:text-[#a8872e] font-medium mb-8 transition-colors">
+          <Link to="/" className="inline-flex items-center gap-2 text-brand-orange hover:text-brand-orange-dark font-medium mb-8 transition-colors">
             <BackArrow className="w-5 h-5" />
             {t('nav.home')}
           </Link>
@@ -87,11 +87,11 @@ const ServiceDetailPage = () => {
             {/* الهيدر الملون للخدمة */}
             <div className={`bg-gradient-to-r ${gradientColor} p-10 text-white relative overflow-hidden`}>
               {/* تأثير ضبابي خلفي للهيدر */}
-              <div className="absolute -top-10 -end-10 w-40 h-40 bg-[#c8a44e]/10 rounded-full blur-3xl"></div>
+              <div className="absolute -top-10 -end-10 w-40 h-40 bg-brand-orange/10 rounded-full blur-3xl"></div>
               
               <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                <div className="w-20 h-20 bg-[#c8a44e]/20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0 border border-[#c8a44e]/30">
-                  <DynamicIcon className="w-10 h-10 text-[#c8a44e]" />
+                <div className="w-20 h-20 bg-brand-orange/20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0 border border-brand-orange/30">
+                  <DynamicIcon className="w-10 h-10 text-brand-orange" />
                 </div>
                 <div>
                   <h1 className="text-3xl md:text-4xl font-extrabold">
@@ -115,7 +115,7 @@ const ServiceDetailPage = () => {
               
               {/* زر الإجراء */}
               <div className="mt-10 pt-8 border-t border-gray-100">
-                <button className="bg-gradient-to-l from-[#c8a44e] to-[#e6c96e] text-[#0a1628] px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-[#c8a44e]/25 transition-all duration-300">
+                <button className="bg-gradient-to-l from-brand-orange to-brand-orange-light text-brand-ink px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-brand-orange/25 transition-all duration-300">
                   {t('services.explore')}
                 </button>
               </div>

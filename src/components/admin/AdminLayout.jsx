@@ -50,7 +50,7 @@ const AdminLayout = () => {
 
   if (isVerifying) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#1a1613] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-brand-dark flex items-center justify-center">
         <div className="w-8 h-8 border-3 border-brand-orange border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -141,14 +141,14 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1613] flex transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-brand-dark flex transition-colors duration-300">
 
       {/* ==================== الشريط الجانبي للكمبيوتر ==================== */}
-      <aside className={`hidden lg:flex w-72 bg-[#1f1a17] text-white flex-col fixed inset-y-0 z-20 ${isRTL ? 'right-0' : 'left-0'}`}>
+      <aside className={`hidden lg:flex w-72 bg-brand-dark-soft text-white flex-col fixed inset-y-0 z-20 ${isRTL ? 'right-0' : 'left-0'}`}>
         {/* الهيدر */}
-        <div className="p-6 border-b border-[#3a322c]/50">
+        <div className="p-6 border-b border-brand-dark-border/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20">
+            <div className="w-10 h-10 bg-gradient-to-br from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center shadow-md shadow-brand-orange/20">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
@@ -169,7 +169,7 @@ const AdminLayout = () => {
         </nav>
 
         {/* زر تسجيل الخروج */}
-        <div className="p-4 border-t border-[#3a322c]/50 mt-auto">
+        <div className="p-4 border-t border-brand-dark-border/50 mt-auto">
           <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-900/20 transition-all">
             <LogOut className="w-5 h-5" /> {t('admin_menu.logout')}
           </button>
@@ -177,8 +177,8 @@ const AdminLayout = () => {
       </aside>
 
       {/* ==================== الهيدر العلوي للهاتف ==================== */}
-      <div className="lg:hidden fixed top-14 inset-x-0 z-10 bg-white/80 dark:bg-[#1a1613]/80 backdrop-blur-md border-b border-gray-200 dark:border-[#3a322c]/60 flex items-center px-4 h-12">
-        <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-600 dark:text-gray-400 p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg transition-colors">
+      <div className="lg:hidden fixed top-14 inset-x-0 z-10 bg-white/80 dark:bg-brand-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-brand-dark-border/60 flex items-center px-4 h-12">
+        <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-600 dark:text-gray-400 p-2 hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg transition-colors">
           <Menu className="w-5 h-5" />
         </button>
         <p className="text-sm font-bold text-gray-700 dark:text-gray-300 ms-3">{t('admin_menu.sidebar')}</p>
@@ -188,8 +188,8 @@ const AdminLayout = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex pt-[104px]">
           <div className="bg-black/60 flex-1" onClick={() => setIsMobileMenuOpen(false)}></div>
-          <div className={`w-72 bg-[#1f1a17] text-white flex flex-col ${isRTL ? 'animate-slide-in-right' : 'animate-slide-in-left'}`}>
-            <div className="p-4 flex items-center justify-between border-b border-[#3a322c]/50">
+          <div className={`w-72 bg-brand-dark-soft text-white flex flex-col ${isRTL ? 'animate-slide-in-right' : 'animate-slide-in-left'}`}>
+            <div className="p-4 flex items-center justify-between border-b border-brand-dark-border/50">
               <h1 className="text-lg font-bold">{t('admin_menu.menu')}</h1>
               <button onClick={() => setIsMobileMenuOpen(false)} className="text-slate-400 hover:text-white p-1">
                 <X className="w-6 h-6" />

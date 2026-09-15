@@ -18,9 +18,9 @@ const textareaToArray = (text) =>
 
 const arrayToTextarea = (arr) => (Array.isArray(arr) ? arr.join('\n') : '');
 
-const inputCls = "w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors";
+const inputCls = "w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors";
 const labelCls = "text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block";
-const cardCls = "bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6";
+const cardCls = "bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-6";
 
 const statusBadge = (status, isAr) => {
     const map = {
@@ -48,7 +48,7 @@ const AddButton = ({ onClick, label }) => (
     <button
         type="button"
         onClick={onClick}
-        className="flex items-center gap-1.5 text-xs font-bold text-brand-orange hover:text-[#d4502a] transition-colors"
+        className="flex items-center gap-1.5 text-xs font-bold text-brand-orange hover:text-brand-orange-dark transition-colors"
     >
         <Plus className="w-3.5 h-3.5" /> {label}
     </button>
@@ -405,7 +405,7 @@ const UniversityProfilePage = () => {
                     <div className="space-y-4">
                         {researchCenters.length === 0 && <p className="text-xs text-gray-400">{isAr ? 'لا توجد سجلات بعد' : 'No records yet'}</p>}
                         {researchCenters.map((c) => (
-                            <div key={c.tempId} className="border border-gray-100 dark:border-[#3a322c]/50 rounded-xl p-3.5 space-y-2.5">
+                            <div key={c.tempId} className="border border-gray-100 dark:border-brand-dark-border/50 rounded-xl p-3.5 space-y-2.5">
                                 <div className="flex items-center gap-2">
                                     <input type="text" placeholder={isAr ? 'اسم المركز البحثي' : 'Research center name'} value={c.name} onChange={(e) => updateResearchCenter(c.tempId, 'name', e.target.value)} className={`${inputCls} flex-1`} />
                                     <RowRemoveButton onClick={() => removeResearchCenter(c.tempId)} />
@@ -417,7 +417,7 @@ const UniversityProfilePage = () => {
                 </div>
 
                 <div className="pt-2">
-                    <button type="submit" disabled={saving} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
+                    <button type="submit" disabled={saving} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-brand-orange-light text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
                         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                         {saved ? (isAr ? 'تم الحفظ' : 'Saved') : (isAr ? 'حفظ الملف' : 'Save Profile')}
                     </button>
@@ -437,7 +437,7 @@ const UniversityProfilePage = () => {
                         type="button"
                         onClick={runAssessment}
                         disabled={assessmentLoading}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-sm font-bold hover:shadow-lg hover:shadow-brand-orange/25 disabled:opacity-60 transition-all"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-orange to-brand-orange-light text-white text-sm font-bold hover:shadow-lg hover:shadow-brand-orange/25 disabled:opacity-60 transition-all"
                     >
                         {assessmentLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                         {assessmentLoading ? t('readiness_diagnostic.running') : t('readiness_diagnostic.run_button')}
@@ -488,8 +488,8 @@ const UniversityProfilePage = () => {
                         {[
                             { key: 'missing_information', icon: AlertTriangle, cls: 'text-amber-600 dark:text-amber-400' },
                             { key: 'weaknesses', icon: AlertTriangle, cls: 'text-red-600 dark:text-red-400' },
-                            { key: 'suggested_priorities', icon: Sparkles, cls: 'text-[#d4502a] dark:text-[#f0916d]' },
-                            { key: 'suggested_next_steps', icon: Sparkles, cls: 'text-[#d4502a] dark:text-[#f0916d]' },
+                            { key: 'suggested_priorities', icon: Sparkles, cls: 'text-brand-orange-dark dark:text-brand-orange-light' },
+                            { key: 'suggested_next_steps', icon: Sparkles, cls: 'text-brand-orange-dark dark:text-brand-orange-light' },
                             { key: 'areas_requiring_more_data', icon: Info, cls: 'text-blue-600 dark:text-blue-400' },
                             { key: 'potential_opportunities', icon: Sparkles, cls: 'text-emerald-600 dark:text-emerald-400' },
                             { key: 'data_collection_recommendations', icon: Info, cls: 'text-blue-600 dark:text-blue-400' },
@@ -497,7 +497,7 @@ const UniversityProfilePage = () => {
                             const items = assessment[key];
                             if (!Array.isArray(items) || items.length === 0) return null;
                             return (
-                                <div key={key} className="border border-gray-100 dark:border-[#3a322c]/50 rounded-xl p-4">
+                                <div key={key} className="border border-gray-100 dark:border-brand-dark-border/50 rounded-xl p-4">
                                     <h3 className={`text-sm font-bold flex items-center gap-1.5 mb-2.5 ${cls}`}>
                                         <Icon className="w-4 h-4" /> {t(`readiness_diagnostic.${key}_title`)}
                                     </h3>
@@ -511,7 +511,7 @@ const UniversityProfilePage = () => {
                         })}
 
                         {/* إشعار توضيحي دائم — لا يُخفى، يظهر أسفل كل نتيجة */}
-                        <div className="flex items-start gap-2.5 p-3.5 bg-gray-50 dark:bg-[#1a1613] border border-gray-200 dark:border-[#3a322c] rounded-xl">
+                        <div className="flex items-start gap-2.5 p-3.5 bg-gray-50 dark:bg-brand-dark border border-gray-200 dark:border-brand-dark-border rounded-xl">
                             <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
                             <p className="text-xs text-gray-500 dark:text-gray-400">{t('readiness_diagnostic.disclaimer')}</p>
                         </div>

@@ -247,11 +247,19 @@ const getMenuGroups = (role, t, isAr) => {
 };
 
 // =========================================================
-// المكون الرئيسي
+// المكون الرئيسي — التصميم المرجعي الجديد: سايدبار أبيض بكامل الارتفاع
+// (اللوجو أعلى ثم القائمة بمجموعاتها). الحساب/الإعدادات/الخروج في قائمة
+// المستخدم بالهيدر (لا تكرار هنا بطلب صريح). العنصر النشط: خلفية خوخية +
+// نص برتقالي + شريط برتقالي على الحافة الخارجية (start). بيانات القوائم
+// (getMenuGroups) كما هي.
 // =========================================================
+// ✅ اللوجو الملوّن للوضع الفاتح، ونسخة "أبيض + شمس برتقالية" (البراند بوك) للوضع الداكن
+const staticLogoUrl = '/logo/logo1.png';
+const staticLogoDarkUrl = '/logo/logo-white-orange.png';
+
 const DashboardSidebar = ({ isOpen, setIsOpen }) => {
   const { t } = useTranslation();
-  const { user: userData, currentLang, isRTL } = useSite();
+  const { user: userData, currentLang, isRTL, theme } = useSite();
   const location = useLocation();
 
   const isAr = currentLang === 'ar';
@@ -288,65 +296,86 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
     return { ...group, items: [...injected, ...group.items] };
   }).filter((group) => group.items.length > 0);
 
+  const groupsWithoutBottom = menuGroups;
+
   const handleLinkClick = () => {
     if (window.innerWidth < 1024) setIsOpen(false);
   };
 
+  const NavItem = ({ item, active }) => {
+    const Icon = item.icon;
+    return (
+      <Link
+        to={item.to}
+        onClick={handleLinkClick}
+        className={`relative flex items-center gap-4 ps-7 pe-5 py-3 text-[15px] transition-colors duration-200 group ${
+          active
+            ? 'bg-[#fff1ea] dark:bg-brand-orange/10 text-brand-orange font-bold'
+            : 'text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-brand-dark-hover/60 hover:text-gray-900 dark:hover:text-white'
+        }`}
+      >
+        {active && <span className="absolute inset-y-0 start-0 w-1 bg-brand-orange" />}
+        <Icon
+          className={`w-[22px] h-[22px] flex-shrink-0 transition-colors ${
+            active ? 'text-brand-orange' : 'text-gray-500 dark:text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200'
+          }`}
+          strokeWidth={1.75}
+        />
+        <span className="flex-1 min-w-0 truncate">{item.label}</span>
+        {item.badge && (
+          <span className={`min-w-[22px] h-[22px] px-1.5 flex items-center justify-center text-[11px] font-bold rounded-full ${
+            active ? 'bg-brand-orange text-white' : 'bg-gray-100 dark:bg-brand-dark-border text-gray-600 dark:text-gray-300'
+          }`}>
+            {item.badge}
+          </span>
+        )}
+      </Link>
+    );
+  };
+
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      {/* رأس القائمة (موبايل فقط) */}
-      <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#3a322c]/50">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-brand-orange to-[#f0916d] rounded-lg flex items-center justify-center">
-            <GraduationCap className="w-4 h-4 text-white" />
+      {/* اللوجو */}
+      <div className="flex items-center justify-between ps-7 pe-5 h-20 flex-shrink-0">
+        <Link to="/dashboard" className="flex items-center" onClick={handleLinkClick}>
+          <img
+            src={theme === 'dark' ? staticLogoDarkUrl : staticLogoUrl}
+            alt="SOURCE"
+            className="h-24 w-auto -my-8 object-contain"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'flex';
+            }}
+          />
+          <div style={{ display: 'none' }} className="items-center gap-2.5">
+            <div className="w-9 h-9 bg-brand-orange rounded-lg flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-gray-900 dark:text-white text-lg font-black">SOURCE</span>
           </div>
-          <span className="text-gray-900 dark:text-white text-sm font-bold">{t('admin_menu.sidebar')}</span>
-        </div>
+        </Link>
         <button
           onClick={() => setIsOpen(false)}
           aria-label="Close menu"
-          className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg transition-colors"
+          className="lg:hidden p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      {/* القائمة الرئيسية — مقسّمة لمجموعات بعناوين */}
-      <nav className="flex-1 overflow-y-auto p-3">
-        {menuGroups.map((group, groupIdx) => (
+      {/* القائمة الرئيسية — مجموعات بعناوين صغيرة */}
+      <nav className="flex-1 overflow-y-auto py-3 border-t border-gray-100 dark:border-brand-dark-border/50">
+        {groupsWithoutBottom.map((group, groupIdx) => (
           <div key={group.id} className={groupIdx > 0 ? 'mt-4' : ''}>
-            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-3 mb-1.5">
-              {isAr ? group.title_ar : group.title_en}
-            </p>
-            <div className="space-y-1">
-              {group.items.map((item) => {
-                const active = item.isServicesLink ? isServicesActive : isActive(item.to);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.id}
-                    to={item.to}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative ${
-                      active
-                        ? 'bg-orange-50 dark:bg-brand-orange/10 text-brand-orange'
-                        : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#2a231e]/60 hover:text-gray-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <Icon className={`w-[18px] h-[18px] flex-shrink-0 transition-colors ${
-                      active ? 'text-brand-orange' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
-                    }`} />
-                    <span className="flex-1 min-w-0 truncate">{item.label}</span>
-                    {item.badge && (
-                      <span className={`min-w-[20px] h-5 px-1.5 flex items-center justify-center text-[10px] font-bold rounded-full ${
-                        active ? 'bg-brand-orange/20 text-brand-orange' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-600 dark:text-gray-400 group-hover:bg-gray-300 dark:group-hover:bg-[#4a4038]'
-                      }`}>
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
+            {groupsWithoutBottom.length > 1 && (
+              <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-[0.18em] ps-7 pe-5 mb-1.5">
+                {isAr ? group.title_ar : group.title_en}
+              </p>
+            )}
+            <div className="flex flex-col gap-0.5">
+              {group.items.map((item) => (
+                <NavItem key={item.id} item={item} active={item.isServicesLink ? isServicesActive : isActive(item.to)} />
+              ))}
             </div>
           </div>
         ))}
@@ -357,19 +386,18 @@ const DashboardSidebar = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
-      <aside className="hidden lg:flex fixed top-20 bottom-0 z-20 w-72 bg-white dark:bg-[#1f1a17]/95 backdrop-blur-xl border-e border-gray-200 dark:border-[#3a322c]/40 flex-col transition-colors duration-300">
+      <aside className="hidden lg:flex fixed top-0 bottom-0 start-0 z-40 w-[280px] bg-white dark:bg-brand-dark-soft border-e border-gray-100 dark:border-brand-dark-border/40 flex-col transition-colors duration-300">
         {sidebarContent}
       </aside>
 
       <AnimatePresence>
         {isOpen && (
           <motion.aside
-            initial={{ x: isRTL ? -300 : 300, opacity: 0 }}
+            initial={{ x: isRTL ? 300 : -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: isRTL ? -300 : 300, opacity: 0 }}
+            exit={{ x: isRTL ? 300 : -300, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-[#1f1a17] border-e border-gray-200 dark:border-[#3a322c]/40 flex flex-col lg:hidden shadow-2xl shadow-black/10 dark:shadow-black/50 transition-colors duration-300"
-            style={{ [isRTL ? 'right' : 'left']: 0 }}
+            className="fixed top-0 bottom-0 start-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-brand-dark-soft border-e border-gray-100 dark:border-brand-dark-border/40 flex flex-col lg:hidden shadow-2xl shadow-black/10 dark:shadow-black/50 transition-colors duration-300"
           >
             {sidebarContent}
           </motion.aside>

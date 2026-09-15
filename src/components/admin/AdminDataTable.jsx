@@ -266,7 +266,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     <title>${isRTL ? 'طباعة' : 'Print'}</title>
                     <style>
                         @page { margin: 15mm; }
-                        body { font-family: 'Cairo', 'Inter', sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 20px; }
+                        body { font-family: 'Bahij TheSansArabic', 'IBM Plex Sans Arabic', 'DM Sans', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 20px; }
                         table { width: 100%; border-collapse: collapse; }
                         th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: ${isRTL ? 'right' : 'left'}; }
                         th { background-color: #f8fafc; font-weight: bold; }
@@ -290,7 +290,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const handleExportWord = () => {
         setExportMenuOpen(false);
         const table = printRef.current.innerHTML;
-        const preHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office:word" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40/strict"><head><meta charset="utf-8"><style>body{font-family:'Cairo','Inter',sans-serif;direction:${isRTL ? 'rtl' : 'ltr'};padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:${isRTL ? 'right' : 'left'}}th{background:#f0f0f0;font-weight:bold}img{max-width:100px;height:60px;object-fit:cover}.bool-yes{color:green;font-weight:bold}.bool-no{color:red}</style><title>Export</title></head><body><h2 style="text-align:center;margin-bottom:20px">${tableName}</h2>${table}</body></html>`;
+        const preHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office:word" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40/strict"><head><meta charset="utf-8"><style>body{font-family:'Bahij TheSansArabic','IBM Plex Sans Arabic','DM Sans',Arial,sans-serif;direction:${isRTL ? 'rtl' : 'ltr'};padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:${isRTL ? 'right' : 'left'}}th{background:#f0f0f0;font-weight:bold}img{max-width:100px;height:60px;object-fit:cover}.bool-yes{color:green;font-weight:bold}.bool-no{color:red}</style><title>Export</title></head><body><h2 style="text-align:center;margin-bottom:20px">${tableName}</h2>${table}</body></html>`;
         const blob = new Blob(['\ufeff', preHtml], { type: 'application/msword' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -343,7 +343,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     <title>${tableName} - PDF</title>
                     <style>
                         @page { margin: 10mm; size: landscape; }
-                        body { font-family: 'Cairo', 'Inter', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 15px; font-size: 11px; }
+                        body { font-family: 'Bahij TheSansArabic', 'IBM Plex Sans Arabic', 'DM Sans', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 15px; font-size: 11px; }
                         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
                         th, td { border: 1px solid #555; padding: 5px 8px; text-align: ${isRTL ? 'right' : 'left'}; }
                         th { background-color: #e2e8f0; font-weight: bold; font-size: 10px; }
@@ -381,13 +381,13 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                 <div className="relative w-full sm:max-w-md">
                     <Search className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'right-4' : 'left-4'} w-5 h-5 text-gray-400`} />
                     <input type="text" placeholder={isRTL ? 'ابحث في الجدول...' : 'Search in table...'} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full border border-gray-200 dark:border-[#3a322c] rounded-xl ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 focus:ring-2 focus:ring-brand-orange outline-none bg-white dark:bg-[#211c18]`}
+                        className={`w-full border border-gray-200 dark:border-brand-dark-border rounded-xl ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 focus:ring-2 focus:ring-brand-orange outline-none bg-white dark:bg-brand-dark-card`}
                     />
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     {!readOnly && (
-                        <button onClick={openAddModal} className="flex items-center justify-center gap-2 bg-brand-orange text-white px-5 py-3 rounded-xl font-bold hover:bg-[#d4502a] transition-colors shadow-sm">
+                        <button onClick={openAddModal} className="flex items-center justify-center gap-2 bg-brand-orange text-white px-5 py-3 rounded-xl font-bold hover:bg-brand-orange-dark transition-colors shadow-sm">
                             <Plus className="w-5 h-5" />
                             {isRTL ? 'إضافة جديد' : 'Add New'}
                         </button>
@@ -405,8 +405,8 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                         </button>
 
                         {exportMenuOpen && (
-                            <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-white dark:bg-[#211c18] rounded-xl shadow-2xl border border-gray-100 dark:border-[#3a322c] py-2 w-52 z-50 animate-in fade-in slide-in-from-top-2`}>
-                                <button onClick={handlePrint} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
+                            <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-white dark:bg-brand-dark-card rounded-xl shadow-2xl border border-gray-100 dark:border-brand-dark-border py-2 w-52 z-50 animate-in fade-in slide-in-from-top-2`}>
+                                <button onClick={handlePrint} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-brand-dark-hover transition-colors">
                                     <Printer className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                                     {isRTL ? 'طباعة' : 'Print'}
                                 </button>
@@ -420,7 +420,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                     {isRTL ? 'تصدير Excel' : 'Export Excel'}
                                     <span className="text-[10px] text-gray-400 dark:text-gray-500 mr-auto">.csv</span>
                                 </button>
-                                <div className="border-t border-gray-100 dark:border-[#3a322c] my-1"></div>
+                                <div className="border-t border-gray-100 dark:border-brand-dark-border my-1"></div>
                                 <button onClick={handleExportPDF} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/15 transition-colors">
                                     <FileDown className="w-4 h-4 text-red-500 dark:text-red-400" />
                                     {isRTL ? 'تصدير PDF' : 'Export PDF'}
@@ -456,16 +456,16 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                         <table className="w-full text-sm text-left">
                             <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="px-4 py-3 border-b border-gray-200 dark:border-[#3a322c]">#{isRTL ? 'رقم' : 'ID'}</th>
-                                    {visibleCols.map(col => (<th key={col.key} className="px-4 py-3 border-b border-gray-200 dark:border-[#3a322c]">{getColLabel(col)}</th>))}
+                                    <th className="px-4 py-3 border-b border-gray-200 dark:border-brand-dark-border">#{isRTL ? 'رقم' : 'ID'}</th>
+                                    {visibleCols.map(col => (<th key={col.key} className="px-4 py-3 border-b border-gray-200 dark:border-brand-dark-border">{getColLabel(col)}</th>))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredData.map(row => (
                                     <tr key={row.id}>
-                                        <td className="px-4 py-3 border-b border-gray-100 dark:border-[#3a322c]">{row.id}</td>
+                                        <td className="px-4 py-3 border-b border-gray-100 dark:border-brand-dark-border">{row.id}</td>
                                         {visibleCols.map(col => (
-                                            <td key={col.key} className="px-4 py-3 border-b border-gray-100 dark:border-[#3a322c]" dangerouslySetInnerHTML={{ __html: formatCellValue(col, row[col.key]) }} />
+                                            <td key={col.key} className="px-4 py-3 border-b border-gray-100 dark:border-brand-dark-border" dangerouslySetInnerHTML={{ __html: formatCellValue(col, row[col.key]) }} />
                                         ))}
                                     </tr>
                                 ))}
@@ -478,15 +478,15 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                         {filteredData.length === 0 ? (
                             <div className="text-center py-10 text-gray-400">{isRTL ? 'لا توجد بيانات' : 'No data found'}</div>
                         ) : filteredData.map((row) => (
-                            <div key={row.id} className="bg-white dark:bg-[#211c18] p-4 rounded-xl border border-gray-200 dark:border-[#3a322c]/60 shadow-sm space-y-3">
+                            <div key={row.id} className="bg-white dark:bg-brand-dark-card p-4 rounded-xl border border-gray-200 dark:border-brand-dark-border/60 shadow-sm space-y-3">
                                 {visibleCols.filter(c => c.key !== 'id').slice(0, 4).map(col => (
                                     <div key={col.key} className="flex justify-between items-start">
                                         <span className="text-xs font-bold text-gray-500">{getColLabel(col)}</span>
                                         <span className="text-sm text-gray-900 dark:text-white text-end max-w-[70%] truncate" dangerouslySetInnerHTML={{ __html: col.type === 'boolean' ? (row[col.key] == 1 ? '✅' : '❌') : (row[col.key] || '-') }} />
                                     </div>
                                 ))}
-                                <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-[#3a322c]">
-                                    <button onClick={() => setViewModal({ isOpen: true, data: row })} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-gray-100 dark:bg-[#2a231e] rounded-lg hover:bg-gray-200">
+                                <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-brand-dark-border">
+                                    <button onClick={() => setViewModal({ isOpen: true, data: row })} className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-gray-100 dark:bg-brand-dark-hover rounded-lg hover:bg-gray-200">
                                         <Eye className="w-4 h-4" /> {isRTL ? 'عرض' : 'View'}
                                     </button>
                                     {!readOnly && (
@@ -505,10 +505,10 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     </div>
 
                     {/* ✅ جدول Desktop مع التعديل السريع */}
-                    <div className="hidden lg:block bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/60 shadow-sm overflow-hidden">
+                    <div className="hidden lg:block bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/60 shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50 dark:bg-[#1a1613] border-b border-gray-200 dark:border-[#3a322c]">
+                                <thead className="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50 dark:bg-brand-dark border-b border-gray-200 dark:border-brand-dark-border">
                                     <tr>
                                         <th className="px-6 py-4">#</th>
                                         {visibleCols.map(col => (<th key={col.key} className="px-6 py-4">{getColLabel(col)}</th>))}
@@ -524,7 +524,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                         </tr>
                                     ) : (
                                         filteredData.map((row) => (
-                                            <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
+                                            <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-brand-dark-hover transition-colors">
                                                 <td className="px-6 py-4 font-medium text-gray-400">{row.id}</td>
                                                 {visibleCols.map(col => (
                                                     <td key={col.key} className="px-6 py-4">
@@ -562,14 +562,14 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                                     {isSavingCell ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                                                                 </button>
                                                                 <button onClick={handleInlineCancel}
-                                                                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg transition-colors flex-shrink-0" title={isRTL ? 'إلغاء (Esc)' : 'Cancel (Esc)'}>
+                                                                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg transition-colors flex-shrink-0" title={isRTL ? 'إلغاء (Esc)' : 'Cancel (Esc)'}>
                                                                     <X className="w-4 h-4" />
                                                                 </button>
                                                             </div>
                                                         ) : col.type === 'image' ? (
                                                             /* ✅ resolveUploadUrl ضرورية: المسار المخزَّن قد يكون نسبيًا (uploads/admin/...
                                                                من الرفع المباشر الجديد) وليس رابطًا كاملاً كما كان يُكتب يدويًا سابقًا. */
-                                                            <img src={resolveUploadUrl(row[col.key])} className="w-16 h-10 object-cover rounded-lg bg-gray-50 dark:bg-[#1a1613]" alt="" />
+                                                            <img src={resolveUploadUrl(row[col.key])} className="w-16 h-10 object-cover rounded-lg bg-gray-50 dark:bg-brand-dark" alt="" />
                                                         ) : col.type === 'boolean' ? (
                                                             <button onClick={() => handleToggle(row.id, col.key, row[col.key])} title="Toggle">
                                                                 {row[col.key] == 1
@@ -616,21 +616,21 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال العرض */}
             {viewModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setViewModal({ isOpen: false, data: null })}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 border-b flex items-center justify-between">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-white dark:bg-brand-dark-card p-6 border-b flex items-center justify-between">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white">{isRTL ? 'تفاصيل السجل' : 'Record Details'} (#{viewModal.data.id})</h3>
-                            <button onClick={() => setViewModal({ isOpen: false, data: null })} className="p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg"><X className="w-5 h-5" /></button>
+                            <button onClick={() => setViewModal({ isOpen: false, data: null })} className="p-2 hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg"><X className="w-5 h-5" /></button>
                         </div>
                         <div className="p-6 space-y-4">
                             {columns.map(col => (
-                                <div key={col.key} className="border-b border-gray-100 dark:border-[#3a322c] pb-4">
+                                <div key={col.key} className="border-b border-gray-100 dark:border-brand-dark-border pb-4">
                                     <p className="text-xs font-bold text-gray-400 dark:text-gray-500 mb-1">{getColLabel(col)}</p>
                                     {col.type === 'image' ? (
                                         <img src={resolveUploadUrl(viewModal.data[col.key])} className="w-40 h-24 object-cover rounded-lg border" alt="" />
                                     ) : col.type === 'boolean' ? (
-                                        <p className="text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1a1613] p-3 rounded-lg text-sm">{viewModal.data[col.key] == 1 ? (isRTL ? 'مفعل' : 'Active') : (isRTL ? 'غير مفعل' : 'Inactive')}</p>
+                                        <p className="text-gray-900 dark:text-white bg-gray-50 dark:bg-brand-dark p-3 rounded-lg text-sm">{viewModal.data[col.key] == 1 ? (isRTL ? 'مفعل' : 'Active') : (isRTL ? 'غير مفعل' : 'Inactive')}</p>
                                     ) : (
-                                        <p className="text-gray-900 dark:text-white whitespace-pre-wrap bg-gray-50 dark:bg-[#1a1613] p-3 rounded-lg text-sm">{viewModal.data[col.key] || '-'}</p>
+                                        <p className="text-gray-900 dark:text-white whitespace-pre-wrap bg-gray-50 dark:bg-brand-dark p-3 rounded-lg text-sm">{viewModal.data[col.key] || '-'}</p>
                                     )}
                                 </div>
                             ))}
@@ -642,12 +642,12 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال التعديل الكامل */}
             {editModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setEditModal({ isOpen: false, data: null, values: {} })}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 border-b flex items-center justify-between">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-white dark:bg-brand-dark-card p-6 border-b flex items-center justify-between">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                                 {isRTL ? 'تعديل السجل' : 'Edit Record'} #{editModal.data.id}
                             </h3>
-                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg">
+                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="p-2 hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -664,9 +664,9 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                         {col.type === 'image' ? (
                                             <div>
                                                 {editModal.values[col.key] && (
-                                                    <img src={resolveUploadUrl(editModal.values[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-[#3a322c] mb-2" />
+                                                    <img src={resolveUploadUrl(editModal.values[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-brand-dark-border mb-2" />
                                                 )}
-                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-brand-orange hover:bg-orange-50/50 dark:hover:bg-brand-orange/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
+                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-brand-dark-border rounded-xl px-4 py-3 cursor-pointer hover:border-brand-orange hover:bg-orange-50/50 dark:hover:bg-brand-orange/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
                                                     {uploadingField === col.key ? (
                                                         <Loader2 className="w-4 h-4 animate-spin" />
                                                     ) : (
@@ -690,7 +690,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 rows={6}
                                                 value={editModal.values[col.key] || ''}
                                                 onChange={e => setEditModal({ ...editModal, values: { ...editModal.values, [col.key]: e.target.value } })}
-                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl p-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none"
+                                                className="w-full border border-gray-200 dark:border-brand-dark-border rounded-xl p-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none"
                                             />
                                         ) : (
                                             <input
@@ -698,18 +698,18 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 value={editModal.values[col.key] || ''}
                                                 onChange={e => setEditModal({ ...editModal, values: { ...editModal.values, [col.key]: e.target.value } })}
                                                 dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none"
+                                                className="w-full border border-gray-200 dark:border-brand-dark-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none"
                                             />
                                         )}
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 dark:border-[#3a322c] flex gap-3 justify-end">
-                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="px-6 py-2.5 bg-gray-100 dark:bg-[#2a231e] rounded-xl text-sm font-bold hover:bg-gray-200">
+                        <div className="p-6 border-t border-gray-100 dark:border-brand-dark-border flex gap-3 justify-end">
+                            <button onClick={() => setEditModal({ isOpen: false, data: null, values: {} })} className="px-6 py-2.5 bg-gray-100 dark:bg-brand-dark-hover rounded-xl text-sm font-bold hover:bg-gray-200">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
-                            <button onClick={handleSaveEdit} className="px-6 py-2.5 bg-brand-orange text-white rounded-xl text-sm font-bold hover:bg-[#d4502a]">
+                            <button onClick={handleSaveEdit} className="px-6 py-2.5 bg-brand-orange text-white rounded-xl text-sm font-bold hover:bg-brand-orange-dark">
                                 {isRTL ? 'حفظ التعديلات' : 'Save Changes'}
                             </button>
                         </div>
@@ -720,10 +720,10 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال الإضافة */}
             {addModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setAddModal({ isOpen: false })}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="sticky top-0 bg-white dark:bg-[#211c18] p-6 border-b flex items-center justify-between">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-white dark:bg-brand-dark-card p-6 border-b flex items-center justify-between">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">{isRTL ? 'إضافة سجل جديد' : 'Add New Record'}</h3>
-                            <button onClick={() => setAddModal({ isOpen: false })} className="p-2 hover:bg-gray-100 dark:hover:bg-[#2a231e] rounded-lg">
+                            <button onClick={() => setAddModal({ isOpen: false })} className="p-2 hover:bg-gray-100 dark:hover:bg-brand-dark-hover rounded-lg">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -747,9 +747,9 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                             <div>
                                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                                 {addData[col.key] && (
-                                                    <img src={resolveUploadUrl(addData[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-[#3a322c] mb-2" />
+                                                    <img src={resolveUploadUrl(addData[col.key])} alt="" className="w-32 h-20 object-cover rounded-lg border border-gray-200 dark:border-brand-dark-border mb-2" />
                                                 )}
-                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 cursor-pointer hover:border-brand-orange hover:bg-orange-50/50 dark:hover:bg-brand-orange/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
+                                                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 dark:border-brand-dark-border rounded-xl px-4 py-3 cursor-pointer hover:border-brand-orange hover:bg-orange-50/50 dark:hover:bg-brand-orange/5 transition-colors text-sm font-bold text-gray-500 dark:text-gray-400">
                                                     {uploadingField === col.key ? (
                                                         <Loader2 className="w-4 h-4 animate-spin" />
                                                     ) : (
@@ -771,7 +771,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 block">{getColLabel(col)}</label>
                                                 <textarea rows={5} value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder={isRTL ? 'اكتب النص هنا...' : 'Type text here...'}
-                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none" />
+                                                    className="w-full border border-gray-200 dark:border-brand-dark-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none resize-none" />
                                             </div>
                                         ) : (
                                             <div>
@@ -779,18 +779,18 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                                                 <input type="text" value={addData[col.key] || ''} onChange={(e) => handleAddChange(col.key, e.target.value)}
                                                     placeholder={isRTL ? 'أدخل القيمة...' : 'Enter value...'}
                                                     dir={col.key === 'email' || col.key === 'link' || col.key.includes('_en') || col.key.includes('_ar') ? 'ltr' : undefined}
-                                                    className="w-full border border-gray-200 dark:border-[#3a322c] rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" />
+                                                    className="w-full border border-gray-200 dark:border-brand-dark-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-brand-orange outline-none" />
                                             </div>
                                         )}
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 dark:border-[#3a322c] flex gap-3 justify-end">
-                            <button onClick={() => setAddModal({ isOpen: false })} className="px-6 py-2.5 bg-gray-100 dark:bg-[#2a231e] rounded-xl text-sm font-bold hover:bg-gray-200">
+                        <div className="p-6 border-t border-gray-100 dark:border-brand-dark-border flex gap-3 justify-end">
+                            <button onClick={() => setAddModal({ isOpen: false })} className="px-6 py-2.5 bg-gray-100 dark:bg-brand-dark-hover rounded-xl text-sm font-bold hover:bg-gray-200">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
-                            <button onClick={handleAddSubmit} disabled={isAdding} className="px-6 py-2.5 bg-brand-orange text-white rounded-xl text-sm font-bold hover:bg-[#d4502a] flex items-center gap-2 disabled:bg-brand-orange/50">
+                            <button onClick={handleAddSubmit} disabled={isAdding} className="px-6 py-2.5 bg-brand-orange text-white rounded-xl text-sm font-bold hover:bg-brand-orange-dark flex items-center gap-2 disabled:bg-brand-orange/50">
                                 <Loader2 className={`w-5 h-5 animate-spin ${isAdding ? 'block' : 'hidden'}`} />
                                 {isAdding ? (isRTL ? 'جاري الحفظ...' : 'Saving...') : (isRTL ? 'حفظ السجل' : 'Save Record')}
                             </button>
@@ -802,7 +802,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
             {/* مودال الحذف */}
             {deleteModal.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => !deleteModal.isLoading && setDeleteModal({ isOpen: false, id: null, isLoading: false })}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
                         <div className="p-6 text-center">
                             <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Trash2 className="w-8 h-8 text-red-500 dark:text-red-400" />
@@ -810,8 +810,8 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{isRTL ? 'تأكيد الحذف؟' : 'Confirm Delete?'}</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400">{isRTL ? 'سيتم حذف هذا السجل نهائياً.' : 'This record will be permanently deleted.'}</p>
                         </div>
-                        <div className="flex border-t border-gray-100 dark:border-[#3a322c]">
-                            <button onClick={() => setDeleteModal({ isOpen: false, id: null, isLoading: false })} disabled={deleteModal.isLoading} className="flex-1 py-4 text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2a231e] transition-colors">
+                        <div className="flex border-t border-gray-100 dark:border-brand-dark-border">
+                            <button onClick={() => setDeleteModal({ isOpen: false, id: null, isLoading: false })} disabled={deleteModal.isLoading} className="flex-1 py-4 text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-brand-dark-hover transition-colors">
                                 {isRTL ? 'إلغاء' : 'Cancel'}
                             </button>
                             <button onClick={handleDelete} disabled={deleteModal.isLoading} className="flex-1 py-4 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:bg-red-400">

@@ -107,8 +107,8 @@ const AccountPage = () => {
                 </div>
             )}
 
-            <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 p-6">
-                <div className="flex items-center gap-5 mb-8 pb-6 border-b border-gray-50 dark:border-[#3a322c]/50">
+            <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 p-6">
+                <div className="flex items-center gap-5 mb-8 pb-6 border-b border-gray-50 dark:border-brand-dark-border/50">
                     <div className="relative">
                         {avatarPath ? (
                             <img src={resolveUploadUrl(avatarPath)} alt="" className="w-20 h-20 rounded-2xl object-cover" />
@@ -121,7 +121,7 @@ const AccountPage = () => {
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
                             disabled={uploadingAvatar}
-                            className="absolute -bottom-1 -end-1 w-7 h-7 bg-brand-orange text-white rounded-lg flex items-center justify-center shadow-md hover:bg-[#d4502a] transition-colors disabled:opacity-60"
+                            className="absolute -bottom-1 -end-1 w-7 h-7 bg-brand-orange text-white rounded-lg flex items-center justify-center shadow-md hover:bg-brand-orange-dark transition-colors disabled:opacity-60"
                         >
                             {uploadingAvatar ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
                         </button>
@@ -139,27 +139,27 @@ const AccountPage = () => {
                             <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'الاسم الكامل' : 'Full Name'}</label>
                             <div className="relative">
                                 <User className="absolute top-1/2 -translate-y-1/2 start-4 w-4 h-4 text-gray-400" />
-                                <input type="text" value={form.full_name} onChange={(e) => handleChange('full_name', e.target.value)} className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
+                                <input type="text" value={form.full_name} onChange={(e) => handleChange('full_name', e.target.value)} className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
                             </div>
                         </div>
                         <div>
                             <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'الهاتف' : 'Phone'}</label>
                             <div className="relative">
                                 <Phone className="absolute top-1/2 -translate-y-1/2 start-4 w-4 h-4 text-gray-400" />
-                                <input type="tel" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} dir="ltr" className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
+                                <input type="tel" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} dir="ltr" className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
                             </div>
                         </div>
                         <div className="md:col-span-2">
                             <label className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-1.5 block">{isAr ? 'البريد الإلكتروني الشخصي' : 'Personal Email'}</label>
                             <div className="relative">
                                 <Mail className="absolute top-1/2 -translate-y-1/2 start-4 w-4 h-4 text-gray-400" />
-                                <input type="email" value={form.personal_email} onChange={(e) => handleChange('personal_email', e.target.value)} dir="ltr" className="w-full bg-[#f4f6fb] dark:bg-[#1a1613] border border-gray-100 dark:border-[#3a322c] rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
+                                <input type="email" value={form.personal_email} onChange={(e) => handleChange('personal_email', e.target.value)} dir="ltr" className="w-full bg-gray-50 dark:bg-brand-dark border border-gray-100 dark:border-brand-dark-border rounded-xl ps-11 pe-4 py-3 text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange transition-colors" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-50 dark:border-[#3a322c]/50">
-                        <button type="submit" disabled={loading} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-[#f0916d] text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
+                    <div className="pt-4 border-t border-gray-50 dark:border-brand-dark-border/50">
+                        <button type="submit" disabled={loading} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 ${saved ? 'bg-emerald-500 text-white' : 'bg-gradient-to-l from-brand-orange to-brand-orange-light text-white hover:shadow-lg hover:shadow-brand-orange/25'}`}>
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                             {saved ? (isAr ? 'تم الحفظ' : 'Saved') : (isAr ? 'حفظ التغييرات' : 'Save Changes')}
                         </button>

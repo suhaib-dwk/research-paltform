@@ -115,13 +115,13 @@ const ConsultationPage = () => {
           <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{submitSuccess}</p>
         </div>
       )}
-    <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
+    <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 space-y-4">
       {step === 1 && (
         <>
           <h2 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? 'اختر موضوع الاستشارة' : 'Choose Topic'}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {TOPICS.map(t => (
-              <button key={t.id} onClick={() => handleTopic(t.id)} className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-[#1e3050] hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all text-start">
+              <button key={t.id} onClick={() => handleTopic(t.id)} className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-brand-dark-border hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all text-start">
                 <span className="text-2xl">{t.icon}</span>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{isAr ? t.label_ar : t.label_en}</span>
               </button>
@@ -135,7 +135,7 @@ const ConsultationPage = () => {
           <h2 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? 'اختر المستشار' : 'Choose Consultant'}</h2>
           <div className="space-y-2">
             {CONSULTANTS.map(c => (
-              <button key={c.id} onClick={() => handleConsultant(c)} className="w-full flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-[#1e3050] hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all text-start">
+              <button key={c.id} onClick={() => handleConsultant(c)} className="w-full flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-brand-dark-border hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/10 transition-all text-start">
                 <div className="w-10 h-10 bg-gradient-to-br from-violet-400 to-violet-600 rounded-xl flex items-center justify-center text-white font-bold">{(isAr ? c.name_ar : c.name_en).charAt(0)}</div>
                 <div className="flex-1"><p className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? c.name_ar : c.name_en}</p><p className="text-xs text-gray-500">{isAr ? c.spec_ar : c.spec_en}</p></div>
                 <div className="flex items-center gap-1 text-amber-500"><Star className="w-3.5 h-3.5 fill-current" /><span className="text-xs font-bold">{c.rating}</span></div>
@@ -151,7 +151,7 @@ const ConsultationPage = () => {
             <div className="w-8 h-8 bg-gradient-to-br from-violet-400 to-violet-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">{(isAr ? selectedConsultant.name_ar : selectedConsultant.name_en).charAt(0)}</div>
             <div><p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{isAr ? selectedConsultant.name_ar : selectedConsultant.name_en}</p><p className="text-[11px] text-violet-600 dark:text-violet-400">{isAr ? selectedConsultant.spec_ar : selectedConsultant.spec_en}</p></div>
           </div>
-          <textarea value={question} onChange={(e) => setQuestion(e.target.value)} rows={5} placeholder={isAr ? 'اكتب سؤالك بالتفصيل...' : 'Write your question in detail...'} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 transition resize-none" />
+          <textarea value={question} onChange={(e) => setQuestion(e.target.value)} rows={5} placeholder={isAr ? 'اكتب سؤالك بالتفصيل...' : 'Write your question in detail...'} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 transition resize-none" />
           <button onClick={handleSubmit} disabled={!question.trim() || submitting} className="w-full py-3 bg-gradient-to-l from-violet-600 to-violet-500 hover:from-violet-700 hover:to-violet-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-violet-500/25 disabled:shadow-none flex items-center justify-center gap-2">
             {submitting ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</> : <><Send className="w-4 h-4" />{isAr ? 'إرسال الاستشارة' : 'Send Consultation'}</>}
           </button>

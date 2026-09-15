@@ -16,7 +16,7 @@ const AUDIENCE_ICONS = { researcher: GraduationCap, university: Building2, minis
 
 const PillarPage = () => {
   const { key } = useParams();
-  const { t, lang, isRTL, ArrowIcon, BackIcon, serifFont } = useInnerLang();
+  const { t, lang, isRTL, ArrowIcon, BackIcon, displayFont } = useInnerLang();
 
   if (!PILLARS[key]) return <Navigate to="/" replace />;
   const p = PILLARS[key];
@@ -27,8 +27,8 @@ const PillarPage = () => {
   const total = PILLAR_ORDER.length;
 
   const L = isRTL
-    ? { section: "الركائز التقنية", pillar: "الركيزة", chapter: "الفصل", ch1: "ما هو", ch2: "المكونات", ch3: "كيف يعمل", ch4: "الضمانة", who: "لمن يفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الركيزة السابقة", next: "الركيزة التالية", register: "إنشاء حساب", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "أربع ركائز تقنية تحت المكونات الثلاثة — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" }
-    : { section: "Technical pillars", pillar: "Pillar", chapter: "Chapter", ch1: "What it is", ch2: "Components", ch3: "How it works", ch4: "The guarantee", who: "Who benefits", whoTitle: "What changes for each role?", prev: "Previous pillar", next: "Next pillar", register: "Create an account", contact: "Contact us", ctaTitle: "A step towards global academic readiness.", ctaDesc: "Four technical pillars beneath the three components — in one national system.", chapters: "The four chapters", all: "All features" };
+    ? { section: "الركائز التقنية", pillar: "الركيزة", chapter: "الفصل", ch1: "ما هو", ch2: "المكونات", ch3: "كيف يعمل", ch4: "الضمانة", who: "لمن يفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الركيزة السابقة", next: "الركيزة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "أربع ركائز تقنية تحت المكونات الثلاثة — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" }
+    : { section: "Technical pillars", pillar: "Pillar", chapter: "Chapter", ch1: "What it is", ch2: "Components", ch3: "How it works", ch4: "The guarantee", who: "Who benefits", whoTitle: "What changes for each role?", prev: "Previous pillar", next: "Next pillar", register: "Sign in", contact: "Contact us", ctaTitle: "A step towards global academic readiness.", ctaDesc: "Four technical pillars beneath the three components — in one national system.", chapters: "The four chapters", all: "All features" };
 
   const chapters = [
     { id: "what", n: "01", label: L.ch1 },
@@ -55,13 +55,13 @@ const PillarPage = () => {
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-6 block">
             {L.pillar} {p.number} / {`0${total}`} — {name}
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-[72px] font-normal leading-[1.28] text-white max-w-5xl mb-6" style={{ fontFamily: serifFont }}>
+          <h1 className="text-[34px] sm:text-[48px] md:text-[64px] font-bold leading-[1.35] text-white max-w-5xl mb-6" style={{ fontFamily: displayFont }}>
             {pick(p, "title_pre", lang)}
-            <span className="italic text-brand-orange">{pick(p, "title_em", lang)}</span>
+            <span className="text-brand-orange">{pick(p, "title_em", lang)}</span>
           </h1>
           <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl mb-9">{pick(p, "intro", lang)}</p>
           <div className="flex flex-wrap items-center gap-5">
-            <Link to="/register" className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-[15px] font-bold text-white hover:bg-brand-orange-dark transition-colors">
+            <Link to="/login" className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-[15px] font-bold text-white hover:bg-brand-orange-dark transition-colors">
               {L.register}
               <ArrowIcon className="w-4 h-4" />
             </Link>
@@ -174,7 +174,7 @@ const PillarPage = () => {
           </div>
         </div>
         <div className="bg-white px-6 py-16 md:py-20 border-b border-gray-200 flex justify-center text-center">
-          <p className="text-2xl md:text-[34px] md:leading-[1.6] text-brand-ink max-w-4xl" style={{ fontFamily: serifFont }}>«{pick(p, "quote", lang)}»</p>
+          <p className="text-2xl md:text-[32px] md:leading-[1.6] font-medium text-brand-ink max-w-4xl" style={{ fontFamily: displayFont }}>«{pick(p, "quote", lang)}»</p>
         </div>
       </section>
 
@@ -225,7 +225,7 @@ const PillarPage = () => {
         </div>
       </section>
 
-      <CtaBand title={L.ctaTitle} desc={L.ctaDesc} primary={{ to: "/register", label: L.register }} secondary={{ to: "/contact-us", label: L.contact }} />
+      <CtaBand title={L.ctaTitle} desc={L.ctaDesc} primary={{ to: "/login", label: L.register }} secondary={{ to: "/contact-us", label: L.contact }} />
     </div>
   );
 };

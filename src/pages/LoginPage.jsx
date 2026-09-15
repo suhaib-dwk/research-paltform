@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, AlertCircle, CheckCircle, Loader2, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useSite } from '../SiteContext';
+import RegisterCategoryModal from '../components/RegisterCategoryChooser';
 import { API_BASE_URL } from '../api';
 
 const getValidationMessages = (lang) => ({
@@ -94,6 +95,8 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  // ✅ نافذة اختيار فئة التسجيل (الوزارة / الجامعات / الباحثون والطلبة)
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -405,9 +408,9 @@ const LoginPage = () => {
 
               <p className="text-center text-sm text-brand-muted mt-8">
                 {t('login.no_account')}{' '}
-                <Link to="/register" className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
+                <button type="button" onClick={() => setShowRegisterModal(true)} className="text-brand-orange font-bold hover:text-brand-orange-dark transition-colors">
                   {t('login.create_account')}
-                </Link>
+                </button>
               </p>
             </div>
           )}
@@ -575,6 +578,7 @@ const LoginPage = () => {
 
         </div>
       </div>
+      <RegisterCategoryModal open={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
     </div>
   );
 };

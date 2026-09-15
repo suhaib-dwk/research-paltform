@@ -58,7 +58,7 @@ export default function ArchitectureFlow({ isAr }) {
           </span>
           <h2
             className="text-3xl md:text-4xl font-normal text-brand-ink leading-tight mb-5"
-            style={{ fontFamily: "'Noto Naskh Arabic', 'Cairo', serif" }}
+            style={{ fontFamily: "var(--font-ar)" }}
           >
             {isAr
               ? "من البيانات الخام إلى التميز والجاهزية"

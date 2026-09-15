@@ -32,7 +32,7 @@ const DynamicHead = () => {
     }
 
     // ✅ تحديث عنوان الصفحة ديناميكياً حسب اللغة
-    const name = siteSettings[`site_name_${lang}`] || 'Research Platform';
+    const name = siteSettings[`site_name_${lang}`] || 'SOURCE';
     const tagline = siteSettings[`site_tagline_${lang}`] || '';
     document.title = tagline ? `${name} | ${tagline}` : name;
   }, [siteSettings, lang]);

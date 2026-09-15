@@ -109,21 +109,21 @@ const JournalSelectionPage = () => {
           <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{submitSuccess}</p>
         </div>
       )}
-      <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
+      <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
             <label className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'التخصص' : 'Field'}</label>
-            <select value={field} onChange={(e) => setField(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition">
+            <select value={field} onChange={(e) => setField(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition">
               <option value="">{isAr ? 'الكل' : 'All'}</option>{FIELDS.map(f => <option key={f.id} value={f.id}>{isAr ? f.label_ar : f.label_en}</option>)}
             </select>
           </div>
           <div className="sm:col-span-2">
             <label className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'بحث' : 'Search'}</label>
-            <div className="relative"><Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400" /><input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={isAr ? 'اسم المجلة...' : 'Journal name...'} className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition" /></div>
+            <div className="relative"><Search className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gray-400" /><input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={isAr ? 'اسم المجلة...' : 'Journal name...'} className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition" /></div>
           </div>
           <div>
             <label className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'أدنى IF' : 'Min IF'}</label>
-            <input type="number" value={minIF} onChange={(e) => setMinIF(e.target.value)} placeholder="0" step="0.1" className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition" />
+            <input type="number" value={minIF} onChange={(e) => setMinIF(e.target.value)} placeholder="0" step="0.1" className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition" />
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -143,10 +143,10 @@ const JournalSelectionPage = () => {
       </div>
 
       {/* ─── طلب مساعدة مقدّم خدمة ─── */}
-      <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-3">
+      <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 space-y-3">
         <h3 className="text-sm font-bold text-gray-900 dark:text-white">{isAr ? 'اطلب مساعدة مختص في اختيار المجلة' : 'Request expert help choosing a journal'}</h3>
         <p className="text-xs text-gray-500 dark:text-gray-400">{isAr ? 'ارفع ملخص بحثك وسيتواصل معك مختص لاقتراح أفضل المجلات (يتطلب اختيار التخصص أعلاه)' : 'Upload your abstract and a specialist will suggest the best journals (requires selecting a field above)'}</p>
-        <label className="flex items-center justify-center h-24 border-2 border-dashed border-gray-200 dark:border-[#1e3050] rounded-xl cursor-pointer hover:border-cyan-400 hover:bg-cyan-50/50 dark:hover:bg-cyan-900/10 transition-all">
+        <label className="flex items-center justify-center h-24 border-2 border-dashed border-gray-200 dark:border-brand-dark-border rounded-xl cursor-pointer hover:border-cyan-400 hover:bg-cyan-50/50 dark:hover:bg-cyan-900/10 transition-all">
           <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={(e) => {
             const selected = e.target.files[0];
             if (!selected) return;

@@ -19,8 +19,8 @@ export const useInnerLang = () => {
     ArrowIcon: isRTL ? ArrowLeft : ArrowRight,
     BackIcon: isRTL ? ArrowRight : ArrowLeft,
     CrumbIcon: isRTL ? ChevronLeft : ChevronRight,
-    // ✅ نفس خط الهيرو بالصفحة الرئيسية: نسخ عربي أنيق، وserif قياسي بالإنجليزية
-    serifFont: isRTL ? "'Noto Naskh Arabic', 'Cairo', serif" : "Georgia, 'Times New Roman', serif",
+    // ✅ خط الهوية للعناوين الكبيرة (Brand Guidelines): Bahij TheSansArabic / DM Sans
+    displayFont: isRTL ? "var(--font-ar)" : "var(--font-en)",
   };
 };
 
@@ -58,7 +58,7 @@ export const Breadcrumb = ({ section, items }) => {
 
 // ── الهيرو المصوّر ──
 export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, primary, secondary, tone = "dark", children }) => {
-  const { ArrowIcon, serifFont } = useInnerLang();
+  const { ArrowIcon, displayFont } = useInnerLang();
   const dark = tone === "dark";
   return (
     <section className={`relative overflow-hidden ${dark ? "bg-brand-ink" : "bg-brand-cream-hero"}`}>
@@ -81,11 +81,11 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
         <div className={`lg:col-span-8 flex flex-col items-start ${dark ? "text-white" : "text-brand-ink"}`}>
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{kicker}</span>
           <h1
-            className="text-4xl sm:text-5xl md:text-[60px] font-normal leading-[1.3] max-w-4xl mb-5"
-            style={{ fontFamily: serifFont }}
+            className="text-[34px] sm:text-[44px] md:text-[56px] font-bold leading-[1.4] max-w-4xl mb-5"
+            style={{ fontFamily: displayFont }}
           >
             {titlePre}
-            <span className="italic text-brand-orange">{titleEm}</span>
+            <span className="text-brand-orange">{titleEm}</span>
             {titlePost}
           </h1>
           <p className={`text-base md:text-lg leading-relaxed max-w-2xl mb-8 ${dark ? "text-gray-300" : "text-brand-muted"}`}>
@@ -171,14 +171,14 @@ export const SectionHead = ({ kicker, title, desc, light = false, className = ""
 
 // ── شريط اقتباس (نسخ) ──
 export const QuoteBand = ({ quote, source, tone = "dark" }) => {
-  const { serifFont } = useInnerLang();
+  const { displayFont } = useInnerLang();
   const dark = tone === "dark";
   return (
     <section className={`${dark ? "bg-brand-ink" : "bg-brand-cream-hero"} py-16 md:py-20`}>
       <div className="container mx-auto px-6 flex flex-col items-center text-center">
         <p
-          className={`text-2xl md:text-[34px] md:leading-[1.6] max-w-4xl ${dark ? "text-white" : "text-brand-ink"}`}
-          style={{ fontFamily: serifFont }}
+          className={`text-2xl md:text-[32px] md:leading-[1.6] font-medium max-w-4xl ${dark ? "text-white" : "text-brand-ink"}`}
+          style={{ fontFamily: displayFont }}
         >
           «{quote}»
         </p>

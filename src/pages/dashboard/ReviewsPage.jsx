@@ -50,22 +50,22 @@ const SubmitReviewForm = ({ review, isAr, reviewerId, onDone }) => {
     };
 
     return (
-        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#3a322c]/50 space-y-3">
+        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-brand-dark-border/50 space-y-3">
             {error && (
                 <div className="flex items-center gap-2 text-xs text-red-500"><XCircle className="w-3.5 h-3.5" />{error}</div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-3">
                 <div>
                     <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'الدرجة (0-100)' : 'Score (0-100)'}</label>
-                    <input type="number" min="0" max="100" value={score} onChange={e => setScore(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange" />
+                    <input type="number" min="0" max="100" value={score} onChange={e => setScore(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange" />
                 </div>
                 <div>
                     <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'التعليقات' : 'Comments'}</label>
-                    <textarea rows={2} value={comments} onChange={e => setComments(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#3a322c] bg-gray-50 dark:bg-[#1a1613] text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange resize-none" />
+                    <textarea rows={2} value={comments} onChange={e => setComments(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-sm text-gray-900 dark:text-white outline-none focus:border-brand-orange resize-none" />
                 </div>
             </div>
             <div className="flex justify-end">
-                <button onClick={handleSubmit} disabled={saving} className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-l from-brand-orange to-[#f0916d] text-white text-xs font-bold hover:brightness-105 disabled:opacity-60 transition">
+                <button onClick={handleSubmit} disabled={saving} className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-l from-brand-orange to-brand-orange-light text-white text-xs font-bold hover:brightness-105 disabled:opacity-60 transition">
                     {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                     {isAr ? 'إنهاء التحكيم' : 'Complete Review'}
                 </button>
@@ -140,13 +140,13 @@ const ReviewsPage = ({ statusFilter = null }) => {
                             <button
                                 key={rt.id}
                                 onClick={() => { setActiveTab(rt.id); setFilterStatus('all'); }}
-                                className={`relative text-start p-4 rounded-2xl border-2 transition-all overflow-hidden ${isActive ? 'border-transparent shadow-lg' : 'border-gray-200 dark:border-[#3a322c] hover:border-gray-300 dark:hover:border-[#4a4038]'}`}
+                                className={`relative text-start p-4 rounded-2xl border-2 transition-all overflow-hidden ${isActive ? 'border-transparent shadow-lg' : 'border-gray-200 dark:border-brand-dark-border hover:border-gray-300 dark:hover:border-[#4a4038]'}`}
                             >
                                 {isActive && <div className={`absolute inset-0 bg-gradient-to-br ${rt.color} opacity-10`} />}
                                 <div className="relative">
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className={`text-sm font-bold ${isActive ? 'text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>{isAr ? rt.label_ar : rt.label_en}</h3>
-                                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-gray-800 dark:text-white' : 'bg-gray-200 dark:bg-[#3a322c] text-gray-500 dark:text-gray-400'}`}>{count}</span>
+                                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${isActive ? 'bg-white/20 text-gray-800 dark:text-white' : 'bg-gray-200 dark:bg-brand-dark-border text-gray-500 dark:text-gray-400'}`}>{count}</span>
                                     </div>
                                     <p className={`text-[12px] leading-relaxed ${isActive ? 'text-gray-600 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'}`}>{isAr ? rt.desc_ar : rt.desc_en}</p>
                                     {isActive && <div className={`mt-3 h-0.5 w-8 rounded-full bg-gradient-to-r ${rt.color}`} />}
@@ -166,7 +166,7 @@ const ReviewsPage = ({ statusFilter = null }) => {
                             { key: 'pending', label_ar: 'قيد الانتظار', label_en: 'Pending' },
                             { key: 'in_progress', label_ar: 'قيد التنفيذ', label_en: 'In Progress' },
                         ]).map(f => (
-                            <button key={f.key} onClick={() => setFilterStatus(f.key)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${filterStatus === f.key ? 'bg-brand-orange/10 text-brand-orange' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2a231e]'}`}>
+                            <button key={f.key} onClick={() => setFilterStatus(f.key)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${filterStatus === f.key ? 'bg-brand-orange/10 text-brand-orange' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-brand-dark-hover'}`}>
                                 {isAr ? f.label_ar : f.label_en}
                             </button>
                         ))}
@@ -179,7 +179,7 @@ const ReviewsPage = ({ statusFilter = null }) => {
                     <Loader2 className="w-6 h-6 text-brand-orange animate-spin" />
                 </div>
             ) : filteredReviews.length === 0 ? (
-                <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-12 text-center">
+                <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-12 text-center">
                     <ShieldCheck className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 dark:text-gray-500">{isAr ? 'لا توجد تحكيمات' : 'No reviews found'}</p>
                 </div>
@@ -189,10 +189,10 @@ const ReviewsPage = ({ statusFilter = null }) => {
                         const sc = statusConfig[review.status];
                         const type = REVIEW_TYPES.find(t => t.id === review.review_type) || REVIEW_TYPES[0];
                         return (
-                            <div key={review.id} className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-200 dark:border-[#3a322c]/50 p-5 hover:border-brand-orange/30 dark:hover:border-brand-orange/20 transition-all">
+                            <div key={review.id} className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 hover:border-brand-orange/30 dark:hover:border-brand-orange/20 transition-all">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                     <div className="flex items-start gap-3">
-                                        <div className="w-10 h-10 bg-gray-100 dark:bg-[#2a231e] rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <div className="w-10 h-10 bg-gray-100 dark:bg-brand-dark-hover rounded-xl flex items-center justify-center flex-shrink-0">
                                             <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                                         </div>
                                         <div>
@@ -233,8 +233,8 @@ const ReviewsPage = ({ statusFilter = null }) => {
 
             {detailsId && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setDetailsId(null)}>
-                    <div className="bg-white dark:bg-[#211c18] rounded-2xl border border-gray-100 dark:border-[#3a322c]/50 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-[#3a322c]/50">
+                    <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-100 dark:border-brand-dark-border/50 max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-5 border-b border-gray-50 dark:border-brand-dark-border/50">
                             <h3 className="font-bold text-gray-900 dark:text-white">{isAr ? 'تفاصيل البحث' : 'Research Details'}</h3>
                             <button onClick={() => setDetailsId(null)} className="text-gray-400 hover:text-gray-700 dark:hover:text-white"><X className="w-5 h-5" /></button>
                         </div>

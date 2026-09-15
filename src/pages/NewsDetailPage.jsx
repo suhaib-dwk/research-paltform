@@ -59,30 +59,30 @@ const NewsDetailPage = () => {
   };
 
   if (isLoading) return (
-    <div className="min-h-screen bg-[#f4f6fb] flex items-center justify-center">
-      <Loader2 className="w-12 h-12 text-[#c8a44e] animate-spin" />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <Loader2 className="w-12 h-12 text-brand-orange animate-spin" />
     </div>
   );
 
   if (error || !news) return (
-    <div className="min-h-screen bg-[#f4f6fb] flex flex-col items-center justify-center gap-6 px-6">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-6 px-6">
       <div className="bg-red-50 border border-red-200 text-red-700 p-8 rounded-2xl max-w-lg text-center">
         <h2 className="text-xl font-bold mb-2">حدث خطأ!</h2>
         <p className="text-sm mb-4">{error}</p>
         <p className="text-xs text-red-500">(افتح Console في المتصفح F12 لمعرفة التفاصيل التقنية)</p>
       </div>
-      <Link to="/" className="text-[#c8a44e] hover:text-[#a8872e] flex items-center gap-2 font-medium transition-colors">
+      <Link to="/" className="text-brand-orange hover:text-brand-orange-dark flex items-center gap-2 font-medium transition-colors">
         <BackArrow className="w-4 h-4" /> {t('nav.home')}
       </Link>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb] flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="flex-grow py-16 px-6">
         <div className="container mx-auto max-w-4xl">
           
-          <Link to="/" className="inline-flex items-center gap-2 text-[#c8a44e] hover:text-[#a8872e] font-medium mb-8 transition-colors">
+          <Link to="/" className="inline-flex items-center gap-2 text-brand-orange hover:text-brand-orange-dark font-medium mb-8 transition-colors">
             <BackArrow className="w-5 h-5" /> {t('nav.home')}
           </Link>
 
@@ -96,7 +96,7 @@ const NewsDetailPage = () => {
             <div className="p-10">
               {/* التصنيف والتاريخ */}
               <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-500">
-                <div className="flex items-center gap-1.5 bg-[#c8a44e]/10 text-[#c8a44e] px-3 py-1.5 rounded-full font-semibold">
+                <div className="flex items-center gap-1.5 bg-brand-orange/10 text-brand-orange px-3 py-1.5 rounded-full font-semibold">
                   <Tag className="w-4 h-4" />
                   {translateCategory(news.category)}
                 </div>

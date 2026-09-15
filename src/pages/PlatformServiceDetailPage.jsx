@@ -173,7 +173,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
 
         <div className="flex flex-wrap items-center gap-4">
           <Link
-            to="/register"
+            to="/login"
             className="inline-flex items-center justify-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300"
           >
             {labels.cta}
@@ -264,7 +264,7 @@ const PlatformServiceDetailPage = () => {
         </div>
 
         <Link
-          to="/register"
+          to="/login"
           className="inline-flex items-center justify-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300"
         >
           {t("services.cta")}

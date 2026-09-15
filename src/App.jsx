@@ -17,6 +17,7 @@ import AudienceDetailPage from './pages/AudienceDetailPage';
 import PlatformServiceDetailPage from './pages/PlatformServiceDetailPage';
 import ServicesCataloguePage from './pages/ServicesCataloguePage';
 import PillarPage from './pages/PillarPage';
+import StaffPage from './pages/StaffPage';
 import Footer from './components/layout/Footer';
 import DynamicHead from './components/layout/DynamicHead';
 
@@ -114,7 +115,7 @@ function AppContent() {
     const isArabic = i18n.language?.toLowerCase().startsWith('ar');
     document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
     document.documentElement.lang = isArabic ? 'ar' : 'en';
-    document.documentElement.style.fontFamily = isArabic ? "'Cairo', sans-serif" : "'Inter', sans-serif";
+    document.documentElement.style.fontFamily = isArabic ? 'var(--font-ar)' : 'var(--font-en)';
   }, [i18n.language]);
 
   const nonEmployeeRoles = ['undergrad', 'grad', 'faculty', 'researcher', 'reviewer', 'university', 'college', 'research_center', 'ministry'];
@@ -144,6 +145,7 @@ function AppContent() {
             <Route path="/audience/:key" element={<AudienceDetailPage />} />
             <Route path="/services" element={<ServicesCataloguePage />} />
             <Route path="/pillar/:key" element={<PillarPage />} />
+            <Route path="/staff" element={<StaffPage />} />
             <Route path="/platform-service/:key" element={<PlatformServiceDetailPage />} />
             <Route path="/page/:slug" element={<DynamicPage />} />
 
@@ -217,7 +219,7 @@ function AppContent() {
               <div className="flex flex-col items-center justify-center min-h-screen text-gray-400">
                 <h1 className="text-6xl font-black mb-4">404</h1>
                 <p className="text-xl mb-6">{i18n.language === 'ar' ? 'الصفحة غير موجودة' : 'Page Not Found'}</p>
-                <a href="/dashboard" className="text-[#c8a44e] font-bold hover:underline">
+                <a href="/dashboard" className="text-brand-orange font-bold hover:underline">
                   {i18n.language === 'ar' ? 'العودة للرئيسية' : 'Back to Dashboard'}
                 </a>
               </div>

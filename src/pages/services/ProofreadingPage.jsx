@@ -114,12 +114,12 @@ const ProofreadingPage = () => {
           <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{submitSuccess}</p>
         </div>
       )}
-    <div className="bg-white dark:bg-[#0c1425] rounded-2xl border border-gray-200 dark:border-[#1e3050]/50 p-5 space-y-4">
+    <div className="bg-white dark:bg-brand-dark-card rounded-2xl border border-gray-200 dark:border-brand-dark-border/50 p-5 space-y-4">
       <div>
         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">{isAr ? 'نوع المستند' : 'Document Type'}</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {DOC_TYPES.map(dt => (
-            <button key={dt.id} onClick={() => setDocType(dt.id)} className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-all ${docType === dt.id ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'border-gray-200 dark:border-[#1e3050] text-gray-500 dark:text-gray-400 hover:border-gray-300'}`}>
+            <button key={dt.id} onClick={() => setDocType(dt.id)} className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-all ${docType === dt.id ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'border-gray-200 dark:border-brand-dark-border text-gray-500 dark:text-gray-400 hover:border-gray-300'}`}>
               {isAr ? dt.label_ar : dt.label_en}
             </button>
           ))}
@@ -127,7 +127,7 @@ const ProofreadingPage = () => {
       </div>
       <div>
         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'رفع المستند' : 'Upload'} <span className="text-rose-500">*</span></label>
-        <label className="flex flex-col items-center justify-center h-36 border-2 border-dashed border-gray-200 dark:border-[#1e3050] rounded-2xl cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-all group">
+        <label className="flex flex-col items-center justify-center h-36 border-2 border-dashed border-gray-200 dark:border-brand-dark-border rounded-2xl cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10 transition-all group">
           <input type="file" className="hidden" onChange={(e) => {
             const selected = e.target.files[0];
             if (!selected) return;
@@ -142,13 +142,13 @@ const ProofreadingPage = () => {
       </div>
       <div>
         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'دليل الأسلوب' : 'Style Guide'}</label>
-        <select value={styleGuide} onChange={(e) => setStyleGuide(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition">
+        <select value={styleGuide} onChange={(e) => setStyleGuide(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition">
           <option value="apa">APA 7th</option><option value="mla">MLA</option><option value="chicago">Chicago</option><option value="ieee">IEEE</option><option value="vancouver">Vancouver</option>
         </select>
       </div>
       <div>
         <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1">{isAr ? 'ملاحظات' : 'Notes'}</label>
-        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} placeholder={isAr ? 'مثال: التركيز على القواعد والترقيم...' : 'e.g. Focus on grammar and punctuation...'} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-[#1e3050] bg-gray-50 dark:bg-[#0a1628] text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition resize-none" />
+        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} placeholder={isAr ? 'مثال: التركيز على القواعد والترقيم...' : 'e.g. Focus on grammar and punctuation...'} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-brand-dark-border bg-gray-50 dark:bg-brand-dark text-gray-900 dark:text-white text-sm placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition resize-none" />
       </div>
       <button onClick={handleSubmit} disabled={!file || submitting} className="w-full py-3 bg-gradient-to-l from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-emerald-500/25 disabled:shadow-none flex items-center justify-center gap-2">
         {submitting ? <><Loader2 className="w-4.5 h-4.5 animate-spin" />{isAr ? 'جارٍ الإرسال...' : 'Submitting...'}</> : (isAr ? 'إرسال طلب التدقيق' : 'Submit Editing Request')}
