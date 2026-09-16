@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark, Users } from "lucide-react";
+import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark, Users, FolderKanban, Database, Bot, BarChart3, ClipboardCheck, Languages, Lightbulb, MonitorSmartphone, Code2, Bell, ListChecks, Lock, FileSearch } from "lucide-react";
 import { PILLARS, PILLAR_ORDER, LAYERS, LAYER_ORDER, PILLAR_AUDIENCE_LABELS } from "../data/pillarsContent";
 import { useInnerLang, pick, Breadcrumb, CtaBand } from "../components/inner/InnerBlocks";
 
@@ -15,6 +16,16 @@ import { useInnerLang, pick, Breadcrumb, CtaBand } from "../components/inner/Inn
 // خدمات الذكاء الاصطناعي / شبكة الخبراء) بنفس القالب — المحتوى من pillarsContent.js
 const ALL = { ...PILLARS, ...LAYERS };
 const PILLAR_ICONS = { digital: Layers, ai: Sparkles, automation: Workflow, security: ShieldCheck, platform: Layers, ai_services: Sparkles, experts: Users };
+// ✅ أيقونة مختلفة لكل مكوّن من مكوّنات الفصل 02 (بترتيب البطاقات الثلاث)
+const COMPONENT_ICONS = {
+  platform: [Users, Workflow, Database],            // المستخدمون والسجلات / مسارات النشر والخدمات / المستودعات واللوحات
+  ai_services: [Bot, BarChart3, ShieldCheck],       // المساعدون البحثيون / الوكلاء التحليليون / الحوكمة والإشراف البشري
+  experts: [ClipboardCheck, Languages, Lightbulb],  // التحكيم والمنهجية / التحرير والترجمة والنشر / الابتكار والملكية الفكرية
+  digital: [MonitorSmartphone, Code2, Database],    // تجربة المستخدم / التطبيق وواجهات API / البيانات والتكامل
+  ai: [Bot, BarChart3, ShieldCheck],
+  automation: [Workflow, Bell, ListChecks],
+  security: [Lock, ShieldCheck, FileSearch],
+};
 const AUDIENCE_ICONS = { researcher: GraduationCap, university: Building2, ministry: Landmark };
 
 const PillarPage = () => {
@@ -45,9 +56,21 @@ const PillarPage = () => {
     { id: "how", n: "03", label: L.ch3 },
     { id: "guarantee", n: "04", label: L.ch4 },
   ];
+  // ✅ الفصل النشط يتبع التمرير (يُضاء تاب الفصل الظاهر على الشاشة)
+  const [activeChapter, setActiveChapter] = useState("what");
+  useEffect(() => {
+    const els = chapters.map((c) => document.getElementById(c.id)).filter(Boolean);
+    if (!els.length) return;
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveChapter(visible.target.id);
+    }, { rootMargin: "-30% 0px -55% 0px", threshold: [0, 0.2, 0.5] });
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [key]);
 
   return (
-    <div className="min-h-screen bg-brand-ink">
+    <div className="min-h-screen bg-white">
       <Breadcrumb section={L.section} items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.about_us"), to: "/about-us" }, { label: name }]} />
 
       {/* الهيرو السينمائي */}
@@ -79,34 +102,47 @@ const PillarPage = () => {
             </a>
           </div>
         </div>
-        {/* شريط الفصول */}
-        <div className="relative z-10 bg-brand-dark-card border-t border-white/10">
-          <div className="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-x-8">
-            {chapters.map((c, i) => (
-              <a key={c.id} href={`#${c.id}`} className={`py-5 flex items-baseline gap-3 border-t-2 -mt-px transition-colors ${i === 0 ? "border-brand-orange" : "border-transparent hover:border-brand-orange/50"}`}>
-                <span className={`text-xs font-extrabold tracking-[0.1em] ${i === 0 ? "text-brand-orange" : "text-white/40"}`}>{c.n}</span>
-                <span className={`text-sm font-bold ${i === 0 ? "text-white" : "text-white/60"}`}>{c.label}</span>
-              </a>
-            ))}
+        {/* ✅ شريط الفصول بأسلوب تابات الصفحة الرئيسية (بطلب صريح): مستطيل أبيض بفواصل
+            وخط برتقالي أعلى التاب النشط — يتبع التمرير ويعمل كأزرار */}
+        <div className="relative z-10 bg-white border-t border-gray-200">
+          <div className="container mx-auto px-6 py-5">
+            <div className="bg-white border border-gray-200 shadow-[0_16px_40px_-24px_rgba(31,26,23,0.35)] grid grid-cols-2 md:grid-cols-4">
+              {chapters.map((c, i) => {
+                const isActive = activeChapter === c.id;
+                return (
+                  <a
+                    key={c.id}
+                    href={`#${c.id}`}
+                    onClick={() => setActiveChapter(c.id)}
+                    className={`flex items-center justify-center gap-2.5 px-3 md:px-6 py-4 md:py-5 text-xs sm:text-sm md:text-[15px] font-bold border-t-[3px] transition-colors duration-300 ${
+                      i < chapters.length - 1 ? "border-e border-e-gray-200" : ""
+                    } ${isActive ? "border-t-brand-orange text-brand-ink" : "border-t-transparent text-brand-muted hover:text-brand-ink"}`}
+                  >
+                    <span className={`text-xs font-extrabold tracking-[0.1em] ${isActive ? "text-brand-orange" : "text-brand-muted/60"}`}>{c.n}</span>
+                    {c.label}
+                  </a>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
 
       {/* الفصل 01 — ما هو */}
-      <section id="what" className="bg-brand-ink py-20 md:py-24 scroll-mt-20">
+      <section id="what" className="bg-white py-20 md:py-24 scroll-mt-20">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-20 items-start">
           <div className="lg:col-span-5">
             <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 01 — {L.ch1}</span>
-            <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-white mb-5">{pick(p, "what_title", lang)}</h2>
-            <p className="text-base leading-relaxed text-white/65">{pick(p, "what_desc", lang)}</p>
+            <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-5">{pick(p, "what_title", lang)}</h2>
+            <p className="text-base leading-relaxed text-brand-muted">{pick(p, "what_desc", lang)}</p>
           </div>
           <div className="lg:col-span-7 flex flex-col">
             {p.verbs.map((v, i) => (
-              <div key={v.verb_ar} className={`grid sm:grid-cols-[150px_1fr] gap-3 sm:gap-6 items-start py-7 border-t border-white/[0.12] ${i === p.verbs.length - 1 ? "border-b" : ""}`}>
-                <span className="text-3xl font-extrabold text-white leading-tight">{pick(v, "verb", lang)}</span>
+              <div key={v.verb_ar} className={`grid sm:grid-cols-[150px_1fr] gap-3 sm:gap-6 items-start py-7 border-t border-gray-200 ${i === p.verbs.length - 1 ? "border-b" : ""}`}>
+                <span className="text-3xl font-extrabold text-brand-ink leading-tight">{pick(v, "verb", lang)}</span>
                 <div>
                   <span className="block text-xs font-bold tracking-[0.2em] text-brand-orange mb-1.5">{pick(v, "label", lang)}</span>
-                  <p className="text-[15px] leading-relaxed text-white/70">{pick(v, "desc", lang)}</p>
+                  <p className="text-[15px] leading-relaxed text-brand-muted">{pick(v, "desc", lang)}</p>
                 </div>
               </div>
             ))}
@@ -115,25 +151,25 @@ const PillarPage = () => {
       </section>
 
       {/* الفصل 02 — المكونات */}
-      <section id="components" className="bg-brand-dark py-20 md:py-24 border-t border-white/[0.08] scroll-mt-20">
+      <section id="components" className="bg-gray-50 py-20 md:py-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
           <div className="mb-12">
             <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 02 — {L.ch2}</span>
-            <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-white">{pick(p, "components_title", lang)}</h2>
+            <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink">{pick(p, "components_title", lang)}</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {p.components.map((c, i) => {
-              const Icon = PILLAR_ICONS[key];
+              const Icon = (COMPONENT_ICONS[key] && COMPONENT_ICONS[key][i]) || PILLAR_ICONS[key];
               const inner = (
                 <>
-                  <span className="absolute -top-4 end-4 text-[120px] leading-none font-black text-white/[0.04]" dir="ltr">0{i + 1}</span>
+                  <span className="absolute -top-4 end-4 text-[120px] leading-none font-black text-brand-ink/[0.04]" dir="ltr">0{i + 1}</span>
                   <span className="w-14 h-14 bg-brand-orange/10 border border-brand-orange/25 flex items-center justify-center text-brand-orange mb-7"><Icon className="w-[26px] h-[26px]" strokeWidth={1.5} /></span>
-                  <h3 className="text-xl font-bold text-white mb-3">{pick(c, "title", lang)}</h3>
-                  <p className="text-sm leading-relaxed text-white/65 flex-1">{pick(c, "desc", lang)}</p>
+                  <h3 className="text-xl font-bold text-brand-ink mb-3">{pick(c, "title", lang)}</h3>
+                  <p className="text-sm leading-relaxed text-brand-muted flex-1">{pick(c, "desc", lang)}</p>
                   {c.id && <span className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold text-brand-orange">{t("services.cta")} <ArrowIcon className="w-3.5 h-3.5" /></span>}
                 </>
               );
-              const cls = "relative overflow-hidden min-h-[300px] p-8 bg-brand-dark-card border border-brand-dark-border flex flex-col";
+              const cls = "relative overflow-hidden min-h-[300px] p-8 bg-white border border-gray-200 flex flex-col";
               return c.id ? (
                 <Link key={c.title_ar} to={`/platform-service/${c.id}`} className={`${cls} hover:border-brand-orange/50 transition-colors`}>{inner}</Link>
               ) : (
@@ -145,18 +181,18 @@ const PillarPage = () => {
       </section>
 
       {/* الفصل 03 — كيف يعمل */}
-      <section id="how" className="bg-brand-ink py-20 md:py-24 border-t border-white/[0.08] scroll-mt-20">
+      <section id="how" className="bg-white py-20 md:py-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 03 — {L.ch3}</span>
-          <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-white mb-14">{pick(p, "how_title", lang)}</h2>
+          <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-14">{pick(p, "how_title", lang)}</h2>
           <div className="relative">
             <span className="hidden lg:block absolute top-7 start-7 end-7 h-px bg-gradient-to-l from-brand-orange to-brand-orange/50"></span>
             <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10">
               {p.steps.map((s, i) => (
                 <div key={s.title_ar} className="flex flex-col items-start">
-                  <span className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-extrabold mb-7 ${s.highlight ? "bg-brand-orange text-white shadow-[0_0_0_8px_rgba(255,135,16,0.15)]" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
-                  <h3 className={`text-[22px] font-bold mb-2.5 ${s.highlight ? "text-brand-orange" : "text-white"}`}>{pick(s, "title", lang)}</h3>
-                  <p className="text-sm leading-relaxed text-white/65">{pick(s, "desc", lang)}</p>
+                  <span className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-extrabold mb-7 ${s.highlight ? "bg-brand-orange text-white shadow-[0_0_0_8px_rgba(255,135,16,0.15)]" : "bg-white border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
+                  <h3 className={`text-[22px] font-bold mb-2.5 ${s.highlight ? "text-brand-orange" : "text-brand-ink"}`}>{pick(s, "title", lang)}</h3>
+                  <p className="text-sm leading-relaxed text-brand-muted">{pick(s, "desc", lang)}</p>
                 </div>
               ))}
             </div>
@@ -165,21 +201,22 @@ const PillarPage = () => {
       </section>
 
       {/* الفصل 04 — الضمانة: بلوك مقسوم */}
-      <section id="guarantee" className="bg-brand-ink pt-20 md:pt-24 border-t border-white/[0.08] scroll-mt-20">
+      <section id="guarantee" className="bg-gray-50 pt-20 md:pt-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 04 — {pick(p, "guarantee_kicker", lang)}</span>
-          <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-white mb-14">{pick(p, "guarantee_title", lang)}</h2>
+          <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-14">{pick(p, "guarantee_title", lang)}</h2>
         </div>
         <div className="grid md:grid-cols-2">
-          <div className="bg-brand-orange px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
-            <span className="text-xs font-bold tracking-[0.3em] text-brand-ink/70">{pick(p, "split_a_label", lang)}</span>
-            <span className="text-6xl md:text-[100px] leading-none font-black text-brand-ink" dir={/^[0-9+]/.test(pick(p, "split_a_word", lang)) ? "ltr" : undefined}>{pick(p, "split_a_word", lang)}</span>
-            <p className="text-base leading-relaxed text-brand-ink/80 max-w-md">{pick(p, "split_a_desc", lang)}</p>
-          </div>
           <div className="bg-brand-cream-hero px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
-            <span className="text-xs font-bold tracking-[0.3em] text-brand-muted">{pick(p, "split_b_label", lang)}</span>
-            <span className="text-6xl md:text-[100px] leading-none font-black text-brand-ink" dir={/^[0-9+]/.test(pick(p, "split_b_word", lang)) ? "ltr" : undefined}>{pick(p, "split_b_word", lang)}</span>
-            <p className="text-base leading-relaxed text-brand-muted max-w-md">{pick(p, "split_b_desc", lang)}</p>
+            <span className="text-xs font-bold tracking-[0.3em] text-brand-orange">{pick(p, "split_a_label", lang)}</span>
+            <span className="text-6xl md:text-[100px] leading-none font-black text-brand-orange" dir={/^[0-9+]/.test(pick(p, "split_a_word", lang)) ? "ltr" : undefined}>{pick(p, "split_a_word", lang)}</span>
+            <p className="text-base leading-relaxed text-brand-orange max-w-md">{pick(p, "split_a_desc", lang)}</p>
+          </div>
+          <div className="bg-brand-orange px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
+            {/* نصوص "تتكامل" بلون خلفية بلوك "تستضيف" (الفاتح) */}
+            <span className="text-xs font-bold tracking-[0.3em] text-brand-cream-hero">{pick(p, "split_b_label", lang)}</span>
+            <span className="text-6xl md:text-[100px] leading-none font-black text-brand-cream-hero" dir={/^[0-9+]/.test(pick(p, "split_b_word", lang)) ? "ltr" : undefined}>{pick(p, "split_b_word", lang)}</span>
+            <p className="text-base leading-relaxed text-brand-cream-hero max-w-md">{pick(p, "split_b_desc", lang)}</p>
           </div>
         </div>
         <div className="bg-white px-6 py-16 md:py-20 border-b border-gray-200 flex justify-center text-center">
@@ -216,19 +253,19 @@ const PillarPage = () => {
 
           {/* الركيزة السابقة / التالية */}
           <div className="mt-16 grid md:grid-cols-2 border border-gray-200">
-            <Link to={`/pillar/${prevKey}`} className="group p-8 flex items-center justify-between gap-6 md:border-e border-b md:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors">
-              <span className="flex flex-col gap-1.5">
-                <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.prev} — {ALL[prevKey].number}</span>
-                <span className="text-2xl font-bold text-brand-ink">{pick(ALL[prevKey], "name", lang)}</span>
-              </span>
-              <span className="w-11 h-11 rounded-full border border-brand-orange/40 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-all"><BackIcon className="w-4 h-4" /></span>
-            </Link>
-            <Link to={`/pillar/${nextKey}`} className="group p-8 flex items-center justify-between gap-6 hover:bg-gray-50 transition-colors">
+            <Link to={`/pillar/${nextKey}`} className="group p-8 flex items-center justify-between gap-6 md:border-e border-b md:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors">
               <span className="flex flex-col gap-1.5">
                 <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.next} — {ALL[nextKey].number}</span>
                 <span className="text-2xl font-bold text-brand-ink">{pick(ALL[nextKey], "name", lang)}</span>
               </span>
               <span className="w-11 h-11 rounded-full bg-brand-orange flex items-center justify-center text-white"><ArrowIcon className="w-4 h-4" /></span>
+            </Link>
+            <Link to={`/pillar/${prevKey}`} className="group p-8 flex items-center justify-between gap-6 hover:bg-gray-50 transition-colors">
+              <span className="flex flex-col gap-1.5">
+                <span className="text-xs font-bold tracking-[0.2em] text-brand-muted">{L.prev} — {ALL[prevKey].number}</span>
+                <span className="text-2xl font-bold text-brand-ink">{pick(ALL[prevKey], "name", lang)}</span>
+              </span>
+              <span className="w-11 h-11 rounded-full border border-brand-orange/40 flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-all"><BackIcon className="w-4 h-4" /></span>
             </Link>
           </div>
         </div>
