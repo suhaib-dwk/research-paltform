@@ -93,7 +93,8 @@ export const tableConfigs = {
       { key: 'linkedin_link', label_ar: 'رابط لينكدإن', label_en: 'LinkedIn', type: 'text' },
       { key: 'youtube_link', label_ar: 'رابط يوتيوب', label_en: 'Youtube', type: 'text' }
     ],
-    readOnly: true
+    // ✅ قابل للتعديل والإضافة والحذف من لوحة الأدمن (بطلب صريح)
+    readOnly: false
   },
   site_settings: {
     title_ar: 'إعدادات الموقع', title_en: 'Site Settings',

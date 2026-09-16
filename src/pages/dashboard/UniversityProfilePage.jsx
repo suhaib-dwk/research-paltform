@@ -284,7 +284,7 @@ const UniversityProfilePage = () => {
                         </div>
                         <div>
                             <label className={labelCls}>{isAr ? 'النطاقات الرسمية' : 'Official Domains'}</label>
-                            <input type="text" dir="ltr" placeholder="example.edu.iq" value={form.official_domains} onChange={(e) => setForm((p) => ({ ...p, official_domains: e.target.value }))} className={inputCls} />
+                            <input type="text" dir="ltr" placeholder="example.edu.ly" value={form.official_domains} onChange={(e) => setForm((p) => ({ ...p, official_domains: e.target.value }))} className={inputCls} />
                         </div>
                     </div>
                 </div>

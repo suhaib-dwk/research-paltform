@@ -10,6 +10,9 @@ import { API_BASE_URL, resolveUploadUrl } from "../api";
 import { SiteContext } from "../SiteContext";
 import PillarsAccordion from "../components/home/PillarsAccordion";
 import { PILLARS, LAYERS, LAYER_ORDER } from "../data/pillarsContent";
+import { HOME_STATS } from "../data/homeStats";
+import { MINISTRY_SPACES } from "../data/audiencesContent";
+import HomeStatsPanel from "../components/home/HomeStatsPanel";
 import {
   SERVICE_FAMILIES,
   SERVICES_CATALOGUE,
@@ -54,8 +57,8 @@ const ScrollReveal = ({ children, delay = 0, className = "" }) => {
 };
 
 // ✅ زر السهم الدائري الموحَّد بآخر كل بطاقة (نفس النمط بكل بطاقات الصفحة)
-const CardArrow = ({ Icon }) => (
-  <div className="w-9 h-9 rounded-full border border-brand-orange/40 flex items-center justify-center self-end mt-6 group-hover:bg-brand-orange group-hover:border-brand-orange transition-all duration-300">
+const CardArrow = ({ Icon, className = "self-end mt-6" }) => (
+  <div className={`w-9 h-9 rounded-full border border-brand-orange/40 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-orange group-hover:border-brand-orange transition-all duration-300 ${className}`}>
     <Icon className="w-3.5 h-3.5 text-brand-orange group-hover:text-white transition-colors" />
   </div>
 );
@@ -79,18 +82,35 @@ const HomePage = () => {
   // ✅ فهرس الصورة الحالية بسلايدر الهيرو (انتقال fade)
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
 
+  // ✅ أنيميشن الرحلة البحثية: تتقدم الخطوة النشطة من 01 إلى 09 (ثم تتوقف لحظة وتعيد
+  // الدورة) عندما يكون القسم ظاهرًا على الشاشة فقط — شرح بصري للفكرة (بطلب صريح)
+  const journeyRef = useRef(null);
+  const [journeyStep, setJourneyStep] = useState(0);
+  const [journeyRunning, setJourneyRunning] = useState(false);
+  useEffect(() => {
+    const el = journeyRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setJourneyRunning(entry.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!journeyRunning) return;
+    const id = setInterval(() => setJourneyStep((cur) => (cur >= 9 ? 0 : cur + 1)), 1300);
+    return () => clearInterval(id);
+  }, [journeyRunning]);
+
   // ✅ التاب النشط بشريط الفئات العائم (الوزارة / الجامعات / الباحثون والطلبة)
   const [activeLevel, setActiveLevel] = useState(2);
 
   // ✅ عائلة الخدمات النشطة بقسم "الخدمات" — مفاتيح SERVICE_FAMILIES
   const [activeFamily, setActiveFamily] = useState("journal");
 
-  // ✅ الشرائح الافتراضية (عند خلو home_slides): الرسوم المتحركة الأربع (SVG)
+  // ✅ الشرائح الفعلية تُدار من لوحة الأدمن (جدول home_slides) — هذه احتياط فقط عند خلو الجدول
   const defaultSlides = [
     { id: 1, image_url: "/Home/anim/lab.svg" },
     { id: 2, image_url: "/Home/anim/molecules.svg" },
-    { id: 3, image_url: "/Home/anim/books.svg" },
-    { id: 4, image_url: "/Home/anim/office.svg" },
+    { id: 3, image_url: "/Home/anim/office.svg" },
   ];
   const bannerSlides = homeSlides.length > 0 ? homeSlides : defaultSlides;
 
@@ -283,6 +303,7 @@ const HomePage = () => {
            هوية الصفحة، وزر أساسي واحد + دخول شبحي. ═══════ */}
       {/* ✅ ارتفاع الهيرو كمرجع Elsevier (~500px على الديسكتوب) والصورة فاتحة
           (بلا تعتيم قوي) مع تدرّج خفيف فقط لقراءة النص — بطلب صريح */}
+      {/* الصورة تملأ السلايدر كاملًا (object-cover) بلا تكبير — كما كانت */}
       <section className="relative z-30 h-[500px] md:h-[460px] w-full overflow-hidden bg-brand-ink">
         {bannerSlides.map((slide, index) => (
           <div
@@ -294,7 +315,7 @@ const HomePage = () => {
             <img
               src={resolveUploadUrl(slide.image_url)}
               alt=""
-              className="w-full h-full object-cover ken-burns-effect brightness-[0.9]"
+              className="w-full h-full object-cover brightness-[0.9]"
               loading={index === 0 ? "eager" : "lazy"}
             />
           </div>
@@ -413,10 +434,20 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══════ 2د) تابات الفئات (الوزارة / الجامعات / الباحثون والطلبة) —
-           نفس التصميم السابق تمامًا + بطاقات المستوى النشط ═══════ */}
+      {/* ═══════ 3) المكونات الثلاثة + تابات الفئات — قسم واحد مدمج (بطلب صريح):
+           عنوان المكونات ووصفها، ثم شريط التابات بنفس تصميمه (الوزارة / الجامعات /
+           الباحثون والطلبة)، وتحت التاب النشط: بطاقة المكوّن المصوّرة (نفس التصميم
+           الممتاز: صورة + رقم + عنوان + قائمة) بجانب بطاقات الفئة التابعة له. ═══════ */}
       <section className="bg-gray-50 py-16 md:py-20">
         <div className="container mx-auto px-6">
+          <ScrollReveal className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-end mb-10">
+            <h2 className="text-3xl md:text-[44px] md:leading-[1.2] font-bold text-brand-ink">
+              {t("home.components_title")}
+            </h2>
+            <p className="text-base leading-relaxed text-brand-muted">{t("home.components_desc")}</p>
+          </ScrollReveal>
+
+          {/* شريط التابات — التصميم نفسه */}
           <div className="relative bg-white border border-gray-200 shadow-[0_16px_40px_-24px_rgba(31,26,23,0.35)] grid grid-cols-3">
             {levelTabs.map((level, index) => {
               const isActive = index === activeLevel;
@@ -444,169 +475,160 @@ const HomePage = () => {
             })}
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 mt-6">
-            {levelTabs[activeLevel].cards.map((card, index) => (
-              <ScrollReveal
-                key={`${levelTabs[activeLevel].key}-${card.key}`}
-                delay={index * 80}
-                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc((100%-48px)/3)]"
-              >
-                <Link
-                  to={`/audience/${card.key}`}
-                  className="group w-full h-full min-h-[250px] text-start bg-white rounded-none p-8 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
-                >
-                  <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2.5 block">
-                    {card.kicker}
-                  </span>
-                  <h3 className="text-lg font-bold text-brand-ink mb-2.5">{card.title}</h3>
-                  <p className="text-sm leading-relaxed text-brand-muted flex-1">{card.desc}</p>
-                  <CardArrow Icon={ArrowIcon} />
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* ═══════ 4) المكونات الثلاثة (نمط "Innovative solutions" — بطاقات مصوّرة
-           بقائمة تحت كل بطاقة) بترتيب الاحتياج من المقترح. ═══════ */}
-      <section className="bg-white pt-20 md:pt-24 pb-16 md:pb-18">
-        <div className="container mx-auto px-6">
-          <ScrollReveal className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-end mb-12">
-            <h2 className="text-3xl md:text-[44px] md:leading-[1.2] font-bold text-brand-ink">
-              {t("home.components_title")}
-            </h2>
-            <p className="text-base leading-relaxed text-brand-muted">{t("home.components_desc")}</p>
-          </ScrollReveal>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {components.map((comp, index) => (
-              <ScrollReveal key={comp.number} delay={index * 100} className="h-full">
-                <Link
-                  to={comp.to}
-                  className="group h-full bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 flex flex-col"
-                >
-                  <div className="relative h-[200px] overflow-hidden">
-                    <img
-                      src={comp.image}
-                      alt=""
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <span className="absolute bottom-0 start-0 w-14 h-14 bg-brand-orange"></span>
-                    <span className="absolute bottom-3.5 start-3.5 text-lg font-black text-brand-ink leading-none">
-                      {comp.number}
-                    </span>
-                  </div>
-                  <div className="p-8 pt-7 flex flex-col flex-1">
-                    <h3 className="text-xl font-bold text-brand-ink mb-2.5">{comp.title}</h3>
-                    <p className="text-sm leading-relaxed text-brand-muted mb-5">{comp.desc}</p>
-                    <div className="border-t border-gray-200 pt-4 flex flex-col gap-2 flex-1">
-                      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-muted mb-1">
-                        {comp.listLabel}
+          {/* محتوى التاب النشط: بطاقة المكوّن (يسار/يمين) + بطاقات الفئة */}
+          {(() => {
+            const comp = components[activeLevel];
+            const tabKey = levelTabs[activeLevel].key;
+            const tabStats = HOME_STATS[tabKey];
+            const cards = levelTabs[activeLevel].cards;
+            return (
+              <div key={levelTabs[activeLevel].key} className="grid lg:grid-cols-12 gap-6 mt-6 items-stretch">
+                {/* بطاقة المكوّن — التصميم المصوّر نفسه */}
+                {/* بلا ScrollReveal هنا حتى يظهر محتوى التاب فورًا عند التبديل */}
+                <div className="lg:col-span-5 h-full">
+                  <Link
+                    to={comp.to}
+                    className="group h-full bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 flex flex-col"
+                  >
+                    <div className="relative h-[220px] overflow-hidden">
+                      <img
+                        src={comp.image}
+                        alt=""
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <span className="absolute bottom-0 start-0 w-14 h-14 bg-brand-orange"></span>
+                      <span className="absolute bottom-3.5 start-3.5 text-lg font-black text-brand-ink leading-none">
+                        {comp.number}
                       </span>
-                      {comp.items.map((item) => (
-                        <span key={item} className="text-sm font-semibold text-brand-ink">
-                          {item}
-                        </span>
-                      ))}
                     </div>
-                    <CardArrow Icon={ArrowIcon} />
-                  </div>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+                    <div className="p-8 pt-7 flex flex-col flex-1">
+                      <h3 className="text-xl font-bold text-brand-ink mb-2.5">{comp.title}</h3>
+                      <p className="text-sm leading-relaxed text-brand-muted mb-5">{comp.desc}</p>
+                      <div className="border-t border-gray-200 pt-4 flex flex-col gap-2 flex-1">
+                        <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-muted mb-1">
+                          {comp.listLabel}
+                        </span>
+                        {comp.items.map((item) => (
+                          <span key={item} className="text-sm font-semibold text-brand-ink">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                      <CardArrow Icon={ArrowIcon} />
+                    </div>
+                  </Link>
+                </div>
 
-      {/* ═══════ 5) شريط برتقالي كامل العرض (نمط بانر Elsevier) — الذكاء
-           الاصطناعي المحكوم + الطبقات التشغيلية الثلاث ═══════ */}
-      <section className="bg-brand-orange py-16 md:py-20">
-        <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          <ScrollReveal className="lg:col-span-7 flex flex-col items-start">
-            <span className="text-brand-ink/70 text-xs font-bold tracking-[0.3em] uppercase mb-5 block">
-              {t("home.ai_kicker")}
-            </span>
-            <h2
-              className="text-3xl md:text-[44px] md:leading-[1.3] font-bold text-brand-ink mb-5"
-              style={{ fontFamily: displayFont }}
-            >
-              {t("home.ai_title_pre")}
-              <span className="text-white">{t("home.ai_title_em")}</span>
-            </h2>
-            <p className="text-base leading-relaxed text-brand-ink/80 max-w-xl mb-8">{t("home.ai_desc")}</p>
-            <Link
-              to="/services"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-ink px-6 py-3 text-[15px] font-bold text-white hover:bg-brand-dark transition-colors"
-            >
-              {t("home.ai_cta")}
-              <ArrowIcon className="w-4 h-4" />
-            </Link>
-          </ScrollReveal>
-          <ScrollReveal className="lg:col-span-5 flex flex-col gap-3" delay={150}>
-            <span className="text-brand-ink/70 text-xs font-bold tracking-[0.2em] uppercase mb-1 block">
-              {t("home.layers_label")}
-            </span>
-            {layers.map((layer) => (
-              <div
-                key={layer.title}
-                className="bg-white/[0.18] border border-white/35 px-5 py-4 flex items-center gap-4"
-              >
-                <span className="w-10 h-10 bg-brand-ink flex items-center justify-center text-brand-orange flex-shrink-0">
-                  <layer.icon className="w-5 h-5" strokeWidth={1.75} />
-                </span>
-                <span className="flex flex-col gap-0.5">
-                  <span className="text-base font-bold text-brand-ink">{layer.title}</span>
-                  <span className="text-[13px] text-brand-ink/75 leading-snug">{layer.desc}</span>
-                </span>
+                {/* ✅ تابا الوزارة والجامعات: إحصائيات ليبيا الحقيقية + رسم بياني (بدل بطاقات
+                    الخيارات) — البيانات ومصادرها في src/data/homeStats.js والمصادر لا تُعرض على
+                    الموقع بطلب صريح. تاب الباحثين والطلبة: بطاقات المراحل كما كانت (بطلب صريح). */}
+                {tabKey === "ministry" ? (
+                  /* ✅ تاب الوزارة: المساحات الأربع (البيانات والذكاء البحثي الوطني / الأولويات /
+                     الشراكات / التمويل) بنفس تصميم بطاقات الطلبة — بطلب صريح */
+                  <div className="lg:col-span-7 grid sm:grid-cols-2 gap-4">
+                    {MINISTRY_SPACES.map((space) => (
+                      <Link
+                        key={space.number}
+                        to="/audience/ministry#spaces"
+                        className="group h-full text-start bg-white p-6 md:p-7 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+                      >
+                        <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
+                          {isRTL ? `المساحة ${space.number}` : `Space ${space.number}`}
+                        </span>
+                        <h3 className="text-lg font-bold text-brand-ink mb-1.5">{space[`title_${lang}`]}</h3>
+                        <p className="text-[13px] font-semibold text-brand-orange/90 mb-2.5">{space[`question_${lang}`]}</p>
+                        <p className="text-sm leading-relaxed text-brand-muted flex-1 line-clamp-4">{space[`desc_${lang}`]}</p>
+                        <CardArrow Icon={ArrowIcon} className="mt-5 self-end" />
+                      </Link>
+                    ))}
+                  </div>
+                ) : tabStats ? (
+                  <div className="lg:col-span-7">
+                    <HomeStatsPanel stats={tabStats} isRTL={isRTL} />
+                  </div>
+                ) : (
+                  <div className="lg:col-span-7 flex flex-col gap-4">
+                    {cards.map((card) => (
+                      <div key={card.key} className="flex-1">
+                        <Link
+                          to={`/audience/${card.key}`}
+                          className="group h-full text-start bg-white p-7 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4 border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
+                              {card.kicker}
+                            </span>
+                            <h3 className="text-lg font-bold text-brand-ink mb-2">{card.title}</h3>
+                            <p className="text-sm leading-relaxed text-brand-muted">{card.desc}</p>
+                          </div>
+                          <CardArrow Icon={ArrowIcon} className="mt-0 self-end sm:self-center" />
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            ))}
-          </ScrollReveal>
+            );
+          })()}
         </div>
       </section>
 
       {/* ═══════ 6) الرحلة البحثية المتكاملة (بدل "كيف تعمل" الوهمية) —
            9 مراحل من ذكاء الوزارة إلى سجل الباحث وبالعكس ═══════ */}
-      <section className="bg-brand-ink py-20 md:py-24">
+      <section ref={journeyRef} className="bg-gray-50 py-20 md:py-24">
         <div className="container mx-auto px-6">
           <ScrollReveal className="grid lg:grid-cols-12 gap-6 lg:gap-16 items-end mb-14">
             <div className="lg:col-span-7">
               <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
                 {t("home.journey_kicker")}
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-ink leading-tight">
                 {t("home.journey_title")}
               </h2>
             </div>
-            <p className="lg:col-span-5 text-[15px] leading-relaxed text-white/65">
+            <p className="lg:col-span-5 text-[15px] leading-relaxed text-brand-muted">
               {t("home.journey_desc")}
             </p>
           </ScrollReveal>
 
           <ScrollReveal className="relative">
-            <span className="hidden lg:block absolute top-6 start-6 end-6 h-px bg-brand-orange/50"></span>
+            {/* الخط الأساسي + خط التقدّم المتحرك + النقطة المتحركة (ديسكتوب) */}
+            <span className="hidden lg:block absolute top-6 start-6 end-6 h-px bg-brand-orange/25"></span>
+            <span
+              className="hidden lg:block absolute top-6 start-6 h-[3px] -mt-px bg-brand-orange rounded-full transition-[width] duration-700 ease-out"
+              style={{ width: `calc((100% - 3rem) * ${Math.max(0, journeyStep - 1) / 8})` }}
+            ></span>
+            <span
+              className="hidden lg:block absolute top-6 w-4 h-4 -mt-2 -ms-2 rounded-full bg-brand-orange ring-4 ring-brand-orange/25 shadow-[0_0_0_8px_rgba(255,135,16,0.12)] transition-[inset-inline-start] duration-700 ease-out z-10"
+              style={{ insetInlineStart: `calc(1.5rem + (100% - 3rem) * ${Math.max(0, journeyStep - 1) / 8})` }}
+            ></span>
             <div className="relative grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-x-4 gap-y-8">
-              {journeySteps.map((step) => (
-                <div key={step.number} className="flex flex-col items-start gap-4">
-                  <span
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${
-                      step.highlight
-                        ? "bg-brand-orange text-white"
-                        : "bg-brand-ink border border-brand-orange/60 text-brand-orange"
-                    }`}
-                  >
-                    {step.number}
-                  </span>
-                  <span className="text-[13px] font-bold text-white leading-snug">{step.label}</span>
-                </div>
-              ))}
+              {journeySteps.map((step, idx) => {
+                const lit = idx <= journeyStep - 1; // الخطوات التي وصلها الأنيميشن (journeyStep = عدد الخطوات المضاءة)
+                const isNow = idx === journeyStep - 1;
+                return (
+                  <div key={step.number} className="flex flex-col items-start gap-4">
+                    <span
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold transition-all duration-500 ${
+                        lit
+                          ? `bg-brand-orange text-white ${isNow ? "scale-110 shadow-[0_10px_24px_-8px_rgba(255,135,16,0.7)]" : ""}`
+                          : "bg-white border border-brand-orange/50 text-brand-orange"
+                      }`}
+                    >
+                      {step.number}
+                    </span>
+                    <span className={`text-[13px] font-bold leading-snug transition-colors duration-500 ${isNow ? "text-brand-orange" : lit ? "text-brand-ink" : "text-brand-ink/60"}`}>
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </ScrollReveal>
 
-          <ScrollReveal className="mt-12 flex items-start sm:items-center gap-3.5 px-6 py-4 border border-white/10 bg-brand-dark-card">
+          <ScrollReveal className="mt-12 flex items-start sm:items-center gap-3.5 px-6 py-4 border border-gray-200 bg-white">
             <RefreshCw className="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5 sm:mt-0" strokeWidth={2} />
-            <span className="text-sm font-semibold text-white/80 leading-relaxed">{t("home.journey_loop")}</span>
+            <span className="text-sm font-semibold text-brand-ink leading-relaxed">{t("home.journey_loop")}</span>
           </ScrollReveal>
         </div>
       </section>
@@ -889,32 +911,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══════ 10) CTA ختامي كريمي — بدل قسم التواصل البرتقالي الثقيل
-           (النموذج الكامل باقٍ في صفحة "للتواصل معنا") ═══════ */}
-      <section className="bg-brand-cream-hero py-16 md:py-20">
-        <div className="container mx-auto px-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-          <ScrollReveal>
-            <h2 className="text-3xl md:text-4xl font-bold text-brand-ink leading-tight mb-2.5">
-              {t("home.cta_title")}
-            </h2>
-            <p className="text-base text-brand-muted">{t("home.cta_desc")}</p>
-          </ScrollReveal>
-          <ScrollReveal className="flex flex-wrap items-center gap-4 flex-shrink-0" delay={100}>
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-brand-orange-dark transition-all duration-300"
-            >
-              {t("nav.login")}
-            </Link>
-            <Link
-              to="/contact-us"
-              className="inline-flex items-center gap-2 bg-white text-brand-ink border border-brand-ink/15 px-7 py-3.5 rounded-full font-medium text-sm hover:border-brand-ink/30 transition-all duration-300"
-            >
-              {t("nav.contact_us")}
-            </Link>
-          </ScrollReveal>
-        </div>
-      </section>
     </>
   );
 };

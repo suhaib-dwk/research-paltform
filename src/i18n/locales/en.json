@@ -189,7 +189,7 @@
     "dash_alert3": "Underfunded priority",
     "dash_alert4": "Collaboration opportunity",
     "dash_source": "Every figure traces back to its source: university, year, unit or official record.",
-    "news_title": "Platform and research ecosystem updates",
+    "news_title": "Research updates",
     "cta_title": "Start where you are: student, researcher, university or ministry.",
     "cta_desc": "One national platform, with tools and a path for every role."
   },
@@ -246,6 +246,8 @@
     "hero_title_main": "Will get back to you as soon",
     "hero_title_highlight": "as possible",
     "form_intro": "We are happy to hear from you and will get back to you as soon as possible",
+    "hero_desc": "For any question about accounts, services or partnerships, or to request a platform demo for your institution — write to us here, or reach us directly by phone and email below.",
+    "hero_note": "The support team replies on working days, and every message is logged with a tracking number.",
     "phone_label": "Phone",
     "email_label": "Email",
     "location_label": "Location"

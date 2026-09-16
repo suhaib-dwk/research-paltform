@@ -97,47 +97,40 @@ const ContactPage = () => {
   return (
     <>
       {/* ✅ قسم الهيرو */}
-      <section className="bg-brand-cream-hero py-16 md:py-20">
+      {/* ✅ الصفحة بلون الموقع (البرتقالي) — بطلب صريح: هيرو برتقالي بنص داكن، ثم النموذج
+          في بطاقة بيضاء فوق الخلفية البرتقالية نفسها */}
+      <section className="bg-brand-orange py-16 md:py-20">
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <span className="inline-block text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4">
+              <span className="inline-block text-brand-ink/70 text-xs font-bold tracking-[0.2em] uppercase mb-4">
                 {t('contact.hero_label')}
               </span>
               <h1 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4">
                 {t('contact.hero_title_main')}{' '}
-                <span className="text-brand-orange">{t('contact.hero_title_highlight')}</span>
+                <span className="text-white">{t('contact.hero_title_highlight')}</span>
               </h1>
               <div className="w-16 h-1 bg-brand-ink" />
             </div>
 
             <div className="space-y-4">
-              <p className="text-brand-muted italic leading-relaxed">{t('help.hero_quote')}</p>
-              <p className="text-brand-muted leading-relaxed">{t('help.hero_desc')}</p>
+              <p className="text-brand-ink/85 leading-relaxed text-lg">{t('contact.hero_desc')}</p>
+              <p className="text-brand-ink/70 leading-relaxed">{t('contact.hero_note')}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ✅ نموذج التواصل فوق صورة داكنة */}
-      <section className="relative">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2071&auto=format&fit=crop"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-brand-ink/80" />
-        </div>
-
-        <div className="relative container mx-auto px-6 py-20 md:py-28">
+      {/* ✅ نموذج التواصل — الجسم أبيض (بطلب صريح) والهيرو فقط برتقالي */}
+      <section className="relative bg-white">
+        <div className="relative container mx-auto px-6 py-20 md:py-24">
           <div className="max-w-2xl mx-auto text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-black text-brand-orange leading-relaxed">
+            <h2 className="text-2xl md:text-3xl font-black text-brand-ink leading-relaxed">
               {t('contact.form_intro')}
             </h2>
           </div>
 
-          <form onSubmit={handleSubmit} noValidate className="max-w-2xl mx-auto space-y-5">
+          <form onSubmit={handleSubmit} noValidate className="max-w-2xl mx-auto space-y-5 bg-white rounded-3xl p-6 md:p-10 border border-gray-200 shadow-[0_24px_50px_-30px_rgba(36,27,20,0.25)]">
             {apiError && (
               <div className="p-4 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
@@ -153,7 +146,7 @@ const ContactPage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-sm font-bold text-white mb-1.5 block">{t('help.form_full_name')}</label>
+                <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_full_name')}</label>
                 <input
                   type="text" name="name" value={formData.name}
                   onChange={handleChange} onBlur={handleBlur}
@@ -162,7 +155,7 @@ const ContactPage = () => {
                 <ErrorMessage message={touched.name ? errors.name : ''} />
               </div>
               <div>
-                <label className="text-sm font-bold text-white mb-1.5 block">{t('help.form_email')}</label>
+                <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_email')}</label>
                 <input
                   type="email" name="email" dir="ltr" value={formData.email}
                   onChange={handleChange} onBlur={handleBlur}
@@ -173,7 +166,7 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label className="text-sm font-bold text-white mb-1.5 block">{t('help.form_subject')}</label>
+              <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_subject')}</label>
               <input
                 type="text" name="subject" value={formData.subject}
                 onChange={handleChange} onBlur={handleBlur}
@@ -183,7 +176,7 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label className="text-sm font-bold text-white mb-1.5 block">{t('help.form_message')}</label>
+              <label className="text-sm font-bold text-brand-ink mb-1.5 block">{t('help.form_message')}</label>
               <textarea
                 name="message" rows="5" value={formData.message}
                 onChange={handleChange} onBlur={handleBlur}
@@ -204,10 +197,10 @@ const ContactPage = () => {
           {/* بطاقات معلومات التواصل */}
           <div className="grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto mt-12">
             {contactInfo.map((info, index) => (
-              <div key={index} className="bg-brand-ink/60 border border-white/10 rounded-xl p-4 text-center">
+              <div key={index} className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
                 <info.icon className="w-5 h-5 text-brand-orange mx-auto mb-2" />
-                <p className="text-[10px] font-bold uppercase tracking-wide text-white/50 mb-1">{info.label}</p>
-                <p dir={info.dir} className="text-white text-sm font-medium break-words">{info.value}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-brand-muted mb-1">{info.label}</p>
+                <p dir={info.dir} className="text-brand-ink text-sm font-bold break-words">{info.value}</p>
               </div>
             ))}
           </div>

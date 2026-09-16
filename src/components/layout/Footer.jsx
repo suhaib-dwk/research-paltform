@@ -14,7 +14,8 @@ const Footer = () => {
 
   const siteName = siteSettings[`site_name_${currentLang}`] || t('footer.about_title');
   // تم تحديد مسار اللوجو الثابت مباشرة (مطابق للـ Navbar)
-  const staticLogoUrl = '/logo/logo1.png';
+  // ✅ الفوتر بلون الموقع (البرتقالي) — نسخة الشعار البيضاء كما في البراند بوك على الخلفية البرتقالية
+  const staticLogoUrl = '/logo/IR-Souce-logo-VO1-2.png';
 
   useEffect(() => {
     const checkAdminStatus = () => {
@@ -52,7 +53,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-brand-cream-footer text-brand-ink pt-16 pb-8 relative">
+    <footer className="bg-brand-orange text-black pt-16 pb-8 relative">
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-14">
           {/* عن المنصة */}
@@ -75,10 +76,10 @@ const Footer = () => {
                 <div className="w-14 h-14 bg-brand-orange rounded-xl flex items-center justify-center text-white text-sm font-black">
                   IR
                 </div>
-                <span className="text-xl font-black text-brand-ink tracking-wide">SOURCE</span>
+                <span className="text-xl font-black text-white tracking-wide">SOURCE</span>
               </div>
             </div>
-            <p className="text-sm text-brand-muted leading-relaxed mb-8 max-w-sm">
+            <p className="text-[15px] text-black leading-relaxed mb-8 max-w-sm">
               {t('footer.about_desc')}
             </p>
 
@@ -91,7 +92,7 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full border border-brand-ink/20 flex items-center justify-center text-brand-ink hover:bg-brand-orange hover:text-white hover:border-transparent transition-all duration-300"
+                    className="w-10 h-10 rounded-full border border-black/40 flex items-center justify-center text-black hover:bg-black hover:text-white hover:border-transparent transition-all duration-300"
                   >
                     {social.icon}
                   </a>
@@ -102,7 +103,7 @@ const Footer = () => {
 
           {/* عمود SOURCE */}
           <div className="md:col-span-3">
-            <h4 className="text-brand-orange text-xs font-bold tracking-[0.15em] uppercase mb-6">
+            <h4 className="text-white text-sm font-bold tracking-[0.15em] uppercase mb-6">
               {t('footer.ir_source_col')}
             </h4>
             <ul className="space-y-3">
@@ -110,17 +111,17 @@ const Footer = () => {
                 <li key={index}>
                   <Link
                     to={link.path}
-                    className="text-sm text-brand-muted hover:text-brand-orange transition-colors duration-200"
+                    className="text-base text-black hover:text-white transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
                 </li>
               ))}
               {isAdmin && (
-                <li className="pt-3 border-t border-brand-ink/10 mt-3">
+                <li className="pt-3 border-t border-black/20 mt-3">
                   <Link
                     to="/admin"
-                    className="text-sm text-brand-orange font-medium flex items-center gap-2 hover:text-brand-orange-dark transition-colors"
+                    className="text-base text-black font-bold flex items-center gap-2 hover:text-white transition-colors"
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
                     لوحة تحكم النظام
@@ -132,7 +133,7 @@ const Footer = () => {
 
           {/* عمود PRIVACY POLICY */}
           <div className="md:col-span-2">
-            <h4 className="text-brand-orange text-xs font-bold tracking-[0.15em] uppercase mb-6">
+            <h4 className="text-white text-sm font-bold tracking-[0.15em] uppercase mb-6">
               {t('footer.privacy_col')}
             </h4>
             <ul className="space-y-3">
@@ -140,7 +141,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link
                     to={link.path}
-                    className="text-sm text-brand-muted hover:text-brand-orange transition-colors duration-200"
+                    className="text-base text-black hover:text-white transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -151,31 +152,31 @@ const Footer = () => {
 
           {/* بيانات التواصل */}
           <div className="md:col-span-2">
-            <h4 className="text-brand-orange text-xs font-bold tracking-[0.15em] uppercase mb-6">
+            <h4 className="text-white text-sm font-bold tracking-[0.15em] uppercase mb-6">
               {t('footer.contact_us')}
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Phone className="w-3.5 h-3.5 text-brand-orange" />
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Phone className="w-3.5 h-3.5 text-black" />
                 </div>
-                <span dir="ltr" className="text-sm text-brand-muted">
+                <span dir="ltr" className="text-[15px] text-black">
                   {siteInfo.phone || '...'}
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Mail className="w-3.5 h-3.5 text-brand-orange" />
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Mail className="w-3.5 h-3.5 text-black" />
                 </div>
-                <span className="text-sm text-brand-muted break-all">
+                <span className="text-[15px] text-black break-all">
                   {siteInfo.email || '...'}
                 </span>
               </li>
               <li className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MapPin className="w-3.5 h-3.5 text-brand-orange" />
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <MapPin className="w-3.5 h-3.5 text-black" />
                 </div>
-                <span className="text-sm text-brand-muted leading-relaxed">
+                <span className="text-[15px] text-black leading-relaxed">
                   {currentLang === 'ar' ? siteInfo.address_ar : siteInfo.address_en || '...'}
                 </span>
               </li>
@@ -184,11 +185,11 @@ const Footer = () => {
         </div>
 
         {/* حقوق النشر */}
-        <div className="border-t border-brand-ink/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-brand-muted/80">
+        <div className="border-t border-black/20 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-sm text-black">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
-          <p className="text-xs text-brand-muted/60">
+          <p className="text-sm text-black/80">
             {t('footer.powered_by')}
           </p>
         </div>

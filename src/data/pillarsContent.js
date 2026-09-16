@@ -200,7 +200,7 @@ export const LAYERS = {
   platform: {
     group: "layer",
     number: "01",
-    image: "/Home/anim/office.svg",
+    image: "/Home/layer-platform.jpg",
     name_ar: "المنصة الرقمية", name_en: "Digital platform",
     card_desc_ar: "بيئة التشغيل الأساسية للمستخدمين والسجلات البحثية والمشاريع ومسارات النشر والخدمات والمستودعات ولوحات المعلومات والتحليلات والتكاملات.",
     card_desc_en: "The core operating environment for users, research records, projects, publication pipelines, services, repositories, dashboards, analytics and integrations.",
@@ -248,7 +248,7 @@ export const LAYERS = {
   ai_services: {
     group: "layer",
     number: "02",
-    image: "/Home/anim/molecules.svg",
+    image: "/Home/layer-ai.jpg",
     name_ar: "خدمات الذكاء الاصطناعي", name_en: "AI services",
     card_desc_ar: "مساعدون بحثيون ووكلاء تحليليون ضمن حوكمة واضحة يدعمون تطوير البحث وتقييم الجودة ومواءمة المجلات وتحليل الأداء ودعم القرار، مع إشراف بشري عند الحاجة.",
     card_desc_en: "Research assistants and analytical agents under clear governance that support research development, quality assessment, journal matching, performance analysis and decision support — with human oversight where needed.",
@@ -296,7 +296,7 @@ export const LAYERS = {
   experts: {
     group: "layer",
     number: "03",
-    image: "/Home/anim/lab.svg",
+    image: "/Home/layer-experts.jpg",
     name_ar: "شبكة الخبراء", name_en: "Expert network",
     card_desc_ar: "وصول مُدار إلى المراجعين والخبراء المتخصصين وخبراء المنهجية والإحصائيين والمحررين والمترجمين ومستشاري النشر وخبراء الابتكار والملكية الفكرية.",
     card_desc_en: "Managed access to reviewers, subject experts, methodologists, statisticians, editors, translators, publication advisors and innovation & IP experts.",
