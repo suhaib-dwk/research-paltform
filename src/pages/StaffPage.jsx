@@ -102,7 +102,7 @@ const StaffPage = () => {
           {roles.map((r) => {
             const dark = r.tone === "dark";
             return (
-              <div key={r.key} className={`p-8 md:p-10 flex flex-col ${dark ? "bg-brand-ink text-white" : "bg-white border border-gray-200 text-brand-ink"}`}>
+              <div key={r.key} id={r.key} className={`p-8 md:p-10 flex flex-col scroll-mt-28 ${dark ? "bg-brand-ink text-white" : "bg-white border border-gray-200 text-brand-ink"}`}>
                 <div className="flex items-center gap-4 mb-6">
                   <span className={`w-14 h-14 flex items-center justify-center ${dark ? "bg-brand-orange/15 text-brand-orange border border-brand-orange/30" : "bg-brand-orange/10 text-brand-orange"}`}>
                     <r.icon className="w-7 h-7" strokeWidth={1.5} />

@@ -1,20 +1,15 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Phone, Mail, MapPin, Loader2, CheckCircle, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
-import { SiteContext } from '../SiteContext';
+import { Plus, AlertCircle } from 'lucide-react';
 import { API_BASE_URL } from '../api';
-import { getValidationMessages, validateField as validateFieldValue } from '../utils/formValidation';
-import ErrorMessage from '../components/shared/ErrorMessage';
 
 const HelpPage = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const currentLang = i18n.language;
   const [openIndex, setOpenIndex] = useState(null);
-
-  const { siteInfo } = useContext(SiteContext);
 
   // حالات الأسئلة الشائعة
   const [faqs, setFaqs] = useState([]);
@@ -43,93 +38,6 @@ const HelpPage = () => {
     fetchFaqs();
     window.scrollTo(0, 0);
   }, []);
-
-  // ✅ حالة نموذج التواصل
-  const validationMessages = getValidationMessages(currentLang);
-  const [isFormLoading, setIsFormLoading] = useState(false);
-  const [isFormSuccess, setIsFormSuccess] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-
-  const validateField = (name, value) => validateFieldValue(name, value, validationMessages);
-
-  const validateAll = () => {
-    const newErrors = {};
-    let isValid = true;
-    Object.keys(formData).forEach((key) => {
-      const err = validateField(key, formData[key]);
-      if (err) {
-        newErrors[key] = err;
-        isValid = false;
-      }
-    });
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    setApiError(null);
-    if (touched[name]) {
-      setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
-    }
-  };
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateAll()) return;
-
-    setIsFormLoading(true);
-    setApiError(null);
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/send_message.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      const result = await res.json();
-
-      if (result.status === 'success') {
-        setIsFormSuccess(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setErrors({});
-        setTouched({});
-        setTimeout(() => setIsFormSuccess(false), 4000);
-      } else {
-        setApiError(result.message);
-      }
-    } catch (err) {
-      setApiError(currentLang === 'ar' ? 'فشل الاتصال بالخادم' : 'Failed to connect to server');
-    } finally {
-      setIsFormLoading(false);
-    }
-  };
-
-  const getInputClass = (fieldName) => {
-    const base = 'w-full px-4 py-3 rounded-xl border outline-none transition-all placeholder:text-gray-300';
-    const hasError = touched[fieldName] && errors[fieldName];
-    if (hasError) {
-      return `${base} border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 bg-red-50/30`;
-    }
-    return `${base} border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20`;
-  };
-
-  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (
     <>
@@ -172,10 +80,9 @@ const HelpPage = () => {
                 {t('help.hero_desc')}
               </p>
               {/* ✅ روابط سريعة لأقسام الصفحة — بدل اقتباس صفحة "من نحن" المكرر */}
-              <div className="grid sm:grid-cols-3 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3">
                 {[
                   { href: '#faq', title: t('help.faq_page'), desc: t('help.faq_page_desc') },
-                  { href: '#contact', title: t('help.contact'), desc: t('help.contact_desc') },
                   { href: '/target-audience', title: t('help.guide'), desc: t('help.guide_desc'), route: true },
                 ].map((q) => (
                   q.route ? (
@@ -285,130 +192,6 @@ const HelpPage = () => {
         </div>
       </section>
 
-      {/* ✅ قسم تواصل معنا */}
-      <section id="contact" className="py-16 px-4 md:px-8 scroll-mt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto bg-brand-orange rounded-2xl p-8 md:p-14 grid lg:grid-cols-2 gap-10"
-        >
-          {/* بيانات التواصل */}
-          <div>
-            <h2 className="text-white font-black text-3xl mb-3">{t('help.cta_title')}</h2>
-            <p className="text-white/80 mb-6">{t('help.cta_subtitle')}</p>
-            <div className="w-12 h-0.5 bg-white/40 mb-6" />
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-white flex-shrink-0" />
-                <span dir="ltr" className="text-white/90 text-sm">{siteInfo?.phone || '...'}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-white flex-shrink-0" />
-                <span className="text-white/90 text-sm">{siteInfo?.email || '...'}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-white flex-shrink-0" />
-                <span className="text-white/90 text-sm">
-                  {currentLang === 'ar' ? (siteInfo?.address_ar || '...') : (siteInfo?.address_en || '...')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* نموذج التواصل */}
-          <form onSubmit={handleSubmit} noValidate className="bg-white rounded-2xl p-6 md:p-8">
-            {apiError && (
-              <div className="mb-5 p-3 bg-red-50 text-red-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-red-100">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                {apiError}
-              </div>
-            )}
-            {isFormSuccess && (
-              <div className="mb-5 p-3 bg-emerald-50 text-emerald-600 rounded-xl flex items-center gap-2 text-sm font-medium border border-emerald-100">
-                <CheckCircle className="w-4 h-4 flex-shrink-0" />
-                {currentLang === 'ar' ? 'تم إرسال رسالتك بنجاح!' : 'Your message sent successfully!'}
-              </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="text-sm font-bold text-brand-ink mb-1.5 block">
-                  {t('help.form_full_name')}
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder={t('help.form_full_name')}
-                  className={getInputClass('name')}
-                />
-                <ErrorMessage message={touched.name ? errors.name : ''} />
-              </div>
-              <div>
-                <label className="text-sm font-bold text-brand-ink mb-1.5 block">
-                  {t('help.form_email')}
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  dir="ltr"
-                  value={formData.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder={t('help.form_email')}
-                  className={getInputClass('email')}
-                />
-                <ErrorMessage message={touched.email ? errors.email : ''} />
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label className="text-sm font-bold text-brand-ink mb-1.5 block">
-                {t('help.form_subject')}
-              </label>
-              <input
-                type="text"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                placeholder={t('help.form_subject')}
-                className={getInputClass('subject')}
-              />
-              <ErrorMessage message={touched.subject ? errors.subject : ''} />
-            </div>
-
-            <div className="mb-6">
-              <label className="text-sm font-bold text-brand-ink mb-1.5 block">
-                {t('help.form_message')}
-              </label>
-              <textarea
-                name="message"
-                rows="4"
-                value={formData.message}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                placeholder={t('help.form_message')}
-                className={getInputClass('message')}
-              ></textarea>
-              <ErrorMessage message={touched.message ? errors.message : ''} />
-            </div>
-
-            <button
-              type="submit"
-              disabled={isFormLoading}
-              className="inline-flex items-center gap-2 bg-brand-orange text-white px-8 py-3 rounded-full font-bold hover:bg-brand-orange-dark transition-all duration-300 disabled:opacity-70"
-            >
-              {isFormLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('help.form_submit')}
-              {!isFormLoading && <ArrowIcon className="w-4 h-4" />}
-            </button>
-          </form>
-        </motion.div>
-      </section>
     </>
   );
 };

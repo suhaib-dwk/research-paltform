@@ -1,15 +1,14 @@
 // src\components\layout\Footer.jsx
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
 // import { resolveUploadUrl } from '../../api'; // لم تعد بحاجة لهذا الاستيراد
 
 const Footer = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
-  const [isAdmin, setIsAdmin] = useState(false);
   const { siteInfo, siteSettings } = useContext(SiteContext);
 
   const siteName = siteSettings[`site_name_${currentLang}`] || t('footer.about_title');
@@ -17,33 +16,13 @@ const Footer = () => {
   // ✅ الفوتر بلون الموقع (البرتقالي) — نسخة الشعار البيضاء كما في البراند بوك على الخلفية البرتقالية
   const staticLogoUrl = '/logo/IR-Souce-logo-VO1-2.png';
 
-  useEffect(() => {
-    const checkAdminStatus = () => {
-      try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        setIsAdmin(user.role === 'super_admin');
-      } catch { setIsAdmin(false); }
-    };
-    checkAdminStatus();
-    window.addEventListener('storage', checkAdminStatus);
-    window.addEventListener('authChange', checkAdminStatus);
-    return () => {
-      window.removeEventListener('storage', checkAdminStatus);
-      window.removeEventListener('authChange', checkAdminStatus);
-    };
-  }, []);
-
-  const irSourceLinks = [
-    { path: '/', label: t('nav.home') },
-    { path: '/about-us', label: t('nav.about_us') },
-    { path: '/contact-us', label: t('nav.contact_us') },
-    { path: '/target-audience', label: t('nav.target_audience') },
-  ];
-
-  const privacyLinks = [
+  // ✅ سياسات المنصة — كل ما يندرج تحت الشروط والسياسات (صفحات /page/:slug
+  // تُدار من لوحة الأدمن: جدول "محتوى الصفحات")
+  const policyLinks = [
     { path: '/page/terms', label: t('footer.terms_conditions') },
+    { path: '/page/privacy', label: t('footer.privacy_policy') },
+    { path: '/page/usage-policy', label: t('footer.usage_policy') },
     { path: '/help', label: t('nav.help') },
-    { path: '/page/overview', label: t('nav.overview') },
   ];
 
   const socials = [
@@ -101,43 +80,13 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* عمود SOURCE */}
+          {/* عمود سياسات المنصة */}
           <div className="md:col-span-3">
             <h4 className="text-white text-sm font-bold tracking-[0.15em] uppercase mb-6">
-              {t('footer.ir_source_col')}
+              {t('footer.policies_col')}
             </h4>
             <ul className="space-y-3">
-              {irSourceLinks.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    to={link.path}
-                    className="text-base text-black hover:text-white transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              {isAdmin && (
-                <li className="pt-3 border-t border-black/20 mt-3">
-                  <Link
-                    to="/admin"
-                    className="text-base text-black font-bold flex items-center gap-2 hover:text-white transition-colors"
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    لوحة تحكم النظام
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* عمود PRIVACY POLICY */}
-          <div className="md:col-span-2">
-            <h4 className="text-white text-sm font-bold tracking-[0.15em] uppercase mb-6">
-              {t('footer.privacy_col')}
-            </h4>
-            <ul className="space-y-3">
-              {privacyLinks.map((link, index) => (
+              {policyLinks.map((link, index) => (
                 <li key={index}>
                   <Link
                     to={link.path}
@@ -151,7 +100,7 @@ const Footer = () => {
           </div>
 
           {/* بيانات التواصل */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-4">
             <h4 className="text-white text-sm font-bold tracking-[0.15em] uppercase mb-6">
               {t('footer.contact_us')}
             </h4>

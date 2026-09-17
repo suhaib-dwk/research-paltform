@@ -70,7 +70,7 @@ const HomePage = () => {
   const currentLang = i18n.language;
   const lang = isRTL ? "ar" : "en";
   // ✅ خط الهوية (Brand Guidelines): العناوين الكبيرة بخط البراند Bold — العربية
-  // Bahij TheSansArabic (أو بديله IBM Plex Sans Arabic) والإنجليزية DM Sans.
+  // Tajawal (خط تجوال) والإنجليزية DM Sans.
   const displayFont = isRTL ? "var(--font-ar)" : "var(--font-en)";
 
   const { siteSettings, homeSlides } = useContext(SiteContext);
@@ -199,7 +199,6 @@ const HomePage = () => {
   // ✅ المكونات الثلاثة للمنصة بترتيب الاحتياج (المقترح، القسم 2)
   const components = [
     {
-      number: "01",
       image: "/Home/anim/office.svg",
       to: "/audience/ministry",
       title: t("home.comp1_title"),
@@ -208,7 +207,6 @@ const HomePage = () => {
       items: [1, 2, 3, 4].map((n) => t(`home.comp1_item${n}`)),
     },
     {
-      number: "02",
       image: "/Home/anim/books.svg",
       to: "/audience/university",
       title: t("home.comp2_title"),
@@ -217,7 +215,6 @@ const HomePage = () => {
       items: [1, 2, 3, 4].map((n) => t(`home.comp2_item${n}`)),
     },
     {
-      number: "03",
       image: "/Home/anim/lab.svg",
       to: "/services",
       title: t("home.comp3_title"),
@@ -444,7 +441,7 @@ const HomePage = () => {
             <h2 className="text-3xl md:text-[44px] md:leading-[1.2] font-bold text-brand-ink">
               {t("home.components_title")}
             </h2>
-            <p className="text-base leading-relaxed text-brand-muted">{t("home.components_desc")}</p>
+            <p className="text-lg md:text-xl md:leading-[1.9] leading-relaxed text-brand-muted">{t("home.components_desc")}</p>
           </ScrollReveal>
 
           {/* شريط التابات — التصميم نفسه */}
@@ -496,10 +493,6 @@ const HomePage = () => {
                         alt=""
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      <span className="absolute bottom-0 start-0 w-14 h-14 bg-brand-orange"></span>
-                      <span className="absolute bottom-3.5 start-3.5 text-lg font-black text-brand-ink leading-none">
-                        {comp.number}
-                      </span>
                     </div>
                     <div className="p-8 pt-7 flex flex-col flex-1">
                       <h3 className="text-xl font-bold text-brand-ink mb-2.5">{comp.title}</h3>
@@ -532,8 +525,8 @@ const HomePage = () => {
                         to="/audience/ministry#spaces"
                         className="group h-full text-start bg-white p-6 md:p-7 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
                       >
-                        <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
-                          {isRTL ? `المساحة ${space.number}` : `Space ${space.number}`}
+                        <span className="text-brand-orange text-3xl md:text-4xl font-black leading-none mb-3 block">
+                          {space.number}
                         </span>
                         <h3 className="text-lg font-bold text-brand-ink mb-1.5">{space[`title_${lang}`]}</h3>
                         <p className="text-[13px] font-semibold text-brand-orange/90 mb-2.5">{space[`question_${lang}`]}</p>

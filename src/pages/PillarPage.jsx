@@ -91,16 +91,7 @@ const PillarPage = () => {
             {pick(p, "title_pre", lang)}
             <span className="text-brand-orange">{pick(p, "title_em", lang)}</span>
           </h1>
-          <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl mb-9">{pick(p, "intro", lang)}</p>
-          <div className="flex flex-wrap items-center gap-5">
-            <Link to="/login" className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-[15px] font-bold text-white hover:bg-brand-orange-dark transition-colors">
-              {L.register}
-              <ArrowIcon className="w-4 h-4" />
-            </Link>
-            <a href="#what" className="inline-flex items-center gap-2 text-[15px] font-semibold text-white hover:text-brand-orange transition-colors">
-              {L.chapters}
-            </a>
-          </div>
+          <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl">{pick(p, "intro", lang)}</p>
         </div>
         {/* ✅ شريط الفصول بأسلوب تابات الصفحة الرئيسية (بطلب صريح): مستطيل أبيض بفواصل
             وخط برتقالي أعلى التاب النشط — يتبع التمرير ويعمل كأزرار */}

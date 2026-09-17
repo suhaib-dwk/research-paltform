@@ -114,7 +114,7 @@ const ServicesCataloguePage = () => {
             if (services.length === 0) return null;
             const Icon = FAMILY_ICONS[family.key] || FileCheck;
             return (
-              <div key={family.key} className="mb-14 last:mb-0">
+              <div key={family.key} id={family.key} className="mb-14 last:mb-0 scroll-mt-28">
                 <div className="flex items-baseline justify-between gap-4 border-b border-gray-200 pb-4 mb-6">
                   <h2 className="text-2xl font-bold text-brand-ink">{family[`label_${lang}`]}</h2>
                   <span className="text-sm text-brand-muted font-semibold flex-shrink-0">

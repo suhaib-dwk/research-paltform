@@ -3,32 +3,14 @@
 @tailwind utilities;
 
 /* =========================================================
-   خطوط الهوية — Source Brand Guidelines (ص4: Typography)
+   خطوط الهوية
+   • العربية: Tajawal (خط تجوال) — مجاني ومحمّل من Google Fonts
+     (الأوزان 200/300/400/500/700/800/900)، انظر index.html.
    • الإنجليزية: DM Sans (Bold للعناوين، Medium/Regular للمتن).
-   • العربية: Bahij TheSansArabic — خط تجاري؛ يُحمَّل من جهاز المستخدم إن كان
-     مثبّتًا (local)، أو من public/fonts/ إن وُضعت ملفاته المرخّصة هناك
-     (فعّل سطري url أدناه)، وإلا يسقط إلى IBM Plex Sans Arabic (أقرب بديل مجاني
-     من حيث السماكة والخطوط الحديثة).
    ========================================================= */
-@font-face {
-  font-family: 'Bahij TheSansArabic';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Bahij TheSansArabic'), local('Bahij TheSansArabic Regular'), local('BahijTheSansArabic-Regular')
-       /* , url('/fonts/BahijTheSansArabic-Regular.woff2') format('woff2') */;
-}
-@font-face {
-  font-family: 'Bahij TheSansArabic';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('Bahij TheSansArabic Bold'), local('BahijTheSansArabic-Bold'), local('Bahij TheSansArabic-Bold')
-       /* , url('/fonts/BahijTheSansArabic-Bold.woff2') format('woff2') */;
-}
 :root {
-  --font-ar: 'Bahij TheSansArabic', 'IBM Plex Sans Arabic', 'DM Sans', system-ui, sans-serif;
-  --font-en: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, 'IBM Plex Sans Arabic', sans-serif;
+  --font-ar: 'Tajawal', 'DM Sans', system-ui, sans-serif;
+  --font-en: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, 'Tajawal', sans-serif;
 }
 /* =========================================================
    لوحات التحكم — التصميم المرجعي الجديد: داخل .dash-theme تُعرض كل البطاقات

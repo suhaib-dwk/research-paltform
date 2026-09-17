@@ -19,7 +19,7 @@ export const useInnerLang = () => {
     ArrowIcon: isRTL ? ArrowLeft : ArrowRight,
     BackIcon: isRTL ? ArrowRight : ArrowLeft,
     CrumbIcon: isRTL ? ChevronLeft : ChevronRight,
-    // ✅ خط الهوية للعناوين الكبيرة (Brand Guidelines): Bahij TheSansArabic / DM Sans
+    // ✅ خط الهوية للعناوين الكبيرة (Brand Guidelines): Tajawal / DM Sans
     displayFont: isRTL ? "var(--font-ar)" : "var(--font-en)",
   };
 };

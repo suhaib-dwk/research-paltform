@@ -2,16 +2,35 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, ShieldCheck, LogOut, Globe, ChevronDown, Landmark, Building2, GraduationCap, Users, Info, HelpCircle, Mail, LayoutGrid } from 'lucide-react';
+import { Menu, X, ShieldCheck, LogOut, Globe, ChevronDown, Landmark, Building2, GraduationCap, Users, Info, HelpCircle, Mail, LayoutGrid, Briefcase, UserCog, FileCheck, Sparkles, Languages, Award, BookMarked, MessageSquare, BarChart3 } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
+import { SERVICE_FAMILIES } from '../../data/servicesCatalogue';
+
+// أيقونة لكل عائلة خدمات في القائمة المنسدلة
+const FAMILY_NAV_ICONS = {
+  assessment: FileCheck, development: Sparkles, editing: Languages, review: Award,
+  journal: BookMarked, revision: MessageSquare, post: BarChart3,
+};
 
 // =========================================================
 // الهيدر العام — بعد إعادة بناء الصفحات الداخلية صارت القائمة:
 //   الرئيسية · الفئة المستهدفة ▾ (الوزارة / الجامعات / الباحثون والطلبة)
-//   · الخدمات · للموظفين ومقدّمي الخدمة · عن المنصة ▾ (من نحن / مركز
-//   المساعدة / للتواصل معنا) · [تسجيل الدخول]
+//   · الخدمات ▾ (عائلات الخدمات السبع) · للموظفين ومقدّمي الخدمة ▾
+//   (مقدّم خدمة / موظف المنصة) · عن المنصة ▾ (من نحن / مركز المساعدة /
+//   للتواصل معنا) · [تسجيل الدخول]
 // "من نحن" و"مركز المساعدة" و"للتواصل معنا" مدمجة في قائمة واحدة بطلب صريح.
 // =========================================================
+
+// ✅ التمرير إلى قسم داخل صفحة أخرى: الصفحات تنفّذ window.scrollTo(0,0) عند
+// التحميل، فننتظر إطارًا بعد انتقال الراوتر ثم نمرّر إلى العنصر المستهدف.
+const scrollToHash = (hash) => {
+  if (!hash) return;
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  });
+};
 
 // ✅ قائمة منسدلة بسيطة (فتح بالمرور أو النقر، إغلاق بالنقر خارجها أو Esc)
 const NavDropdown = ({ label, active, items, isRTL }) => {
@@ -51,12 +70,17 @@ const NavDropdown = ({ label, active, items, isRTL }) => {
       {open && (
         <div className={`absolute top-full ${isRTL ? 'right-0' : 'left-0'} mt-1 w-72 bg-white border border-gray-200 shadow-[0_24px_48px_-24px_rgba(31,26,23,0.35)] z-50 divide-y divide-gray-100`}>
           {items.map((item) => {
-            const isCurrent = location.pathname === item.to;
+            const [path, hash] = item.to.split('#');
+            const isCurrent = location.pathname === path && !hash;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  // نفس الصفحة: الراوتر لا يعيد التحميل، فنمرّر يدويًا
+                  if (hash && location.pathname === path) scrollToHash(`#${hash}`);
+                }}
                 className={`block px-5 py-3.5 border-s-[3px] transition-colors group ${
                   isCurrent ? 'border-brand-orange bg-brand-orange/5' : 'border-transparent hover:border-brand-orange hover:bg-brand-orange/5'
                 }`}
@@ -112,6 +136,12 @@ const Navbar = () => {
     window.location.href = '/';
   };
 
+  // ✅ الانتقال بين الصفحات مع hash (مثل /services#assessment): بعد أن يركّب
+  // الراوتر الصفحة الجديدة نمرّر إلى القسم المطلوب.
+  useEffect(() => {
+    scrollToHash(location.hash);
+  }, [location.pathname, location.hash]);
+
   const siteName = siteSettings[`site_name_${currentLang}`] || 'SOURCE';
   // تم تحديد مسار اللوجو الثابت مباشرة (الهيدر أبيض بالشعار الملوّن — أُعيد كما كان بطلب صريح)
   const staticLogoUrl = '/logo/logo1.png';
@@ -123,6 +153,23 @@ const Navbar = () => {
     { to: '/audience/university', icon: Building2, label: isAr ? 'الجامعات والمؤسسات' : 'Universities & institutions', desc: isAr ? 'الجودة والاعتماد والتصنيفات' : 'Quality, accreditation and rankings' },
     { to: '/audience/undergrad', icon: GraduationCap, label: isAr ? 'الباحثون والطلبة' : 'Researchers & students', desc: isAr ? 'من البكالوريوس إلى هيئة التدريس' : 'From undergraduate to faculty' },
     { to: '/target-audience', icon: LayoutGrid, label: isAr ? 'كل الفئات' : 'All audiences', desc: null },
+  ];
+  // ✅ الخدمات — عائلات الخدمات السبع من دليل الخدمات، كل عنصر يفتح قسم
+  // العائلة في صفحة دليل الخدمات (/services#<family.key>)
+  const serviceItems = [
+    ...SERVICE_FAMILIES.map((f) => ({
+      to: `/services#${f.key}`,
+      icon: FAMILY_NAV_ICONS[f.key] || FileCheck,
+      label: f[`label_${currentLang.toLowerCase().startsWith('ar') ? 'ar' : 'en'}`],
+      desc: null,
+    })),
+    { to: '/services', icon: LayoutGrid, label: isAr ? 'كل الخدمات' : 'All services', desc: null },
+  ];
+  // ✅ للموظفين ومقدّمي الخدمة — الدوران المتاحان في صفحة /staff
+  const staffItems = [
+    { to: '/staff#service_provider', icon: Briefcase, label: isAr ? 'مقدّم خدمة' : 'Service provider', desc: isAr ? 'محكّم، مترجم، مدقق، مستشار نشر' : 'Reviewer, translator, editor, advisor' },
+    { to: '/staff#employee', icon: UserCog, label: isAr ? 'موظف المنصة' : 'Platform employee', desc: isAr ? 'فريق التشغيل وإدارة الحسابات' : 'Operations team and account management' },
+    { to: '/staff', icon: LayoutGrid, label: isAr ? 'عن الدورين' : 'About both roles', desc: null },
   ];
   // ✅ "عن المنصة" — من نحن + مركز المساعدة + للتواصل معنا مدمجة في قائمة واحدة
   const aboutItems = [
@@ -180,8 +227,8 @@ const Navbar = () => {
         <nav className="hidden lg:flex items-center gap-1">
           <Link to="/" className={linkCls(location.pathname === '/')}>{t('nav.home')}</Link>
           <NavDropdown label={t('nav.target_audience')} active={audienceActive} items={audienceItems} isRTL={isRTL} />
-          <Link to="/services" className={linkCls(servicesActive)}>{servicesLabel}</Link>
-          <Link to="/staff" className={linkCls(staffActive)}>{staffLabel}</Link>
+          <NavDropdown label={servicesLabel} active={servicesActive} items={serviceItems} isRTL={isRTL} />
+          <NavDropdown label={staffLabel} active={staffActive} items={staffItems} isRTL={isRTL} />
           <NavDropdown label={aboutLabel} active={aboutActive} items={aboutItems} isRTL={isRTL} />
         </nav>
 
@@ -259,8 +306,6 @@ const Navbar = () => {
             <nav className="flex flex-col gap-1">
               {[
                 { to: '/', label: t('nav.home') },
-                { to: '/services', label: servicesLabel },
-                { to: '/staff', label: staffLabel },
               ].map((link) => {
                 const isActive = location.pathname === link.to;
                 return (
@@ -281,6 +326,20 @@ const Navbar = () => {
 
               <p className="text-[10px] font-bold text-brand-muted uppercase tracking-[0.2em] px-3 pt-4 pb-1">{t('nav.target_audience')}</p>
               {audienceItems.map((item) => (
+                <Link key={item.to} to={item.to} onClick={closeMobileMenu} className="flex items-center gap-3 py-2.5 px-3 rounded-lg text-[15px] text-brand-muted font-medium hover:text-brand-ink">
+                  <item.icon className="w-4 h-4 text-brand-orange" />{item.label}
+                </Link>
+              ))}
+
+              <p className="text-[10px] font-bold text-brand-muted uppercase tracking-[0.2em] px-3 pt-4 pb-1">{servicesLabel}</p>
+              {serviceItems.map((item) => (
+                <Link key={item.to} to={item.to} onClick={closeMobileMenu} className="flex items-center gap-3 py-2.5 px-3 rounded-lg text-[15px] text-brand-muted font-medium hover:text-brand-ink">
+                  <item.icon className="w-4 h-4 text-brand-orange" />{item.label}
+                </Link>
+              ))}
+
+              <p className="text-[10px] font-bold text-brand-muted uppercase tracking-[0.2em] px-3 pt-4 pb-1">{staffLabel}</p>
+              {staffItems.map((item) => (
                 <Link key={item.to} to={item.to} onClick={closeMobileMenu} className="flex items-center gap-3 py-2.5 px-3 rounded-lg text-[15px] text-brand-muted font-medium hover:text-brand-ink">
                   <item.icon className="w-4 h-4 text-brand-orange" />{item.label}
                 </Link>

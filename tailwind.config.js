@@ -1,3 +1,5 @@
+import typography from '@tailwindcss/typography';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -13,8 +15,7 @@ export default {
       //   • الخط الإنجليزي: DM Sans (العناوين Bold والمتن Medium/Regular).
       //     Helvetica Neue LT Pro خط تجاري غير قابل للتضمين على الويب بلا ترخيص،
       //     والكتيّب نفسه يعتمد DM Sans للعناوين واللافتات الرقمية.
-      //   • الخط العربي: Bahij TheSansArabic (تجاري) — يُستخدم تلقائيًا إن كان
-      //     مثبّتًا على جهاز المستخدم، وبديله المجاني الأقرب IBM Plex Sans Arabic.
+      //   • الخط العربي: Tajawal (خط تجوال) — مجاني ومحمّل من Google Fonts.
       //   المتغيّرات --font-ar / --font-en معرّفة في src/index.css.
       // =====================================================================
       fontFamily: {
@@ -52,5 +53,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  // ✅ إضافة typography: صفحات المحتوى الديناميكي (/page/:slug) تعرض HTML
+  // قادمًا من لوحة الأدمن داخل .prose — بدون هذه الإضافة تفقد تنسيقها.
+  plugins: [typography],
 }

@@ -266,7 +266,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     <title>${isRTL ? 'طباعة' : 'Print'}</title>
                     <style>
                         @page { margin: 15mm; }
-                        body { font-family: 'Bahij TheSansArabic', 'IBM Plex Sans Arabic', 'DM Sans', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 20px; }
+                        body { font-family: 'Tajawal', 'DM Sans', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 20px; }
                         table { width: 100%; border-collapse: collapse; }
                         th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: ${isRTL ? 'right' : 'left'}; }
                         th { background-color: #f8fafc; font-weight: bold; }
@@ -290,7 +290,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const handleExportWord = () => {
         setExportMenuOpen(false);
         const table = printRef.current.innerHTML;
-        const preHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office:word" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40/strict"><head><meta charset="utf-8"><style>body{font-family:'Bahij TheSansArabic','IBM Plex Sans Arabic','DM Sans',Arial,sans-serif;direction:${isRTL ? 'rtl' : 'ltr'};padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:${isRTL ? 'right' : 'left'}}th{background:#f0f0f0;font-weight:bold}img{max-width:100px;height:60px;object-fit:cover}.bool-yes{color:green;font-weight:bold}.bool-no{color:red}</style><title>Export</title></head><body><h2 style="text-align:center;margin-bottom:20px">${tableName}</h2>${table}</body></html>`;
+        const preHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office:word" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40/strict"><head><meta charset="utf-8"><style>body{font-family:'Tajawal','DM Sans',Arial,sans-serif;direction:${isRTL ? 'rtl' : 'ltr'};padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:${isRTL ? 'right' : 'left'}}th{background:#f0f0f0;font-weight:bold}img{max-width:100px;height:60px;object-fit:cover}.bool-yes{color:green;font-weight:bold}.bool-no{color:red}</style><title>Export</title></head><body><h2 style="text-align:center;margin-bottom:20px">${tableName}</h2>${table}</body></html>`;
         const blob = new Blob(['\ufeff', preHtml], { type: 'application/msword' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -343,7 +343,7 @@ const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
                     <title>${tableName} - PDF</title>
                     <style>
                         @page { margin: 10mm; size: landscape; }
-                        body { font-family: 'Bahij TheSansArabic', 'IBM Plex Sans Arabic', 'DM Sans', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 15px; font-size: 11px; }
+                        body { font-family: 'Tajawal', 'DM Sans', Arial, sans-serif; direction: ${isRTL ? 'rtl' : 'ltr'}; padding: 15px; font-size: 11px; }
                         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
                         th, td { border: 1px solid #555; padding: 5px 8px; text-align: ${isRTL ? 'right' : 'left'}; }
                         th { background-color: #e2e8f0; font-weight: bold; font-size: 10px; }
