@@ -18,6 +18,7 @@ import PlatformServiceDetailPage from './pages/PlatformServiceDetailPage';
 import ServicesCataloguePage from './pages/ServicesCataloguePage';
 import PillarPage from './pages/PillarPage';
 import StaffPage from './pages/StaffPage';
+import MinistrySpacePage from './pages/MinistrySpacePage';
 import Footer from './components/layout/Footer';
 import DynamicHead from './components/layout/DynamicHead';
 
@@ -145,6 +146,7 @@ function AppContent() {
             <Route path="/audience/:key" element={<AudienceDetailPage />} />
             <Route path="/services" element={<ServicesCataloguePage />} />
             <Route path="/pillar/:key" element={<PillarPage />} />
+            <Route path="/ministry-space/:slug" element={<MinistrySpacePage />} />
             <Route path="/staff" element={<StaffPage />} />
             <Route path="/platform-service/:key" element={<PlatformServiceDetailPage />} />
             <Route path="/page/:slug" element={<DynamicPage />} />

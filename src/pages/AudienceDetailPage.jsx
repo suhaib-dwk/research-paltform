@@ -5,6 +5,8 @@ import {
   MINISTRY_SPACES, POLICY_JOURNEY, MINISTRY_PRINCIPLES, MINISTRY_ROLES, MINISTRY_REPORTS, getLevelLabel,
 } from "../data/audiencesContent";
 import { SERVICE_FAMILIES, EXEC_TYPES, SERVICES_CATALOGUE, getServiceById } from "../data/servicesCatalogue";
+import { MINISTRY_SPACE_DETAILS } from "../data/ministrySpacesDetails";
+import HomeStatsPanel from "../components/home/HomeStatsPanel";
 import {
   useInnerLang, pick, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow, RelatedCards,
 } from "../components/inner/InnerBlocks";
@@ -320,7 +322,8 @@ const QualityLayout = ({ audienceKey, data, L }) => {
 };
 
 // ── لوحات توضيحية للمساحات الأربع (بلا أرقام مختلقة) ──
-const SpaceMock = ({ kind, lang }) => {
+// ✅ تُعرض الآن داخل الصفحة التفصيلية لكل مساحة (MinistrySpacePage) كمعاينة للواجهة
+export const SpaceMock = ({ kind, lang }) => {
   const label = (ar, en) => (lang === "ar" ? ar : en);
   const frame = "bg-brand-ink p-5 md:p-6 shadow-[0_40px_64px_-32px_rgba(31,26,23,0.45)]";
   const tile = "bg-brand-dark-card border border-brand-dark-border";
@@ -403,10 +406,10 @@ const SpaceMock = ({ kind, lang }) => {
 
 // ───────────────────────── 3) الوزارة — تصميم "الذكاء الوطني" ─────────────────────────
 const IntelligenceLayout = ({ data, L }) => {
-  const { t, lang, isRTL } = L;
+  const { t, lang, isRTL, ArrowIcon } = L;
   const labels = isRTL
-    ? { spaces: "المساحات الأربع", policy: "رحلة القرار", principles: "القواعد", roles: "لمن", reports: "التقارير", spacesKicker: "المكون الأول — لوحات الوزارة والذكاء البحثي الوطني", spacesTitle: "أربع مساحات مستقلة وظيفيًا، مترابطة بياناتيًا.", spacesDesc: "البيانات تتحول إلى أولويات، والأولويات إلى شراكات وتمويل، ثم تنتج مشاريع ومخرجات تعود إلى قاعدة البيانات لقياس الأثر.", policyKicker: "الاستخدام الأهم", policyTitle: "من «عرض الأرقام» إلى «فهم الواقع ثم اختيار التدخل».", policyDesc: "المخرج النهائي ليس رقمًا؛ بل ملف قرار يوضح الأدلة والخيارات والمخاطر والمؤشرات التي ستُستخدم لمتابعته.", principlesKicker: "قواعد غير قابلة للتفاوض", principlesTitle: "ما الذي يضمنه النظام للوزارة.", rolesKicker: "لمن هذه الطبقة", rolesTitle: "صلاحيات بحسب الدور داخل الوزارة.", reportsKicker: "التقارير الوطنية", reportsTitle: "تقارير دورية تُبنى من الأرقام نفسها التي تراها في اللوحة.", contact: "للتواصل معنا", ctaTitle: "الخطوة التالية: مرحلة تأسيس واكتشاف تقني مشتركة.", ctaDesc: "تبدأ باعتماد لوحات الوزارة ومؤشراتها الأساسية، ثم النطاق والحوكمة والمؤسسات المشاركة.", relatedTitle: "صفحات ذات صلة", quote: "لا تجعلوا الوزارة مجرد شاشة تقارير.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض", question: "السؤال" }
-    : { spaces: "The four spaces", policy: "Decision journey", principles: "Rules", roles: "Who", reports: "Reports", spacesKicker: "Component one — Ministry dashboards & national research intelligence", spacesTitle: "Four functionally independent spaces, linked by data.", spacesDesc: "Data becomes priorities, priorities become partnerships and funding, which produce projects and outputs that return to the database to measure impact.", policyKicker: "The most important use", policyTitle: "From “showing numbers” to “understanding reality, then choosing the intervention”.", policyDesc: "The final output is not a number; it is a decision file showing evidence, options, risks and the indicators that will track the decision.", principlesKicker: "Non-negotiable rules", principlesTitle: "What the system guarantees the Ministry.", rolesKicker: "Who this layer is for", rolesTitle: "Role-based access inside the Ministry.", reportsKicker: "National reports", reportsTitle: "Periodic reports built from the same figures you see on the dashboard.", contact: "Contact us", ctaTitle: "Next step: a joint foundation and technical discovery phase.", ctaDesc: "It starts by approving the Ministry dashboards and core indicators, then scope, governance and participating institutions.", relatedTitle: "Related pages", quote: "Do not turn the Ministry into a mere reporting screen.", quoteSource: "Ministry layer specification — non-negotiable rules", question: "The question" };
+    ? { spaces: "المساحات الأربع", policy: "رحلة القرار", principles: "القواعد", roles: "لمن", reports: "التقارير", spacesKicker: "المكون الأول — لوحات الوزارة والذكاء البحثي الوطني", spacesTitle: "أربع مساحات مستقلة وظيفيًا، مترابطة بياناتيًا.", spacesDesc: "البيانات تتحول إلى أولويات، والأولويات إلى شراكات وتمويل، ثم تنتج مشاريع ومخرجات تعود إلى قاعدة البيانات لقياس الأثر.", policyKicker: "الاستخدام الأهم", policyTitle: "من «عرض الأرقام» إلى «فهم الواقع ثم اختيار التدخل».", policyDesc: "المخرج النهائي ليس رقمًا؛ بل ملف قرار يوضح الأدلة والخيارات والمخاطر والمؤشرات التي ستُستخدم لمتابعته.", principlesKicker: "قواعد غير قابلة للتفاوض", principlesTitle: "ما الذي يضمنه النظام للوزارة.", rolesKicker: "لمن هذه الطبقة", rolesTitle: "صلاحيات بحسب الدور داخل الوزارة.", reportsKicker: "التقارير الوطنية", reportsTitle: "تقارير دورية تُبنى من الأرقام نفسها التي تراها في اللوحة.", contact: "للتواصل معنا", ctaTitle: "الخطوة التالية: مرحلة تأسيس واكتشاف تقني مشتركة.", ctaDesc: "تبدأ باعتماد لوحات الوزارة ومؤشراتها الأساسية، ثم النطاق والحوكمة والمؤسسات المشاركة.", relatedTitle: "صفحات ذات صلة", quote: "لا تجعلوا الوزارة مجرد شاشة تقارير.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض", question: "السؤال", details: "العرض التفصيلي والمؤشرات" }
+    : { spaces: "The four spaces", policy: "Decision journey", principles: "Rules", roles: "Who", reports: "Reports", spacesKicker: "Component one — Ministry dashboards & national research intelligence", spacesTitle: "Four functionally independent spaces, linked by data.", spacesDesc: "Data becomes priorities, priorities become partnerships and funding, which produce projects and outputs that return to the database to measure impact.", policyKicker: "The most important use", policyTitle: "From “showing numbers” to “understanding reality, then choosing the intervention”.", policyDesc: "The final output is not a number; it is a decision file showing evidence, options, risks and the indicators that will track the decision.", principlesKicker: "Non-negotiable rules", principlesTitle: "What the system guarantees the Ministry.", rolesKicker: "Who this layer is for", rolesTitle: "Role-based access inside the Ministry.", reportsKicker: "National reports", reportsTitle: "Periodic reports built from the same figures you see on the dashboard.", contact: "Contact us", ctaTitle: "Next step: a joint foundation and technical discovery phase.", ctaDesc: "It starts by approving the Ministry dashboards and core indicators, then scope, governance and participating institutions.", relatedTitle: "Related pages", quote: "Do not turn the Ministry into a mere reporting screen.", quoteSource: "Ministry layer specification — non-negotiable rules", question: "The question", details: "Detailed view & indicators" };
 
   const regLinks = registerLinks("ministry", t, isRTL);
   const related = [
@@ -453,9 +456,19 @@ const IntelligenceLayout = ({ data, L }) => {
                       </li>
                     ))}
                   </ul>
+                  <Link
+                    to={`/ministry-space/${space.slug}`}
+                    className="mt-7 inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-[15px] font-bold text-white hover:bg-brand-orange-dark transition-colors"
+                  >
+                    {labels.details}
+                    <ArrowIcon className="w-4 h-4" />
+                  </Link>
                 </div>
+                {/* ✅ أرقام حقيقية منشورة بدل اللوحة التوضيحية (اللوحة انتقلت للصفحة التفصيلية) */}
                 <div className={`lg:col-span-7 ${i % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}>
-                  <SpaceMock kind={space.mock} lang={lang} />
+                  {MINISTRY_SPACE_DETAILS[space.slug] && (
+                    <HomeStatsPanel stats={MINISTRY_SPACE_DETAILS[space.slug].summary} isRTL={isRTL} />
+                  )}
                 </div>
               </div>
             ))}
