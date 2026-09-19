@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GraduationCap, MapPin, Phone, Mail, ShieldCheck } from 'lucide-react';
-import { SiteContext } from '../../SiteContext';
-import { resolveUploadUrl } from '../../api';
+import { SiteContext } from '../../../SiteContext';
+import { resolveUploadUrl } from '../../../api';
 
 const DashboardFooter = () => {
   const { i18n } = useTranslation();

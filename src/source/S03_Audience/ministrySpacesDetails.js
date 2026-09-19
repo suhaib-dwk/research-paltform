@@ -11,11 +11,11 @@
 //    متعدد الدول: …,countries_distinct_count:>1   (النِّسب محسوبة: متعدد الدول ÷ المجموع)
 //    بالممول:   …&group_by=funders.id  ،  وجود ممول: …,funders.id:!null
 //    المؤسسات:  https://api.openalex.org/institutions?filter=country_code:LY  (57)
-//  [SCImago] / [UNICEF-NCESD] / [QS-2026] / [LEP] — انظر src/data/homeStats.js
+//  [SCImago] / [UNICEF-NCESD] / [QS-2026] / [LEP] — انظر src/source/S01_Home/homeStats.js
 //  ملاحظة: أرقام OpenAlex تشمل كل أنواع الأعمال، لذا تختلف عن سلسلة Scopus (SCImago).
 // =========================================================
-import { HOME_STATS } from "./homeStats";
-import { buildForecast, herfindahl, fmt } from "../utils/forecast";
+import { HOME_STATS } from "../S01_Home/homeStats";
+import { buildForecast, herfindahl, fmt } from "./forecast";
 
 const uni = HOME_STATS.university;
 const tile = (value, label_ar, label_en) => ({ value, label_ar, label_en });
@@ -346,7 +346,7 @@ export const MINISTRY_SPACE_DETAILS = {
 
 // =========================================================
 // إحصائيات يولّدها الذكاء الاصطناعي (ai_stats) — محسوبة آليًا من الأرقام أعلاه
-// عبر src/utils/forecast.js: اتجاه خطي + نطاق ثقة 95% تقريبي، مؤشر تركّز، سيناريوهات.
+// عبر src/source/S03_Audience/forecast.js: اتجاه خطي + نطاق ثقة 95% تقريبي، مؤشر تركّز، سيناريوهات.
 // هي تقديرات تحليلية وليست أرقامًا رسمية، ويُشار إلى ذلك على الصفحة.
 // =========================================================
 
@@ -518,13 +518,12 @@ const forecastChart = (title_ar, title_en, series, opts = {}) => {
 
 // =========================================================
 // ملاحظات الاجتماع (2026-09):
-//  • البيانات والذكاء: «مستشار بحثي ذكي» كخدمة محادثة داخل المساحة (advisor)
+//  • البيانات والذكاء: «SOURCE Chatbot» شات بوت عائم في صفحات الوزارة (source/S03_Audience/SourceChatbot.jsx)
 //  • الأولويات: الذكاء الاصطناعي يقترح الأولويات (ai_stats.suggestions)
 //  • الشراكات: لا تُنشئها الوزارة — تنشأ محليًا وتصل للوزارة كبيانات (local_flow)
 //  • التمويل: الإحصائيات أولًا، ثم أخبار وإعلانات التمويل المتغيرة للطلبة (news)
 // =========================================================
 
-MINISTRY_SPACE_DETAILS["data-intelligence"].advisor = true;
 MINISTRY_SPACE_DETAILS.funding.news = ["grants", "announcements"];
 
 // ── الأولويات المقترحة: مؤشر فجوة مبدئي = 1 − (حصة المجال ÷ الحصة المتساوية بين 26 مجالًا) ──
@@ -562,16 +561,557 @@ MINISTRY_SPACE_DETAILS.partnerships.local_flow = [
   { title_ar: "الوزارة تقرأ وتحلّل", title_en: "The Ministry reads & analyses", desc_ar: "لا تُنشئ الوزارة الشراكات — تراها كبيانات، تقيس أثرها، وتكشف الفرص.", desc_en: "The Ministry doesn't create partnerships — it sees them as data, measures impact and spots opportunities." },
 ];
 
-// ── سياق «المستشار البحثي الذكي»: كل الأرقام المنشورة والتقديرات كنص مرجعي ──
-export const buildAdvisorContext = (lang = "ar") => {
+// =========================================================
+// ملاحظات 2026-09-19:
+//  • نقل إحصائيات المجالات من صفحة الأولويات إلى المساحة الأولى (stats_extra)
+//  • صفحة الأولويات تعرض المؤشرات المحسوبة من البيانات بدلها
+//  • كل مؤشر في المساحات الأربع يحمل قيمته المحسوبة (value) أو «بانتظار البيانات»
+// =========================================================
+
+// ── 1) إحصائيات المجالات تنتقل إلى «البيانات والذكاء البحثي» ──
+{
+  const pr = MINISTRY_SPACE_DETAILS.priorities;
+  MINISTRY_SPACE_DETAILS["data-intelligence"].stats_extra = {
+    title_ar: "توزيع الإنتاج البحثي حسب المجال (2020–2025)",
+    title_en: "Research output by field (2020–2025)",
+    tiles: pr.stats.tiles,
+    charts: pr.stats.charts,
+  };
+}
+
+// ── 2) مؤشرات الأولويات محسوبة من البيانات ──
+{
+  const equalShare = 100 / ALL_FIELDS.length;
+  const share = (en) => (ALL_FIELDS.find((f) => f[1] === en)[2] / TOTAL_WORKS) * 100;
+  const coverage = (en) => (share(en) / equalShare) * 100;
+  const hhi = herfindahl(ALL_FIELDS.map((f) => f[2]));
+  const top2 = ((ALL_FIELDS[0][2] + ALL_FIELDS[1][2]) / TOTAL_WORKS) * 100;
+  const low = ALL_FIELDS.filter((f) => (f[2] / TOTAL_WORKS) * 100 < 2).length;
+  const pr = MINISTRY_SPACE_DETAILS.priorities;
+  const sugg = pr.ai_stats.suggestions;
+
+  const VITAL = [
+    ["الزراعة والأحياء", "Agri & Bio"], ["البيئة", "Environment"], ["الطاقة", "Energy"], ["علوم الأرض", "Earth sci."],
+    ["الاقتصاد", "Economics"], ["البيطرة", "Veterinary"], ["الهندسة الكيميائية", "Chem. eng."],
+  ];
+  const COVERAGE_CHART = {
+    type: "bar",
+    title_ar: "مؤشر تغطية الأولوية (P-02) للقطاعات الحيوية — 100% = الحصة المتساوية بين المجالات",
+    title_en: "Priority coverage (P-02) for vital sectors — 100% = the equal share across fields",
+    unit: "%",
+    data: VITAL.map(([ar, en]) => ({ name_ar: ar, name_en: en, value: Math.round(coverage(en)), highlight: coverage(en) < 50 })),
+  };
+  const SHARE_CHART = {
+    type: "bar",
+    title_ar: "مؤشر حصة المجال من الإنتاج (P-03) — أكبر 8 مجالات (%)",
+    title_en: "Field share of output (P-03) — top 8 fields (%)",
+    unit: "%",
+    data: ALL_FIELDS.slice(0, 8).map(([ar, en, v]) => ({ name_ar: ar, name_en: en, value: Number(((v / TOTAL_WORKS) * 100).toFixed(1)), highlight: en === "Medicine" })),
+  };
+  const tiles = [
+    tile(`${fmt(coverage("Energy"))}%`, "تغطية أولوية الطاقة (P-02) — أقل من نصف الحصة المتساوية", "Energy priority coverage (P-02) — under half the equal share"),
+    tile(`${fmt(coverage("Earth sci."))}%`, "تغطية المياه الجوفية وعلوم الأرض (P-02)", "Groundwater & earth sciences coverage (P-02)"),
+    tile(`${fmt(coverage("Veterinary"))}%`, "تغطية الثروة الحيوانية والبيطرة (P-02)", "Livestock & veterinary coverage (P-02)"),
+    tile(`${fmt(share("Medicine"), 1)}%`, "حصة الطب من الإنتاج (P-03) — أعلى مجال", "Medicine's share of output (P-03) — the top field"),
+    tile(`${fmt(top2, 1)}%`, "حصة أكبر مجالين معًا (P-03)", "Combined share of the top two fields (P-03)"),
+    tile(fmt(hhi, 3), "مؤشر تركّز الإنتاج بين المجالات (هيرفندال)", "Output concentration across fields (Herfindahl)"),
+    tile(String(low), "مجالًا تحت عتبة 2% من الإنتاج", "Fields below the 2% output threshold"),
+    tile(String(sugg.length), "أولويات مرشّحة بمكوّن الفجوة من مؤشر الأولوية (P-01)", "Candidate priorities from the gap component of the priority index (P-01)"),
+  ];
+  pr.stats_kicker_ar = "مؤشرات محسوبة من البيانات"; pr.stats_kicker_en = "Indicators computed from the data";
+  pr.stats_title_ar = "ما الذي تقوله البيانات عن الأولويات الوطنية."; pr.stats_title_en = "What the data says about national priorities.";
+  pr.stats_note_ar = `كل رقم هنا مؤشر محسوب آليًا من ${fmt(TOTAL_WORKS)} عملًا بحثيًا ليبيًا (2020–2025) موزّعة على ${ALL_FIELDS.length} مجالًا — بالصيغ المعتمدة في قسم المؤشرات.`;
+  pr.stats_note_en = `Every figure here is an indicator computed automatically from ${fmt(TOTAL_WORKS)} Libyan research works (2020–2025) across ${ALL_FIELDS.length} fields — using the formulas in the indicators section.`;
+  pr.stats = { tiles, charts: [COVERAGE_CHART, SHARE_CHART] };
+  pr.summary = { tiles: tiles.slice(0, 4), charts: [COVERAGE_CHART] };
+  pr.headline = [tiles[0], tiles[4], tiles[7]].map((t) => ({ ...t }));
+
+  // إحصائيات الذكاء الاصطناعي للأولويات تتركّز الآن على المقترحات (بلا تكرار المؤشرات أعلاه)
+  const avgCov = VITAL.reduce((s, [, en]) => s + coverage(en), 0) / VITAL.length;
+  const under50 = VITAL.filter(([, en]) => coverage(en) < 50).length;
+  pr.ai_stats.title_ar = "ما الأولويات التي يقترحها الذكاء الاصطناعي؟"; pr.ai_stats.title_en = "Which priorities does AI suggest?";
+  pr.ai_stats.method_ar = "ترتيب القطاعات الحيوية حسب مؤشر الفجوة المشتق من مؤشري التغطية (P-02) والحصة (P-03)."; pr.ai_stats.method_en = "Vital sectors ranked by a gap index derived from the coverage (P-02) and share (P-03) indicators.";
+  pr.ai_stats.tiles = [
+    tile(String(sugg.length), "أولويات مقترحة بانتظار اعتماد الوزارة", "Suggested priorities pending Ministry approval"),
+    tile(`${fmt(sugg[0].gap)}%`, `أعلى فجوة: ${sugg[0].sector_ar}`, `Highest gap: ${sugg[0].sector_en}`),
+    tile(`${fmt(avgCov)}%`, "متوسط تغطية القطاعات الحيوية السبعة", "Average coverage of the seven vital sectors"),
+    tile(`${under50} / ${VITAL.length}`, "قطاعات حيوية بتغطية أقل من 50%", "Vital sectors with coverage below 50%"),
+  ];
+  pr.ai_stats.charts = [{
+    type: "bar",
+    title_ar: "مؤشر الفجوة للأولويات المقترحة (%)",
+    title_en: "Gap index of the suggested priorities (%)",
+    unit: "%",
+    data: sugg.map((s, i) => ({ name_ar: s.field_ar, name_en: s.field_en, value: Math.round(s.gap), highlight: i === 0 })),
+  }];
+}
+
+// ── 3) قيم المؤشرات في المساحات الأربع (محسوبة، أو «بانتظار البيانات» مع السبب) ──
+{
+  const val = (value, note_ar, note_en) => ({ value, note_ar, note_en });
+  const wait = (note_ar, note_en) => ({ value: null, note_ar, note_en });
+  const setVals = (slug, map) => MINISTRY_SPACE_DETAILS[slug].indicators.forEach((ind) => { if (map[ind.code]) Object.assign(ind, { current: map[ind.code] }); });
+
+  const scopus = SCOPUS_BY_YEAR.data;
+  const s25 = scopus[scopus.length - 1].value;
+  const s24 = scopus[scopus.length - 2].value;
+  const oa25 = OUTPUT_BY_YEAR.data[OUTPUT_BY_YEAR.data.length - 1].value;
+  const uniAvg = UNI_OUTPUT.data.reduce((s, d) => s + d.value, 0) / UNI_OUTPUT.data.length;
+  const faculty = 25587;
+  setVals("data-intelligence", {
+    "D-01": val(fmt(TOTAL_WORKS), "عملًا بحثيًا 2020–2025", "research works 2020–2025"),
+    "D-02": val(fmt(oa25 / faculty, 2), "عمل لكل عضو هيئة تدريس في 2025 (تقريب)", "works per faculty member in 2025 (approx.)"),
+    "D-03": val(`${fmt((UNI_OUTPUT.data[0].value / uniAvg) * 100)}%`, "جامعة طرابلس مقابل متوسط أكبر 6 جامعات", "University of Tripoli vs the average of the 6 largest"),
+    "D-04": val(`+${fmt(((s25 - s24) / s24) * 100, 1)}%`, "نمو وثائق Scopus بين 2024 و2025", "Scopus document growth 2024→2025"),
+    "D-05": wait("بانتظار ربط سجلات الجامعات المتحقق منها", "Awaiting verified university records"),
+    "D-06": val(`${fmt((s25 / oa25) * 100)}%`, "من إنتاج 2025 مفهرس في Scopus", "of 2025 output is Scopus-indexed"),
+  });
+
+  const pr = MINISTRY_SPACE_DETAILS.priorities;
+  const equalShare = 100 / ALL_FIELDS.length;
+  const energyCov = (ALL_FIELDS.find((f) => f[1] === "Energy")[2] / TOTAL_WORKS) * 100 / equalShare * 100;
+  setVals("priorities", {
+    "P-01": val(String(pr.ai_stats.suggestions.length), "أولويات مرشّحة (مكوّن الفجوة) — بقية المكوّنات بانتظار أوزان الوزارة", "candidate priorities (gap component) — other components await Ministry weights"),
+    "P-02": val(`${fmt(energyCov)}%`, "تغطية أولوية الطاقة", "Energy priority coverage"),
+    "P-03": val(`${fmt((ALL_FIELDS[0][2] / TOTAL_WORKS) * 100, 1)}%`, "حصة الطب — أعلى مجال", "Medicine's share — the top field"),
+    "P-04": wait("بانتظار بيانات الباحثين والمختبرات حسب الأولوية", "Awaiting researcher and lab data by priority"),
+    "P-05": wait("بانتظار بيانات الجامعات حسب المنطقة", "Awaiting university data by region"),
+  });
+
+  const collab25 = COLLAB_SHARE.data[COLLAB_SHARE.data.length - 1].value;
+  const partnerHhi = herfindahl(PARTNERS_18.map((p) => p[1]));
+  setVals("partnerships", {
+    "C-01": val(`${fmt(collab25, 1)}%`, "نسبة التعاون الدولي في 2025", "International collaboration rate in 2025"),
+    "C-02": wait("بانتظار بيانات التأليف المشترك بين الجامعات الليبية", "Awaiting co-authorship data between Libyan universities"),
+    "C-03": wait("بانتظار تسجيل الاتفاقيات ومخرجاتها", "Awaiting agreements and their outputs"),
+    "C-04": val(fmt(1 - partnerHhi, 3), "تنوع الشركاء بين أكبر 18 دولة (1 = أعلى تنوع)", "Partner diversity across the top 18 countries (1 = most diverse)"),
+    "C-05": wait("بانتظار سجل الاتفاقيات", "Awaiting the agreements registry"),
+  });
+
+  setVals("funding", {
+    "F-01": val(`${fmt((1561 / TOTAL_WORKS) * 100, 1)}%`, "من الأبحاث تذكر جهة ممولة (2020–2025)", "of works acknowledge a funder (2020–2025)"),
+    "F-02": wait("بانتظار قيم التمويل من سجل المشاريع", "Awaiting funding amounts from the projects registry"),
+    "F-03": wait("بانتظار ربط المشاريع الممولة بالأولويات", "Awaiting funded projects linked to priorities"),
+    "F-04": wait("بانتظار سير عمل التقديم داخل المنصة", "Awaiting the in-platform application workflow"),
+    "F-05": wait("بانتظار تصنيف الجهات الممولة (محلي/عربي/دولي/صناعي)", "Awaiting funder classification (local/Arab/international/industry)"),
+  });
+}
+
+// =========================================================
+// ملاحظة 2026-09-19 (2): المستوى الثاني (الأولويات) بلا إحصائيات إطلاقًا —
+// كل الأرقام في المستوى الأول (البيانات والذكاء)، والمستوى الثاني يعرض الشرح
+// فقط، مولَّدًا نصيًا من تلك الأرقام نفسها (لا أرقام مكتوبة يدويًا).
+// =========================================================
+{
+  const di = MINISTRY_SPACE_DETAILS["data-intelligence"];
+  const pr = MINISTRY_SPACE_DETAILS.priorities;
+
+  // 1) كل إحصائيات الأولويات تنتقل إلى المستوى الأول كمجموعات إضافية
+  di.stats_groups = [
+    { id: "fields", ...di.stats_extra },
+    { id: "priority-indicators", title_ar: "مؤشرات الأولويات المحسوبة من البيانات", title_en: "Priority indicators computed from the data", tiles: pr.stats.tiles, charts: pr.stats.charts },
+    { id: "priority-gaps", title_ar: "مؤشر الفجوة للأولويات المقترحة", title_en: "Gap index of the suggested priorities", tiles: pr.ai_stats.tiles, charts: pr.ai_stats.charts },
+  ];
+  delete di.stats_extra;
+
+  // 2) الشرح المولَّد من الأرقام
+  const equalShare = 100 / ALL_FIELDS.length;
+  const sh = (en) => (ALL_FIELDS.find((f) => f[1] === en)[2] / TOTAL_WORKS) * 100;
+  const cov = (en) => Math.round((sh(en) / equalShare) * 100);
+  const top2 = ((ALL_FIELDS[0][2] + ALL_FIELDS[1][2]) / TOTAL_WORKS) * 100;
+  const low = ALL_FIELDS.filter((f) => (f[2] / TOTAL_WORKS) * 100 < 2).length;
+  const sugg = pr.ai_stats.suggestions;
+  const L1 = "/ministry-space/data-intelligence#priority-indicators";
+  const L1gap = "/ministry-space/data-intelligence#priority-gaps";
+  const L1fields = "/ministry-space/data-intelligence#fields";
+
+  pr.explain_only = true;
+  pr.explanation = [
+    {
+      title_ar: "المعرفة متركّزة في مجالين", title_en: "Knowledge is concentrated in two fields",
+      body_ar: `الطب والهندسة وحدهما يشكّلان ${fmt(top2, 1)}% من الإنتاج البحثي الليبي، بينما يقع ${low} مجالًا من أصل ${ALL_FIELDS.length} تحت عتبة 2%. هذا يعني أن القدرة البحثية الوطنية موجّهة نحو عدد محدود من التخصصات، وأن مجالات كثيرة ترتبط باحتياجات الدولة لا تحظى بنشاط كافٍ.`,
+      body_en: `Medicine and engineering alone make up ${fmt(top2, 1)}% of Libyan research output, while ${low} of ${ALL_FIELDS.length} fields sit below 2%. National research capacity is directed at a narrow set of disciplines, and many fields tied to national needs lack sufficient activity.`,
+      link: L1fields,
+    },
+    {
+      title_ar: "قطاعات حيوية بتغطية منخفضة", title_en: "Vital sectors with low coverage",
+      body_ar: `مقارنةً بالحصة المتساوية بين المجالات، تبلغ تغطية الطاقة ${cov("Energy")}% فقط، وعلوم الأرض والمياه الجوفية ${cov("Earth sci.")}%، والاقتصاد ${cov("Economics")}%، والبيطرة ${cov("Veterinary")}%، والهندسة الكيميائية ${cov("Chem. eng.")}%. وهي قطاعات يقوم عليها اقتصاد ليبيا ومواردها: النفط والغاز، المياه، الغذاء، والتنويع الاقتصادي.`,
+      body_en: `Against the equal share across fields, energy coverage is only ${cov("Energy")}%, earth sciences and groundwater ${cov("Earth sci.")}%, economics ${cov("Economics")}%, veterinary ${cov("Veterinary")}% and chemical engineering ${cov("Chem. eng.")}%. These are the sectors Libya's economy and resources rest on: oil and gas, water, food and economic diversification.`,
+      link: L1,
+    },
+    {
+      title_ar: "نقاط قوة يمكن البناء عليها", title_en: "Strengths to build on",
+      body_ar: `في المقابل، تتجاوز الزراعة والعلوم البيولوجية (${cov("Agri & Bio")}%) والعلوم البيئية (${cov("Environment")}%) الحصة المتساوية بوضوح — قاعدة جاهزة يمكن توجيهها نحو أولويات الأمن الغذائي والمياه والتصحر بدل البدء من الصفر.`,
+      body_en: `By contrast, agricultural & biological sciences (${cov("Agri & Bio")}%) and environmental science (${cov("Environment")}%) clearly exceed the equal share — a ready base that can be steered toward food security, water and desertification priorities instead of starting from scratch.`,
+      link: L1,
+    },
+  ];
+  pr.explanation_suggestions = sugg.map((s) => ({
+    sector_ar: s.sector_ar, sector_en: s.sector_en,
+    body_ar: `مجال «${s.field_ar}» لا يمثّل إلا ${s.share.toFixed(2)}% من الإنتاج (${fmt(s.works)} عملًا)، أي أقل بكثير من الحصة المتساوية. لذلك يقترح الذكاء الاصطناعي إدراج «${s.sector_ar}» كأولوية مرشّحة تُعرض على المراجعة القطاعية ومراجعة الخبراء قبل اعتماد الوزارة.`,
+    body_en: `“${s.field_en}” accounts for only ${s.share.toFixed(2)}% of output (${fmt(s.works)} works), far below the equal share. AI therefore suggests listing “${s.sector_en}” as a candidate priority for sector and expert review before Ministry approval.`,
+    link: L1gap,
+  }));
+  pr.explanation_next = {
+    ar: ["تعتمد الوزارة أوزان مؤشر الأولوية (الحاجة، الفجوة، المواءمة، القدرة، الاتجاه) لتكتمل مكوّناته بعد مكوّن الفجوة المحسوب.", "تحوّل الأولويات المعتمدة إلى دعوات بحثية وتمويل وشراكات موجّهة للجامعات والمراكز.", "تُقاس التغطية سنويًا من أرقام المستوى الأول لمتابعة أثر كل قرار."],
+    en: ["The Ministry approves the priority-index weights (need, gap, alignment, capacity, trend) to complete it beyond the computed gap component.", "Approved priorities become research calls, funding and partnerships aimed at universities and centres.", "Coverage is measured annually from the level-one figures to track each decision's impact."],
+  };
+  pr.explanation_summary = {
+    ar: [pr.explanation[0].title_ar + ": " + `مجالان = ${fmt(top2, 1)}% من الإنتاج.`, `تغطية الطاقة ${cov("Energy")}% والمياه الجوفية ${cov("Earth sci.")}% من الحصة المتساوية.`, `${sugg.length} أولويات مرشّحة يقترحها الذكاء الاصطناعي بانتظار اعتماد الوزارة.`],
+    en: [pr.explanation[0].title_en + ": " + `two fields = ${fmt(top2, 1)}% of output.`, `Energy coverage ${cov("Energy")}% and groundwater ${cov("Earth sci.")}% of the equal share.`, `${sugg.length} candidate priorities suggested by AI, pending Ministry approval.`],
+  };
+
+  // 3) المؤشرات في المستوى الثاني: تفسير بدل الرقم
+  const interp = {
+    "P-01": [`مكوّن الفجوة محسوب ويرشّح ${sugg.length} أولويات؛ بقية المكوّنات تنتظر أوزان الوزارة.`, `The gap component is computed and flags ${sugg.length} priorities; the other components await Ministry weights.`],
+    "P-02": [`الطاقة عند ${cov("Energy")}% من الحصة المتساوية — تغطية أقل من النصف لقطاع حيوي.`, `Energy is at ${cov("Energy")}% of the equal share — under half the coverage for a vital sector.`],
+    "P-03": [`الطب يستحوذ على ${sh("Medicine").toFixed(1)}% — تركّز يستدعي إعادة توازن نحو القطاعات الحيوية.`, `Medicine holds ${sh("Medicine").toFixed(1)}% — a concentration calling for rebalancing toward vital sectors.`],
+    "P-04": ["هل تملك كل أولوية ما يكفي من الباحثين والمختبرات؟ يُقاس بعد ربط ملفات الجامعات.", "Does each priority have enough researchers and labs? Measured once university profiles are connected."],
+    "P-05": ["هل تُبحث الأولوية حيث توجد الحاجة جغرافيًا؟ يُقاس بعد ربط بيانات الجامعات حسب المنطقة.", "Is each priority researched where the need is? Measured once university data by region is connected."],
+  };
+  pr.indicators.forEach((ind) => {
+    if (interp[ind.code]) { ind.interpret_ar = interp[ind.code][0]; ind.interpret_en = interp[ind.code][1]; }
+  });
+
+  // 3ب) شرح تفصيلي لكل مؤشر (يظهر في نافذة منبثقة عند الضغط): الخطوات، القراءة
+  //     الحالية كنص، الترابط مع إحصائيات المستوى الأول والمؤشرات الأخرى، دور الذكاء
+  //     الاصطناعي، والقرار الذي يدعمه. القيم مولَّدة من الأرقام — لا شيء مكتوب يدويًا.
+  const vitalLow = ["Energy", "Earth sci.", "Economics", "Veterinary", "Chem. eng."];
+  const lowList_ar = vitalLow.map((en) => `${ALL_FIELDS.find((f) => f[1] === en)[0]} ${cov(en)}%`).join("، ");
+  const lowList_en = vitalLow.map((en) => `${en} ${cov(en)}%`).join(", ");
+  const G = {
+    fields: { to: L1fields, ar: "توزيع الإنتاج حسب المجال", en: "Output by field" },
+    ind: { to: L1, ar: "مؤشرات الأولويات المحسوبة", en: "Computed priority indicators" },
+    gap: { to: L1gap, ar: "مؤشر الفجوة للأولويات المقترحة", en: "Gap index of suggested priorities" },
+    output: { to: "/ministry-space/data-intelligence#numbers", ar: "الإنتاج البحثي الوطني", en: "National research output" },
+  };
+  const DETAILS = {
+    "P-01": {
+      steps_ar: ["نحدد لكل قطاع مؤشرات الحاجة الوطنية من الخطط والاستراتيجيات.", "نحسب مكوّن الفجوة من التغطية (P-02) والحصة (P-03).", "نضيف المواءمة مع السياسات والقدرة المتاحة (P-04) واتجاه النمو.", "نضرب كل مكوّن في وزنه المعتمد من الوزارة ونجمع النتيجة.", "نرتّب القطاعات تنازليًا ونعرض الأعلى كأولويات مرشّحة."],
+      steps_en: ["For each sector, set national-need indicators from plans and strategies.", "Compute the gap component from coverage (P-02) and share (P-03).", "Add policy alignment, available capacity (P-04) and growth trend.", "Multiply each component by its Ministry-approved weight and sum.", "Rank sectors descending and show the top as candidate priorities."],
+      reading_ar: `حاليًا يُحسب مكوّن الفجوة فقط، وهو يرشّح ${sugg.length} قطاعات: ${sugg.map((s) => s.sector_ar).join("، ")}. أعلاها فجوةً «${sugg[0].sector_ar}». بقية المكوّنات (الحاجة، المواءمة، القدرة، الاتجاه) تنتظر اعتماد الأوزان، لذلك الترتيب مبدئي.`,
+      reading_en: `Only the gap component is computed now; it flags ${sugg.length} sectors: ${sugg.map((s) => s.sector_en).join(", ")}. The largest gap is “${sugg[0].sector_en}”. The other components (need, alignment, capacity, trend) await approved weights, so the ranking is preliminary.`,
+      links: [G.gap, G.ind], related: ["P-02", "P-03", "P-04"],
+      ai_ar: "يقترح الذكاء الاصطناعي الأوزان الأولية ويختبر حساسية الترتيب لتغييرها، ويشرح لكل قطاع أي مكوّن رفعه أو خفّضه.",
+      ai_en: "AI proposes initial weights, tests how sensitive the ranking is to them, and explains which component raised or lowered each sector.",
+      decision_ar: "اعتماد قائمة الأولويات الوطنية السنوية وتحويلها إلى دعوات بحثية وتمويل.",
+      decision_en: "Approving the annual national priority list and turning it into research calls and funding.",
+    },
+    "P-02": {
+      steps_ar: ["نصنّف كل عمل بحثي إلى مجاله الرئيسي.", "نحسب حصة كل مجال من الإنتاج الوطني.", `نقارنها بالحصة المتساوية بين ${ALL_FIELDS.length} مجالًا (${fmt(equalShare, 2)}%).`, "التغطية = حصة المجال ÷ الحصة المتساوية × 100 — أقل من 100% يعني نشاطًا دون المتوقع."],
+      steps_en: ["Classify every research work into its primary field.", "Compute each field's share of national output.", `Compare it with the equal share across ${ALL_FIELDS.length} fields (${fmt(equalShare, 2)}%).`, "Coverage = field share ÷ equal share × 100 — below 100% means less activity than expected."],
+      reading_ar: `القطاعات الحيوية الأقل تغطية: ${lowList_ar}. في المقابل الزراعة والأحياء ${cov("Agri & Bio")}% والبيئة ${cov("Environment")}% فوق الحصة المتساوية. أي أن الطاقة والمياه والاقتصاد تحصل على أقل من نصف النشاط المتوقع.`,
+      reading_en: `The least-covered vital sectors: ${lowList_en}. By contrast agriculture & biology is at ${cov("Agri & Bio")}% and environment at ${cov("Environment")}%, above the equal share. Energy, water and economics get under half the expected activity.`,
+      links: [G.ind, G.fields], related: ["P-03", "P-01", "P-05"],
+      ai_ar: "يصنّف الذكاء الاصطناعي الأبحاث إلى مجالات وأولويات دلاليًا (لا بالكلمات المفتاحية فقط)، ثم يحدّث التغطية تلقائيًا مع كل عمل جديد.",
+      ai_en: "AI classifies research into fields and priorities semantically (not only by keywords), then updates coverage automatically with every new work.",
+      decision_ar: "تحديد القطاعات التي تحتاج دعوات بحثية أو حوافز موجّهة لرفع نشاطها.",
+      decision_en: "Identifying sectors that need targeted research calls or incentives to raise activity.",
+    },
+    "P-03": {
+      steps_ar: ["نعدّ الأعمال البحثية في كل مجال خلال الفترة.", `نقسمها على مجموع الإنتاج الوطني (${fmt(TOTAL_WORKS)} عملًا).`, "نرتّب المجالات ونرصد التركّز في الأعلى والمجالات تحت عتبة 2%."],
+      steps_en: ["Count research works per field over the period.", `Divide by total national output (${fmt(TOTAL_WORKS)} works).`, "Rank fields and watch concentration at the top and fields below the 2% threshold."],
+      reading_ar: `الطب يتصدّر بـ${sh("Medicine").toFixed(1)}%، ومع الهندسة يصل المجالان إلى ${fmt(top2, 1)}% من الإنتاج، بينما ${low} مجالًا تحت 2%. الإنتاج الوطني متركّز، وهذا ما يغذّي مكوّن الفجوة في مؤشر الأولوية.`,
+      reading_en: `Medicine leads with ${sh("Medicine").toFixed(1)}%; with engineering the two reach ${fmt(top2, 1)}% of output, while ${low} fields are below 2%. National output is concentrated, which feeds the gap component of the priority index.`,
+      links: [G.fields, G.ind], related: ["P-02", "P-01"],
+      ai_ar: "يرصد الذكاء الاصطناعي تغيّر الحصص عبر السنوات وينبّه عند تراجع مجال مرتبط بأولوية أو صعود مجال جديد.",
+      ai_en: "AI tracks share changes over the years and alerts when a priority-linked field declines or a new field rises.",
+      decision_ar: "إعادة توازن الدعم البحثي بين المجالات المتركّزة والمجالات الحيوية المهمَلة.",
+      decision_en: "Rebalancing research support between concentrated fields and neglected vital ones.",
+    },
+    "P-04": {
+      steps_ar: ["نحدد لكل أولوية القدرة المطلوبة: باحثون، مختبرات، أجهزة.", "نجمع القدرة المتاحة من ملفات الباحثين والبنية التحتية في الجامعات.", "الفجوة القدراتية = المطلوب − المتاح لكل أولوية."],
+      steps_en: ["Set the required capacity per priority: researchers, labs, equipment.", "Aggregate available capacity from researcher and infrastructure profiles.", "Capacity gap = required − available per priority."],
+      reading_ar: "لا يُحسب بعد: يحتاج بيانات الباحثين والمختبرات مصنّفة حسب الأولوية من الجامعات. سيظهر تلقائيًا بعد ربط ملفاتها بالمنصة.",
+      reading_en: "Not computed yet: it needs researcher and lab data classified by priority from universities. It will appear automatically once their profiles are connected.",
+      links: [G.output], related: ["P-01", "P-05"],
+      ai_ar: "يطابق الذكاء الاصطناعي خبرات الباحثين مع موضوعات الأولوية لتقدير القدرة الفعلية لا العددية فقط.",
+      ai_en: "AI matches researchers' expertise to priority topics to estimate real capacity, not just headcount.",
+      decision_ar: "توجيه الابتعاث والتوظيف وتجهيز المختبرات نحو الأولويات ناقصة القدرة.",
+      decision_en: "Directing scholarships, hiring and lab investment toward capacity-short priorities.",
+    },
+    "P-05": {
+      steps_ar: ["نوزّع النشاط البحثي لكل أولوية على المناطق (حسب الجامعة والمركز).", "نقارنه بحجم الحاجة في كل منطقة.", "التغطية الجغرافية = النشاط في المنطقة ÷ الحاجة فيها."],
+      steps_en: ["Distribute each priority's research activity across regions (by university and centre).", "Compare it with the size of need in each region.", "Geographic coverage = activity in the region ÷ need in the region."],
+      reading_ar: "لا يُحسب بعد: يحتاج بيانات الجامعات حسب المنطقة. سيكشف مثلًا إن كانت أولوية المياه تُبحث في مناطق لا تعاني منها أكثر من المناطق المتأثرة.",
+      reading_en: "Not computed yet: it needs university data by region. It will reveal, for example, whether water is researched more in regions that don't suffer from it than in affected ones.",
+      links: [G.output], related: ["P-02", "P-04"],
+      ai_ar: "يربط الذكاء الاصطناعي مواقع الجامعات والمراكز بمؤشرات الحاجة المحلية ويقترح شراكات بين مناطق متكاملة.",
+      ai_en: "AI links university and centre locations to local need indicators and suggests partnerships between complementary regions.",
+      decision_ar: "توزيع الدعوات والتمويل جغرافيًا بعدالة وحسب الحاجة الفعلية.",
+      decision_en: "Allocating calls and funding geographically, fairly and by actual need.",
+    },
+  };
+  pr.indicators.forEach((ind) => { if (DETAILS[ind.code]) Object.assign(ind, { detail: DETAILS[ind.code] }); });
+
+  // 4) لا أرقام في المستوى الثاني
+  delete pr.stats; delete pr.summary; delete pr.headline;
+  pr.ai_stats = { suggestions: sugg };
+}
+
+// =========================================================
+// كل المؤشرات في المستويات الأربعة: نص (تفسير قصير) + شرح تفصيلي في نافذة منبثقة.
+// القراءات مبنية على القيم المحسوبة في كتلة «قيم المؤشرات» أعلاه.
+// =========================================================
+{
+  const V = (slug, code) => MINISTRY_SPACE_DETAILS[slug].indicators.find((i) => i.code === code)?.current?.value;
+  const link = (slug, hash, ar, en) => ({ to: `/ministry-space/${slug}#${hash}`, ar, en });
+  const scopus = SCOPUS_BY_YEAR.data;
+  const oa = OUTPUT_BY_YEAR.data;
+  const di = "data-intelligence";
+
+  const DETAILS = {
+    // ── 01 البيانات والذكاء البحثي ──
+    "D-01": {
+      interpret: [`${V(di, "D-01")} عملًا بحثيًا ليبيًا بين 2020 و2025، وارتفع الإنتاج السنوي من ${fmt(oa[0].value)} إلى ${fmt(oa[oa.length - 1].value)}.`, `${V(di, "D-01")} Libyan research works in 2020–2025; yearly output rose from ${fmt(oa[0].value)} to ${fmt(oa[oa.length - 1].value)}.`],
+      steps_ar: ["نجمع مخرجات الباحثين والجامعات من ملفاتها وقواعد الفهرسة.", "نزيل التكرار ونوحّد أسماء الباحثين والمؤسسات.", "نعدّ المخرجات المتحقق منها لكل فترة، حسب النوع والجامعة والمجال."],
+      steps_en: ["Collect researcher and university outputs from their profiles and indexes.", "Remove duplicates and reconcile researcher and institution names.", "Count verified outputs per period, by type, university and field."],
+      reading_ar: `بلغ الإنتاج ${V(di, "D-01")} عملًا خلال 2020–2025. أعلى سنة هي 2025 بـ${fmt(oa[oa.length - 1].value)} عملًا، بعد ${fmt(oa[oa.length - 2].value)} في 2024. هذا هو الأساس الذي تُبنى عليه بقية المؤشرات.`,
+      reading_en: `Output reached ${V(di, "D-01")} works in 2020–2025. The peak year is 2025 with ${fmt(oa[oa.length - 1].value)} works, after ${fmt(oa[oa.length - 2].value)} in 2024. Every other indicator is built on this base.`,
+      links: [link(di, "numbers", "الإنتاج البحثي الوطني", "National research output"), link(di, "fields", "توزيع الإنتاج حسب المجال", "Output by field")], related: ["D-02", "D-04", "D-06"],
+      ai_ar: "يوحّد الذكاء الاصطناعي الكيانات (أسماء الباحثين والجامعات بالعربية والإنجليزية) ويكتشف السجلات المكررة أو الناقصة قبل العدّ.",
+      ai_en: "AI reconciles entities (researcher and university names in Arabic and English) and detects duplicate or missing records before counting.",
+      decision_ar: "متابعة حجم المنظومة البحثية الوطنية وتقييم أثر السياسات عليها سنة بعد سنة.",
+      decision_en: "Tracking the size of the national research system and the effect of policies on it year by year.",
+    },
+    "D-02": {
+      interpret: [`نحو ${V(di, "D-02")} عمل لكل عضو هيئة تدريس في 2025 — إنتاجية منخفضة تستحق التشخيص.`, `About ${V(di, "D-02")} works per faculty member in 2025 — low productivity worth diagnosing.`],
+      steps_ar: ["نحدد الباحثين النشطين في كل جامعة (نشر أو مشروع خلال الفترة).", "نقسم مخرجات الجامعة على عدد باحثيها النشطين.", "نقارن الجامعات ببعضها وبالمتوسط الوطني بشكل عادل رغم اختلاف الحجم."],
+      steps_en: ["Identify active researchers per university (a publication or project in the period).", "Divide the university's outputs by its active researchers.", "Compare universities with each other and the national average fairly despite size differences."],
+      reading_ar: `التقدير الحالي ${V(di, "D-02")} عمل لكل عضو هيئة تدريس في 2025 (${fmt(oa[oa.length - 1].value)} عملًا ÷ 25,587 عضوًا). هو تقريب لأنه يقسم على كل الأعضاء لا الباحثين النشطين فقط؛ القيمة الدقيقة تظهر بعد ربط ملفات الباحثين.`,
+      reading_en: `The current estimate is ${V(di, "D-02")} works per faculty member in 2025 (${fmt(oa[oa.length - 1].value)} works ÷ 25,587 members). It is approximate because it divides by all members, not only active researchers; the exact value appears once researcher profiles are connected.`,
+      links: [link(di, "numbers", "الإنتاج البحثي الوطني", "National research output")], related: ["D-01", "D-03"],
+      ai_ar: "يميّز الذكاء الاصطناعي الباحث النشط من غير النشط، ويكشف أسباب انخفاض الإنتاجية (العبء التدريسي، التمويل، البنية التحتية).",
+      ai_en: "AI distinguishes active from inactive researchers and surfaces causes of low productivity (teaching load, funding, infrastructure).",
+      decision_ar: "تصميم حوافز البحث وتخفيف العبء التدريسي حيث تنخفض الإنتاجية.",
+      decision_en: "Designing research incentives and easing teaching loads where productivity is low.",
+    },
+    "D-03": {
+      interpret: [`جامعة طرابلس عند ${V(di, "D-03")} من متوسط أكبر 6 جامعات — فجوة واضحة بين الجامعات.`, `The University of Tripoli is at ${V(di, "D-03")} of the average of the 6 largest — a clear gap between universities.`],
+      steps_ar: ["نحسب قيمة المؤشر لكل جامعة (أو منطقة أو تخصص).", "نحسب المتوسط الوطني للمؤشر نفسه.", "الأداء = قيمة الجهة ÷ المتوسط × 100 — فوق 100% أعلى من المتوسط."],
+      steps_en: ["Compute the indicator for each university (or region or field).", "Compute the national average of the same indicator.", "Performance = entity value ÷ average × 100 — above 100% is above average."],
+      reading_ar: `جامعة طرابلس تنتج ${V(di, "D-03")} من متوسط أكبر ست جامعات، تليها بنغازي. الإنتاج متركّز في جامعتين كبيرتين بينما تبقى بقية الجامعات دون المتوسط.`,
+      reading_en: `The University of Tripoli produces ${V(di, "D-03")} of the average of the six largest, followed by Benghazi. Output is concentrated in two large universities while the others stay below average.`,
+      links: [link(di, "numbers", "الإنتاج التراكمي لأكبر الجامعات", "Cumulative output of the largest universities")], related: ["D-01", "D-02"],
+      ai_ar: "يطبّع الذكاء الاصطناعي المقارنة حسب الحجم والتخصص ويشرح لماذا تتقدم جامعة أو تتأخر.",
+      ai_en: "AI normalises the comparison by size and discipline and explains why a university leads or lags.",
+      decision_ar: "توجيه الدعم للجامعات دون المتوسط ونقل الممارسات الناجحة من الجامعات المتقدمة.",
+      decision_en: "Directing support to below-average universities and transferring good practice from leading ones.",
+    },
+    "D-04": {
+      interpret: [`نمو ${V(di, "D-04")} في وثائق Scopus بين 2024 و2025، واتجاه صاعد منذ 2015.`, `${V(di, "D-04")} growth in Scopus documents between 2024 and 2025, and a rising trend since 2015.`],
+      steps_ar: ["نأخذ السلسلة الزمنية للإنتاج سنة بسنة.", "النمو = (السنة الحالية − السابقة) ÷ السابقة.", "نرصد المجالات الصاعدة والمتراجعة ونبني عليها التنبؤ."],
+      steps_en: ["Take the output time series year by year.", "Growth = (current year − previous) ÷ previous.", "Spot rising and declining fields and build the forecast on them."],
+      reading_ar: `وثائق Scopus الليبية ارتفعت من ${fmt(scopus[scopus.length - 2].value)} في 2024 إلى ${fmt(scopus[scopus.length - 1].value)} في 2025 (${V(di, "D-04")})، ومن ${fmt(scopus[0].value)} في 2015. أكبر قفزة كانت في 2021.`,
+      reading_en: `Libyan Scopus documents rose from ${fmt(scopus[scopus.length - 2].value)} in 2024 to ${fmt(scopus[scopus.length - 1].value)} in 2025 (${V(di, "D-04")}), and from ${fmt(scopus[0].value)} in 2015. The biggest jump was in 2021.`,
+      links: [link(di, "numbers", "الإنتاج في Scopus سنويًا", "Scopus output per year"), link(di, "ai-insights", "توقع الإنتاج حتى 2028", "Output forecast to 2028")], related: ["D-01", "D-06"],
+      ai_ar: "يبني الذكاء الاصطناعي نموذج اتجاه وتوقعًا بنطاق ثقة، ويكشف القفزات غير المفسَّرة للتحقق منها.",
+      ai_en: "AI builds a trend model and a forecast with a confidence band, and flags unexplained jumps for verification.",
+      decision_ar: "التخطيط متعدد السنوات للتمويل والقدرات بناءً على المسار المتوقع.",
+      decision_en: "Multi-year planning of funding and capacity based on the projected path.",
+    },
+    "D-05": {
+      interpret: ["شرط قبل أي مقارنة — يُقاس بعد ربط سجلات الجامعات المتحقق منها.", "A precondition for any comparison — measured once verified university records are connected."],
+      steps_ar: ["نفحص كل سجل: هل الحقول الأساسية مكتملة؟ هل هو متحقق منه مؤسسيًا؟", "نحسب نسبة السجلات المكتملة والمتحقق منها لكل جامعة.", "لا تدخل جامعة في المقارنات الوطنية تحت حد جودة معيّن."],
+      steps_en: ["Check each record: are core fields complete? Is it institutionally verified?", "Compute the share of complete, verified records per university.", "A university below a quality threshold is excluded from national comparisons."],
+      reading_ar: "لا يُحسب بعد: يعتمد على سجلات الجامعات بعد ربطها بالمنصة. حتى ذلك الحين تعتمد الأرقام على مصادر منشورة (OpenAlex وScopus والتقارير الرسمية).",
+      reading_en: "Not computed yet: it depends on university records once connected. Until then figures rely on published sources (OpenAlex, Scopus and official reports).",
+      links: [link(di, "numbers", "الإنتاج البحثي الوطني", "National research output")], related: ["D-01", "D-03"],
+      ai_ar: "يكتشف الذكاء الاصطناعي الحقول الناقصة والقيم الشاذة ويقترح تصحيحها للجامعة قبل الاعتماد.",
+      ai_en: "AI detects missing fields and outliers and suggests corrections to the university before approval.",
+      decision_ar: "ضمان أن كل رقم في اللوحة الوطنية موثوق وقابل للتتبع إلى مصدره.",
+      decision_en: "Ensuring every figure on the national dashboard is reliable and traceable to its source.",
+    },
+    "D-06": {
+      interpret: [`نحو ${V(di, "D-06")} فقط من إنتاج 2025 مفهرس في Scopus — الظهور الدولي محدود.`, `Only about ${V(di, "D-06")} of 2025 output is Scopus-indexed — limited international visibility.`],
+      steps_ar: ["نعدّ المخرجات المفهرسة في قواعد دولية (Scopus وغيرها).", "نقسمها على كل المخرجات في الفترة نفسها.", "نضيف معدلات الاستشهاد المطبّعة حسب المجال لقياس الأثر."],
+      steps_en: ["Count outputs indexed in international databases (Scopus and others).", "Divide by all outputs in the same period.", "Add field-normalised citation rates to measure impact."],
+      reading_ar: `من ${fmt(oa[oa.length - 1].value)} عملًا في 2025، مفهرس في Scopus ${fmt(scopus[scopus.length - 1].value)} فقط، أي نحو ${V(di, "D-06")}. معظم الإنتاج ينشر في أوعية غير مفهرسة دوليًا.`,
+      reading_en: `Of ${fmt(oa[oa.length - 1].value)} works in 2025, only ${fmt(scopus[scopus.length - 1].value)} are Scopus-indexed, about ${V(di, "D-06")}. Most output is published in venues not indexed internationally.`,
+      links: [link(di, "numbers", "الإنتاج في Scopus مقابل كل الأعمال", "Scopus vs all works")], related: ["D-01", "D-04", "C-01"],
+      ai_ar: "يقترح الذكاء الاصطناعي مجلات مفهرسة مناسبة لكل بحث ويرصد المجلات غير الموثوقة.",
+      ai_en: "AI suggests suitable indexed journals for each paper and flags untrustworthy ones.",
+      decision_ar: "دعم النشر في أوعية مفهرسة وبرامج التحرير والترجمة لرفع الظهور الدولي.",
+      decision_en: "Supporting publication in indexed venues and editing/translation programmes to raise visibility.",
+    },
+    // ── 03 الشراكات ──
+    "C-01": {
+      interpret: [`${V("partnerships", "C-01")} من أبحاث 2025 بتأليف دولي، بعد ذروة 54.8% في 2023.`, `${V("partnerships", "C-01")} of 2025 research is internationally co-authored, after a 54.8% peak in 2023.`],
+      steps_ar: ["نقرأ دول المؤلفين في كل عمل بحثي.", "العمل دولي إن شارك فيه مؤلف من دولة أخرى على الأقل.", "النسبة = الأعمال الدولية ÷ كل الأعمال، سنويًا."],
+      steps_en: ["Read the authors' countries in every work.", "A work is international if at least one author is from another country.", "Rate = international works ÷ all works, per year."],
+      reading_ar: `النسبة ${V("partnerships", "C-01")} في 2025، بعد ذروة 54.8% في 2023. التراجع نسبي: الأعمال الدولية زادت، لكن الإنتاج الكلي نما أسرع.`,
+      reading_en: `The rate is ${V("partnerships", "C-01")} in 2025, after a 54.8% peak in 2023. The decline is relative: international works grew, but total output grew faster.`,
+      links: [link("partnerships", "numbers", "التعاون الدولي سنويًا", "International collaboration per year"), link("partnerships", "ai-insights", "توقع نسبة التعاون", "Collaboration forecast")], related: ["C-04", "D-06"],
+      ai_ar: "يتنبأ الذكاء الاصطناعي باتجاه النسبة ويقترح شركاء دوليين في المجالات التي يضعف فيها التعاون.",
+      ai_en: "AI forecasts the rate's trend and suggests international partners in fields where collaboration is weak.",
+      decision_ar: "برامج تنقّل وشراكات دولية موجّهة للحفاظ على الانفتاح البحثي.",
+      decision_en: "Targeted mobility and international partnership programmes to keep research open.",
+    },
+    "C-02": {
+      interpret: ["تكامل الجامعات الليبية فيما بينها — يُقاس بعد ربط بيانات التأليف المشترك.", "Integration between Libyan universities — measured once joint-authorship data is connected."],
+      steps_ar: ["نرصد الأعمال التي يشارك فيها باحثون من جامعتين ليبيتين أو أكثر.", "نقسمها على كل الأعمال.", "نرسم شبكة التعاون بين الجامعات والمراكز."],
+      steps_en: ["Find works co-authored by researchers from two or more Libyan universities.", "Divide by all works.", "Map the collaboration network between universities and centres."],
+      reading_ar: "لا يُحسب بعد: يحتاج بيانات تأليف مشترك موحّدة من الجامعات الليبية. الشراكات هنا تنشأ محليًا بين الطلبة والباحثين والجامعات، وتصل للوزارة كبيانات.",
+      reading_en: "Not computed yet: it needs unified co-authorship data from Libyan universities. Partnerships here start locally between students, researchers and universities, and reach the Ministry as data.",
+      links: [link("partnerships", "local", "مسار الشراكات المحلية", "Local partnerships flow")], related: ["C-01", "C-03"],
+      ai_ar: "يبني الذكاء الاصطناعي شبكة التعاون المحلية ويكشف الجامعات المعزولة والفرص بين جامعات متكاملة.",
+      ai_en: "AI builds the local collaboration network and reveals isolated universities and opportunities between complementary ones.",
+      decision_ar: "تحفيز المشاريع المشتركة بين الجامعات وتقليل التكرار.",
+      decision_en: "Encouraging joint projects between universities and reducing duplication.",
+    },
+    "C-03": {
+      interpret: ["ما الذي تنتجه كل شراكة مقارنة بالتزاماتها — يُقاس بعد تسجيل الاتفاقيات.", "What each partnership delivers against its commitments — measured once agreements are registered."],
+      steps_ar: ["نسجّل كل اتفاقية بالتزاماتها: مشاريع، منشورات، تبادل، تمويل.", "نربطها بالمخرجات الفعلية من ملفات الباحثين.", "الأثر = المخرجات المتحققة ÷ الالتزامات."],
+      steps_en: ["Register each agreement with its commitments: projects, papers, exchanges, funding.", "Link it to actual outputs from researcher profiles.", "Impact = delivered outputs ÷ commitments."],
+      reading_ar: "لا يُحسب بعد: يعتمد على سجل الاتفاقيات الذي تنشئه الجامعات والمراكز محليًا.",
+      reading_en: "Not computed yet: it depends on the agreements registry created locally by universities and centres.",
+      links: [link("partnerships", "local", "مسار الشراكات المحلية", "Local partnerships flow")], related: ["C-05", "C-02"],
+      ai_ar: "يقرأ الذكاء الاصطناعي نصوص الاتفاقيات ويستخرج الالتزامات والمؤشرات، وينبّه للشراكات الخاملة.",
+      ai_en: "AI reads agreement texts, extracts commitments and KPIs, and flags dormant partnerships.",
+      decision_ar: "تجديد الشراكات المثمرة وإعادة النظر في غير المنتجة.",
+      decision_en: "Renewing productive partnerships and reviewing unproductive ones.",
+    },
+    "C-04": {
+      interpret: [`تنوع الشركاء ${V("partnerships", "C-04")} — التعاون موزّع على دول كثيرة لا على شريك واحد.`, `Partner diversity ${V("partnerships", "C-04")} — collaboration is spread across many countries, not one partner.`],
+      steps_ar: ["نحسب حصة كل دولة شريكة من الأعمال المشتركة.", "نحسب مؤشر التركّز (مجموع مربعات الحصص).", "التنوع = 1 − التركّز؛ الأقرب إلى 1 يعني تنوعًا أعلى."],
+      steps_en: ["Compute each partner country's share of co-authored works.", "Compute the concentration index (sum of squared shares).", "Diversity = 1 − concentration; closer to 1 means more diverse."],
+      reading_ar: `القيمة ${V("partnerships", "C-04")} عبر أكبر 18 دولة شريكة: مصر في المقدمة ثم الولايات المتحدة والمملكة المتحدة والسعودية، دون اعتماد مفرط على شريك واحد. الدول العربية نحو 40% من هذا التعاون.`,
+      reading_en: `The value is ${V("partnerships", "C-04")} across the top 18 partners: Egypt leads, then the US, UK and Saudi Arabia, with no over-reliance on one partner. Arab countries are about 40% of this collaboration.`,
+      links: [link("partnerships", "numbers", "أكثر الدول مشاركة", "Top co-authoring countries")], related: ["C-01"],
+      ai_ar: "يرصد الذكاء الاصطناعي تغيّر خريطة الشركاء وينبّه إذا بدأ التعاون يتركّز على دولة واحدة.",
+      ai_en: "AI monitors the partner map and alerts if collaboration starts concentrating on one country.",
+      decision_ar: "تنويع الشراكات الإقليمية والدولية وتوجيهها نحو الأولويات الوطنية.",
+      decision_en: "Diversifying regional and international partnerships and steering them toward national priorities.",
+    },
+    "C-05": {
+      interpret: ["الاتفاقيات النشطة والمنتهية والقريبة من الانتهاء — يُقاس من سجل الاتفاقيات.", "Active, expired and expiring agreements — measured from the agreements registry."],
+      steps_ar: ["نسجّل تاريخ بداية ونهاية كل اتفاقية وحالتها.", "نعدّ الاتفاقيات حسب الحالة.", "ننبّه قبل موعد التجديد بفترة كافية."],
+      steps_en: ["Record each agreement's start and end dates and status.", "Count agreements by status.", "Alert well before renewal dates."],
+      reading_ar: "لا يُحسب بعد: يظهر بعد أن تسجّل الجامعات والمراكز اتفاقياتها في المنصة.",
+      reading_en: "Not computed yet: it appears once universities and centres register their agreements on the platform.",
+      links: [link("partnerships", "local", "مسار الشراكات المحلية", "Local partnerships flow")], related: ["C-03"],
+      ai_ar: "يذكّر الذكاء الاصطناعي بمواعيد التجديد ويلخّص أداء كل اتفاقية قبلها.",
+      ai_en: "AI reminds of renewal dates and summarises each agreement's performance beforehand.",
+      decision_ar: "عدم خسارة شراكات مهمة بسبب انتهاء غير ملحوظ.",
+      decision_en: "Not losing important partnerships to unnoticed expiry.",
+    },
+    // ── 04 التمويل ──
+    "F-01": {
+      interpret: [`${V("funding", "F-01")} فقط من الأبحاث الليبية تذكر جهة ممولة — أكبر فجوة بين المساحات.`, `Only ${V("funding", "F-01")} of Libyan research acknowledges a funder — the largest gap across the spaces.`],
+      steps_ar: ["نقرأ قسم التمويل والشكر في كل عمل بحثي.", "نعدّ الأعمال التي تذكر جهة ممولة.", "النسبة = الأعمال الممولة ÷ كل الأعمال."],
+      steps_en: ["Read the funding/acknowledgement section of every work.", "Count works that name a funder.", "Rate = funded works ÷ all works."],
+      reading_ar: `${V("funding", "F-01")} فقط من الأعمال (2020–2025) تذكر جهة ممولة، أي نحو 9 من كل 10 أبحاث بلا تمويل مسجّل. وأكثر الممولين ظهورًا جهات خارجية (سعودية وماليزية وأوروبية).`,
+      reading_en: `Only ${V("funding", "F-01")} of works (2020–2025) name a funder — about 9 in 10 papers have no recorded funding. The most frequent funders are foreign (Saudi, Malaysian, European).`,
+      links: [link("funding", "numbers", "الجهات الممولة", "Funders"), link("funding", "ai-insights", "سيناريوهات التمويل", "Funding scenarios")], related: ["F-02", "F-05"],
+      ai_ar: "يستخرج الذكاء الاصطناعي الجهات الممولة من نصوص الأبحاث، ويحاكي أثر رفع النسبة على عدد الأبحاث الممولة.",
+      ai_en: "AI extracts funders from paper texts and simulates the effect of raising the rate on funded research.",
+      decision_ar: "وضع هدف وطني لنسبة الأبحاث الممولة وبرامج تمويل محلية لتحقيقه.",
+      decision_en: "Setting a national target for the funded-research rate and local programmes to reach it.",
+    },
+    "F-02": {
+      interpret: ["ما الذي أنتجه كل دينار تمويل — يُقاس بعد تسجيل قيم التمويل في المشاريع.", "What each dinar of funding produced — measured once funding amounts are recorded."],
+      steps_ar: ["نسجّل قيمة تمويل كل مشروع.", "نربطه بمخرجاته: منشورات، براءات، أثر.", "العائد = المخرجات ÷ قيمة التمويل."],
+      steps_en: ["Record each project's funding amount.", "Link it to its outputs: papers, patents, impact.", "Return = outputs ÷ funding amount."],
+      reading_ar: "لا يُحسب بعد: يحتاج سجل المشاريع الممولة بقيمها من الجامعات والجهات الممولة.",
+      reading_en: "Not computed yet: it needs the funded-projects registry with amounts from universities and funders.",
+      links: [link("funding", "numbers", "الجهات الممولة", "Funders")], related: ["F-01", "F-03"],
+      ai_ar: "يقارن الذكاء الاصطناعي عائد التمويل بين المجالات والجامعات ويكشف أين يحقق التمويل أثرًا أكبر.",
+      ai_en: "AI compares funding return across fields and universities and shows where funding has most impact.",
+      decision_ar: "توجيه الميزانية البحثية نحو البرامج الأعلى أثرًا.",
+      decision_en: "Steering the research budget toward the highest-impact programmes.",
+    },
+    "F-03": {
+      interpret: ["كيف يتوزع التمويل على الأولويات الوطنية — يُقاس بعد ربط المشاريع بالأولويات.", "How funding spreads across national priorities — measured once projects are linked to priorities."],
+      steps_ar: ["نربط كل مشروع ممول بالأولوية التي يخدمها.", "نجمع التمويل لكل أولوية.", "الحصة = تمويل الأولوية ÷ إجمالي التمويل، ونقارنها بمؤشر الأولوية."],
+      steps_en: ["Link each funded project to the priority it serves.", "Sum funding per priority.", "Share = priority funding ÷ total funding, compared with the priority index."],
+      reading_ar: "لا يُحسب بعد: يحتاج ربط المشاريع الممولة بالأولويات المعتمدة من صفحة الأولويات.",
+      reading_en: "Not computed yet: it needs funded projects linked to the priorities approved on the priorities page.",
+      links: [{ to: "/ministry-space/priorities#suggested", ar: "الأولويات المقترحة", en: "Suggested priorities" }], related: ["P-01", "F-02"],
+      ai_ar: "يكشف الذكاء الاصطناعي «الأولويات ناقصة التمويل» بمقارنة التمويل بمؤشر الأولوية.",
+      ai_en: "AI detects “underfunded priorities” by comparing funding with the priority index.",
+      decision_ar: "إعادة توزيع التمويل ليتوافق مع الأولويات المعتمدة.",
+      decision_en: "Reallocating funding to match approved priorities.",
+    },
+    "F-04": {
+      interpret: ["نسبة الطلبات المقبولة من المقدمة — تُقاس من سير عمل التقديم داخل المنصة.", "Accepted applications out of submitted — measured from the in-platform application workflow."],
+      steps_ar: ["نسجّل كل طلب تمويل يُقدَّم عبر المنصة.", "نتابع نتيجته: مقبول، مرفوض، قيد المراجعة.", "النجاح = المقبول ÷ المقدَّم، لكل جهة ممولة ولكل جامعة."],
+      steps_en: ["Record every funding application submitted through the platform.", "Track its outcome: accepted, rejected, under review.", "Success = accepted ÷ submitted, per funder and per university."],
+      reading_ar: "لا يُحسب بعد: يبدأ مع أول طلبات تُقدَّم عبر المنصة للفرص المعروضة في صفحة التمويل.",
+      reading_en: "Not computed yet: it starts with the first applications submitted via the platform for opportunities on the funding page.",
+      links: [link("funding", "announcements", "فرص التمويل المتاحة", "Available funding opportunities")], related: ["F-01"],
+      ai_ar: "يراجع الذكاء الاصطناعي الطلب مقابل معايير الجهة الممولة قبل التقديم لرفع فرص القبول.",
+      ai_en: "AI reviews the application against the funder's criteria before submission to raise acceptance chances.",
+      decision_ar: "دعم الجامعات ذات معدل النجاح المنخفض بالتدريب ومراجعة الطلبات.",
+      decision_en: "Supporting low-success universities with training and application review.",
+    },
+    "F-05": {
+      interpret: ["توزع التمويل بين محلي وعربي ودولي وصناعي — يُقاس بعد تصنيف الجهات الممولة.", "The split between local, Arab, international and industry funding — measured once funders are classified."],
+      steps_ar: ["نصنّف كل جهة ممولة: محلية، عربية، دولية، صناعية.", "نحسب حصة كل فئة من التمويل.", "نراقب الاعتماد على مصدر واحد."],
+      steps_en: ["Classify every funder: local, Arab, international, industry.", "Compute each category's share of funding.", "Watch for reliance on a single source."],
+      reading_ar: "لا يُحسب بعد بدقة: قائمة الممولين الحالية تُظهر أن أكثرهم ظهورًا جهات خارجية، لكن التصنيف الكامل ينتظر بيانات التمويل المحلي.",
+      reading_en: "Not precisely computed yet: the current funder list shows the most frequent are foreign, but full classification awaits local funding data.",
+      links: [link("funding", "numbers", "الجهات الممولة", "Funders")], related: ["F-01", "F-02"],
+      ai_ar: "يصنّف الذكاء الاصطناعي الجهات الممولة آليًا ويقترح مصادر بديلة لتقليل الاعتماد على مصدر واحد.",
+      ai_en: "AI classifies funders automatically and suggests alternative sources to reduce single-source reliance.",
+      decision_ar: "بناء منظومة تمويل وطنية متوازنة وأقل اعتمادًا على الخارج.",
+      decision_en: "Building a balanced national funding system less dependent on foreign sources.",
+    },
+  };
+  Object.values(MINISTRY_SPACE_DETAILS).forEach((d) => d.indicators.forEach((ind) => {
+    const x = DETAILS[ind.code];
+    if (!x) return;
+    ind.interpret_ar = x.interpret[0]; ind.interpret_en = x.interpret[1];
+    const { interpret, ...rest } = x; // eslint-disable-line no-unused-vars
+    ind.detail = rest;
+  }));
+}
+
+// ── سياق «SOURCE Chatbot»: كل الأرقام المنشورة والمؤشرات والتقديرات كنص مرجعي ──
+// focus = مفتاح الصفحة الحالية (slug مساحة، أو "ministry"): تُعرض بيانات المساحة
+// الحالية أولًا وكاملة، والمساحات الأخرى مختصرة (أرقام فقط) — ليتخصص الرد بالصفحة.
+export const buildChatbotContext = (lang = "ar", focus = "ministry") => {
   const L = (o, k) => o[`${k}_${lang}`] ?? o[k] ?? "";
   const lines = [];
-  Object.entries(MINISTRY_SPACE_DETAILS).forEach(([slug, d]) => {
-    lines.push(`## ${L(d, "kicker")} (${slug})`);
-    lines.push(lang === "ar" ? "أرقام منشورة:" : "Published figures:");
-    d.stats.tiles.forEach((t) => lines.push(`- ${t.value}: ${L(t, "label")}`));
-    d.stats.charts.forEach((c) => lines.push(`- ${L(c, "title")}: ${c.data.map((p) => `${L(p, "name")}=${p.value}${c.unit || ""}`).join("، ")}`));
-    if (d.ai_stats) {
+  const chartLine = (c) => `- ${L(c, "title")}: ${c.data.map((p) => `${L(p, "name")}=${p.value}${c.unit || ""}`).join("، ")}`;
+  const entries = Object.entries(MINISTRY_SPACE_DETAILS);
+  const ordered = MINISTRY_SPACE_DETAILS[focus]
+    ? [entries.find(([s]) => s === focus), ...entries.filter(([s]) => s !== focus)]
+    : entries;
+  // صفحة الأولويات تشرح أرقام المستوى الأول — فنرسل المستوى الأول كاملًا معها
+  const full = new Set(MINISTRY_SPACE_DETAILS[focus] ? [focus, ...(focus === "priorities" ? ["data-intelligence"] : [])] : entries.map(([s]) => s));
+  ordered.forEach(([slug, d]) => {
+    const isFocus = slug === focus;
+    if (!full.has(slug)) {
+      // مساحة أخرى: أرقام مختصرة فقط
+      lines.push(`## ${L(d, "kicker")} (${slug}) — ${lang === "ar" ? "مختصر" : "summary"}`);
+      (d.stats?.tiles || []).slice(0, 4).forEach((t) => lines.push(`- ${t.value}: ${L(t, "label")}`));
+      return;
+    }
+    lines.push(`## ${L(d, "kicker")} (${slug})${isFocus ? (lang === "ar" ? " — الصفحة الحالية" : " — current page") : ""}`);
+    if (isFocus && slug === "funding") {
+      lines.push(lang === "ar" ? "برامج تمويل دولية معروضة في الصفحة:" : "International funding programmes shown on the page:");
+      FUNDING_FALLBACK.forEach((f) => lines.push(`- ${L(f, "title")} (${L(f, "tag")}) — ${f.url}`));
+    }
+    if (isFocus && d.local_flow) {
+      lines.push(lang === "ar" ? "مسار الشراكات المحلية:" : "Local partnerships flow:");
+      d.local_flow.forEach((st) => lines.push(`- ${L(st, "title")}: ${L(st, "desc")}`));
+    }
+    if (isFocus && d.explanation) {
+      lines.push(lang === "ar" ? "الشرح المعروض في الصفحة (مبني على أرقام المستوى الأول):" : "Explanation shown on the page (built from level-one figures):");
+      d.explanation.forEach((e) => lines.push(`- ${L(e, "title")}: ${L(e, "body")}`));
+      (d.explanation_suggestions || []).forEach((e) => lines.push(`- ${L(e, "sector")}: ${L(e, "body")}`));
+    }
+    if (d.stats) {
+      lines.push(lang === "ar" ? "أرقام ومؤشرات:" : "Figures & indicators:");
+      d.stats.tiles.forEach((t) => lines.push(`- ${t.value}: ${L(t, "label")}`));
+      d.stats.charts.forEach((c) => lines.push(chartLine(c)));
+    }
+    (d.stats_groups || []).forEach((g) => {
+      lines.push(`### ${L(g, "title")}`);
+      g.charts.forEach((c) => lines.push(chartLine(c)));
+    });
+    d.indicators.filter((i) => i.current?.value).forEach((i) => lines.push(`- ${i.code} ${L(i, "name")} = ${i.current.value} (${L(i.current, "note")})`));
+    if (d.ai_stats?.tiles) {
       lines.push(lang === "ar" ? "تقديرات محسوبة (ليست أرقامًا رسمية):" : "Computed estimates (not official figures):");
       d.ai_stats.tiles.forEach((t) => lines.push(`- ${t.value}: ${L(t, "label")}`));
       lines.push(`- ${L(d.ai_stats, "method")}`);

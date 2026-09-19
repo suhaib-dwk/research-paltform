@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, ArrowLeft, ShieldCheck, AlertCircle, CheckCircle, Loader2, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { useSite } from '../SiteContext';
-import RegisterCategoryModal from '../components/RegisterCategoryChooser';
+import RegisterCategoryModal from './S01_Register/RegisterCategoryChooser';
 import { API_BASE_URL } from '../api';
 
 const getValidationMessages = (lang) => ({

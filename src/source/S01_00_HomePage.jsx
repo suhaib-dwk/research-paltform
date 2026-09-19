@@ -8,17 +8,17 @@ import {
 import { Link } from "react-router-dom";
 import { API_BASE_URL, resolveUploadUrl } from "../api";
 import { SiteContext } from "../SiteContext";
-import PillarsAccordion from "../components/home/PillarsAccordion";
-import { PILLARS, LAYERS, LAYER_ORDER } from "../data/pillarsContent";
-import { HOME_STATS } from "../data/homeStats";
-import { MINISTRY_SPACES } from "../data/audiencesContent";
-import HomeStatsPanel from "../components/home/HomeStatsPanel";
+import PillarsAccordion from "./S01_Home/PillarsAccordion";
+import { PILLARS, LAYERS, LAYER_ORDER } from "./S01_Home/pillarsContent";
+import { HOME_STATS } from "./S01_Home/homeStats";
+import { MINISTRY_SPACES } from "./S01_Home/audiencesContent";
+import HomeStatsPanel from "./S01_Home/HomeStatsPanel";
 import {
   SERVICE_FAMILIES,
   SERVICES_CATALOGUE,
   EXEC_TYPES,
   getServicesByFamily,
-} from "../data/servicesCatalogue";
+} from "./S02_Services/servicesCatalogue";
 
 // مكون مساعد لظهور العناصر عند التمرير (مع تحسين الحركة)
 const ScrollReveal = ({ children, delay = 0, className = "" }) => {
@@ -101,7 +101,8 @@ const HomePage = () => {
   }, [journeyRunning]);
 
   // ✅ التاب النشط بشريط الفئات العائم (الوزارة / الجامعات / الباحثون والطلبة)
-  const [activeLevel, setActiveLevel] = useState(2);
+  // الافتراضي: تاب الوزارة (index 0) عند فتح الصفحة
+  const [activeLevel, setActiveLevel] = useState(0);
 
   // ✅ عائلة الخدمات النشطة بقسم "الخدمات" — مفاتيح SERVICE_FAMILIES
   const [activeFamily, setActiveFamily] = useState("journal");
@@ -513,7 +514,7 @@ const HomePage = () => {
                 </div>
 
                 {/* ✅ تابا الوزارة والجامعات: إحصائيات ليبيا الحقيقية + رسم بياني (بدل بطاقات
-                    الخيارات) — البيانات ومصادرها في src/data/homeStats.js والمصادر لا تُعرض على
+                    الخيارات) — البيانات ومصادرها في src/source/S01_Home/homeStats.js والمصادر لا تُعرض على
                     الموقع بطلب صريح. تاب الباحثين والطلبة: بطاقات المراحل كما كانت (بطلب صريح). */}
                 {tabKey === "ministry" ? (
                   /* ✅ تاب الوزارة: المساحات الأربع (البيانات والذكاء البحثي الوطني / الأولويات /

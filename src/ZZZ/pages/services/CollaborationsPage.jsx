@@ -4,8 +4,8 @@ import {
   Handshake, Plus, Loader2, X, Check, ArrowUpRight, ArrowDownLeft,
   Clock, CheckCircle2, XCircle, Search,
 } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 
 const roleLabel = (role, isAr) => ({
   researcher: isAr ? 'باحث' : 'Researcher',

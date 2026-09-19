@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, CheckCircle, AlertCircle, Loader2, Check } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 
 const statusStyle = {
     pending: { bg: 'bg-orange-50 dark:bg-orange-900/15', text: 'text-orange-600 dark:text-orange-400', icon: Clock },

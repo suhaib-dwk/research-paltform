@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Save, Loader2, Check, FileText, XCircle } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 
 const getSubmitError = (serverMsg, isAr) => {
     if (!serverMsg) return isAr ? 'حدث خطأ غير متوقع' : 'An unexpected error occurred';

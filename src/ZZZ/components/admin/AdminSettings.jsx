@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Settings, Save, Upload, Loader2, CheckCircle, AlertCircle, Sparkles, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { SiteContext } from '../../SiteContext';
-import { resolveUploadUrl } from '../../api';
-import { API_BASE_URL } from '../../api';
+import { SiteContext } from '../../../SiteContext';
+import { resolveUploadUrl } from '../../../api';
+import { API_BASE_URL } from '../../../api';
 
 // ===== مزوّدو الذكاء الاصطناعي المدعومون (يُعرَضان دائمًا حتى قبل أي بذر بقاعدة البيانات) =====
 const AI_PROVIDER_DEFS = [

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, BookOpen, TrendingUp, HandCoins, FlaskConical, Loader2 } from 'lucide-react';
-import Footer from '../components/layout/Footer';
+import Footer from './shared/Footer';
 import { API_BASE_URL } from '../api';
 
 const ServiceDetailPage = () => {

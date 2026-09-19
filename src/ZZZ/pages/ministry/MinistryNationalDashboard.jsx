@@ -15,7 +15,7 @@ import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { useSite } from '../../SiteContext';
+import { useSite } from '../../../SiteContext';
 
 // =========================================================
 // الثوابت والبيانات (Mock Data)

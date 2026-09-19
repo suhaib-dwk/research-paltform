@@ -7,8 +7,8 @@ import {
   Shield, Clock, Star, Info, Send, CheckCircle,
   FileText, BookOpen, ClipboardList, UserCheck, MessageSquare
 } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { getServiceConfig } from '../../data/servicesConfig';
+import { useSite } from '../../../SiteContext';
+import { getServiceConfig } from '../../../source/S02_Services/servicesConfig';
 
 const STEPS = [
   { icon: FileText, title_ar: 'جهّز ملف البحث', title_en: 'Prepare Research File', desc_ar: 'تأكد من أن ملف البحث جاهز بصيغة PDF أو Word.', desc_en: 'Ensure your research file is ready in PDF or Word format.' },

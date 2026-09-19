@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle, Briefcase, UserCog, Languages, Shield, FileText, MessageSquare, BookMarked, BarChart3, LayoutTemplate, Mail, Send, Award } from "lucide-react";
-import { getAllServices } from "../data/servicesConfig";
-import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow } from "../components/inner/InnerBlocks";
+import { getAllServices } from "./S02_Services/servicesConfig";
+import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة الموظفين ومقدّمي الخدمة (/staff) — الطبقة التشغيلية: المنصة تعمل

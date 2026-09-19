@@ -5,7 +5,7 @@ import {
     Plus, Printer, FileDown, FileSpreadsheet, FileText, ChevronDown, Check, Pencil,
     ImageUp
 } from 'lucide-react';
-import { API_BASE_URL, resolveUploadUrl } from '../../api';
+import { API_BASE_URL, resolveUploadUrl } from '../../../api';
 
 const AdminDataTable = ({ tableName, columns, readOnly = false }) => {
     const { i18n } = useTranslation();

@@ -1,31 +1,58 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Sparkles, Bot, ArrowUp, RotateCcw, LogIn, AlertCircle } from "lucide-react";
+import { Sparkles, Bot, ArrowUp, RotateCcw, AlertCircle, X, MessageCircle } from "lucide-react";
 import { useSite } from "../../SiteContext";
 import { API_BASE_URL } from "../../api";
-import { buildAdvisorContext } from "../../data/ministrySpacesDetails";
+import { buildChatbotContext } from "./ministrySpacesDetails";
 
 // =========================================================
-// «المستشار البحثي الذكي» — واجهة محادثة تجريبية داخل مساحة البيانات والذكاء
-// البحثي. تستدعي ai_chat_assistant.php بوضع mode=ministry_advisor، فتستخدم
+// «SOURCE Chatbot» — شات بوت عائم (زر في زاوية الشاشة يفتح نافذة محادثة) على
+// صفحات الوزارة. يستدعي ai_chat_assistant.php بوضع mode=ministry_chatbot، فيستخدم
 // مزوّد الذكاء الاصطناعي المفعّل من لوحة التحكم (الإعدادات → الذكاء الاصطناعي)،
-// وتُرسل أرقام المنصة المنشورة كبيانات مرجعية حتى لا يختلق النموذج أرقامًا.
-// تتطلب تسجيل الدخول (نفس قيد المساعد الذكي — التحكم بالتكلفة).
+// ويُرسل أرقام المنصة المنشورة كبيانات مرجعية حتى لا يختلق النموذج أرقامًا.
+// متاح للزوار بلا تسجيل دخول؛ الخادم يطبّق حدّ استخدام للزوار (rate_limited).
 // =========================================================
 
-const SUGGESTIONS = {
-  ar: [
-    "ما أبرز ثلاثة اتجاهات في الإنتاج البحثي الليبي؟",
-    "أين أكبر الفجوات بين المجالات البحثية والقطاعات الحيوية؟",
-    "كيف يمكن رفع نسبة الأبحاث الممولة خلال 3 سنوات؟",
-    "حلّل اتجاه التعاون الدولي واقترح خيارات سياسة.",
-  ],
-  en: [
-    "What are the top three trends in Libyan research output?",
-    "Where are the biggest gaps between research fields and vital sectors?",
-    "How could the funded-research rate be raised within 3 years?",
-    "Analyse the international collaboration trend and propose policy options.",
-  ],
+const BOT_NAME = "SOURCE Chatbot";
+
+// ✅ تخصيص حسب الصفحة المفتوحة: الموضوع + الترحيب + الأسئلة المقترحة.
+// المفتاح = slug المساحة، أو "ministry" لصفحة الوزارة الرئيسية. يُرسل للخادم كـ page
+// (قائمة بيضاء هناك) ليركّز الرد، وتُرتَّب البيانات المرجعية بحيث تأتي الصفحة الحالية أولًا.
+const PAGES = {
+  ministry: {
+    topic_ar: "طبقة الوزارة", topic_en: "Ministry layer",
+    intro_ar: "أنت الآن في صفحة الوزارة. اسألني عن المساحات الأربع: البيانات، الأولويات، الشراكات، والتمويل.",
+    intro_en: "You're on the Ministry page. Ask me about the four spaces: data, priorities, partnerships and funding.",
+    ar: ["ما أبرز ثلاثة اتجاهات في الإنتاج البحثي الليبي؟", "أين أكبر الفجوات بين المجالات البحثية والقطاعات الحيوية؟", "كيف يمكن رفع نسبة الأبحاث الممولة خلال 3 سنوات؟", "حلّل اتجاه التعاون الدولي واقترح خيارات سياسة."],
+    en: ["What are the top three trends in Libyan research output?", "Where are the biggest gaps between research fields and vital sectors?", "How could the funded-research rate be raised within 3 years?", "Analyse the international collaboration trend and propose policy options."],
+  },
+  "data-intelligence": {
+    topic_ar: "البيانات والذكاء البحثي", topic_en: "Research data & intelligence",
+    intro_ar: "أنت الآن في «البيانات والذكاء البحثي الوطني». اسألني عن الإنتاج البحثي واتجاهاته وتنبؤاته والمقارنات بين الجامعات والمجالات.",
+    intro_en: "You're in “National research data & intelligence”. Ask me about research output, its trends and forecasts, and comparisons across universities and fields.",
+    ar: ["إلى أين يتجه الإنتاج البحثي حتى 2028؟", "قارن جامعة طرابلس بباقي الجامعات الكبرى.", "ما المجالات الأكبر إنتاجًا ولماذا؟", "ما نسبة الإنتاج الليبي المفهرس في Scopus؟"],
+    en: ["Where is research output heading to 2028?", "Compare the University of Tripoli with the other large universities.", "Which fields produce the most, and why?", "What share of Libyan output is Scopus-indexed?"],
+  },
+  priorities: {
+    topic_ar: "الأولويات البحثية الوطنية", topic_en: "National research priorities",
+    intro_ar: "أنت الآن في «الأولويات البحثية الوطنية». اسألني عن المؤشرات المحسوبة، والفجوات، والأولويات التي يقترحها الذكاء الاصطناعي.",
+    intro_en: "You're in “National research priorities”. Ask me about the computed indicators, the gaps and the priorities AI suggests.",
+    ar: ["ما الأولويات التي تقترحها ولماذا؟", "اشرح مؤشر تغطية الطاقة 40%.", "ما القطاعات الحيوية الأقل تغطية بحثيًا؟", "كيف تتحول فجوة إلى دعوة بحثية؟"],
+    en: ["Which priorities do you suggest, and why?", "Explain the 40% energy coverage indicator.", "Which vital sectors have the lowest research coverage?", "How does a gap become a research call?"],
+  },
+  partnerships: {
+    topic_ar: "الشراكات والاتفاقيات البحثية", topic_en: "Research partnerships & agreements",
+    intro_ar: "أنت الآن في «الشراكات والاتفاقيات البحثية». اسألني عن التعاون الدولي، والشركاء، وكيف تصل الشراكات المحلية إلى الوزارة كبيانات.",
+    intro_en: "You're in “Research partnerships & agreements”. Ask me about international collaboration, partners, and how local partnerships reach the Ministry as data.",
+    ar: ["لماذا تراجعت نسبة التعاون الدولي منذ 2023؟", "من أهم الشركاء العرب للبحث الليبي؟", "كيف تصل الشراكات المحلية للوزارة كبيانات؟", "اقترح شراكات تعالج فجوة الطاقة."],
+    en: ["Why has the international collaboration rate fallen since 2023?", "Who are Libyan research's main Arab partners?", "How do local partnerships reach the Ministry as data?", "Suggest partnerships that could close the energy gap."],
+  },
+  funding: {
+    topic_ar: "فرص التمويل وذكاء التمويل", topic_en: "Funding opportunities & intelligence",
+    intro_ar: "أنت الآن في «فرص التمويل وذكاء التمويل البحثي». اسألني عن نسبة الأبحاث الممولة، والجهات الممولة، وفرص التمويل المتاحة للطلبة والباحثين.",
+    intro_en: "You're in “Funding opportunities & funding intelligence”. Ask me about the funded-research rate, funders, and opportunities open to students and researchers.",
+    ar: ["لماذا نسبة الأبحاث الممولة 10.2% فقط؟", "ما فرص التمويل الدولية المناسبة لطالب ماجستير؟", "ماذا يحدث لو رفعنا النسبة إلى 30%؟", "من أكثر الجهات تمويلًا للأبحاث الليبية؟"],
+    en: ["Why is the funded-research rate only 10.2%?", "Which international funding suits a master's student?", "What happens if we raise the rate to 30%?", "Who funds Libyan research the most?"],
+  },
 };
 
 const TypingDots = () => (
@@ -36,27 +63,34 @@ const TypingDots = () => (
   </span>
 );
 
-const MinistryAdvisorChat = ({ lang }) => {
+const SourceChatbot = ({ lang, page = "ministry" }) => {
+  const cfg = PAGES[page] || PAGES.ministry;
   const { user } = useSite();
   const isAr = lang === "ar";
   const userId = user?.user_id ?? user?.id;
   const greeting = isAr
-    ? "مرحبًا، أنا المستشار البحثي الذكي. اسألني عن اتجاهات البحث الوطني وفجواته وتنبؤاته — أجيب من أرقام المنصة مع ذكر مصدرها."
-    : "Hello, I'm the smart research advisor. Ask me about national research trends, gaps and forecasts — I answer from the platform's figures and cite their source.";
+    ? `مرحبًا 👋 أنا SOURCE Chatbot. ${cfg.intro_ar} أجيب من أرقام المنصة مع ذكر مصدرها.`
+    : `Hi 👋 I'm SOURCE Chatbot. ${cfg.intro_en} I answer from the platform's figures and cite their source.`;
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([{ role: "assistant", content: greeting }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState(null);
   const listRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const el = listRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, loading]);
+  }, [messages, loading, open]);
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
 
   const send = async (text) => {
     const content = (text ?? input).trim();
-    if (!content || loading || !userId) return;
+    if (!content || loading) return;
     const next = [...messages, { role: "user", content }];
     setMessages(next);
     setInput("");
@@ -67,10 +101,11 @@ const MinistryAdvisorChat = ({ lang }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id: userId,
+          user_id: userId || 0, // 0 = زائر
           lang,
-          mode: "ministry_advisor",
-          context: buildAdvisorContext(lang),
+          mode: "ministry_chatbot",
+          page,
+          context: buildChatbotContext(lang, page),
           // رسالة الترحيب محلية فقط — لا تُرسل للخادم
           messages: next.slice(1),
         }),
@@ -78,6 +113,8 @@ const MinistryAdvisorChat = ({ lang }) => {
       const result = await res.json();
       if (result.status === "success") {
         setMessages((p) => [...p, { role: "assistant", content: result.data.content }]);
+      } else if (result.message === "rate_limited") {
+        setNotice(isAr ? "وصلت للحد المسموح من الأسئلة حاليًا — حاول بعد قليل، أو سجّل الدخول لاستخدام غير محدود." : "You've reached the question limit for now — try again later, or sign in for unlimited use.");
       } else if (result.message === "ai_not_configured") {
         setNotice(isAr ? "الذكاء الاصطناعي غير مفعّل بعد — اضبط مزوّدًا ومفتاحًا من لوحة التحكم (الإعدادات → الذكاء الاصطناعي)." : "AI is not configured yet — set a provider and key in the admin panel (Settings → AI).");
       } else {
@@ -96,102 +133,120 @@ const MinistryAdvisorChat = ({ lang }) => {
   };
 
   return (
-    <div className="bg-brand-ink border border-brand-dark-border flex flex-col h-[560px]">
-      {/* الرأس */}
-      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <span className="w-9 h-9 bg-brand-orange flex items-center justify-center text-white">
-            <Bot className="w-5 h-5" strokeWidth={2} />
-          </span>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-white">{isAr ? "المستشار البحثي الذكي" : "Smart research advisor"}</span>
-            <span className="text-[11px] text-white/50">{isAr ? "نسخة تجريبية · يستخدم الذكاء الاصطناعي المفعّل في المنصة" : "Beta · uses the platform's configured AI"}</span>
-          </div>
-        </div>
-        <button type="button" onClick={reset} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white/60 hover:text-brand-orange transition-colors">
-          <RotateCcw className="w-3.5 h-3.5" /> {isAr ? "محادثة جديدة" : "New chat"}
-        </button>
-      </div>
-
-      {/* الرسائل */}
-      <div ref={listRef} className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-4">
-        {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div
-              className={`max-w-[85%] text-sm leading-relaxed whitespace-pre-wrap px-4 py-3 ${
-                m.role === "user" ? "bg-brand-orange text-white" : "bg-brand-dark-card border border-brand-dark-border text-white/90"
-              }`}
-            >
-              {m.content}
+    <>
+      {/* نافذة المحادثة */}
+      {open && (
+        <div
+          role="dialog"
+          aria-label={BOT_NAME}
+          className="fixed z-50 inset-x-3 bottom-24 sm:inset-x-auto sm:end-6 sm:w-[400px] h-[min(600px,calc(100vh-8rem))] bg-brand-ink border border-brand-dark-border shadow-[0_32px_64px_-24px_rgba(0,0,0,0.6)] flex flex-col"
+        >
+          {/* الرأس */}
+          <div className="flex items-center justify-between gap-3 px-4 py-3.5 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <span className="relative w-9 h-9 bg-brand-orange flex items-center justify-center text-white">
+                <Bot className="w-5 h-5" strokeWidth={2} />
+                <span className="absolute -bottom-0.5 -end-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-brand-ink" />
+              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-white" dir="ltr">{BOT_NAME}</span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] text-white/60">
+                  <span className="w-1.5 h-1.5 bg-brand-orange flex-shrink-0" />
+                  {isAr ? `متخصص في: ${cfg.topic_ar}` : `Focused on: ${cfg.topic_en}`}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <button type="button" onClick={reset} title={isAr ? "محادثة جديدة" : "New chat"} className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-brand-orange transition-colors">
+                <RotateCcw className="w-4 h-4" />
+              </button>
+              <button type="button" onClick={() => setOpen(false)} title={isAr ? "إغلاق" : "Close"} className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
             </div>
           </div>
-        ))}
-        {loading && (
-          <div className="flex justify-start">
-            <div className="bg-brand-dark-card border border-brand-dark-border px-4"><TypingDots /></div>
-          </div>
-        )}
-        {messages.length === 1 && userId && (
-          <div className="grid sm:grid-cols-2 gap-2 mt-2">
-            {SUGGESTIONS[lang].map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => send(s)}
-                className="text-start text-[13px] font-semibold text-white/80 border border-white/15 px-3.5 py-2.5 hover:border-brand-orange hover:text-brand-orange transition-colors"
-              >
-                <Sparkles className="inline w-3.5 h-3.5 text-brand-orange me-1.5" />
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
 
-      {notice && (
-        <div className="mx-5 mb-3 flex items-start gap-2 text-[13px] font-semibold text-brand-orange border border-brand-orange/40 px-3.5 py-2.5">
-          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /> {notice}
+          {/* الرسائل */}
+          <div ref={listRef} className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
+            {messages.map((m, i) => (
+              <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`max-w-[85%] text-[13px] leading-relaxed whitespace-pre-wrap px-3.5 py-2.5 ${
+                    m.role === "user" ? "bg-brand-orange text-white" : "bg-brand-dark-card border border-brand-dark-border text-white/90"
+                  }`}
+                >
+                  {m.content}
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="bg-brand-dark-card border border-brand-dark-border px-3.5"><TypingDots /></div>
+              </div>
+            )}
+            {messages.length === 1 && (
+              <div className="flex flex-col gap-2 mt-1">
+                {cfg[lang].map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => send(s)}
+                    className="text-start text-[12px] font-semibold text-white/80 border border-white/15 px-3 py-2 hover:border-brand-orange hover:text-brand-orange transition-colors"
+                  >
+                    <Sparkles className="inline w-3.5 h-3.5 text-brand-orange me-1.5" />
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {notice && (
+            <div className="mx-4 mb-3 flex items-start gap-2 text-[12px] font-semibold text-brand-orange border border-brand-orange/40 px-3 py-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /> {notice}
+            </div>
+          )}
+
+          {/* الإدخال */}
+          <div className="border-t border-white/10 p-3">
+            <form onSubmit={(e) => { e.preventDefault(); send(); }} className="flex items-end gap-2">
+              <textarea
+                ref={inputRef}
+                rows={1}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
+                placeholder={isAr ? "اكتب سؤالك…" : "Type your question…"}
+                className="flex-1 resize-none bg-brand-dark-card border border-brand-dark-border text-white text-[13px] px-3.5 py-2.5 placeholder:text-white/40 focus:outline-none focus:border-brand-orange max-h-28"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || loading}
+                className="w-10 h-10 bg-brand-orange text-white flex items-center justify-center disabled:opacity-40 hover:bg-brand-orange-dark transition-colors"
+                aria-label={isAr ? "إرسال" : "Send"}
+              >
+                <ArrowUp className="w-5 h-5" />
+              </button>
+            </form>
+            <p className="mt-2 text-[10px] text-white/40">
+              {isAr ? "يقترح ويشرح، والقرار للوزارة. تحقق من الأرقام قبل أي استخدام رسمي." : "It proposes and explains; the decision is the Ministry's. Verify figures before official use."}
+            </p>
+          </div>
         </div>
       )}
 
-      {/* الإدخال */}
-      <div className="border-t border-white/10 p-4">
-        {userId ? (
-          <form
-            onSubmit={(e) => { e.preventDefault(); send(); }}
-            className="flex items-end gap-2"
-          >
-            <textarea
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-              placeholder={isAr ? "اسأل المستشار عن البحث العلمي الوطني…" : "Ask the advisor about national research…"}
-              className="flex-1 resize-none bg-brand-dark-card border border-brand-dark-border text-white text-sm px-4 py-3 placeholder:text-white/40 focus:outline-none focus:border-brand-orange max-h-32"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || loading}
-              className="w-11 h-11 bg-brand-orange text-white flex items-center justify-center disabled:opacity-40 hover:bg-brand-orange-dark transition-colors"
-              aria-label={isAr ? "إرسال" : "Send"}
-            >
-              <ArrowUp className="w-5 h-5" />
-            </button>
-          </form>
-        ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span className="text-[13px] text-white/60">{isAr ? "سجّل الدخول لتجربة المستشار." : "Sign in to try the advisor."}</span>
-            <Link to="/login" className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-2.5 text-[13px] font-bold text-white hover:bg-brand-orange-dark transition-colors">
-              <LogIn className="w-4 h-4" /> {isAr ? "تسجيل الدخول" : "Sign in"}
-            </Link>
-          </div>
-        )}
-        <p className="mt-2 text-[11px] text-white/40">
-          {isAr ? "المستشار يقترح ويشرح، والقرار للوزارة. تحقق من الأرقام قبل أي استخدام رسمي." : "The advisor proposes and explains; the decision is the Ministry's. Verify figures before official use."}
-        </p>
-      </div>
-    </div>
+      {/* زر الفتح العائم */}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label={open ? (isAr ? "إغلاق المحادثة" : "Close chat") : BOT_NAME}
+        className="fixed z-50 bottom-6 end-6 h-14 rounded-full bg-brand-orange text-white shadow-[0_16px_32px_-12px_rgba(255,135,16,0.7)] hover:bg-brand-orange-dark transition-all flex items-center gap-2.5 px-5"
+      >
+        {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        {!open && <span className="hidden sm:inline text-sm font-bold" dir="ltr">{BOT_NAME}</span>}
+      </button>
+    </>
   );
 };
 
-export default MinistryAdvisorChat;
+export default SourceChatbot;

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Globe, Bell, Shield, Save, Check, Loader2, Settings as SettingsIcon, Clock, CheckCircle, LogIn, FileText, UserPlus, ShieldCheck, MessageSquare, AlertCircle } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 
 // ✅ أيقونة/لون تُشتقان من event_type القادم من الخادم (activity_log.event_type)
 // — منقولة من ActivityPage.jsx السابقة (محذوفة الآن، مدمجة هنا كتبويب)

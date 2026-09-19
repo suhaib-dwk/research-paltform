@@ -8,8 +8,8 @@ import {
   AlertCircle, Loader2, CheckCircle2, Upload, FileText, X, Info
 } from 'lucide-react';
 import { API_BASE_URL } from '../api';
-import { getAllServices } from '../data/servicesConfig';
-import { RegisterCategoryChooser } from '../components/RegisterCategoryChooser';
+import { getAllServices } from './S02_Services/servicesConfig';
+import { RegisterCategoryChooser } from './S01_Register/RegisterCategoryChooser';
 
 // =========================================================
 // 1. الفئات

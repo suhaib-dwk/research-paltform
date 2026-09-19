@@ -7,7 +7,7 @@ import {
   User, LogOut, Languages, Sun, Moon, Settings,
   LayoutDashboard, ListChecks, MessageSquare, HelpCircle, BookOpen, FileText, ShieldCheck, Building2, Users,
 } from 'lucide-react';
-import { useSite } from '../../SiteContext';
+import { useSite } from '../../../SiteContext';
 
 // =========================================================
 // هيدر لوحات التحكم (التصميم المرجعي الجديد): شريط أبيض بجانب السايدبار

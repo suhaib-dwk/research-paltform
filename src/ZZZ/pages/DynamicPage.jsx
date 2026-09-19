@@ -6,7 +6,7 @@ import {
   ArrowLeft, ArrowRight, BookOpen, Users, Building2, Scale, Shield,
   Target, Eye, FileText, AlertCircle, CheckCircle
 } from 'lucide-react';
-import { API_BASE_URL } from '../api';
+import { API_BASE_URL } from '../../api';
 
 // =========================================================
 // صفحة محتوى ديناميكية (/page/:slug) — تُستخدم لصفحات السياسات (الشروط

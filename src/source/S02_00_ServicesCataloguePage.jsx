@@ -9,7 +9,7 @@ import {
   EXEC_TYPES,
   getServicesByFamily,
   getServiceLevel,
-} from "../data/servicesCatalogue";
+} from "./S02_Services/servicesCatalogue";
 
 // =========================================================
 // كتالوج الخدمات العام (/services) — كل خدمات الطبقة الأولى (35 خدمة) من

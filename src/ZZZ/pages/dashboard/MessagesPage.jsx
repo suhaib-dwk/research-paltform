@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { MessageSquare, Search, Send, Paperclip, Inbox, Loader2, XCircle, ArrowLeft, ArrowRight, Mail, MailOpen, X, Headset, Bell, CheckCheck } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL, resolveUploadUrl } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL, resolveUploadUrl } from '../../../api';
 
 // =========================================================
 // الرسائل — صندوق وارد بأسلوب الأنظمة العالمية (Gmail / Intercom):

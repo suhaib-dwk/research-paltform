@@ -11,8 +11,8 @@ import {
     BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, LabelList,
     PieChart, Pie,
 } from 'recharts';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 import { Card, CardHeader, KpiCard, StatusPill, PillButton, SelectPill } from './ui';
 
 // ✅ استيراد لوحة التحكم الوطنية للوزارة

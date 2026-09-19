@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 import {
     Building2, MapPin, School, Layers, FlaskConical, Trash2, Plus,
     Save, Check, Loader2, XCircle, Sparkles, Info, AlertTriangle, TrendingUp,

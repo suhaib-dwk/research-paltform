@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark, Users, FolderKanban, Database, Bot, BarChart3, ClipboardCheck, Languages, Lightbulb, MonitorSmartphone, Code2, Bell, ListChecks, Lock, FileSearch } from "lucide-react";
-import { PILLARS, PILLAR_ORDER, LAYERS, LAYER_ORDER, PILLAR_AUDIENCE_LABELS } from "../data/pillarsContent";
-import { useInnerLang, pick, Breadcrumb, CtaBand } from "../components/inner/InnerBlocks";
+import { PILLARS, PILLAR_ORDER, LAYERS, LAYER_ORDER, PILLAR_AUDIENCE_LABELS } from "./S01_Home/pillarsContent";
+import { useInnerLang, pick, Breadcrumb, CtaBand } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة الركيزة التقنية (/pillar/:key) — التصميم "السينمائي الداكن بفصول"
 // المعتمد من لوحة التصميم: هيرو داكن بعلامة مائية رقمية وعنوان نسخ بمائل
 // برتقالي → شريط الفصول → 01 ما هو → 02 المكونات → 03 كيف يعمل → 04 الضمانة
 // (بلوك مقسوم) → اقتباس → لمن يفيد → الركيزة السابقة/التالية → CTA.
-// المحتوى من src/data/pillarsContent.js (المقترح + مواصفة الوزارة + الدليل).
+// المحتوى من src/source/S01_Home/pillarsContent.js (المقترح + مواصفة الوزارة + الدليل).
 // =========================================================
 
 // ✅ الصفحة تخدم الركائز التقنية الأربع والطبقات التشغيلية الثلاث (المنصة الرقمية /

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Building2, Search, Plus, Edit3, Trash2, Eye, Loader2 } from 'lucide-react';
-import { API_BASE_URL } from '../../../api';
+import { API_BASE_URL } from '../../../../api';
 
 const UniversitiesPage = () => {
     const { t, i18n } = useTranslation();

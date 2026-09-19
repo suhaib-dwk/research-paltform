@@ -7,7 +7,7 @@ import {
   Mail, HelpCircle, FileText, Globe, Home, Puzzle,
   Monitor, Lock
 } from 'lucide-react';
-import { API_BASE_URL } from '../../api';
+import { API_BASE_URL } from '../../../api';
 
 const AdminLayout = () => {
   const navigate = useNavigate();

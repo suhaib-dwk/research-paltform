@@ -4,7 +4,7 @@ import {
   ArrowLeft, ArrowRight, CheckCircle, Upload, TrendingUp, HandCoins, Search,
   FileCheck, PenTool, BarChart3, Sparkles, Users, Workflow,
 } from "lucide-react";
-import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES } from "../data/servicesCatalogue";
+import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES } from "./S02_Services/servicesCatalogue";
 
 // =========================================================
 // صفحة تفصيلية مستقلة لكل "خدمة" (منصة أو ذكاء اصطناعي) — بطلب صريح: كانت
@@ -15,7 +15,7 @@ import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES } from ".
 //
 // ✅ تُغطّي الصفحة الآن مسارين بنفس الرابط /platform-service/:key:
 //   1) المفاتيح القديمة السبع (submit_research… ai_gap_insights) من i18n.
-//   2) خدمات كتالوج الباحثين الـ35 (U01…F12) من src/data/servicesCatalogue.js
+//   2) خدمات كتالوج الباحثين الـ35 (U01…F12) من src/source/S02_Services/servicesCatalogue.js
 //      — تعرض التعريف، وكيف يحصل عليها المستخدم، والمدخلات، والمخرجات،
 //      ونوع التنفيذ، والتنبيه الأخلاقي (قاعدة عرض الخدمة، القسم 2 بالدليل).
 // =========================================================

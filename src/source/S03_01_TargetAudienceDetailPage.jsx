@@ -3,13 +3,14 @@ import { CheckCircle, FileCheck, Search, Users, RefreshCw, Award, Landmark, Buil
 import {
   AUDIENCES, AUDIENCE_GROUP, QUALITY_TRACKS, PERFORMANCE_AREAS, DATA_FLOW,
   MINISTRY_SPACES, POLICY_JOURNEY, MINISTRY_PRINCIPLES, MINISTRY_ROLES, MINISTRY_REPORTS, getLevelLabel,
-} from "../data/audiencesContent";
-import { SERVICE_FAMILIES, EXEC_TYPES, SERVICES_CATALOGUE, getServiceById } from "../data/servicesCatalogue";
-import { MINISTRY_SPACE_DETAILS } from "../data/ministrySpacesDetails";
-import HomeStatsPanel from "../components/home/HomeStatsPanel";
+} from "./S01_Home/audiencesContent";
+import { SERVICE_FAMILIES, EXEC_TYPES, SERVICES_CATALOGUE, getServiceById } from "./S02_Services/servicesCatalogue";
+import { MINISTRY_SPACE_DETAILS } from "./S03_Audience/ministrySpacesDetails";
+import HomeStatsPanel from "./S01_Home/HomeStatsPanel";
+import SourceChatbot from "./S03_Audience/SourceChatbot";
 import {
   useInnerLang, pick, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow, RelatedCards,
-} from "../components/inner/InnerBlocks";
+} from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة تفصيلية لكل فئة مستفيدة (/audience/:key) — ثلاثة تصاميم مختلفة
@@ -466,8 +467,27 @@ const IntelligenceLayout = ({ data, L }) => {
                 </div>
                 {/* ✅ أرقام حقيقية منشورة بدل اللوحة التوضيحية (اللوحة انتقلت للصفحة التفصيلية) */}
                 <div className={`lg:col-span-7 ${i % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}>
-                  {MINISTRY_SPACE_DETAILS[space.slug] && (
+                  {MINISTRY_SPACE_DETAILS[space.slug]?.summary && (
                     <HomeStatsPanel stats={MINISTRY_SPACE_DETAILS[space.slug].summary} isRTL={isRTL} />
+                  )}
+                  {/* ✅ المستوى الثاني (الأولويات) بلا إحصائيات — شرح مختصر مبني على أرقام المستوى الأول */}
+                  {MINISTRY_SPACE_DETAILS[space.slug]?.explanation_summary && (
+                    <div className="bg-brand-ink p-7 md:p-9 flex flex-col gap-5">
+                      <span className="text-xs font-bold tracking-[0.2em] uppercase text-brand-orange">
+                        {isRTL ? "ماذا تقول البيانات" : "What the data says"}
+                      </span>
+                      <ul className="flex flex-col gap-4">
+                        {MINISTRY_SPACE_DETAILS[space.slug].explanation_summary[lang].map((txt) => (
+                          <li key={txt} className="flex items-start gap-3 text-[15px] font-semibold text-white/85 leading-relaxed">
+                            <span className="w-1.5 h-1.5 bg-brand-orange flex-shrink-0 mt-2.5"></span>
+                            {txt}
+                          </li>
+                        ))}
+                      </ul>
+                      <Link to="/ministry-space/data-intelligence#priority-indicators" className="inline-flex items-center gap-2 text-[13px] font-bold text-white hover:text-brand-orange transition-colors border-t border-white/10 pt-4">
+                        {isRTL ? "الأرقام في المستوى الأول" : "Figures in level one"} <ArrowIcon className="w-3.5 h-3.5 text-brand-orange" />
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>
@@ -540,6 +560,7 @@ const IntelligenceLayout = ({ data, L }) => {
       <QuoteBand quote={labels.quote} source={labels.quoteSource} />
       <RelatedCards title={labels.relatedTitle} items={related} />
       <CtaBand title={labels.ctaTitle} desc={labels.ctaDesc} primary={regLinks[0]} secondary={{ to: "/contact-us", label: labels.contact }} />
+      <SourceChatbot lang={lang} page="ministry" />
     </>
   );
 };

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, ArrowUpRight, BookOpen, FileText } from 'lucide-react';
-import { useSite } from '../../SiteContext';
+import { useSite } from '../../../SiteContext';
 import { getVisibleServices, ADVANCED_ROLES } from '../../components/dashboard/DashboardSidebar';
-import { SERVICES_INDEX_DETAILS } from '../../data/servicesIndexData';
+import { SERVICES_INDEX_DETAILS } from '../../../source/S02_Services/servicesIndexData';
 
 // =========================================================
 // فهرس الخدمات (/dashboard/services)

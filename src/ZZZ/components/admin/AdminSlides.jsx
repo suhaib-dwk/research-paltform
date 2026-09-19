@@ -1,8 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Upload, Trash2, Loader2, AlertCircle, X, TriangleAlert } from "lucide-react";
-import { SiteContext } from "../../SiteContext";
-import { API_BASE_URL } from "../../api";
+import { SiteContext } from "../../../SiteContext";
+import { API_BASE_URL } from "../../../api";
 
 const AdminSlides = () => {
   const { i18n } = useTranslation();

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 import { ShieldCheck, Clock, FileText, Eye, Filter, Loader2, X, Save, XCircle } from 'lucide-react';
 
 const REVIEW_TYPES = [

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 import {
   Sparkles, Send, Bot, User, ListChecks, Lightbulb, HelpCircle, AlertCircle,
   Plus, Copy, Check, X, BookOpenText, PenLine, Wand2, FlaskConical, ArrowUp,

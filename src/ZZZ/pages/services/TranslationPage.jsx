@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 import ServicePageWrapper from './ServicePageWrapper';
 import {
     Languages, Upload, ArrowRightLeft, FileText, Clock,

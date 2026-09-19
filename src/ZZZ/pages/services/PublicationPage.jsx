@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
-import ServicePageWrapper from '../services/ServicePageWrapper';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
+import ServicePageWrapper from './ServicePageWrapper';
 import { Send, CheckCircle, Circle, ArrowRight, FileText, Upload, AlertCircle, ListChecks, Lightbulb, HelpCircle, XCircle, Loader2 } from 'lucide-react';
 
 const STEPS = [

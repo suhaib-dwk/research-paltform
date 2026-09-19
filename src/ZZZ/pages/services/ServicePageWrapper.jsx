@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSite } from '../../SiteContext';
-import { resolveUploadUrl } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { resolveUploadUrl } from '../../../api';
 import {
   ChevronDown, Clock, CheckCircle, AlertCircle,
   FileText, Eye, Info, Lightbulb, HelpCircle,

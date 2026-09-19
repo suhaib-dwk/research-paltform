@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Eye, Ban, CheckCircle, UserCheck, UserX, Loader2, X } from 'lucide-react';
-import { useSite } from '../../../SiteContext';
-import { API_BASE_URL } from '../../../api';
+import { useSite } from '../../../../SiteContext';
+import { API_BASE_URL } from '../../../../api';
 
 const roleColors = {
     faculty: 'bg-purple-50 dark:bg-purple-900/15 text-purple-600 dark:text-purple-400',

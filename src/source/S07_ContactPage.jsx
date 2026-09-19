@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Phone, Mail, MapPin, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { SiteContext } from '../SiteContext';
 import { API_BASE_URL } from '../api';
-import { getValidationMessages, validateField as validateFieldValue } from '../utils/formValidation';
-import ErrorMessage from '../components/shared/ErrorMessage';
+import { getValidationMessages, validateField as validateFieldValue } from './shared/formValidation';
+import ErrorMessage from './shared/ErrorMessage';
 
 const ContactPage = () => {
   const { t, i18n } = useTranslation();

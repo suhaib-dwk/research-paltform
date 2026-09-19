@@ -1,7 +1,7 @@
 <?php
 // =====================================================================
 // submit_translation.php — تقديم طلب ترجمة جديد (خدمة translation)
-// ⚠️ العقد مطابق تماماً لما تتوقعه src/pages/services/TranslationPage.jsx
+// ⚠️ العقد مطابق تماماً لما تتوقعه src/ZZZ/pages/services/TranslationPage.jsx
 // الموجودة مسبقاً بالمشروع (source_lang/target_lang/urgency/english_variant).
 // =====================================================================
 error_reporting(0);

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { User, Mail, Phone, Camera, Save, Check, Loader2, XCircle } from 'lucide-react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL, resolveUploadUrl } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL, resolveUploadUrl } from '../../../api';
 
 const AccountPage = () => {
     const { user, currentLang, loginUser } = useSite();

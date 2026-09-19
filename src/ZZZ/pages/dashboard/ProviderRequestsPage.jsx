@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL, resolveUploadUrl } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL, resolveUploadUrl } from '../../../api';
 import { Briefcase, Clock, FileText, Filter, Loader2, X, Send, XCircle, CheckCircle, Download, Inbox } from 'lucide-react';
 
 // ===== أسماء الخدمات (تطابق servicesConfig.js) =====

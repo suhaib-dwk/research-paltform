@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FileText, Search, Plus, Eye, Calendar, Loader2, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL, resolveUploadUrl } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL, resolveUploadUrl } from '../../../api';
 
 const statusColors = {
     published: 'bg-emerald-50 dark:bg-emerald-900/15 text-emerald-600 dark:text-emerald-400',

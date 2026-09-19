@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, ShieldCheck, LogOut, Globe, ChevronDown, Landmark, Building2, GraduationCap, Users, Info, HelpCircle, Mail, LayoutGrid, Briefcase, UserCog, FileCheck, Sparkles, Languages, Award, BookMarked, MessageSquare, BarChart3 } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
-import { SERVICE_FAMILIES } from '../../data/servicesCatalogue';
+import { SERVICE_FAMILIES } from '../S02_Services/servicesCatalogue';
 
 // أيقونة لكل عائلة خدمات في القائمة المنسدلة
 const FAMILY_NAV_ICONS = {

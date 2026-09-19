@@ -4,7 +4,7 @@
 -- تظهر في صفحة /ministry-space/funding (قسم «أخبار وإعلانات») وفي /all-news.
 -- برامج دولية حقيقية تُفتح دوريًا؛ بلا مواعيد أو مبالغ لأنها تتغير كل دورة —
 -- المحتوى يحيل إلى الموقع الرسمي. نفس القائمة موجودة كاحتياط في الواجهة
--- (FUNDING_FALLBACK في src/data/ministrySpacesDetails.js).
+-- (FUNDING_FALLBACK في src/source/S03_Audience/ministrySpacesDetails.js).
 -- آمن للتشغيل أكثر من مرة: INSERT IGNORE على المفتاح الفريد slug.
 -- =====================================================================
 

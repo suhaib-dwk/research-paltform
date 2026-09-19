@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ShieldCheck, Settings, Image, FileText, Mail, Phone } from 'lucide-react';
-import { SiteContext } from '../../SiteContext';
+import { SiteContext } from '../../../SiteContext';
 
 const AdminFooter = () => {
   const { i18n } = useTranslation();

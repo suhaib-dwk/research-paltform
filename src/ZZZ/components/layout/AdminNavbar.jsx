@@ -5,7 +5,7 @@ import {
   ShieldCheck, Globe, Menu, X, UserCog, KeyRound, 
   LogOut, ChevronDown, Settings 
 } from 'lucide-react';
-import { SiteContext } from '../../SiteContext';
+import { SiteContext } from '../../../SiteContext';
 
 const AdminNavbar = () => {
   const { i18n } = useTranslation();

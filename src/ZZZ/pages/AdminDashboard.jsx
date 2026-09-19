@@ -5,8 +5,8 @@ import {
   Settings, Image, Layout, LogOut, Save, Upload, Trash2, 
   Loader2, CheckCircle, AlertCircle, Menu, X, Globe
 } from 'lucide-react';
-import { SiteContext } from '../SiteContext';
-import { API_BASE_URL, resolveUploadUrl } from '../api';
+import { SiteContext } from '../../SiteContext';
+import { API_BASE_URL, resolveUploadUrl } from '../../api';
 
 const AdminDashboard = () => {
   const { i18n } = useTranslation();

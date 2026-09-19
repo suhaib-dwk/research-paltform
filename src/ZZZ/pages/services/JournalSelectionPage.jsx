@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSite } from '../../SiteContext';
-import { API_BASE_URL } from '../../api';
+import { useSite } from '../../../SiteContext';
+import { API_BASE_URL } from '../../../api';
 import ServicePageWrapper from './ServicePageWrapper';
 import { BookMarked, Search, ExternalLink, TrendingUp, Globe, Filter, ListChecks, Lightbulb, HelpCircle, Send, XCircle, CheckCircle, Loader2 } from 'lucide-react';
 

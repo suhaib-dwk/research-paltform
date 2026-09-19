@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Landmark, Building2, School, FlaskConical, GraduationCap, BookOpen, Users, Briefcase, ChevronDown } from "lucide-react";
-import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, CtaBand, CardArrow } from "../components/inner/InnerBlocks";
+import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // الفئة المستهدفة (/target-audience) — خريطة المنظومة كما هي مبنية فعلًا:
