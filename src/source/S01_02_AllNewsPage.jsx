@@ -37,7 +37,6 @@ const AllNewsPage = () => {
       }
     };
     fetchNews();
-    window.scrollTo(0, 0);
   }, []);
 
   // استخراج التصنيفات الفريدة من الأخبار
@@ -171,7 +170,7 @@ const AllNewsPage = () => {
                 >
                   <Link 
                     to={`/news/${item.slug}`} 
-                    className="group bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+                    className="group bg-white rounded-3xl overflow-hidden shadow-sm border-2 border-gray-100 hover:shadow-xl transition-all duration-300 flex flex-col h-full"
                   >
                     <div className="h-52 overflow-hidden relative">
                       <img 

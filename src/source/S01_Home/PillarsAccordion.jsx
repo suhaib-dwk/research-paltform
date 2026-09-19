@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 // =========================================================
@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 // بل عنصر فني مقصوص إلى شرائح مائلة (chevron): شرائح أفقية أسفل البطاقة
 // المطوية، وشرائح رأسية بجانب النص في البطاقة الممددة. لا شريحة مفتوحة في
 // البداية؛ التمدد عند المرور/النقر ويعود للإغلاق عند الخروج.
-// items: [{ key, image, title, desc }] — كل بطاقة تفتح /pillar/:key
+// items: [{ key, image, title, desc }] — الضغط على أي مكان بالبطاقة يفتح /pillar/:key
 // =========================================================
 
 // شرائح صورة متصلة (الصورة واحدة تمتد عبر كل الشرائح) مع فجوات وقصّ مائل متناوب — للبطاقة الممددة فقط
@@ -41,6 +41,7 @@ const ImageStrips = ({ image, count = 4, gap = 3, direction = "v" }) => {
 const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
   const [active, setActive] = useState(null);
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+  const navigate = useNavigate();
 
   return (
     <div className="relative flex flex-col md:flex-row gap-3 h-[720px] md:h-[460px]" onMouseLeave={() => setActive(null)}>
@@ -50,14 +51,17 @@ const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
         return (
           <div
             key={item.key}
-            role="button"
+            role="link"
             tabIndex={0}
             aria-expanded={open}
+            aria-label={item.title}
             onMouseEnter={() => setActive(i)}
             onFocus={() => setActive(i)}
-            onClick={() => setActive((cur) => (cur === i ? null : i))}
-            className={`relative overflow-hidden cursor-pointer basis-0 min-h-0 bg-white border transition-[flex-grow,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              open ? "border-brand-orange/40 shadow-[0_24px_50px_-30px_rgba(36,27,20,0.35)]" : "border-gray-200 hover:border-brand-orange/40"
+            // ✅ الضغط على أي مكان بالبطاقة يفتح صفحة الركيزة
+            onClick={() => navigate(`/pillar/${item.key}`)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); navigate(`/pillar/${item.key}`); } }}
+            className={`relative overflow-hidden cursor-pointer basis-0 min-h-0 bg-white rounded-2xl border-2 transition-[flex-grow,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              open ? "border-brand-orange shadow-[0_24px_50px_-30px_rgba(36,27,20,0.35)]" : "border-gray-200 hover:border-brand-orange"
             }`}
             style={{ flexGrow: open ? 3.4 : 1 }}
           >
@@ -68,7 +72,7 @@ const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
                 <h3 className="text-base md:text-lg font-bold text-brand-ink leading-snug">{item.title}</h3>
               </div>
               {/* الصورة عادية (بلا تقطيع) في الحالة المطوية — التقطيع يظهر عند التمدد فقط */}
-              <div className="relative flex-1 mx-3 mb-3 overflow-hidden">
+              <div className="relative flex-1 mx-3 mb-3 overflow-hidden rounded-xl">
                 <img src={item.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
               </div>
             </div>
@@ -81,6 +85,7 @@ const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
                 <p className="text-sm md:text-[15px] leading-relaxed text-brand-muted mb-5">{item.desc}</p>
                 <Link
                   to={`/pillar/${item.key}`}
+                  tabIndex={-1}
                   onClick={(e) => e.stopPropagation()}
                   className="group inline-flex items-center gap-2 text-sm font-bold text-brand-ink hover:text-brand-orange transition-colors"
                 >

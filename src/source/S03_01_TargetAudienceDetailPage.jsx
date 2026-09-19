@@ -55,7 +55,7 @@ const ServiceCard = ({ service, lang }) => {
   return (
     <Link
       to={`/platform-service/${service.id}`}
-      className="group w-full h-full min-h-[250px] text-start bg-white rounded-none p-7 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+      className="rounded-2xl group w-full h-full min-h-[250px] text-start bg-white p-7 flex flex-col border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 overflow-hidden"
     >
       <div className="flex items-center justify-between gap-3 mb-5">
         <span className="w-11 h-11 bg-brand-orange/10 flex items-center justify-center flex-shrink-0">
@@ -133,7 +133,7 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
           <SectionHead kicker={labels.levelsKicker} title={labels.levelsTitle} />
           <div className="grid md:grid-cols-3 gap-6">
             {data.levels.map((lvl, i) => (
-              <div key={lvl.key} className="bg-white border border-gray-200 p-8 flex flex-col">
+              <div key={lvl.key} className="rounded-2xl bg-white border-2 border-gray-200 p-8 flex flex-col overflow-hidden">
                 <span className="text-5xl font-black text-brand-cream leading-none mb-5">0{i + 1}</span>
                 <h3 className="text-xl font-bold text-brand-ink mb-3">{getLevelLabel(lvl.key, lang)}</h3>
                 <p className="text-sm leading-relaxed text-brand-muted">{pick(lvl, "desc", lang)}</p>
@@ -237,7 +237,7 @@ const QualityLayout = ({ audienceKey, data, L }) => {
         primary={regLinks[0]}
         secondary={{ to: "#tracks", label: labels.tracks }}
       >
-        <div className="bg-white border border-gray-200 p-6 md:p-7">
+        <div className="rounded-2xl bg-white border-2 border-gray-200 p-6 md:p-7 overflow-hidden">
           <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4 block">{labels.focus}</span>
           <ul className="flex flex-col gap-3">
             {data[`focus_${lang}`].map((item) => (
@@ -284,7 +284,7 @@ const QualityLayout = ({ audienceKey, data, L }) => {
           <SectionHead kicker={labels.areasKicker} title={labels.areasTitle} desc={labels.areasDesc} />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {PERFORMANCE_AREAS.map((area, i) => (
-              <div key={area.title_ar} className="bg-white border border-gray-200 p-7 flex flex-col gap-3">
+              <div key={area.title_ar} className="rounded-2xl bg-white border-2 border-gray-200 p-7 flex flex-col gap-3 overflow-hidden">
                 <span className="text-xs font-extrabold tracking-[0.1em] text-brand-orange">0{i + 1}</span>
                 <h3 className="text-lg font-bold text-brand-ink">{pick(area, "title", lang)}</h3>
                 <p className="text-sm leading-relaxed text-brand-muted">{pick(area, "desc", lang)}</p>
@@ -472,7 +472,7 @@ const IntelligenceLayout = ({ data, L }) => {
                   )}
                   {/* ✅ المستوى الثاني (الأولويات) بلا إحصائيات — شرح مختصر مبني على أرقام المستوى الأول */}
                   {MINISTRY_SPACE_DETAILS[space.slug]?.explanation_summary && (
-                    <div className="bg-brand-cream-hero border border-brand-ink/10 p-7 md:p-9 flex flex-col gap-5">
+                    <div className="bg-brand-cream-hero rounded-2xl border-2 border-brand-ink/10 p-7 md:p-9 flex flex-col gap-5">
                       <span className="text-xs font-bold tracking-[0.2em] uppercase text-brand-orange">
                         {isRTL ? "ماذا تقول البيانات" : "What the data says"}
                       </span>
@@ -536,7 +536,7 @@ const IntelligenceLayout = ({ data, L }) => {
           <SectionHead kicker={labels.rolesKicker} title={labels.rolesTitle} desc={labels.rolesDesc} />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {MINISTRY_ROLES.map((role) => (
-              <div key={role.ar} className="bg-white border border-gray-200 p-7 flex flex-col gap-3">
+              <div key={role.ar} className="rounded-2xl bg-white border-2 border-gray-200 p-7 flex flex-col gap-3 overflow-hidden">
                 <span className="w-10 h-10 bg-brand-orange/10 flex items-center justify-center text-brand-orange"><Landmark className="w-5 h-5" strokeWidth={1.75} /></span>
                 <h3 className="text-lg font-bold text-brand-ink">{role[lang]}</h3>
                 <p className="text-sm leading-relaxed text-brand-muted">{pick(role, "desc", lang)}</p>

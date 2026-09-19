@@ -236,7 +236,7 @@ const PillarPage = () => {
             {p.audiences.map((a) => {
               const Icon = AUDIENCE_ICONS[a.key];
               return (
-                <div key={a.key} className="p-7 border border-gray-200 bg-white">
+                <div key={a.key} className="rounded-2xl p-7 border-2 border-gray-200 bg-white overflow-hidden">
                   <div className="flex items-center gap-3 mb-5">
                     <span className="w-10 h-10 bg-brand-orange/10 flex items-center justify-center text-brand-orange"><Icon className="w-5 h-5" strokeWidth={1.75} /></span>
                     <h3 className="text-lg font-bold text-brand-ink">{PILLAR_AUDIENCE_LABELS[a.key][lang]}</h3>

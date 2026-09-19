@@ -31,6 +31,7 @@ import { SiteProvider, useSite } from "./SiteContext";
 import Navbar from "./source/shared/Navbar";
 import Footer from "./source/shared/Footer";
 import DynamicHead from "./source/shared/DynamicHead";
+import ScrollManager from "./source/shared/ScrollManager";
 
 // ✅ مفعّلان (معلّقان في النسخة الأصلية) — يُستخدمان أدناه لحساب الأدمن، وبدونهما تنهار الصفحة
 import AdminNavbar from "./ZZZ/components/layout/AdminNavbar";
@@ -144,6 +145,8 @@ function AppContent() {
   return (
     <>
       <DynamicHead />
+      {/* الرجوع يعيد لنفس موقع التمرير، والصفحة الجديدة تبدأ من الأعلى */}
+      <ScrollManager />
       <div className="flex flex-col min-h-screen">
         {/* Header Logic */}
         {!isDashboardPage &&

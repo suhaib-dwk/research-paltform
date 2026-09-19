@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Landmark, Building2, School, FlaskConical, GraduationCap, BookOpen, Users, Briefcase, ChevronDown } from "lucide-react";
 import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
@@ -14,7 +13,6 @@ import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, CtaBand, C
 
 const TargetAudiencePage = () => {
   const { t, isRTL, ArrowIcon } = useInnerLang();
-  useEffect(() => { window.scrollTo(0, 0); }, []);
   const L = (ar, en) => (isRTL ? ar : en);
 
   const login = { to: "/login", label: t("nav.login") };
@@ -191,7 +189,7 @@ const TargetAudiencePage = () => {
               </div>
               <div className={`lg:col-span-7 grid gap-5 ${g.nodes.length > 1 ? "sm:grid-cols-3" : "sm:grid-cols-1 max-w-md"}`}>
                 {g.nodes.map((n, ni) => (
-                  <Link key={n.key} to={`/audience/${n.key}`} className="group bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 p-6 flex flex-col relative">
+                  <Link key={n.key} to={`/audience/${n.key}`} className="rounded-2xl group bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 p-6 flex flex-col relative overflow-hidden">
                     {g.id === "researchers" && ni < g.nodes.length - 1 && (
                       <ArrowIcon className="hidden sm:block absolute top-1/2 -translate-y-1/2 -end-4 w-4 h-4 text-brand-muted z-10" />
                     )}

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -58,7 +58,16 @@ export const Breadcrumb = ({ section, items }) => {
 
 // ── الهيرو المصوّر ──
 export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, primary, secondary, tone = "dark", children }) => {
-  const { ArrowIcon, displayFont } = useInnerLang();
+  const { ArrowIcon, BackIcon, displayFont } = useInnerLang();
+  const navigate = useNavigate();
+  // زر الرجوع يعود للصفحة السابقة فعليًا (وموقعها يُستعاد عبر ScrollManager)؛
+  // إن فُتحت الصفحة مباشرة بلا سجل داخل الموقع نستخدم primary.to
+  const onPrimaryClick = (e) => {
+    if (primary?.back && (window.history.state?.idx ?? 0) > 0) {
+      e.preventDefault();
+      navigate(-1);
+    }
+  };
   const dark = tone === "dark";
   return (
     <section className={`relative overflow-hidden ${dark ? "bg-brand-ink" : "bg-brand-cream-hero"}`}>
@@ -100,10 +109,13 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
             {primary && (
               <Link
                 to={primary.to}
+                onClick={onPrimaryClick}
                 className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-[15px] font-bold text-white hover:bg-brand-orange-dark transition-colors"
               >
+                {/* primary.back: زر رجوع — السهم قبل النص وباتجاه الرجوع */}
+                {primary.back && <BackIcon className="w-4 h-4" />}
                 {primary.label}
-                <ArrowIcon className="w-4 h-4" />
+                {!primary.back && <ArrowIcon className="w-4 h-4" />}
               </Link>
             )}
             {secondary && (
@@ -247,7 +259,7 @@ export const RelatedCards = ({ title, items }) => (
           <Link
             key={item.to}
             to={item.to}
-            className="group bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 p-7 flex flex-col min-h-[200px]"
+            className="rounded-2xl group bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 p-7 flex flex-col min-h-[200px] overflow-hidden"
           >
             {item.kicker && (
               <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2.5 block">{item.kicker}</span>

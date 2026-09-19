@@ -128,7 +128,7 @@ const ServicesCataloguePage = () => {
                       <Link
                         key={service.id}
                         to={`/platform-service/${service.id}`}
-                        className="group w-full h-full min-h-[270px] text-start bg-white rounded-none p-7 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+                        className="rounded-2xl group w-full h-full min-h-[270px] text-start bg-white p-7 flex flex-col border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 overflow-hidden"
                       >
                         <div className="flex items-center justify-between gap-3 mb-5">
                           <span className="w-11 h-11 bg-brand-orange/10 flex items-center justify-center flex-shrink-0">

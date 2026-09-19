@@ -1,6 +1,6 @@
 // src\components\layout\Navbar.jsx
 import { useState, useEffect, useContext, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigationType } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, ShieldCheck, LogOut, Globe, ChevronDown, Landmark, Building2, GraduationCap, Users, Info, HelpCircle, Mail, LayoutGrid, Briefcase, UserCog, FileCheck, Sparkles, Languages, Award, BookMarked, MessageSquare, BarChart3 } from 'lucide-react';
 import { SiteContext } from '../../SiteContext';
@@ -138,9 +138,12 @@ const Navbar = () => {
 
   // ✅ الانتقال بين الصفحات مع hash (مثل /services#assessment): بعد أن يركّب
   // الراوتر الصفحة الجديدة نمرّر إلى القسم المطلوب.
+  // عند الرجوع (POP) لا نقفز للقسم — ScrollManager يعيد الموقع السابق بالضبط
+  const navigationType = useNavigationType();
   useEffect(() => {
+    if (navigationType === 'POP') return;
     scrollToHash(location.hash);
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.hash, navigationType]);
 
   const siteName = siteSettings[`site_name_${currentLang}`] || 'SOURCE';
   // تم تحديد مسار اللوجو الثابت مباشرة (الهيدر أبيض بالشعار الملوّن — أُعيد كما كان بطلب صريح)

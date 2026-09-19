@@ -29,7 +29,7 @@ export const RegisterCategoryChooser = ({ onPick, compact = false }) => {
           key={c.key}
           to={c.to}
           onClick={onPick}
-          className="group flex items-start gap-4 p-5 rounded-2xl border border-gray-200 bg-white hover:border-brand-orange/50 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+          className="group flex items-start gap-4 p-5 rounded-2xl border-2 border-gray-200 bg-white hover:border-brand-orange hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
         >
           <span className="w-12 h-12 rounded-2xl bg-brand-orange/10 text-brand-orange flex items-center justify-center flex-shrink-0 group-hover:bg-brand-orange group-hover:text-white transition-colors">
             <c.icon className="w-6 h-6" strokeWidth={1.75} />

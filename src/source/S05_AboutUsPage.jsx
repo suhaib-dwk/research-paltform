@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Target, Eye, Shield, RefreshCw, Home, Users, ClipboardCheck } from 'lucide-react';
@@ -8,9 +7,6 @@ const AboutUsPage = () => {
   const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const currentLang = i18n.language;
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const stats = [
     { value: '2026', label: t('about.stat_founded') },

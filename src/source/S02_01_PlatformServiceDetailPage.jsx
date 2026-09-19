@@ -131,7 +131,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
 
         {showLists && (
           <div className="grid md:grid-cols-2 gap-6 mb-10">
-            <div className="md:col-span-2 bg-white border border-gray-200 p-6">
+            <div className="rounded-2xl md:col-span-2 bg-white border-2 border-gray-200 p-6 overflow-hidden">
               <h2 className="text-base font-bold text-brand-ink mb-4">{labels.how}</h2>
               <ol className="flex flex-col gap-3">
                 {service.how_ar.map((step, i) => (
@@ -144,7 +144,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
                 ))}
               </ol>
             </div>
-            <div className="bg-white border border-gray-200 p-6">
+            <div className="rounded-2xl bg-white border-2 border-gray-200 p-6 overflow-hidden">
               <h2 className="text-base font-bold text-brand-ink mb-4">{labels.inputs}</h2>
               <ul className="flex flex-col gap-2.5">
                 {service.inputs_ar.map((item) => (
@@ -155,7 +155,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
                 ))}
               </ul>
             </div>
-            <div className="bg-white border border-gray-200 p-6">
+            <div className="rounded-2xl bg-white border-2 border-gray-200 p-6 overflow-hidden">
               <h2 className="text-base font-bold text-brand-ink mb-4">{labels.outputs}</h2>
               <ul className="flex flex-col gap-2.5">
                 {service.outputs_ar.map((item) => (
@@ -251,7 +251,7 @@ const PlatformServiceDetailPage = () => {
           {details.map((detail, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 bg-white border border-gray-200 rounded-none p-6"
+              className="rounded-2xl flex items-start gap-3 bg-white border-2 border-gray-200 p-6 overflow-hidden"
             >
               <span className="w-7 h-7 rounded-full bg-brand-orange/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <CheckCircle className="w-4 h-4 text-brand-orange" strokeWidth={2.5} />

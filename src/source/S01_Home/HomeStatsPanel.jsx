@@ -64,7 +64,7 @@ const HomeStatsPanel = ({ stats, isRTL }) => {
       {/* الأرقام — بالبرتقالي (بطلب صريح) */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {stats.tiles.map((st, i) => (
-          <div key={i} className="bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 p-4 md:p-5 flex flex-col">
+          <div key={i} className="rounded-2xl bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 p-4 md:p-5 flex flex-col overflow-hidden">
             <span dir="ltr" className="text-[28px] md:text-[32px] font-bold leading-none text-brand-orange text-start mb-2">{st.value}</span>
             <p className="text-[12px] md:text-[13px] font-semibold leading-relaxed text-brand-muted">{st[`label_${lang}`]}</p>
           </div>
@@ -74,7 +74,7 @@ const HomeStatsPanel = ({ stats, isRTL }) => {
       {/* الرسوم البيانية (واحد أو أكثر جنبًا إلى جنب) */}
       <div className={`grid gap-4 flex-1 ${charts.length > 1 ? "xl:grid-cols-2" : ""}`}>
         {charts.map((chart, i) => (
-          <div key={i} className="bg-white border border-gray-200 p-5 md:p-6 flex flex-col min-h-[280px]">
+          <div key={i} className="rounded-2xl bg-white border-2 border-gray-200 p-5 md:p-6 flex flex-col min-h-[280px] overflow-hidden">
             <div className="flex items-start justify-between gap-4 mb-3">
               <h4 className="text-sm md:text-[15px] font-bold text-brand-ink leading-snug">{chart[`title_${lang}`]}</h4>
               <span className="w-2.5 h-2.5 rounded-full bg-brand-orange mt-1.5 flex-shrink-0" />

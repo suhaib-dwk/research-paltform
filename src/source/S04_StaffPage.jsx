@@ -149,7 +149,7 @@ const StaffPage = () => {
             {providerServices.map((s) => {
               const Icon = SERVICE_ICONS[s.slug] || FileText;
               return (
-                <Link key={s.slug} to="/register?role=service_provider" className="group bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 p-7 flex flex-col min-h-[210px]">
+                <Link key={s.slug} to="/register?role=service_provider" className="rounded-2xl group bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 p-7 flex flex-col min-h-[210px] overflow-hidden">
                   <span className="w-11 h-11 bg-brand-orange/10 text-brand-orange flex items-center justify-center mb-5"><Icon className="w-[22px] h-[22px]" strokeWidth={1.75} /></span>
                   <h3 className="text-[17px] font-bold text-brand-ink mb-2">{s[`title_${lang}`]}</h3>
                   <p className="text-[13px] leading-relaxed text-brand-muted flex-1">{s[`desc_${lang}`]}</p>

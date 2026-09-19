@@ -105,7 +105,7 @@ const HomePage = () => {
   const [activeLevel, setActiveLevel] = useState(0);
 
   // ✅ عائلة الخدمات النشطة بقسم "الخدمات" — مفاتيح SERVICE_FAMILIES
-  const [activeFamily, setActiveFamily] = useState("journal");
+  const [activeFamily, setActiveFamily] = useState("assessment");
 
   // ✅ الشرائح الفعلية تُدار من لوحة الأدمن (جدول home_slides) — هذه احتياط فقط عند خلو الجدول
   const defaultSlides = [
@@ -486,7 +486,7 @@ const HomePage = () => {
                 <div className="lg:col-span-5 h-full">
                   <Link
                     to={comp.to}
-                    className="group h-full bg-white border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300 flex flex-col"
+                    className="rounded-2xl group h-full bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden"
                   >
                     <div className="relative h-[220px] overflow-hidden">
                       <img
@@ -524,7 +524,7 @@ const HomePage = () => {
                       <Link
                         key={space.number}
                         to="/audience/ministry#spaces"
-                        className="group h-full text-start bg-white p-6 md:p-7 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+                        className="rounded-2xl group h-full text-start bg-white p-6 md:p-7 flex flex-col border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 overflow-hidden"
                       >
                         <span className="text-brand-orange text-3xl md:text-4xl font-black leading-none mb-3 block">
                           {space.number}
@@ -546,7 +546,7 @@ const HomePage = () => {
                       <div key={card.key} className="flex-1">
                         <Link
                           to={`/audience/${card.key}`}
-                          className="group h-full text-start bg-white p-7 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4 border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+                          className="rounded-2xl group h-full text-start bg-white p-7 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4 border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 overflow-hidden"
                         >
                           <div className="flex-1 min-w-0">
                             <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
@@ -681,7 +681,7 @@ const HomePage = () => {
                 <ScrollReveal key={service.id} delay={index * 100}>
                   <Link
                     to={`/platform-service/${service.id}`}
-                    className="group w-full h-full min-h-[270px] text-start bg-white rounded-none p-7 flex flex-col border border-gray-200 hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300"
+                    className="rounded-2xl group w-full h-full min-h-[270px] text-start bg-white p-7 flex flex-col border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 overflow-hidden"
                   >
                     <div className="flex items-center justify-between gap-3 mb-5">
                       <span className="w-11 h-11 bg-brand-orange/10 flex items-center justify-center flex-shrink-0">
@@ -894,7 +894,7 @@ const HomePage = () => {
                 {newsData.slice(1, 4).map((item) => (
                   <ScrollReveal key={item.id} className="flex-1">
                     <Link to={`/news/${item.slug}`} className="group block h-full">
-                      <div className="bg-white border border-gray-200 px-7 py-6 h-full flex flex-col justify-center gap-3 transition-all duration-300 hover:border-brand-orange/40 hover:shadow-lg">
+                      <div className="rounded-2xl bg-white border-2 border-gray-200 px-7 py-6 h-full flex flex-col justify-center gap-3 transition-all duration-300 hover:border-brand-orange hover:shadow-lg overflow-hidden">
                         <h3 className="font-bold text-brand-ink text-[17px] leading-snug group-hover:text-brand-orange transition-colors">
                           {currentLang === "ar" ? item.title_ar : item.title_en}
                         </h3>

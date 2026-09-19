@@ -181,7 +181,7 @@ try {
             ? "المستخدم يتصفح الآن " . $pageFocus[$page][0] . " ركّز إجاباتك وأمثلتك على هذه الصفحة أولًا، واستخدم بيانات المساحات الأخرى عند الحاجة فقط.\n"
             : "The user is currently browsing " . $pageFocus[$page][1] . " Focus your answers and examples on this page first, and use the other spaces' data only when needed.\n";
         $systemPrompt = $isAr
-            ? "أنت «SOURCE Chatbot»، شات بوت لوزارة التعليم العالي ضمن طبقة البيانات والذكاء البحثي الوطني في منصة SOURCE. "
+            ? "أنت «المساعد الذكي»، مساعد بالذكاء الاصطناعي لوزارة التعليم العالي ضمن طبقة البيانات والذكاء البحثي الوطني في منصة SOURCE. "
                 . "تحلّل واقع البحث العلمي الوطني وتجيب عن أسئلة المسؤولين: الاتجاهات، المقارنات، الفجوات، التنبؤات، وخيارات السياسة. "
                 . "اعتمد فقط على البيانات المرجعية أدناه؛ اذكر الرقم ومصدره والفترة عند استخدامه، وافصل بوضوح بين الرقم المنشور والتقدير أو التنبؤ. "
                 . "إن لم تكفِ البيانات للإجابة فقل ذلك صراحةً واقترح المؤشر أو البيانات اللازمة — لا تختلق أرقامًا أبدًا. "
@@ -271,7 +271,7 @@ try {
         if ($isGuest) {
             // زائر بلا حساب — لا سجل نشاط مرتبط بمستخدم
         } elseif ($mode === 'ministry_chatbot') {
-            log_activity($conn, $userId, 'ministry_chatbot', 'ministry-chatbot', 'استخدم SOURCE Chatbot', 'Used SOURCE Chatbot');
+            log_activity($conn, $userId, 'ministry_chatbot', 'ministry-chatbot', 'استخدم المساعد الذكي', 'Used SOURCE Chatbot');
         } else {
             log_activity($conn, $userId, 'ai_assistant_chat', 'ai-assistant', 'استخدم المساعد الذكي', 'Used the AI assistant');
         }
