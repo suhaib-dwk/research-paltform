@@ -12,6 +12,7 @@ import {
 } from "./S02_Services/servicesCatalogue";
 import { HeroCrumbs } from "./S01_Home/InnerBlocks";
 import usePageState from "./shared/usePageState";
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // كتالوج الخدمات العام (/services) — كل خدمات الطبقة الأولى (35 خدمة) من
@@ -67,11 +68,8 @@ const ServicesCataloguePage = () => {
       {/* رأس الصفحة — نفس مفردات الصفحات الداخلية (كريمي، عنوان، وصف) */}
       <section className="bg-brand-cream-hero py-14 md:py-16">
         <div className="container mx-auto px-6">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
-            {isRTL ? "المكون الثالث — خدمات البحث ودعم الباحثين" : "Component three — Research services & enablers"}
-          </span>
           <h1 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4">
-            {isRTL ? "دعم متكامل عبر رحلة البحث." : t("services.section_heading")}
+            {cleanHeroText(isRTL ? "دعم متكامل عبر رحلة البحث." : t("services.section_heading"))}
           </h1>
           <p className="text-base leading-relaxed text-brand-muted max-w-3xl">{isRTL ? "ترتبط الخدمات باحتياج الباحث ومرحلة البحث، من تطوير الفكرة والمنهجية إلى الجودة والنشر وما بعده. ويجمع المسار بين الأدوات الرقمية، وخدمات الذكاء الاصطناعي، والخبرة البشرية، بحيث يكون واضحاً متى يكون الدعم آلياً ومتى يتطلب مراجعة أو تدخلاً من خبير." : t("home.services_desc")}</p>
           {/* ✅ مسار التنقل أسفل الهيدر على شكل زر، ومقابله زر الرجوع (كباقي الصفحات) */}

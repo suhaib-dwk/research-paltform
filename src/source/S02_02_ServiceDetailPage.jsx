@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, BookOpen, TrendingUp, HandCoins, FlaskConical, L
 import Footer from './shared/Footer';
 import { API_BASE_URL } from '../api';
 import useBackClick from "./shared/useBackClick";
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 const ServiceDetailPage = () => {
   const { slug } = useParams(); // استقبال slug من الرابط
@@ -97,7 +98,7 @@ const ServiceDetailPage = () => {
                 </div>
                 <div>
                   <h1 className="text-3xl md:text-4xl font-extrabold">
-                    {currentLang === 'ar' ? service.title_ar : service.title_en}
+                    {cleanHeroText(currentLang === 'ar' ? service.title_ar : service.title_en)}
                   </h1>
                   <p className="mt-2 text-gray-300 text-lg">
                     {currentLang === 'ar' ? service.desc_ar : service.desc_en}

@@ -65,7 +65,7 @@ const HomeStatsPanel = ({ stats, isRTL }) => {
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {stats.tiles.map((st, i) => (
           <div key={i} className="rounded-2xl bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 p-4 md:p-5 flex flex-col overflow-hidden">
-            <span dir="ltr" className="text-[28px] md:text-[32px] font-bold leading-none text-brand-orange text-start mb-2">{st.value}</span>
+            <span dir="ltr" className="text-[28px] md:text-[32px] font-bold leading-none text-brand-orange self-start mb-2">{st.value}</span>
             <p className="text-[12px] md:text-[13px] font-semibold leading-relaxed text-brand-muted">{st[`label_${lang}`]}</p>
           </div>
         ))}

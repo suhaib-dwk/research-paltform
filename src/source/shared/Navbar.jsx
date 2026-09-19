@@ -114,6 +114,15 @@ const Navbar = () => {
   };
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
+  // ✅ قائمة الموبايل: تُغلق عند تغيّر الصفحة، وتقفل تمرير الصفحة خلفها وهي مفتوحة
+  useEffect(() => { setIsMobileMenuOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [isMobileMenuOpen]);
+
   useEffect(() => {
     const checkAdminStatus = () => {
       try {
@@ -284,7 +293,7 @@ const Navbar = () => {
 
       {/* قائمة الموبايل */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden max-w-7xl mx-auto mt-2 rounded-3xl bg-white shadow-sm border border-gray-100 z-40 relative">
+        <div className="lg:hidden fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto overscroll-contain bg-white border-t border-gray-100">
           <div className="px-6 py-6 space-y-5">
             {/* لوجو موبايل */}
             <div className="flex items-center gap-3 pb-4 border-b border-brand-ink/10">

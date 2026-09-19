@@ -14,6 +14,17 @@ i18n
       ar: { translation: ar }
     },
     fallbackLng: 'ar',
+    supportedLngs: ['ar', 'en'],
+    load: 'languageOnly', // "ar-IQ" / "en-US" ← "ar" / "en"
+    // ✅ العربية افتراضيًا لكل زائر جديد (على السيرفر كان يفتح إنجليزي لأن الكاشف كان
+    // يأخذ لغة المتصفح/الجهاز). الآن لا نقرأ لغة المتصفح إطلاقًا: الإنجليزية فقط إذا
+    // اختارها الزائر من زر اللغة (تُحفظ في localStorage) أو جاءت في الرابط (?lng=en).
+    detection: {
+      order: ['querystring', 'localStorage'],
+      lookupQuerystring: 'lng',
+      lookupLocalStorage: 'i18nextLng',
+      caches: ['localStorage'],
+    },
     interpolation: {
       escapeValue: false
     }

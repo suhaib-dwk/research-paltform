@@ -25,6 +25,16 @@ export const useInnerLang = () => {
   };
 };
 
+// ✅ تنظيف عناوين الهيرو (بطلب صريح): بلا شحطة (— / – أو - منفصلة) وبلا نقطة أو فاصلة في آخر النص.
+// الشرطة داخل الكلمات (Post-Publication) تبقى.
+export const cleanHeroText = (s) =>
+  String(s ?? "")
+    .replace(/\s*[—–]\s*/g, " ")
+    .replace(/(^|\s)-(\s|$)/g, " ")
+    .replace(/[\s.。،,]+$/, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
 // يقرأ الحقل المناسب للغة من كائن يحمل مفاتيح _ar / _en
 export const pick = (obj, key, lang) => obj?.[`${key}_${lang}`] ?? obj?.[key] ?? "";
 
@@ -61,36 +71,15 @@ export const Breadcrumb = ({ section, items }) => {
 // dark = فوق صورة داكنة، وإلا فوق خلفية فاتحة.
 // زر الرجوع يعيد المستخدم إلى المكان الذي ضغط منه بالضبط (useBackClick + ScrollManager)؛
 // وإن فُتحت الصفحة مباشرة يذهب إلى الصفحة الأعلى في المسار.
-export const HeroCrumbs = ({ items, dark = true, className = "" }) => {
-  const { CrumbIcon, BackIcon, isRTL } = useInnerLang();
+// ✅ مسار التنقل (breadcrumbs) مخفي في كل الصفحات الداخلية بطلب صريح — يظهر مكانه زر
+// الرجوع فقط. items تبقى لتحديد الصفحة الاحتياطية عند فتح الصفحة مباشرة.
+export const HeroCrumbs = ({ items, className = "" }) => {
+  const { BackIcon, isRTL } = useInnerLang();
   const onBack = useBackClick();
   if (!items?.length) return null;
   const fallback = [...items].slice(0, -1).reverse().find((it) => it.to)?.to || "/";
   return (
-    <div className={`w-full flex flex-wrap items-center justify-between gap-3 ${className}`}>
-    <nav aria-label="breadcrumb">
-      <div
-        className={`inline-flex flex-wrap items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-bold ${
-          dark ? "bg-white/10 border border-white/20 backdrop-blur-md text-white/70" : "bg-white border-2 border-gray-200 text-brand-muted shadow-sm"
-        }`}
-      >
-        {items.map((item, i) => {
-          const isLast = i === items.length - 1;
-          return (
-            <span key={`${item.label}-${i}`} className="inline-flex items-center gap-2">
-              {item.to && !isLast ? (
-                <Link to={item.to} className={`transition-colors hover:text-brand-orange ${dark ? "text-white" : "text-brand-ink"}`}>
-                  {item.label}
-                </Link>
-              ) : (
-                <span className={isLast ? "text-brand-orange" : ""}>{item.label}</span>
-              )}
-              {!isLast && <CrumbIcon className={`w-3.5 h-3.5 ${dark ? "text-white/50" : "text-brand-muted"}`} />}
-            </span>
-          );
-        })}
-      </div>
-    </nav>
+    <div className={`w-full flex flex-wrap items-center justify-end gap-3 ${className}`}>
     <Link
       to={fallback}
       onClick={onBack}
@@ -104,7 +93,7 @@ export const HeroCrumbs = ({ items, dark = true, className = "" }) => {
 };
 
 // ── الهيرو المصوّر ──
-export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, primary, secondary, tone = "dark", crumbs, children }) => {
+export const InnerHero = ({ image, imagePos, kicker, titlePre, titleEm, titlePost, intro, primary, secondary, tone = "dark", crumbs, children }) => {
   const { ArrowIcon, BackIcon, displayFont } = useInnerLang();
   const navigate = useNavigate();
   // زر الرجوع يعود للصفحة السابقة فعليًا (وموقعها يُستعاد عبر ScrollManager)؛
@@ -117,17 +106,16 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
   };
   const dark = tone === "dark";
   return (
-    <section className={`relative overflow-hidden ${dark ? "bg-brand-ink" : "bg-brand-cream-hero"}`}>
+    <section className={`relative overflow-hidden ${dark && !image ? "bg-brand-ink" : "bg-brand-cream-hero"} ${image ? "min-h-[500px] md:min-h-0 md:h-[460px] flex items-center" : ""}`}>
       {image && (
         <img
           src={image}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover ${dark ? "brightness-[0.35]" : "opacity-[0.6]"}`}
+          className={`absolute inset-0 w-full h-full object-cover ${dark ? "" : "opacity-[0.6]"}`}
+          style={imagePos ? { objectPosition: imagePos } : undefined}
         />
       )}
-      {dark && (
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/60 to-brand-ink/20 pointer-events-none"></div>
-      )}
+      {/* ✅ النمط الداكن: الصورة كما هي والنص فوقها — بلا طبقة سوداء (بطلب صريح) */}
       {/* ✅ الهيرو الفاتح: الصورة أوضح (بلا طبقة بيضاء ثقيلة) مع تدرّج أبيض خفيف على
           جهة النص فقط لضمان قراءته (بطلب صريح) */}
       {!dark && image && (
@@ -138,20 +126,29 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
         <div className="absolute bottom-16 end-[8%] h-28 w-28 bg-brand-orange/10" />
         <div className="absolute top-1/2 end-1/4 h-12 w-44 bg-white/5" />
       </div>
-      <div className="relative container mx-auto px-6 py-20 md:py-24 grid lg:grid-cols-12 gap-10 items-end">
+      {/* ✅ بطول سلايدر الرئيسية (460px): مسافات أصغر، وزر الرجوع عائم في الزاوية بدل سطر إضافي */}
+      <div className={`relative w-full container mx-auto px-6 grid lg:grid-cols-12 gap-8 items-center ${image ? "pt-8 pb-24 md:py-8" : "py-10 md:py-12"}`}>
         <div className={`lg:col-span-8 flex flex-col items-start ${dark ? "text-white" : "text-brand-ink"}`}>
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{kicker}</span>
+          {/* ✅ فوق الصورة (النمط الداكن): بوكس أسود شفاف مع تمويه خلف النص — نفس بوكس سلايدر الرئيسية */}
+          <div className={dark && image ? "bg-black/30 backdrop-blur-[6px] border border-white/15 rounded-2xl px-6 sm:px-8 md:px-10 py-5 md:py-6 mb-5 max-w-4xl" : "contents"}>
+          {/* ✅ العنوان الفرعي (kicker) فوق عنوان الهيرو محذوف من كل الصفحات الداخلية بطلب صريح */}
           <h1
-            className="text-[34px] sm:text-[44px] md:text-[56px] font-bold leading-[1.4] max-w-4xl mb-5"
+            className={`text-[28px] sm:text-[34px] md:text-[40px] font-bold leading-[1.3] max-w-4xl mb-3 ${dark ? "[text-shadow:0_2px_14px_rgba(0,0,0,0.55)]" : ""}`}
             style={{ fontFamily: displayFont }}
           >
-            {titlePre}
-            <span className="text-brand-orange">{titleEm}</span>
-            {titlePost}
+            {/* ✅ الجزء البرتقالي في سطر مستقل أسفل النص، بلا شحطة ولا نقطة */}
+            {cleanHeroText(titlePre)}
+            {(titleEm || titlePost) && (
+              <span className="block">
+                <span className="text-brand-orange">{cleanHeroText(titleEm)}</span>
+                {cleanHeroText(titlePost) && <> {cleanHeroText(titlePost)}</>}
+              </span>
+            )}
           </h1>
-          <p className={`text-base md:text-lg leading-relaxed max-w-2xl mb-8 ${dark ? "text-gray-300" : "text-brand-muted"}`}>
+          <p className={`text-[15px] md:text-base leading-relaxed max-w-2xl ${image ? "line-clamp-3" : ""} ${dark && image ? "" : "mb-8"} ${dark ? "text-white font-medium [text-shadow:0_2px_14px_rgba(0,0,0,0.55)]" : "text-brand-muted"}`}>
             {intro}
           </p>
+          </div>
           <div className="flex flex-wrap items-center gap-4">
             {primary && (
               <Link
@@ -170,7 +167,7 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
                 to={secondary.to}
                 className={`inline-flex items-center rounded-full border px-6 py-3 text-[15px] font-bold transition-colors ${
                   dark
-                    ? "border-white/30 text-white hover:bg-white hover:text-brand-ink"
+                    ? "border-white/30 bg-black/30 backdrop-blur-[6px] text-white hover:bg-white hover:text-brand-ink"
                     : "border-brand-ink/15 text-brand-ink bg-white hover:border-brand-ink/30"
                 }`}
               >
@@ -183,8 +180,10 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
       </div>
       {/* ✅ مسار التنقل أسفل الهيرو على شكل زر */}
       {crumbs && (
-        <div className="relative container mx-auto px-6 pb-10 -mt-6 md:-mt-8">
-          <HeroCrumbs items={crumbs} dark={dark} />
+        <div className={image ? "absolute inset-x-0 bottom-6 z-10" : "relative"}>
+          <div className={`container mx-auto px-6 ${image ? "" : "pb-8 -mt-2"}`}>
+            <HeroCrumbs items={crumbs} dark={dark} />
+          </div>
         </div>
       )}
     </section>
@@ -192,8 +191,7 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
 };
 
 // ── شريط الروابط الداخلية اللاصق (Elsevier: قائمة أقسام صفحة المنتج) ──
-export const AnchorNav = ({ items, cta }) => {
-  const { ArrowIcon } = useInnerLang();
+export const AnchorNav = ({ items }) => {
   return (
     <div className="sticky top-16 z-20 bg-white/95 backdrop-blur border-b border-gray-200">
       <div className="container mx-auto px-6 flex items-center justify-between gap-6 overflow-x-auto">
@@ -208,26 +206,17 @@ export const AnchorNav = ({ items, cta }) => {
             </a>
           ))}
         </div>
-        {cta && (
-          <Link
-            to={cta.to}
-            className="hidden md:inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-2 text-[13px] font-bold text-white hover:bg-brand-orange-dark transition-colors flex-shrink-0"
-          >
-            {cta.label}
-            <ArrowIcon className="w-3.5 h-3.5" />
-          </Link>
-        )}
+        {/* ✅ زر الـ CTA في شريط الأقسام محذوف بطلب صريح (تكرار لزر الهيرو) */}
       </div>
     </div>
   );
 };
 
 // ── رأس قسم ──
+// ✅ العنوان الفرعي (kicker) مخفي في كل الأقسام بطلب صريح — الخاصية تبقى مقبولة لعدم كسر الاستدعاءات
+// eslint-disable-next-line no-unused-vars
 export const SectionHead = ({ kicker, title, desc, light = false, className = "" }) => (
   <div className={`mb-10 md:mb-12 ${className}`}>
-    {kicker && (
-      <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-4 block">{kicker}</span>
-    )}
     <h2 className={`text-3xl md:text-4xl font-bold leading-tight ${light ? "text-white" : "text-brand-ink"} ${desc ? "mb-4" : ""}`}>
       {title}
     </h2>
@@ -314,9 +303,7 @@ export const RelatedCards = ({ title, items }) => (
             to={item.to}
             className="rounded-2xl group bg-white border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 p-7 flex flex-col min-h-[200px] overflow-hidden"
           >
-            {item.kicker && (
-              <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2.5 block">{item.kicker}</span>
-            )}
+            {/* ✅ العنوان الفرعي (item.kicker) مخفي بطلب صريح */}
             <h3 className="text-lg font-bold text-brand-ink mb-2">{item.title}</h3>
             {item.desc && <p className="text-sm leading-relaxed text-brand-muted flex-1">{item.desc}</p>}
             <CardArrow />

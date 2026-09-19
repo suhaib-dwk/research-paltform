@@ -5,6 +5,7 @@ import { SiteContext } from '../SiteContext';
 import { API_BASE_URL } from '../api';
 import { getValidationMessages, validateField as validateFieldValue } from './shared/formValidation';
 import ErrorMessage from './shared/ErrorMessage';
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 const ContactPage = () => {
   const { t, i18n } = useTranslation();
@@ -103,12 +104,9 @@ const ContactPage = () => {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <span className="inline-block text-brand-ink/70 text-xs font-bold tracking-[0.2em] uppercase mb-4">
-                {t('contact.hero_label')}
-              </span>
               <h1 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4">
-                {t('contact.hero_title_main')}{' '}
-                <span className="text-white">{t('contact.hero_title_highlight')}</span>
+                {cleanHeroText(t('contact.hero_title_main'))}{' '}
+                <span className="text-white block">{cleanHeroText(t('contact.hero_title_highlight'))}</span>
               </h1>
               <div className="w-16 h-1 bg-brand-ink" />
             </div>

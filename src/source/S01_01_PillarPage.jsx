@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark, Users, FolderKanban, Database, Bot, BarChart3, ClipboardCheck, Languages, Lightbulb, MonitorSmartphone, Code2, Bell, ListChecks, Lock, FileSearch } from "lucide-react";
 import { PILLARS, PILLAR_ORDER, LAYERS, LAYER_ORDER, PILLAR_AUDIENCE_LABELS } from "./S01_Home/pillarsContent";
-import { useInnerLang, pick, HeroCrumbs, CtaBand } from "./S01_Home/InnerBlocks";
+import { useInnerLang, pick, HeroCrumbs, CtaBand, cleanHeroText } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة الركيزة التقنية (/pillar/:key) — التصميم "السينمائي الداكن بفصول"
@@ -27,6 +27,65 @@ const COMPONENT_ICONS = {
   security: [Lock, ShieldCheck, FileSearch],
 };
 const AUDIENCE_ICONS = { researcher: GraduationCap, university: Building2, ministry: Landmark };
+
+// ── خطوات «كيف تعمل» متحركة بأسلوب الرحلة البحثية في الرئيسية (بطلب صريح):
+//    خط تقدّم ونقطة متحركة وإضاءة الخطوات بالتتابع — بالأبيض فوق القسم الداكن.
+//    تعمل فقط عندما يكون القسم ظاهرًا، وتحترم «تقليل الحركة». ──
+const AnimatedSteps = ({ steps, lang }) => {
+  const ref = useRef(null);
+  const n = steps.length;
+  const reduce = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const [step, setStep] = useState(reduce ? n : 0);
+  const [running, setRunning] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || reduce) return undefined;
+    const io = new IntersectionObserver(([e]) => setRunning(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduce]);
+  useEffect(() => {
+    if (!running) return undefined;
+    const id = setInterval(() => setStep((cur) => (cur >= n ? 0 : cur + 1)), 1300);
+    return () => clearInterval(id);
+  }, [running, n]);
+  const frac = Math.max(0, step - 1) / Math.max(1, n - 1);
+  return (
+    <div ref={ref} className="relative">
+      {/* الخط الأساسي + خط التقدّم الأبيض + النقطة المتحركة (ديسكتوب) */}
+      <span className="hidden lg:block absolute top-7 start-7 end-7 h-px bg-white/25"></span>
+      <span
+        className="hidden lg:block absolute top-7 start-7 h-[3px] -mt-px bg-white rounded-full transition-[width] duration-700 ease-out"
+        style={{ width: `calc((100% - 3.5rem) * ${frac})` }}
+      ></span>
+      <span
+        className="hidden lg:block absolute top-7 w-4 h-4 -mt-2 -ms-2 rounded-full bg-white ring-4 ring-white/25 shadow-[0_0_0_8px_rgba(255,255,255,0.12)] transition-[inset-inline-start] duration-700 ease-out z-10"
+        style={{ insetInlineStart: `calc(1.75rem + (100% - 3.5rem) * ${frac})` }}
+      ></span>
+      <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10">
+        {steps.map((st, idx) => {
+          const lit = idx <= step - 1;
+          const isNow = idx === step - 1;
+          return (
+            <div key={st.title_ar} className="flex flex-col items-start">
+              <span
+                className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-extrabold mb-7 transition-all duration-500 ${
+                  lit
+                    ? `bg-white text-brand-ink ${isNow ? "scale-110 shadow-[0_10px_28px_-8px_rgba(255,255,255,0.75)]" : ""}`
+                    : "bg-transparent border border-white/40 text-white"
+                }`}
+              >
+                0{idx + 1}
+              </span>
+              <h3 className={`text-[22px] font-bold mb-2.5 transition-colors duration-500 ${lit ? "text-white" : "text-white/60"}`}>{pick(st, "title", lang)}</h3>
+              <p className={`text-sm leading-relaxed transition-colors duration-500 ${lit ? "text-white/80" : "text-white/50"}`}>{pick(st, "desc", lang)}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 const PillarPage = () => {
   const { key } = useParams();
@@ -70,27 +129,36 @@ const PillarPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* الهيرو السينمائي */}
-      <section className="relative overflow-hidden bg-brand-ink min-h-[640px] md:min-h-[700px] flex flex-col justify-end">
-        <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover brightness-[0.3]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-brand-ink/70 to-brand-ink/30 pointer-events-none"></div>
+      {/* الهيرو: الصورة كما هي والنص فوقها — بلا خلفية أو طبقة سوداء (بطلب صريح)؛
+          ظل نص خفيف فقط لضمان القراءة */}
+      <section className="relative overflow-hidden bg-brand-cream-hero">
+        {/* ✅ منطقة الصورة بطول سلايدر الرئيسية (500px موبايل / 460px ديسكتوب)، وشريط الفصول أسفلها */}
+        <div className="relative min-h-[500px] md:min-h-0 md:h-[460px] flex items-center">
+        <img src={p.hero_image || p.image} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: p.hero_image_pos || "center" }} />
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute top-10 end-10 h-24 w-24 bg-brand-orange/20" />
           <div className="absolute top-1/3 end-1/4 h-16 w-40 bg-white/5" />
           <div className="absolute bottom-40 end-16 h-32 w-32 bg-brand-orange/10" />
           <span className="absolute bottom-4 end-[-10px] text-[300px] md:text-[440px] leading-none font-black text-white/[0.035] tracking-[-0.04em]" dir="ltr">{p.number}</span>
         </div>
-        <div className="relative z-10 container mx-auto px-6 pt-16 pb-14 flex flex-col items-start">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-6 block">
-            {name}
-          </span>
-          <h1 className="text-[34px] sm:text-[48px] md:text-[64px] font-bold leading-[1.35] text-white max-w-5xl mb-6" style={{ fontFamily: displayFont }}>
-            {pick(p, "title_pre", lang)}
-            <span className="text-brand-orange">{pick(p, "title_em", lang)}</span>
-          </h1>
-          <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl">{pick(p, "intro", lang)}</p>
+        <div className="relative z-10 w-full container mx-auto px-6 pt-8 pb-24 md:py-8 flex flex-col items-start">
+          {/* ✅ بوكس أسود شفاف مع تمويه خلف النص — نفس بوكس سلايدر الصفحة الرئيسية (بطلب صريح) */}
+          <div className="bg-black/30 backdrop-blur-[6px] border border-white/15 rounded-2xl px-6 sm:px-8 md:px-10 py-5 md:py-6 max-w-5xl">
+            <h1 className="text-[28px] sm:text-[34px] md:text-[40px] font-bold leading-[1.3] text-white max-w-5xl mb-3 [text-shadow:0_2px_14px_rgba(0,0,0,0.55)]" style={{ fontFamily: displayFont }}>
+              {/* ✅ الجزء البرتقالي في سطر مستقل، بلا شحطة ولا نقطة */}
+              {cleanHeroText(pick(p, "title_pre", lang))}
+              <span className="text-brand-orange block">{cleanHeroText(pick(p, "title_em", lang))}</span>
+            </h1>
+            <p className="text-[15px] md:text-base text-white font-medium leading-relaxed max-w-2xl line-clamp-3 [text-shadow:0_2px_14px_rgba(0,0,0,0.55)]">{pick(p, "intro", lang)}</p>
+          </div>
           {/* ✅ مسار التنقل أسفل الهيرو على شكل زر */}
-          <HeroCrumbs className="mt-10" items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.about_us"), to: "/about-us" }, { label: name }]} />
+        </div>
+        {/* زر الرجوع عائم في الزاوية — لا يضيف ارتفاعًا */}
+        <div className="absolute inset-x-0 bottom-6 z-10">
+          <div className="container mx-auto px-6">
+            <HeroCrumbs items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.about_us"), to: "/about-us" }, { label: name }]} />
+          </div>
+        </div>
         </div>
         {/* ✅ شريط الفصول بأسلوب تابات الصفحة الرئيسية (بطلب صريح): مستطيل أبيض بفواصل
             وخط برتقالي أعلى التاب النشط — يتبع التمرير ويعمل كأزرار */}
@@ -121,7 +189,6 @@ const PillarPage = () => {
       <section id="what" className="bg-white py-20 md:py-24 scroll-mt-20">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-20 items-start">
           <div className="lg:col-span-5">
-            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.ch1}</span>
             <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-5">{pick(p, "what_title", lang)}</h2>
             <p className="text-base leading-relaxed text-brand-muted">{pick(p, "what_desc", lang)}</p>
           </div>
@@ -143,7 +210,6 @@ const PillarPage = () => {
       <section id="components" className="bg-gray-50 py-20 md:py-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
           <div className="mb-12">
-            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.ch2}</span>
             <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink">{pick(p, "components_title", lang)}</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -172,27 +238,14 @@ const PillarPage = () => {
       {/* الفصل 03 — كيف يعمل */}
       <section id="how" className="bg-white py-20 md:py-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.ch3}</span>
           <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-14">{pick(p, "how_title", lang)}</h2>
-          <div className="relative">
-            <span className="hidden lg:block absolute top-7 start-7 end-7 h-px bg-gradient-to-l from-brand-orange to-brand-orange/50"></span>
-            <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-10">
-              {p.steps.map((s, i) => (
-                <div key={s.title_ar} className="flex flex-col items-start">
-                  <span className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-extrabold mb-7 ${s.highlight ? "bg-brand-orange text-white shadow-[0_0_0_8px_rgba(255,135,16,0.15)]" : "bg-white border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
-                  <h3 className={`text-[22px] font-bold mb-2.5 ${s.highlight ? "text-brand-orange" : "text-brand-ink"}`}>{pick(s, "title", lang)}</h3>
-                  <p className="text-sm leading-relaxed text-brand-muted">{pick(s, "desc", lang)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <AnimatedSteps steps={p.steps} lang={lang} />
         </div>
       </section>
 
       {/* الفصل 04 — الضمانة: بلوك مقسوم */}
       <section id="guarantee" className="bg-gray-50 pt-20 md:pt-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{pick(p, "guarantee_kicker", lang)}</span>
           <h2 className={`text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink ${pick(p, "guarantee_desc", lang) ? "mb-5" : "mb-14"}`}>{pick(p, "guarantee_title", lang)}</h2>
           {pick(p, "guarantee_desc", lang) && (
             <p className="text-base leading-relaxed text-brand-muted max-w-3xl mb-14">{pick(p, "guarantee_desc", lang)}</p>
@@ -228,7 +281,6 @@ const PillarPage = () => {
       {/* لمن يفيد */}
       <section className="bg-white py-20 md:py-24">
         <div className="container mx-auto px-6">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.who}</span>
           <h2 className="text-3xl md:text-4xl font-bold text-brand-ink mb-10">{pick(p, "who_title", lang) || L.whoTitle}</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {p.audiences.map((a) => {

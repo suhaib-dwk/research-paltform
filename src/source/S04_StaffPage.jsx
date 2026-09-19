@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CheckCircle, Briefcase, UserCog, Languages, Shield, FileText, MessageSquare, BookMarked, BarChart3, LayoutTemplate, Mail, Send, Award } from "lucide-react";
 import { getAllServices } from "./S02_Services/servicesConfig";
 import { useInnerLang, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
+import AnimatedSteps from "./shared/AnimatedSteps";
 
 // =========================================================
 // صفحة الموظفين ومقدّمي الخدمة (/staff) — الطبقة التشغيلية: المنصة تعمل
@@ -165,18 +166,14 @@ const StaffPage = () => {
       <section id="steps" className="bg-brand-ink py-20 md:py-24 scroll-mt-28">
         <div className="container mx-auto px-6">
           <SectionHead kicker={L.stepsKicker} title={L.stepsTitle} light />
-          <div className="relative">
-            <span className="hidden md:block absolute top-6 start-6 end-6 h-px bg-brand-orange/50"></span>
-            <div className="relative grid md:grid-cols-3 gap-x-10 gap-y-10">
-              {L.steps.map((step, i) => (
-                <div key={step.title} className="flex flex-col items-start gap-4">
-                  <span className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${i === L.steps.length - 1 ? "bg-brand-orange text-white" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
-                  <h3 className="text-xl font-bold text-white">{step.title}</h3>
-                  <p className="text-sm text-white/65 leading-relaxed">{step.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* ✅ خطوات متحركة بأسلوب الرحلة البحثية في الرئيسية — بالأبيض فوق القسم الداكن */}
+          <AnimatedSteps
+            items={L.steps}
+            cols="md:grid-cols-3 gap-x-10 gap-y-10"
+            titleClass="text-xl"
+            title={(step) => step.title}
+            desc={(step) => step.desc}
+          />
         </div>
       </section>
 

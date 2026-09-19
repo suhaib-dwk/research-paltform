@@ -3,6 +3,7 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { Sparkles, Brain, Radar, Lightbulb, ShieldCheck, Gauge, Megaphone, ExternalLink, X } from "lucide-react";
 import { API_BASE_URL } from "../api";
 import SourceChatbot from "./S03_Audience/SourceChatbot";
+import AnimatedSteps from "./shared/AnimatedSteps";
 import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
 import { MINISTRY_SPACES } from "./S01_Home/audiencesContent";
 import { MINISTRY_SPACE_DETAILS, FUNDING_FALLBACK } from "./S03_Audience/ministrySpacesDetails";
@@ -296,6 +297,7 @@ const MinistrySpacePage = () => {
           { label: pick(space, "title", lang) },
         ]}
         image={detail.image}
+        imagePos={detail.image_pos}
         kicker={`${labels.space} ${space.number} — ${pick(detail, "kicker", lang)}`}
         titlePre={pick(detail, "hero_pre", lang)}
         titleEm={pick(detail, "hero_em", lang)}
@@ -456,18 +458,13 @@ const MinistrySpacePage = () => {
         <section id="local" className="bg-brand-ink py-20 md:py-24 scroll-mt-28">
           <div className="container mx-auto px-6">
             <SectionHead kicker={labels.localKicker} title={labels.localTitle} desc={labels.localDesc} light />
-            <div className="relative">
-              <span className="hidden lg:block absolute top-6 start-6 end-6 h-px bg-brand-orange/50"></span>
-              <div className="relative grid sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10">
-                {detail.local_flow.map((step, i) => (
-                  <div key={step.title_en} className="flex flex-col items-start gap-4">
-                    <span className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${i === detail.local_flow.length - 1 ? "bg-brand-orange text-white" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
-                    <h3 className="text-lg font-bold text-white leading-snug">{pick(step, "title", lang)}</h3>
-                    <p className="text-sm text-white/65 leading-relaxed">{pick(step, "desc", lang)}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* ✅ خطوات متحركة بأسلوب الرحلة البحثية في الرئيسية — بالأبيض فوق القسم الداكن */}
+            <AnimatedSteps
+              items={detail.local_flow}
+              cols="sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10"
+              title={(step) => pick(step, "title", lang)}
+              desc={(step) => pick(step, "desc", lang)}
+            />
           </div>
         </section>
       )}
@@ -480,10 +477,10 @@ const MinistrySpacePage = () => {
             <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
               {ai.tiles.map((st) => (
                 <div key={st.label_en} className="relative bg-brand-ink p-5 md:p-6 flex flex-col">
-                  <span className="absolute top-4 end-4 inline-flex items-center gap-1 text-[10px] font-bold tracking-[0.15em] text-brand-orange border border-brand-orange/40 px-1.5 py-0.5">
+                  <span className="self-start inline-flex items-center gap-1 text-[10px] font-bold tracking-[0.15em] text-brand-orange border border-brand-orange/40 rounded-md px-1.5 py-0.5 mb-3">
                     <Sparkles className="w-3 h-3" /> AI
                   </span>
-                  <span dir="ltr" className="text-[28px] md:text-[34px] font-bold leading-none text-brand-orange text-start mb-2.5">{st.value}</span>
+                  <span dir="ltr" className="text-[28px] md:text-[34px] font-bold leading-none text-brand-orange self-start mb-2.5">{st.value}</span>
                   <p className="text-[12px] md:text-[13px] font-semibold leading-relaxed text-white/70">{pick(st, "label", lang)}</p>
                 </div>
               ))}

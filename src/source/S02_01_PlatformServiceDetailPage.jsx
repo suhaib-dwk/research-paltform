@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES, getExecLabel } from "./S02_Services/servicesCatalogue";
 import useBackClick from "./shared/useBackClick";
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة تفصيلية مستقلة لكل "خدمة" (منصة أو ذكاء اصطناعي) — بطلب صريح: كانت
@@ -108,7 +109,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
         </div>
 
         <h1 className="text-3xl md:text-5xl font-extrabold text-brand-ink leading-tight mb-3">
-          {service[`name_${lang}`]}
+          {cleanHeroText(service[`name_${lang}`])}
         </h1>
         {lang === "ar" && (
           <p className="text-sm font-semibold text-brand-muted mb-5" dir="ltr">
@@ -243,9 +244,6 @@ const PlatformServiceDetailPage = () => {
             <Icon className="w-8 h-8 text-brand-orange" strokeWidth={1.5} />
           </div>
           <div>
-            <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
-              {title}
-            </span>
             <h1 className="text-2xl md:text-4xl font-extrabold text-brand-ink leading-tight">
               {tagline}
             </h1>

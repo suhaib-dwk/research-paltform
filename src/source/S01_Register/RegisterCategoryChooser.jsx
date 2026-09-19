@@ -79,7 +79,6 @@ const RegisterCategoryModal = ({ open, onClose }) => {
             <button type="button" onClick={onClose} aria-label="close" className="absolute top-5 end-5 w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500">
               <X className="w-4 h-4" />
             </button>
-            <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">{isAr ? 'إنشاء حساب جديد' : 'Create a new account'}</span>
             <h2 className="text-2xl font-black text-brand-ink mb-1.5">{isAr ? 'من أنت في منظومة البحث؟' : 'Who are you in the research ecosystem?'}</h2>
             <p className="text-sm text-brand-muted mb-6">{isAr ? 'اختر فئتك لتقرأ ما تقدمه لك المنصة، ثم أنشئ حسابك من هناك.' : 'Pick your category to see what the platform offers you, then create your account from there.'}</p>
             <RegisterCategoryChooser compact onPick={onClose} />

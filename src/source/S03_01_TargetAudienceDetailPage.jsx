@@ -8,6 +8,7 @@ import { SERVICE_FAMILIES, EXEC_TYPES, SERVICES_CATALOGUE, getServiceById, getEx
 import { MINISTRY_SPACE_DETAILS } from "./S03_Audience/ministrySpacesDetails";
 import HomeStatsPanel from "./S01_Home/HomeStatsPanel";
 import SourceChatbot from "./S03_Audience/SourceChatbot";
+import AnimatedSteps from "./shared/AnimatedSteps";
 import {
   useInnerLang, pick, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow, RelatedCards,
 } from "./S01_Home/InnerBlocks";
@@ -174,30 +175,25 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
       <section id="journey" className="bg-brand-ink py-20 md:py-24 scroll-mt-28">
         <div className="container mx-auto px-6">
           <SectionHead kicker={labels.journeyKicker} title={labels.journeyTitle} light />
-          <div className="relative">
-            <span className="hidden lg:block absolute top-6 start-6 end-6 h-px bg-brand-orange/50"></span>
-            <div className={`relative grid gap-x-6 gap-y-10 sm:grid-cols-2 ${data.steps.length >= 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"}`}>
-              {data.steps.map((step, i) => (
-                <div key={step.title_ar} className="flex flex-col items-start gap-4">
-                  <span className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${i === data.steps.length - 1 ? "bg-brand-orange text-white" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>
-                    0{i + 1}
-                  </span>
-                  <h3 className="text-lg font-bold text-white leading-snug">{pick(step, "title", lang)}</h3>
-                  <p className="text-sm text-white/65 leading-relaxed">{pick(step, "desc", lang)}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {step.ids.map((id) => {
-                      const svc = getServiceById(id);
-                      return svc ? (
-                        <Link key={id} to={`/platform-service/${id}`} className="text-[11px] font-bold text-white/80 border border-white/20 px-2 py-1 hover:border-brand-orange hover:text-brand-orange transition-colors" title={svc[`name_${lang}`]}>
-                          <span dir="ltr">{id}</span>
-                        </Link>
-                      ) : null;
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* ✅ خطوات متحركة بأسلوب الرحلة البحثية في الرئيسية — بالأبيض فوق القسم الداكن */}
+          <AnimatedSteps
+            items={data.steps}
+            cols={`gap-x-6 gap-y-10 sm:grid-cols-2 ${data.steps.length >= 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"}`}
+            title={(step) => pick(step, "title", lang)}
+            desc={(step) => pick(step, "desc", lang)}
+            extra={(step) => (
+              <div className="flex flex-wrap gap-1.5">
+                {step.ids.map((id) => {
+                  const svc = getServiceById(id);
+                  return svc ? (
+                    <Link key={id} to={`/platform-service/${id}`} className="text-[11px] font-bold text-white/80 border border-white/20 px-2 py-1 hover:border-brand-orange hover:text-brand-orange transition-colors" title={svc[`name_${lang}`]}>
+                      <span dir="ltr">{id}</span>
+                    </Link>
+                  ) : null;
+                })}
+              </div>
+            )}
+          />
         </div>
       </section>
 
@@ -227,8 +223,9 @@ const QualityLayout = ({ audienceKey, data, L }) => {
     <>
       <InnerHero
         crumbs={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: GROUP_NAMES[audienceKey][lang] }]}
-        tone="light"
+        tone={data.tone || "light"}
         image={data.image}
+        imagePos={data.imagePos}
         kicker={pick(data, "kicker", lang)}
         titlePre={pick(data, "title_pre", lang)}
         titleEm={pick(data, "title_em", lang)}
@@ -301,18 +298,13 @@ const QualityLayout = ({ audienceKey, data, L }) => {
       <section id="flow" className="bg-brand-ink py-20 md:py-24 scroll-mt-28">
         <div className="container mx-auto px-6">
           <SectionHead kicker={labels.flowKicker} title={labels.flowTitle} light />
-          <div className="relative">
-            <span className="hidden lg:block absolute top-6 start-6 end-6 h-px bg-brand-orange/50"></span>
-            <div className="relative grid sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10">
-              {DATA_FLOW.map((step, i) => (
-                <div key={step.title_ar} className="flex flex-col items-start gap-4">
-                  <span className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${i === DATA_FLOW.length - 1 ? "bg-brand-orange text-white" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
-                  <h3 className="text-lg font-bold text-white leading-snug">{pick(step, "title", lang)}</h3>
-                  <p className="text-sm text-white/65 leading-relaxed">{pick(step, "desc", lang)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* ✅ خطوات متحركة بأسلوب الرحلة البحثية في الرئيسية — بالأبيض فوق القسم الداكن */}
+          <AnimatedSteps
+            items={DATA_FLOW}
+            cols="sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-10"
+            title={(step) => pick(step, "title", lang)}
+            desc={(step) => pick(step, "desc", lang)}
+          />
         </div>
       </section>
 

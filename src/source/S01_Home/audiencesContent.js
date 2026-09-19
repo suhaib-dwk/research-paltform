@@ -113,7 +113,10 @@ export const AUDIENCES = {
 
   // ───────────────────────── المؤسسات ─────────────────────────
   university: {
-    image: "/Home/home05.jpg",
+    // ✅ صورة داكنة: تُعرض كما هي (النمط الداكن للهيرو) مع إظهار مبنى الجامعة في المنتصف
+    image: "/Home/audience-university-hero.jpg",
+    tone: "dark",
+    imagePos: "center 68%",
     kicker_ar: "الجامعات — الجودة والاعتماد والجاهزية للتصنيفات",
     kicker_en: "Universities — Quality, accreditation & rankings",
     title_pre_ar: "إدارة الأداء والتميّز البحثي ", title_em_ar: "كوظيفة مؤسسية", title_post_ar: ".",

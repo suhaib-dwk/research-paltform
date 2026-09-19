@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Search, Filter } from 'lucide-react';
 import usePageState from './shared/usePageState';
 import { API_BASE_URL } from '../api'; // ✅ أضف هذا السطر
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 const AllNewsPage = () => {
   const { t, i18n } = useTranslation();
@@ -82,7 +83,7 @@ const AllNewsPage = () => {
             animate={{ opacity: 1, y: 0 }} 
             className="text-4xl md:text-5xl font-black text-white mb-4"
           >
-            {t('news.title')}
+            {cleanHeroText(t('news.title'))}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }} 

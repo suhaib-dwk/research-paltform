@@ -411,8 +411,9 @@ const HomePage = () => {
           {/* ✅ العنوان وتحته الشرح في عمود واحد، وفي العمود الآخر أكورديون الركائز (بطلب صريح) */}
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             <ScrollReveal className="lg:col-span-5 flex flex-col items-start gap-5">
-              {/* ✅ شعار SOURCE بدل نص «عن SOURCE» */}
-              <img src="/logo/logo1.png" alt={t("home.about_kicker")} className="h-10 md:h-12 w-auto" />
+              {/* ✅ شعار SOURCE بدل نص «عن SOURCE» — مكبّر؛ الهوامش السالبة تقصّ الفراغ الشفاف
+                  حول الشعار داخل الصورة (1920×1080، الشعار نحو 80% عرضًا و35% ارتفاعًا) */}
+              <img src="/logo/logo1.png" alt={t("home.about_kicker")} className="h-[155px] md:h-[197px] w-auto max-w-none -my-[50px] md:-my-[64px] -ms-[27px] md:-ms-[35px]" />
               <h2 className="text-3xl md:text-[40px] font-bold leading-[1.35] text-brand-ink">{t("home.about_title")}</h2>
               <p className="text-base md:text-lg leading-[1.9] text-brand-ink/85">{t("home.about_desc")}</p>
               <p className="text-[15px] md:text-base leading-[1.9] text-brand-muted">{t("home.about_desc2")}</p>
@@ -552,9 +553,6 @@ const HomePage = () => {
                           className="rounded-2xl group h-full text-start bg-white p-7 md:p-8 flex flex-col sm:flex-row sm:items-center gap-4 border-2 border-gray-200 hover:border-brand-orange hover:shadow-lg transition-all duration-300 overflow-hidden"
                         >
                           <div className="flex-1 min-w-0">
-                            <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-2 block">
-                              {card.kicker}
-                            </span>
                             <h3 className="text-lg font-bold text-brand-ink mb-2">{card.title}</h3>
                             <p className="text-sm leading-relaxed text-brand-muted">{card.desc}</p>
                           </div>
@@ -576,9 +574,6 @@ const HomePage = () => {
         <div className="container mx-auto px-6">
           <ScrollReveal className="grid lg:grid-cols-12 gap-6 lg:gap-16 items-end mb-14">
             <div className="lg:col-span-7">
-              <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
-                {t("home.journey_kicker")}
-              </span>
               <h2 className="text-3xl md:text-4xl font-bold text-brand-ink leading-tight">
                 {t("home.journey_title")}
               </h2>
@@ -726,9 +721,6 @@ const HomePage = () => {
       <section className="bg-white py-20 md:py-24">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           <ScrollReveal className="lg:col-span-5 flex flex-col items-start">
-            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
-              {t("home.ministry_kicker")}
-            </span>
             <h2 className="text-3xl md:text-4xl font-bold text-brand-ink leading-tight mb-4">
               {t("home.ministry_title")}
             </h2>
@@ -833,9 +825,6 @@ const HomePage = () => {
         <div className="container mx-auto px-6">
           <ScrollReveal className="flex flex-col md:flex-row items-start md:items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-3 block">
-                {t("news.title_badge_small")}
-              </span>
               <h2 className="text-3xl md:text-4xl font-bold text-brand-ink">{t("home.news_title")}</h2>
             </div>
             <Link

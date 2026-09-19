@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Calendar, Tag, Loader2 } from 'lucide-react';
 // import Footer from './shared/Footer';
 import { API_BASE_URL } from '../api';
 import useBackClick from "./shared/useBackClick";
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 const NewsDetailPage = () => {
   const { slug } = useParams();
@@ -110,7 +111,7 @@ const NewsDetailPage = () => {
 
               {/* العنوان */}
               <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 leading-tight">
-                {currentLang === 'ar' ? news.title_ar : news.title_en}
+                {cleanHeroText(currentLang === 'ar' ? news.title_ar : news.title_en)}
               </h1>
 
               {/* التفاصيل (يدعم HTML من الداتا بيس) */}

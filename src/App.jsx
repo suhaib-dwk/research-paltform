@@ -40,6 +40,8 @@ import Navbar from "./source/shared/Navbar";
 import Footer from "./source/shared/Footer";
 import DynamicHead from "./source/shared/DynamicHead";
 import ScrollManager from "./source/shared/ScrollManager";
+import BottomBackBar from "./source/shared/BottomBackBar";
+import SectionCycle from "./source/shared/SectionCycle";
 
 // Shared Dashboard Home & Tasks
 import Home from "./academic/Home";
@@ -345,6 +347,8 @@ function AppContent() {
       <DynamicHead />
       {/* الرجوع يعيد لنفس موقع التمرير، والصفحة الجديدة تبدأ من الأعلى */}
       <ScrollManager />
+      {/* الصفحات الداخلية: خلفيات الأقسام أبيض → رمادي → أسود بالتكرار */}
+      {location.pathname !== "/" && !isInternalPage && !isAdminPage && !isAuthPage && <SectionCycle />}
       <div className="flex flex-col min-h-screen">
         {!isInternalPage && !isAdminPage && !isAuthPage && <Navbar />}
 
@@ -637,6 +641,8 @@ function AppContent() {
           </Routes>
         </main>
 
+        {/* زر الرجوع أسفل كل صفحة داخلية (نفس زر الهيرو) */}
+        {!isInternalPage && !isAdminPage && !isAuthPage && <BottomBackBar />}
         {!isInternalPage && !isAdminPage && !isAuthPage && <Footer />}
       </div>
     </>

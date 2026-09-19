@@ -28,3 +28,31 @@
     box-shadow: none;
   }
 }
+
+/* =========================================================
+   تدرّج خلفيات الأقسام في الصفحات الداخلية: أبيض → رمادي → أسود ثم يتكرر.
+   data-cycle يضعه src/source/shared/SectionCycle.jsx على الأقسام العليا بعد الهيرو.
+   قلب لون النص يطبَّق فقط على النص الواقع مباشرة على خلفية القسم — لا على الكاردات
+   والأزرار والصناديق التي لها خلفيتها الخاصة (bg-*) ولا على ما بداخلها.
+   ========================================================= */
+@layer utilities {
+  main section[data-cycle="white"] { background-color: #ffffff !important; }
+  main section[data-cycle="gray"]  { background-color: #f3f4f6 !important; }
+  main section[data-cycle="black"] { background-color: #241B14 !important; }
+
+  /* قسم أسود: النص الداكن ← أبيض */
+  main section[data-cycle="black"] :is(.text-brand-ink, .text-gray-900, .text-gray-800, .text-gray-700):not(:is([class*="bg-white"], [class*="bg-gray-"], [class*="bg-brand-cream"], [class*="bg-brand-orange"], [class*="bg-red-"])):not(section[data-cycle] :is([class*="bg-white"], [class*="bg-gray-"], [class*="bg-brand-cream"], [class*="bg-brand-orange"], [class*="bg-red-"]) *) {
+    color: #ffffff !important;
+  }
+  main section[data-cycle="black"] :is(.text-brand-muted, .text-gray-600, .text-gray-500, .text-gray-400):not(:is([class*="bg-white"], [class*="bg-gray-"], [class*="bg-brand-cream"], [class*="bg-brand-orange"], [class*="bg-red-"])):not(section[data-cycle] :is([class*="bg-white"], [class*="bg-gray-"], [class*="bg-brand-cream"], [class*="bg-brand-orange"], [class*="bg-red-"]) *) {
+    color: rgba(255, 255, 255, 0.72) !important;
+  }
+
+  /* قسم أبيض/رمادي: النص الفاتح (من أقسام صُممت داكنة) ← داكن */
+  main section:is([data-cycle="white"], [data-cycle="gray"]) :is(.text-white):not(:is([class*="bg-brand-orange"], [class*="bg-brand-ink"], [class*="bg-brand-dark"], [class*="bg-black"], [class*="bg-emerald"])):not(section[data-cycle] :is([class*="bg-brand-orange"], [class*="bg-brand-ink"], [class*="bg-brand-dark"], [class*="bg-black"], [class*="bg-emerald"]) *) {
+    color: #241B14 !important;
+  }
+  main section:is([data-cycle="white"], [data-cycle="gray"]) :is([class*="text-white/"], .text-gray-300, .text-gray-400):not(:is([class*="bg-brand-orange"], [class*="bg-brand-ink"], [class*="bg-brand-dark"], [class*="bg-black"], [class*="bg-emerald"])):not(section[data-cycle] :is([class*="bg-brand-orange"], [class*="bg-brand-ink"], [class*="bg-brand-dark"], [class*="bg-black"], [class*="bg-emerald"]) *) {
+    color: #6B6259 !important;
+  }
+}

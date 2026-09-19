@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Target, Eye, Shield, RefreshCw, Home, Users, ClipboardCheck } from 'lucide-react';
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 const AboutUsPage = () => {
   const { t, i18n } = useTranslation();
@@ -37,21 +38,14 @@ const AboutUsPage = () => {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <motion.span
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-block text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4"
-              >
-                {t('about.hero_label')}
-              </motion.span>
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4"
               >
-                {t('about.hero_title_line1')}{' '}
-                <span className="text-brand-orange block">{t('about.hero_title_line2')}</span>
+                {cleanHeroText(t('about.hero_title_line1'))}{' '}
+                <span className="text-brand-orange block">{cleanHeroText(t('about.hero_title_line2'))}</span>
               </motion.h1>
               <motion.div
                 initial={{ opacity: 0, width: 0 }}
@@ -113,9 +107,6 @@ const AboutUsPage = () => {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <span className="flex items-center gap-2 text-brand-orange text-xs font-bold tracking-[0.15em] uppercase mb-4">
-                <Target className="w-4 h-4" /> {t('about.mission_label')}
-              </span>
               <h2 className="text-2xl md:text-3xl font-black text-white mb-4 leading-snug">
                 {t('about.mission_title')}
               </h2>
@@ -124,9 +115,6 @@ const AboutUsPage = () => {
               </p>
             </div>
             <div className="bg-white/5 rounded-2xl p-6 md:p-8">
-              <span className="flex items-center gap-2 text-brand-orange text-xs font-bold tracking-[0.15em] uppercase mb-4">
-                <Eye className="w-4 h-4" /> {t('about.vision_label')}
-              </span>
               <h2 className="text-2xl md:text-3xl font-black text-white mb-4 leading-snug">
                 {t('about.vision_title')}
               </h2>
@@ -143,9 +131,6 @@ const AboutUsPage = () => {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10">
             <div>
-              <span className="inline-block text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4">
-                {t('about.story_label')}
-              </span>
               <h2 className="text-3xl md:text-4xl font-black text-brand-ink leading-tight mb-4">
                 {t('about.story_title')}
               </h2>
@@ -186,9 +171,6 @@ const AboutUsPage = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
             <div>
-              <span className="inline-block text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4">
-                {t('about.values_label')}
-              </span>
               <h2 className="text-3xl md:text-4xl font-black text-brand-ink">
                 {t('about.values_title')}
               </h2>

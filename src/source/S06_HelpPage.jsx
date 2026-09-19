@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, AlertCircle } from 'lucide-react';
 import { API_BASE_URL } from '../api';
+import { cleanHeroText } from "./S01_Home/InnerBlocks";
 
 const HelpPage = () => {
   const { t, i18n } = useTranslation();
@@ -45,21 +46,14 @@ const HelpPage = () => {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
-              <motion.span
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-block text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4"
-              >
-                {t('help.hero_label')}
-              </motion.span>
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4"
               >
-                {t('help.hero_title_line1')}{' '}
-                <span className="text-brand-orange block">{t('help.hero_title_line2')}</span>
+                {cleanHeroText(t('help.hero_title_line1'))}{' '}
+                <span className="text-brand-orange block">{cleanHeroText(t('help.hero_title_line2'))}</span>
               </motion.h1>
               <motion.div
                 initial={{ opacity: 0, width: 0 }}

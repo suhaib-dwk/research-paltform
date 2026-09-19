@@ -201,6 +201,7 @@ export const LAYERS = {
     group: "layer",
     number: "01",
     image: "/Home/layer-platform.jpg",
+    hero_image: "/Home/layer-platform-hero.jpg", // صورة هيرو صفحة الطبقة فقط (الكارد بالرئيسية يبقى بالصورة الأولى)
     name_ar: "المنصة الرقمية", name_en: "Digital platform",
     card_desc_ar: "بيئة التشغيل الأساسية للمستخدمين والسجلات البحثية والمشاريع ومسارات النشر والخدمات والمستودعات ولوحات المعلومات والتحليلات والتكاملات.",
     card_desc_en: "The core operating environment for users, research records, projects, publication pipelines, services, repositories, dashboards, analytics and integrations.",
@@ -297,6 +298,8 @@ export const LAYERS = {
     group: "layer",
     number: "03",
     image: "/Home/layer-experts.jpg",
+    hero_image: "/Home/layer-experts-hero.jpg", // صورة هيرو صفحة الطبقة فقط (الكارد بالرئيسية يبقى بالصورة الأولى)
+    hero_image_pos: "center 38%", // الصورة طولية — نُظهر الشاشة ورؤوس الأشخاص
     name_ar: "شبكة الخبراء", name_en: "Expert network",
     card_desc_ar: "وصول مُدار إلى المراجعين والخبراء المتخصصين وخبراء المنهجية والإحصائيين والمحررين والمترجمين ومستشاري النشر وخبراء الابتكار والملكية الفكرية.",
     card_desc_en: "Managed access to reviewers, subject experts, methodologists, statisticians, editors, translators, publication advisors and innovation & IP experts.",

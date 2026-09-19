@@ -132,7 +132,8 @@ const FUNDED_VS_NOT = {
 
 export const MINISTRY_SPACE_DETAILS = {
   "data-intelligence": {
-    image: "/Home/home01.jpg",
+    image: "/Home/space-data-intelligence.jpg",
+    image_pos: "center 62%", // الصورة طولية — نُظهر اليد والقلم على اللوح
     kicker_ar: "البيانات والذكاء البحثي الوطني", kicker_en: "National research data & intelligence",
     hero_pre_ar: "صورة وطنية واحدة ", hero_pre_en: "One national picture ",
     hero_em_ar: "للبحث العلمي", hero_em_en: "of scientific research",

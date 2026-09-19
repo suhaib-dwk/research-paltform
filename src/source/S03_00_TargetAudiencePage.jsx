@@ -176,7 +176,6 @@ const TargetAudiencePage = () => {
             <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
               <div className="lg:col-span-5">
                 <span className="text-brand-orange text-sm font-bold block mb-3">{g.number}</span>
-                <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-4 block">{g.kicker}</span>
                 <h2 className="text-3xl md:text-4xl font-bold text-brand-ink leading-tight mb-4">{g.title}</h2>
                 <p className="text-[15px] md:text-base leading-relaxed text-brand-muted mb-6">{g.desc}</p>
                 <Link to={`/audience/${g.nodes[0].key}`} className="inline-flex items-center gap-2 text-brand-orange font-bold text-sm hover:text-brand-orange-dark transition-colors">
@@ -193,7 +192,6 @@ const TargetAudiencePage = () => {
                     <span className="w-11 h-11 bg-brand-orange/10 text-brand-orange flex items-center justify-center mb-4 group-hover:bg-brand-orange group-hover:text-white transition-colors">
                       <n.icon className="w-5 h-5" strokeWidth={1.75} />
                     </span>
-                    <span className="text-brand-orange text-[11px] font-bold tracking-[0.15em] uppercase mb-1.5 block">{n.tag}</span>
                     <h3 className="text-lg font-bold text-brand-ink mb-2">{n.title}</h3>
                     <p className="text-sm leading-relaxed text-brand-muted flex-1">{n.desc}</p>
                     <span className="mt-5 text-xs font-bold text-brand-muted group-hover:text-brand-orange transition-colors">{register(n.key).label}</span>
@@ -214,7 +212,6 @@ const TargetAudiencePage = () => {
               <Briefcase className="w-5 h-5" strokeWidth={1.75} />
             </span>
             <div>
-              <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-2 block">{L("خارج الفئات الثلاث", "Outside the three audiences")}</span>
               <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-2">{L("موظفو المنصة ومقدّمو الخدمة", "Platform staff & service providers")}</h2>
               <p className="text-white/65 text-[15px] leading-relaxed max-w-2xl">
                 {L("فرق التشغيل داخل المنصة والخبراء الذين ينفّذون خدمات التحكيم والتحرير والترجمة — لهم تسجيل خاص ولوحات مختلفة عن فئات المستفيدين.", "Operations teams inside the platform and the experts who deliver review, editing and translation services — they have their own registration and different dashboards from the beneficiary audiences.")}
