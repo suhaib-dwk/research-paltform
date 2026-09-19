@@ -464,6 +464,8 @@ const RegisterPage = () => {
   // فيُفتح نموذج هذا الدور مباشرة بلا عرض كل أنواع الحسابات. بدون دور صالح
   // تُعرض الفئات الثلاث الرئيسية فقط.
   const [searchParams] = useSearchParams();
+  // نص الجانب الخاص بمقدّمي الخدمة وفريق التشغيل (Source.docx)
+  const STAFF_ROLES = ['service_provider', 'employee'];
   const navigate = useNavigate();
   const roleParam = searchParams.get('role');
   const presetRole = categories.some((c) => c.key === roleParam) ? roleParam : null;
@@ -666,10 +668,10 @@ const RegisterPage = () => {
         </div>
         <div className="relative z-10 text-white max-w-lg">
           <h1 className="text-5xl font-black leading-tight mb-6 drop-shadow-2xl">
-            {t('register.side_title')}
+            {t(STAFF_ROLES.includes(selectedRole) ? 'register.side_title_staff' : 'register.side_title')}
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed font-light">
-            {t('register.side_desc')}
+            {t(STAFF_ROLES.includes(selectedRole) ? 'register.side_desc_staff' : 'register.side_desc')}
           </p>
         </div>
       </div>

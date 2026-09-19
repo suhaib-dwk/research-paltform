@@ -4,7 +4,8 @@ import {
   ArrowLeft, ArrowRight, CheckCircle, Upload, TrendingUp, HandCoins, Search,
   FileCheck, PenTool, BarChart3, Sparkles, Users, Workflow,
 } from "lucide-react";
-import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES } from "./S02_Services/servicesCatalogue";
+import { getServiceById, getServiceLevel, EXEC_TYPES, SERVICE_FAMILIES, getExecLabel } from "./S02_Services/servicesCatalogue";
+import useBackClick from "./shared/useBackClick";
 
 // =========================================================
 // صفحة تفصيلية مستقلة لكل "خدمة" (منصة أو ذكاء اصطناعي) — بطلب صريح: كانت
@@ -43,6 +44,7 @@ const EXEC_ICONS = {
 const CatalogueServiceDetail = ({ service, isRTL }) => {
   const lang = isRTL ? "ar" : "en";
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
+  const onBack = useBackClick(); // الرجوع لمكان الضغط بالضبط
   const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
   const level = getServiceLevel(service);
   const family = SERVICE_FAMILIES.find((f) => f.key === service.family);
@@ -84,6 +86,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
       <div className="container mx-auto px-6 py-16 md:py-24 max-w-4xl">
         <Link
           to="/services"
+          onClick={onBack}
           className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-orange font-bold text-sm mb-10 transition-colors"
         >
           <BackArrow className="w-4 h-4" />
@@ -125,7 +128,7 @@ const CatalogueServiceDetail = ({ service, isRTL }) => {
             <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-1 block">
               {labels.exec}
             </span>
-            <span className="text-lg font-bold">{exec[`label_${lang}`]}</span>
+            <span className="text-lg font-bold">{getExecLabel(service, lang)}</span>
           </div>
         </div>
 
@@ -196,6 +199,7 @@ const PlatformServiceDetailPage = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language?.toLowerCase().startsWith("ar") ?? false;
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
+  const onBack = useBackClick(); // الرجوع لمكان الضغط بالضبط
   const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
 
   // ✅ خدمات كتالوج الباحثين (U01…F12) لها عرضها الخاص
@@ -227,6 +231,7 @@ const PlatformServiceDetailPage = () => {
       <div className="container mx-auto px-6 py-16 md:py-24 max-w-4xl">
         <Link
           to="/#services"
+          onClick={onBack}
           className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-orange font-bold text-sm mb-10 transition-colors"
         >
           <BackArrow className="w-4 h-4" />

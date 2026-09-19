@@ -1,0 +1,155 @@
+// =========================================================
+// بيانات صفحة "فهرس الخدمات" (/dashboard/services)
+// نص إضافي لكل خدمة من SIDEBAR_SERVICES (DashboardSidebar.jsx) يُستخدم
+// حصراً في بطاقة الخدمة ونافذة تفاصيلها المنبثقة بهذه الصفحة — لا علاقة له
+// بمنطق أو نصوص صفحة الخدمة الفعلية (ReviewServicePage.jsx وغيرها).
+//
+// المفتاح هنا (key) يطابق svc.slug بالضبط في SIDEBAR_SERVICES.
+// =========================================================
+
+export const SERVICES_INDEX_DETAILS = {
+  review: {
+    what_ar:
+      "مراجعة أكاديمية لجاهزية بحثك من حيث المنهجية والوضوح والالتزام بمعايير النشر، قبل أن تستثمر وقتاً إضافياً فيه.",
+    what_en:
+      "An academic review of your research readiness — methodology, clarity, and compliance with publication standards — before you invest further time.",
+    format_ar: "مراجعة من محكّم مختص",
+    format_en: "Expert-led review",
+    focus_ar: "سياق بحثك المحدد",
+    focus_en: "Your research context",
+    next_ar: "توجيه عملي وقابل للتنفيذ",
+    next_en: "Actionable direction",
+    before_ar:
+      "أحضر النسخة الحالية من بحثك والسؤال الذي تريد إجابة عليه. سنساعدك على توضيح العمل؛ القرار الأكاديمي النهائي يبقى لك.",
+    before_en:
+      "Bring the current version of your work and the question you want answered. We will help clarify the work; the final academic judgment remains yours.",
+  },
+  translation: {
+    what_ar:
+      "ترجمة أكاديمية دقيقة لبحثك أو أجزاء منه، مع الحفاظ على المصطلحات العلمية والمعنى الدقيق بين اللغتين.",
+    what_en:
+      "Accurate academic translation of your research or parts of it, preserving scientific terminology and precise meaning between languages.",
+    format_ar: "ترجمة من مختص أكاديمي",
+    format_en: "Academic translator-led",
+    focus_ar: "المصطلحات العلمية بمجالك",
+    focus_en: "Terminology in your field",
+    next_ar: "نص جاهز للمراجعة النهائية",
+    next_en: "Text ready for final review",
+    before_ar:
+      "أحضر النص الأصلي كاملاً واللغة الهدف. حدد إن كان هناك مصطلحات خاصة تفضّل ترجمة محددة لها.",
+    before_en:
+      "Bring the full source text and target language. Note any specialized terms you prefer translated a specific way.",
+  },
+  proofreading: {
+    what_ar:
+      "تدقيق لغوي شامل لبحثك يعالج الأخطاء النحوية والإملائية وركاكة الصياغة دون المساس بالمحتوى العلمي.",
+    what_en:
+      "Comprehensive language editing of your research addressing grammar, spelling, and phrasing issues without altering the scientific content.",
+    format_ar: "تدقيق من مدقق لغوي متخصص",
+    format_en: "Specialist language editor",
+    focus_ar: "وضوح الصياغة والسلامة اللغوية",
+    focus_en: "Clarity and language accuracy",
+    next_ar: "نسخة مصححة جاهزة للتقديم",
+    next_en: "Corrected version ready to submit",
+    before_ar:
+      "أحضر النسخة شبه النهائية من بحثك. التدقيق لا يشمل تعديل المحتوى العلمي أو إعادة الصياغة الجوهرية.",
+    before_en:
+      "Bring a near-final version of your research. Proofreading does not include changing scientific content or major rewriting.",
+  },
+  consultation: {
+    what_ar:
+      "جلسة استشارية مع مختص لمناقشة تحدٍّ محدد يواجهك في بحثك، سواء بالمنهجية أو التحليل أو خطة النشر.",
+    what_en:
+      "A consultation session with a specialist to discuss a specific challenge in your research — methodology, analysis, or publication planning.",
+    format_ar: "جلسة استشارية مباشرة",
+    format_en: "Direct consultation session",
+    focus_ar: "التحدي المحدد الذي تواجهه",
+    focus_en: "Your specific challenge",
+    next_ar: "خطة عمل واضحة للخطوة القادمة",
+    next_en: "A clear plan for your next step",
+    before_ar:
+      "حدد سؤالك أو تحديك بدقة قبل الجلسة، وأحضر أي مواد بحثية ذات صلة لتحقيق أقصى استفادة من الوقت.",
+    before_en:
+      "Define your question or challenge precisely before the session, and bring any relevant research materials to make the most of the time.",
+  },
+  "journal-selection": {
+    what_ar:
+      "مساعدة في اختيار المجلة العلمية الأنسب لبحثك بناءً على مجال التخصص، معايير النشر، ونطاق التأثير المستهدف.",
+    what_en:
+      "Help selecting the most suitable journal for your research based on field, publication criteria, and target impact scope.",
+    format_ar: "تحليل مقارن للمجلات",
+    format_en: "Comparative journal analysis",
+    focus_ar: "مجال بحثك وأهدافك بالنشر",
+    focus_en: "Your field and publication goals",
+    next_ar: "قائمة مجلات مرشّحة مع مبررات",
+    next_en: "A shortlist of journals with rationale",
+    before_ar:
+      "أحضر ملخص بحثك ومجال تخصصه الدقيق، وحدد إن كان لديك تفضيل بخصوص معامل التأثير أو سرعة النشر.",
+    before_en:
+      "Bring your research abstract and precise field, and note any preference regarding impact factor or publication speed.",
+  },
+  "journal-evaluation": {
+    what_ar:
+      "تقييم مصداقية وجودة مجلة علمية معينة قبل التقديم إليها، للتأكد من سلامة معايير النشر والفهرسة الخاصة بها.",
+    what_en:
+      "Evaluating the credibility and quality of a specific journal before submission, to verify its publication and indexing standards.",
+    format_ar: "تقرير تقييم موثّق",
+    format_en: "Documented evaluation report",
+    focus_ar: "المجلة التي تفكر بالتقديم لها",
+    focus_en: "The journal you are considering",
+    next_ar: "قرار مبني على معايير واضحة",
+    next_en: "A decision based on clear criteria",
+    before_ar:
+      "أحضر اسم المجلة أو رابطها. التقييم يغطي المصداقية والفهرسة، لا احتمالية قبول بحثك تحديداً.",
+    before_en:
+      "Bring the journal name or link. The evaluation covers credibility and indexing, not your specific acceptance odds.",
+  },
+  template: {
+    what_ar:
+      "قوالب جاهزة ومهيأة مسبقاً لهيكلة بحثك حسب متطلبات مجلات أو جهات نشر محددة، لتوفير الوقت والالتزام بالمعايير الشكلية.",
+    what_en:
+      "Ready-made templates structured to specific journal or publisher requirements, saving time and ensuring formatting compliance.",
+    format_ar: "قالب جاهز قابل للتعديل",
+    format_en: "Ready-to-edit template",
+    focus_ar: "متطلبات الجهة المستهدفة بالنشر",
+    focus_en: "Your target publisher's requirements",
+    next_ar: "ملف جاهز لملء محتوى بحثك",
+    next_en: "A file ready for your content",
+    before_ar:
+      "حدد اسم المجلة أو الجهة الناشرة المستهدفة بدقة للحصول على القالب المطابق لمتطلباتها.",
+    before_en:
+      "Specify the exact target journal or publisher to receive the template matching its requirements.",
+  },
+  correspondence: {
+    what_ar:
+      "صياغة احترافية لرسائل الغلاف وردود المحكمين وسائر المراسلات العلمية التي تزيد من فرص قبول بحثك.",
+    what_en:
+      "Professional drafting of cover letters, reviewer responses, and other scientific correspondence that improves your acceptance chances.",
+    format_ar: "صياغة من كاتب أكاديمي متخصص",
+    format_en: "Academic writer-led drafting",
+    focus_ar: "نوع المراسلة المطلوبة",
+    focus_en: "The correspondence type needed",
+    next_ar: "رسالة جاهزة للإرسال",
+    next_en: "A letter ready to send",
+    before_ar:
+      "أحضر بحثك وأي ملاحظات محكّمين إن وجدت، وحدد نوع المراسلة (رسالة غلاف، رد على محكّم، استفسار...).",
+    before_en:
+      "Bring your research and any reviewer comments, and specify the correspondence type (cover letter, reviewer reply, inquiry...).",
+  },
+  publication: {
+    what_ar:
+      "مرافقة كاملة لمرحلة النشر النهائية، من التقديم للمجلة حتى متابعة إجراءات القبول والنشر الفعلي.",
+    what_en:
+      "Full support through the final publication stage — from journal submission to following up on acceptance and actual publication.",
+    format_ar: "متابعة ميدانية لإجراءات النشر",
+    format_en: "Hands-on publication support",
+    focus_ar: "بحثك الجاهز للتقديم",
+    focus_en: "Your submission-ready research",
+    next_ar: "متابعة حتى صدور البحث",
+    next_en: "Follow-through until publication",
+    before_ar:
+      "أحضر النسخة النهائية من بحثك وتفاصيل المجلة المستهدفة (إن كانت محددة مسبقاً).",
+    before_en:
+      "Bring the final version of your research and target journal details (if already decided).",
+  },
+};

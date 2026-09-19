@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, Calendar, Tag, Loader2 } from 'lucide-react';
 // import Footer from './shared/Footer';
 import { API_BASE_URL } from '../api';
+import useBackClick from "./shared/useBackClick";
 
 const NewsDetailPage = () => {
   const { slug } = useParams();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language?.toLowerCase().startsWith('ar') ?? false; // مقارنة بادئة اللغة (يدعم ar-IQ ونحوها)
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
+  const onBack = useBackClick(); // الرجوع لمكان الضغط بالضبط
   const currentLang = i18n.language;
 
   const [news, setNews] = useState(null);
@@ -82,7 +84,7 @@ const NewsDetailPage = () => {
       <div className="flex-grow py-16 px-6">
         <div className="container mx-auto max-w-4xl">
           
-          <Link to="/" className="inline-flex items-center gap-2 text-brand-orange hover:text-brand-orange-dark font-medium mb-8 transition-colors">
+          <Link to="/" onClick={onBack} className="inline-flex items-center gap-2 text-brand-orange hover:text-brand-orange-dark font-medium mb-8 transition-colors">
             <BackArrow className="w-5 h-5" /> {t('nav.home')}
           </Link>
 

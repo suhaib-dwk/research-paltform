@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { CheckCircle, Layers, Sparkles, Workflow, ShieldCheck, GraduationCap, Building2, Landmark, Users, FolderKanban, Database, Bot, BarChart3, ClipboardCheck, Languages, Lightbulb, MonitorSmartphone, Code2, Bell, ListChecks, Lock, FileSearch } from "lucide-react";
 import { PILLARS, PILLAR_ORDER, LAYERS, LAYER_ORDER, PILLAR_AUDIENCE_LABELS } from "./S01_Home/pillarsContent";
-import { useInnerLang, pick, Breadcrumb, CtaBand } from "./S01_Home/InnerBlocks";
+import { useInnerLang, pick, HeroCrumbs, CtaBand } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة الركيزة التقنية (/pillar/:key) — التصميم "السينمائي الداكن بفصول"
@@ -40,7 +40,6 @@ const PillarPage = () => {
   const prevKey = ORDER[(index - 1 + ORDER.length) % ORDER.length];
   const nextKey = ORDER[(index + 1) % ORDER.length];
   const name = pick(p, "name", lang);
-  const total = ORDER.length;
 
   const L = isRTL
     ? (isLayer
@@ -71,8 +70,6 @@ const PillarPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumb section={L.section} items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.about_us"), to: "/about-us" }, { label: name }]} />
-
       {/* الهيرو السينمائي */}
       <section className="relative overflow-hidden bg-brand-ink min-h-[640px] md:min-h-[700px] flex flex-col justify-end">
         <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover brightness-[0.3]" />
@@ -85,13 +82,15 @@ const PillarPage = () => {
         </div>
         <div className="relative z-10 container mx-auto px-6 pt-16 pb-14 flex flex-col items-start">
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-6 block">
-            {L.pillar} {p.number} / {`0${total}`} — {name}
+            {name}
           </span>
           <h1 className="text-[34px] sm:text-[48px] md:text-[64px] font-bold leading-[1.35] text-white max-w-5xl mb-6" style={{ fontFamily: displayFont }}>
             {pick(p, "title_pre", lang)}
             <span className="text-brand-orange">{pick(p, "title_em", lang)}</span>
           </h1>
           <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl">{pick(p, "intro", lang)}</p>
+          {/* ✅ مسار التنقل أسفل الهيرو على شكل زر */}
+          <HeroCrumbs className="mt-10" items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.about_us"), to: "/about-us" }, { label: name }]} />
         </div>
         {/* ✅ شريط الفصول بأسلوب تابات الصفحة الرئيسية (بطلب صريح): مستطيل أبيض بفواصل
             وخط برتقالي أعلى التاب النشط — يتبع التمرير ويعمل كأزرار */}
@@ -109,7 +108,6 @@ const PillarPage = () => {
                       i < chapters.length - 1 ? "border-e border-e-gray-200" : ""
                     } ${isActive ? "border-t-brand-orange text-brand-ink" : "border-t-transparent text-brand-muted hover:text-brand-ink"}`}
                   >
-                    <span className={`text-xs font-extrabold tracking-[0.1em] ${isActive ? "text-brand-orange" : "text-brand-muted/60"}`}>{c.n}</span>
                     {c.label}
                   </a>
                 );
@@ -123,7 +121,7 @@ const PillarPage = () => {
       <section id="what" className="bg-white py-20 md:py-24 scroll-mt-20">
         <div className="container mx-auto px-6 grid lg:grid-cols-12 gap-10 lg:gap-20 items-start">
           <div className="lg:col-span-5">
-            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 01 — {L.ch1}</span>
+            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.ch1}</span>
             <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-5">{pick(p, "what_title", lang)}</h2>
             <p className="text-base leading-relaxed text-brand-muted">{pick(p, "what_desc", lang)}</p>
           </div>
@@ -145,7 +143,7 @@ const PillarPage = () => {
       <section id="components" className="bg-gray-50 py-20 md:py-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
           <div className="mb-12">
-            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 02 — {L.ch2}</span>
+            <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.ch2}</span>
             <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink">{pick(p, "components_title", lang)}</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -174,7 +172,7 @@ const PillarPage = () => {
       {/* الفصل 03 — كيف يعمل */}
       <section id="how" className="bg-white py-20 md:py-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 03 — {L.ch3}</span>
+          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.ch3}</span>
           <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-14">{pick(p, "how_title", lang)}</h2>
           <div className="relative">
             <span className="hidden lg:block absolute top-7 start-7 end-7 h-px bg-gradient-to-l from-brand-orange to-brand-orange/50"></span>
@@ -194,7 +192,7 @@ const PillarPage = () => {
       {/* الفصل 04 — الضمانة: بلوك مقسوم */}
       <section id="guarantee" className="bg-gray-50 pt-20 md:pt-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
-          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 04 — {pick(p, "guarantee_kicker", lang)}</span>
+          <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{pick(p, "guarantee_kicker", lang)}</span>
           <h2 className={`text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink ${pick(p, "guarantee_desc", lang) ? "mb-5" : "mb-14"}`}>{pick(p, "guarantee_title", lang)}</h2>
           {pick(p, "guarantee_desc", lang) && (
             <p className="text-base leading-relaxed text-brand-muted max-w-3xl mb-14">{pick(p, "guarantee_desc", lang)}</p>
@@ -203,19 +201,19 @@ const PillarPage = () => {
         <div className={`grid ${pick(p, "split_c_word", lang) ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
           <div className="bg-brand-cream-hero px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
             <span className="text-xs font-bold tracking-[0.3em] text-brand-orange">{pick(p, "split_a_label", lang)}</span>
-            <span className="text-6xl md:text-[100px] leading-none font-black text-brand-orange" dir={/^[0-9+]/.test(pick(p, "split_a_word", lang)) ? "ltr" : undefined}>{pick(p, "split_a_word", lang)}</span>
+            <span className={`text-6xl ${pick(p, "split_c_word", lang) ? "md:text-[72px]" : "md:text-[100px]"} leading-none font-black text-brand-orange`} dir={/^[0-9+]/.test(pick(p, "split_a_word", lang)) ? "ltr" : undefined}>{pick(p, "split_a_word", lang)}</span>
             <p className="text-base leading-relaxed text-brand-orange max-w-md">{pick(p, "split_a_desc", lang)}</p>
           </div>
           <div className="bg-brand-orange px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
             {/* نصوص "تتكامل" بلون خلفية بلوك "تستضيف" (الفاتح) */}
             <span className="text-xs font-bold tracking-[0.3em] text-brand-cream-hero">{pick(p, "split_b_label", lang)}</span>
-            <span className="text-6xl md:text-[100px] leading-none font-black text-brand-cream-hero" dir={/^[0-9+]/.test(pick(p, "split_b_word", lang)) ? "ltr" : undefined}>{pick(p, "split_b_word", lang)}</span>
+            <span className={`text-6xl ${pick(p, "split_c_word", lang) ? "md:text-[72px]" : "md:text-[100px]"} leading-none font-black text-brand-cream-hero`} dir={/^[0-9+]/.test(pick(p, "split_b_word", lang)) ? "ltr" : undefined}>{pick(p, "split_b_word", lang)}</span>
             <p className="text-base leading-relaxed text-brand-cream-hero max-w-md">{pick(p, "split_b_desc", lang)}</p>
           </div>
           {pick(p, "split_c_word", lang) && (
             <div className="bg-white border-y border-gray-200 px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
               <span className="text-xs font-bold tracking-[0.3em] text-brand-orange">{pick(p, "split_c_label", lang)}</span>
-              <span className="text-6xl md:text-[100px] leading-none font-black text-brand-ink">{pick(p, "split_c_word", lang)}</span>
+              <span className="text-6xl md:text-[72px] leading-none font-black text-brand-ink">{pick(p, "split_c_word", lang)}</span>
               <p className="text-base leading-relaxed text-brand-ink max-w-md">{pick(p, "split_c_desc", lang)}</p>
             </div>
           )}

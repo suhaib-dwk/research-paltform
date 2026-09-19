@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, FileCheck, Search, Users, RefreshCw, Award } from "lucide-react";
@@ -7,9 +6,12 @@ import {
   SERVICES_CATALOGUE,
   SERVICE_LEVELS,
   EXEC_TYPES,
+  getExecLabel,
   getServicesByFamily,
   getServiceLevel,
 } from "./S02_Services/servicesCatalogue";
+import { HeroCrumbs } from "./S01_Home/InnerBlocks";
+import usePageState from "./shared/usePageState";
 
 // =========================================================
 // كتالوج الخدمات العام (/services) — كل خدمات الطبقة الأولى (35 خدمة) من
@@ -42,10 +44,10 @@ const ServicesCataloguePage = () => {
   const isRTL = i18n.language?.toLowerCase().startsWith("ar") ?? false;
   const lang = isRTL ? "ar" : "en";
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
-  const BackArrow = isRTL ? ArrowRight : ArrowLeft;
 
   // "all" أو أحد مفاتيح SERVICE_LEVELS (undergrad / grad / faculty)
-  const [activeLevel, setActiveLevel] = useState("all");
+  // الفلتر يبقى كما تركه المستخدم عند الرجوع من صفحة الخدمة
+  const [activeLevel, setActiveLevel] = usePageState("services.level", "all");
 
   const levelFilters = [
     { key: "all", label: isRTL ? "كل المراحل" : "All stages" },
@@ -65,20 +67,15 @@ const ServicesCataloguePage = () => {
       {/* رأس الصفحة — نفس مفردات الصفحات الداخلية (كريمي، عنوان، وصف) */}
       <section className="bg-brand-cream-hero py-14 md:py-16">
         <div className="container mx-auto px-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-orange font-bold text-sm mb-8 transition-colors"
-          >
-            <BackArrow className="w-4 h-4" />
-            {isRTL ? "العودة إلى الرئيسية" : "Back to home"}
-          </Link>
           <span className="text-brand-orange text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
-            {isRTL ? "المكون الثالث — خدمات البحث والممكنات البحثية" : "Component three — Research services & enablers"}
+            {isRTL ? "المكون الثالث — خدمات البحث ودعم الباحثين" : "Component three — Research services & enablers"}
           </span>
           <h1 className="text-4xl md:text-5xl font-black text-brand-ink leading-tight mb-4">
-            {t("services.section_heading")}
+            {isRTL ? "دعم متكامل عبر رحلة البحث." : t("services.section_heading")}
           </h1>
-          <p className="text-base leading-relaxed text-brand-muted max-w-3xl">{t("home.services_desc")}</p>
+          <p className="text-base leading-relaxed text-brand-muted max-w-3xl">{isRTL ? "ترتبط الخدمات باحتياج الباحث ومرحلة البحث، من تطوير الفكرة والمنهجية إلى الجودة والنشر وما بعده. ويجمع المسار بين الأدوات الرقمية، وخدمات الذكاء الاصطناعي، والخبرة البشرية، بحيث يكون واضحاً متى يكون الدعم آلياً ومتى يتطلب مراجعة أو تدخلاً من خبير." : t("home.services_desc")}</p>
+          {/* ✅ مسار التنقل أسفل الهيدر على شكل زر، ومقابله زر الرجوع (كباقي الصفحات) */}
+          <HeroCrumbs className="mt-10" dark={false} items={[{ label: t("nav.home"), to: "/" }, { label: isRTL ? "الخدمات" : "Services" }]} />
         </div>
       </section>
 
@@ -135,7 +132,7 @@ const ServicesCataloguePage = () => {
                             <Icon className="w-[22px] h-[22px] text-brand-orange" strokeWidth={1.75} />
                           </span>
                           <span className="text-[11px] font-bold text-brand-ink bg-brand-cream-hero px-2.5 py-1 leading-tight text-end">
-                            {EXEC_TYPES[service.exec][`label_${lang}`]}
+                            {getExecLabel(service, lang)}
                           </span>
                         </div>
                         <span className="text-[11px] font-bold tracking-[0.15em] text-brand-muted mb-1.5 block">

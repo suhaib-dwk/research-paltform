@@ -114,13 +114,13 @@ export const AUDIENCES = {
   // ───────────────────────── المؤسسات ─────────────────────────
   university: {
     image: "/Home/home05.jpg",
-    kicker_ar: "الجامعات — الجودة والاعتماد والتصنيفات",
+    kicker_ar: "الجامعات — الجودة والاعتماد والجاهزية للتصنيفات",
     kicker_en: "Universities — Quality, accreditation & rankings",
-    title_pre_ar: "إدارة التميز البحثي ", title_em_ar: "كوظيفة مؤسسية", title_post_ar: ".",
+    title_pre_ar: "إدارة الأداء والتميّز البحثي ", title_em_ar: "كوظيفة مؤسسية", title_post_ar: ".",
     title_pre_en: "Research excellence ", title_em_en: "as an institutional function", title_post_en: ".",
-    intro_ar: "بيئة واحدة تربط الملف البحثي للجامعة بالاعتماد المحلي والتصنيفات الدولية: لوحات أداء للجامعة والكلية والقسم والباحث، أدلة موثقة، وخطط تحسين مرتبطة بالمؤشرات — منسجمة مع الأولويات الوطنية التي حددتها الوزارة.",
+    intro_ar: "تربط SOURCE الأداء البحثي للجامعة بمتطلبات الجودة والاعتماد والجاهزية للتصنيفات، من خلال لوحات أداء على مستوى الجامعة والكلية والقسم والباحث، وملف بحثي مؤسسي، ومؤشرات تساعد على رصد الفجوات ومجالات التحسين، ضمن سياق مرتبط بالأولويات الوطنية.",
     intro_en: "One environment linking the university's research profile to national accreditation and international rankings: performance dashboards by university, college, department and researcher, documented evidence, and improvement plans tied to indicators — aligned with the national priorities set by the Ministry.",
-    focus_ar: ["لوحة بحثية شاملة لكل الكليات والباحثين والإنتاج المنشور", "ملف بحثي مؤسسي وسجلات موثقة للإنتاج العلمي", "خطط تحسين مبنية على بيانات فعلية لا على التخمين", "تقارير جاهزة للقيادة ولمكاتب البحث العلمي"],
+    focus_ar: ["لوحات أداء بحثي على مستوى الجامعة والكلية والقسم والباحث", "ملف بحثي مؤسسي وسجلات موثقة للإنتاج والأداء البحثي", "مؤشرات تساعد على متابعة الجودة والاعتماد والجاهزية للتصنيفات", "رصد الفجوات ومجالات التحسين بناءً على بيانات فعلية"],
     focus_en: ["A comprehensive research dashboard for every college, researcher and published output", "An institutional research profile with documented output records", "Improvement plans built on real data, not guesswork", "Reports ready for leadership and research offices"],
   },
   college: {
@@ -163,36 +163,36 @@ export const QUALITY_TRACKS = [
   {
     number: "01",
     title_ar: "الجودة والاعتماد المحلي", title_en: "National quality & accreditation",
-    desc_ar: "وفق الأطر والمعايير المعتمدة، وضمن اختصاص المركز الوطني لضمان جودة واعتماد المؤسسات التعليمية والتدريبية.",
+    desc_ar: "تدعم SOURCE الجامعة في تنظيم بياناتها وأدلتها البحثية وربطها بمتطلبات الجودة والاعتماد المعتمدة، بما يساعد على متابعة الجاهزية ورصد النواقص قبل التقديم.",
     desc_en: "Under the approved frameworks and standards, within the remit of the National Centre for Quality Assurance and Accreditation of Educational and Training Institutions.",
-    items_ar: ["ملف بحثي مؤسسي وسجلات موثقة للإنتاج العلمي", "مطابقة الأدلة بمعايير الاعتماد وكشف الناقص قبل التقديم", "تقارير امتثال جاهزة للمركز الوطني ولقيادة المؤسسة"],
+    items_ar: ["ملف بحثي مؤسسي وسجلات موثقة للإنتاج والأداء البحثي", "ربط الأدلة والمؤشرات بمتطلبات الجودة والاعتماد ذات الصلة", "رصد النواقص ومجالات التحسين ودعم إعداد التقارير المؤسسية"],
     items_en: ["An institutional research profile with documented output records", "Evidence matched to accreditation standards, gaps flagged before submission", "Compliance reports ready for the national centre and institutional leadership"],
   },
   {
     number: "02",
-    title_ar: "التصنيفات الدولية", title_en: "International rankings",
-    desc_ar: "تصنيف QS العالمي، وتصنيف Times Higher Education للجامعات العربية، وتصنيف QS العربي — عبر مجموعة معايير كاملة تُعبّئها المؤسسة استنادًا إلى بيانات الأداء البحثي الفعلي.",
+    title_ar: "الجاهزية للتصنيفات الدولية", title_en: "International rankings",
+    desc_ar: "تساعد SOURCE الجامعة على متابعة المؤشرات ذات الصلة بالتصنيفات الدولية، وتحليل أدائها البحثي والعوامل المرتبطة به، بما يدعم خطط التحسين والاستعداد للتصنيف.",
     desc_en: "QS World, Times Higher Education Arab and QS Arab rankings — through a complete set of criteria the institution completes from actual research performance data.",
-    items_ar: ["مراقبة مؤشرات التصنيف وربطها بخطط التحسين", "تحليلات التعاون الدولي والتأليف المشترك", "لا يُعدّ النظام ولا يضمن مركزًا في التصنيف — بل يحسّن المؤشرات التي تصنعه"],
+    items_ar: ["متابعة مؤشرات الأداء ذات الصلة بالتصنيفات وربطها بخطط التحسين", "تحليل الإنتاج البحثي والتعاون الدولي والتأليف المشترك", "دعم الجاهزية للتصنيفات دون ضمان نتيجة أو مركز تصنيفي"],
     items_en: ["Ranking indicators monitored and tied to improvement plans", "International collaboration and co-authorship analytics", "The system neither promises nor guarantees a ranking position — it improves the indicators behind it"],
   },
 ];
 
 export const PERFORMANCE_AREAS = [
-  { title_ar: "الإنتاج البحثي والجودة", title_en: "Research output & quality", desc_ar: "حجم النشر ونموه، جودة المجلات، تقييمات جودة البحث، الجاهزية للنشر.", desc_en: "Publication volume and growth, journal quality, research quality assessments, publication readiness." },
-  { title_ar: "الأثر البحثي", title_en: "Research impact", desc_ar: "أداء الاستشهادات، مؤشرات الأثر المعيارية حيث تسمح البيانات المرخصة، الظهور والوصول.", desc_en: "Citation performance, normalised impact where licensed data allow, visibility and reach." },
-  { title_ar: "الشراكات والتعاون الدولي", title_en: "Partnerships & international collaboration", desc_ar: "التأليف الدولي المشترك، الشراكات البحثية، مجموعات البحث العابرة للمؤسسات.", desc_en: "International co-authorship, research partnerships, cross-institutional research groups." },
-  { title_ar: "التمويل وأداء المشاريع", title_en: "Funding & project performance", desc_ar: "المنح البحثية، المشاريع الممولة، معدلات الإنجاز، الاستثمار في المجالات ذات الأولوية.", desc_en: "Research grants, funded projects, completion rates, investment in priority fields." },
-  { title_ar: "الابتكار ونقل المعرفة", title_en: "Innovation & knowledge transfer", desc_ar: "براءات الاختراع، نشاط الملكية الفكرية، البحث التطبيقي، المخرجات التجارية.", desc_en: "Patents, IP activity, applied research, commercial outputs." },
-  { title_ar: "الأداء المؤسسي", title_en: "Institutional performance", desc_ar: "الأداء حسب الجامعة والكلية والقسم والمركز والباحث، وتقدم خطط التحسين.", desc_en: "Performance by university, college, department, centre and researcher, and improvement plan progress." },
+  { title_ar: "الإنتاج البحثي والجودة", title_en: "Research output & quality", desc_ar: "حجم النشر ونموه، جودة المجلات، تقييمات جودة البحث، والجاهزية للنشر.", desc_en: "Publication volume and growth, journal quality, research quality assessments, publication readiness." },
+  { title_ar: "الأثر البحثي", title_en: "Research impact", desc_ar: "أداء الاستشهادات، مؤشرات الأثر المعيارية حيث تسمح البيانات المرخصة، والظهور والوصول البحثي.", desc_en: "Citation performance, normalised impact where licensed data allow, visibility and reach." },
+  { title_ar: "الشراكات والتعاون الدولي", title_en: "Partnerships & international collaboration", desc_ar: "التأليف الدولي المشترك، الشراكات البحثية، ومجموعات البحث بين المؤسسات.", desc_en: "International co-authorship, research partnerships, cross-institutional research groups." },
+  { title_ar: "التمويل وأداء المشاريع", title_en: "Funding & project performance", desc_ar: "المنح البحثية، المشاريع الممولة، معدلات الإنجاز، والاستثمار في المجالات ذات الأولوية.", desc_en: "Research grants, funded projects, completion rates, investment in priority fields." },
+  { title_ar: "الابتكار ونقل المعرفة", title_en: "Innovation & knowledge transfer", desc_ar: "براءات الاختراع، نشاط الملكية الفكرية، البحث التطبيقي، والمخرجات التجارية والابتكارية.", desc_en: "Patents, IP activity, applied research, commercial outputs." },
+  { title_ar: "الأداء المؤسسي", title_en: "Institutional performance", desc_ar: "الأداء على مستوى الجامعة والكلية والقسم والمركز والباحث، والتقدم في خطط التحسين.", desc_en: "Performance by university, college, department, centre and researcher, and improvement plan progress." },
 ];
 
 export const DATA_FLOW = [
-  { title_ar: "نواة البيانات البحثية", title_en: "Research Data Core", desc_ar: "تُجمع بيانات المؤسسة مرة واحدة في ملفها البحثي.", desc_en: "Institutional data is collected once in its research profile." },
-  { title_ar: "التحقق المؤسسي", title_en: "Institutional validation", desc_ar: "تعتمد المؤسسة بياناتها وأدلتها قبل أي مشاركة.", desc_en: "The institution validates its data and evidence before any sharing." },
-  { title_ar: "لقطة مؤسسية", title_en: "Institutional snapshot", desc_ar: "نسخة مؤرخة بإصدار ومصدر لكل فترة.", desc_en: "A dated, versioned snapshot with a source for every period." },
-  { title_ar: "سياسة المشاركة الوطنية", title_en: "National sharing policy", desc_ar: "ما يُشارَك مع الوزارة يحدده تصنيف البيانات والصلاحيات.", desc_en: "What is shared with the Ministry is governed by data classification and permissions." },
-  { title_ar: "لوحات الوزارة", title_en: "Ministry dashboards", desc_ar: "تصل البيانات المعتمدة عبر API أو مزامنة مضبوطة — لا إعادة إدخال يدوي.", desc_en: "Approved data arrives through APIs or controlled synchronisation — no manual re-entry." },
+  { title_ar: "السجلات البحثية المؤسسية", title_en: "Research Data Core", desc_ar: "تحتفظ الجامعة بملفها البحثي وسجلاتها الموثقة للإنتاج والأداء البحثي.", desc_en: "Institutional data is collected once in its research profile." },
+  { title_ar: "جودة البيانات والتحقق", title_en: "Institutional validation", desc_ar: "تُراجع البيانات وتُدار جودتها قبل استخدامها في المؤشرات والتحليلات المؤسسية والوطنية.", desc_en: "The institution validates its data and evidence before any sharing." },
+  { title_ar: "التكامل المؤسسي", title_en: "Institutional snapshot", desc_ar: "تتكامل SOURCE مع أنظمة الجامعة والمستودعات والمصادر المعتمدة من خلال واجهات وتكاملات مضبوطة.", desc_en: "A dated, versioned snapshot with a source for every period." },
+  { title_ar: "الحوكمة والصلاحيات", title_en: "National sharing policy", desc_ar: "تحدد الوزارة، ضمن إطار الحوكمة المعتمد، قواعد الوصول إلى البيانات ومشاركتها والصلاحيات المرتبطة بها.", desc_en: "What is shared with the Ministry is governed by data classification and permissions." },
+  { title_ar: "لوحات الوزارة", title_en: "Ministry dashboards", desc_ar: "تغذي البيانات المعتمدة والمؤشرات الموحّدة لوحات الوزارة والذكاء البحثي الوطني، بما يسمح بالمقارنة والتحليل والمتابعة على المستوى الوطني.", desc_en: "Approved data arrives through APIs or controlled synchronisation — no manual re-entry." },
 ];
 
 // ── المساحات الأربع لطبقة الوزارة — نصوص Source.docx:

@@ -4,12 +4,12 @@ import {
   AUDIENCES, AUDIENCE_GROUP, QUALITY_TRACKS, PERFORMANCE_AREAS, DATA_FLOW,
   MINISTRY_SPACES, POLICY_JOURNEY, MINISTRY_PRINCIPLES, MINISTRY_ROLES, MINISTRY_REPORTS, getLevelLabel,
 } from "./S01_Home/audiencesContent";
-import { SERVICE_FAMILIES, EXEC_TYPES, SERVICES_CATALOGUE, getServiceById } from "./S02_Services/servicesCatalogue";
+import { SERVICE_FAMILIES, EXEC_TYPES, SERVICES_CATALOGUE, getServiceById, getExecLabel } from "./S02_Services/servicesCatalogue";
 import { MINISTRY_SPACE_DETAILS } from "./S03_Audience/ministrySpacesDetails";
 import HomeStatsPanel from "./S01_Home/HomeStatsPanel";
 import SourceChatbot from "./S03_Audience/SourceChatbot";
 import {
-  useInnerLang, pick, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow, RelatedCards,
+  useInnerLang, pick, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow, RelatedCards,
 } from "./S01_Home/InnerBlocks";
 
 // =========================================================
@@ -62,7 +62,7 @@ const ServiceCard = ({ service, lang }) => {
           <Icon className="w-[22px] h-[22px] text-brand-orange" strokeWidth={1.75} />
         </span>
         <span className="text-[11px] font-bold text-brand-ink bg-brand-cream-hero px-2.5 py-1 leading-tight text-end">
-          {EXEC_TYPES[service.exec][`label_${lang}`]}
+          {getExecLabel(service, lang)}
         </span>
       </div>
       <span className="text-[11px] font-bold tracking-[0.15em] text-brand-muted mb-1.5 block" dir="ltr">
@@ -94,8 +94,8 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
 
   return (
     <>
-      <Breadcrumb section={t("nav.target_audience")} items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: t(`home.stage_${audienceKey}_title`) }]} />
       <InnerHero
+        crumbs={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: t(`home.stage_${audienceKey}_title`) }]}
         image={data.image}
         kicker={pick(data, "kicker", lang)}
         titlePre={pick(data, "title_pre", lang)}
@@ -214,19 +214,19 @@ const JourneyLayout = ({ audienceKey, data, L }) => {
 const QualityLayout = ({ audienceKey, data, L }) => {
   const { t, lang, isRTL } = L;
   const labels = isRTL
-    ? { tracks: "المساران", areas: "مجالات الأداء", flow: "تدفق البيانات", related: "صفحات ذات صلة", focus: "ما تحصل عليه", tracksKicker: "المكون الثاني — الجودة والاعتماد والتصنيفات", tracksTitle: "مساران متوازيان، وملف بحثي واحد يغذيهما.", areasKicker: "ما الذي يُقاس", areasTitle: "مجالات الأداء التي تراقبها المؤسسة.", areasDesc: "أمثلة على المؤشرات من المقترح — يمكن للنظام دعم أطر مثل QS وTimes Higher Education وSCImago وLeiden CWTS متى توافرت البيانات.", flowKicker: "من المؤسسة إلى الوزارة", flowTitle: "بياناتك تُدخل مرة واحدة، وتصل إلى الوزارة عبر طبقة مشاركة وحوكمة.", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "انضم كمؤسسة وابدأ من ملفك البحثي.", ctaDesc: "التسجيل المؤسسي ثم تسجيل الباحثين، ثم تتدفق البيانات.", relatedTitle: "صفحات ذات صلة", quote: "لا يُعدّ ارتفاع عدد المنشورات وحده دليلًا على جودة البحث — كل رقم يجب أن يعود إلى مصدر وفترة وتعريف.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض" }
+    ? { tracks: "المساران", areas: "مجالات الأداء", flow: "تدفق البيانات", related: "صفحات ذات صلة", focus: "ما تحصل عليه", tracksKicker: "المكون الثاني — الجودة والاعتماد والجاهزية للتصنيفات", tracksTitle: "مساران متوازيان، وملف بحثي مؤسسي يدعمهما.", areasKicker: "ما الذي يُقاس", areasTitle: "مجالات الأداء التي تتابعها المؤسسة.", areasDesc: "تدعم SOURCE مجموعة من مؤشرات الأداء البحثي المرتبطة بالجودة، الأثر، التعاون، التمويل، الابتكار، والأداء المؤسسي، ويمكن ربط المؤشرات ذات الصلة بأطر مثل QS وTimes Higher Education وSCImago وCWTS Leiden عندما تتوفر البيانات والمنهجية اللازمة.", areasNote: "ملاحظة مهمة: لا تَعِد SOURCE بمركز محدد في أي تصنيف؛ دورها هو دعم ومتابعة القدرات والمؤشرات التي تسهم في تحسين الأداء والجاهزية للتصنيفات.", flowKicker: "من المؤسسة إلى الوزارة", flowTitle: "بيانات مؤسسية موثقة تتكامل مع الصورة الوطنية ضمن حوكمة واضحة.", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "انضم كمؤسسة وابدأ من ملفك البحثي.", ctaDesc: "التسجيل المؤسسي ثم تسجيل الباحثين، ثم تتدفق البيانات.", relatedTitle: "صفحات ذات صلة", quote: "لا يُقاس الأداء البحثي بعدد المنشورات وحده؛ بل من خلال مجموعة من المؤشرات المرتبطة بالجودة والأثر والتعاون والتمويل والابتكار والأداء المؤسسي، على أن تكون البيانات قابلة للتتبع والتحقق.", quoteSource: "قواعد أساسية لإدارة الأداء البحثي المؤسسي", relDesc: { college: "تتابع الكلية الأداء البحثي على مستوى الأقسام والباحثين، وتستخدم المؤشرات والسجلات البحثية لدعم الجودة والاعتماد وخطط التحسين.", research_center: "توثّق المراكز مشاريعها ومخرجاتها البحثية، وتظهر ضمن الصورة المؤسسية والوطنية للبحث، بما يدعم المتابعة والتعاون وربط النشاط البحثي بالأولويات.", ministry: "رؤية وطنية للمشهد البحثي تساعد على متابعة الأداء، رصد الاتجاهات والفجوات، وربط الأولويات بالشراكات وفرص التمويل." } }
     : { tracks: "The two tracks", areas: "Performance areas", flow: "Data flow", related: "Related pages", focus: "What you get", tracksKicker: "Component two — Quality, accreditation & rankings", tracksTitle: "Two parallel tracks, fed by one research profile.", areasKicker: "What is measured", areasTitle: "The performance areas an institution monitors.", areasDesc: "Example indicators from the proposal — the system can support frameworks such as QS, Times Higher Education, SCImago and Leiden CWTS where data is available.", flowKicker: "From institution to Ministry", flowTitle: "Your data is entered once and reaches the Ministry through a sharing and governance layer.", register: "Sign in", contact: "Contact us", ctaTitle: "Join as an institution and start from your research profile.", ctaDesc: "Institutional registration, then researcher enrolment, then the data flows.", relatedTitle: "Related pages", quote: "A rising publication count alone is never evidence of research quality — every figure must trace back to a source, a period and a definition.", quoteSource: "Ministry layer specification — non-negotiable rules" };
 
   const regLinks = registerLinks(audienceKey, t, isRTL);
   const related = ["university", "college", "research_center"]
     .filter((k) => k !== audienceKey)
-    .map((k) => ({ to: `/audience/${k}`, kicker: pick(AUDIENCES[k], "kicker", lang).split(" — ")[0], title: GROUP_NAMES[k][lang], desc: pick(AUDIENCES[k], "intro", lang).slice(0, 110) + "…" }))
-    .concat([{ to: "/audience/ministry", kicker: isRTL ? "المكون الأول" : "Component one", title: t("home.comp1_title"), desc: t("home.ministry_q1_question") }]);
+    .map((k) => ({ to: `/audience/${k}`, kicker: pick(AUDIENCES[k], "kicker", lang).split(" — ")[0], title: GROUP_NAMES[k][lang], desc: labels.relDesc?.[k] || pick(AUDIENCES[k], "intro", lang).slice(0, 110) + "…" }))
+    .concat([{ to: "/audience/ministry", kicker: isRTL ? "المكون الأول" : "Component one", title: t("home.comp1_title"), desc: labels.relDesc?.ministry || t("home.ministry_q1_question") }]);
 
   return (
     <>
-      <Breadcrumb section={t("nav.target_audience")} items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: GROUP_NAMES[audienceKey][lang] }]} />
       <InnerHero
+        crumbs={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: GROUP_NAMES[audienceKey][lang] }]}
         tone="light"
         image={data.image}
         kicker={pick(data, "kicker", lang)}
@@ -291,6 +291,9 @@ const QualityLayout = ({ audienceKey, data, L }) => {
               </div>
             ))}
           </div>
+          {labels.areasNote && (
+            <p className="mt-8 rounded-2xl border-2 border-brand-orange/30 bg-white px-6 py-4 text-sm font-semibold text-brand-ink leading-relaxed">{labels.areasNote}</p>
+          )}
         </div>
       </section>
 
@@ -421,8 +424,8 @@ const IntelligenceLayout = ({ data, L }) => {
 
   return (
     <>
-      <Breadcrumb section={t("nav.target_audience")} items={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: GROUP_NAMES.ministry[lang] }]} />
       <InnerHero
+        crumbs={[{ label: t("nav.home"), to: "/" }, { label: t("nav.target_audience"), to: "/target-audience" }, { label: GROUP_NAMES.ministry[lang] }]}
         image={data.image}
         kicker={pick(data, "kicker", lang)}
         titlePre={pick(data, "title_pre", lang)}

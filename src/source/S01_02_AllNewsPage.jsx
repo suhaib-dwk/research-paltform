@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Search, Filter } from 'lucide-react';
+import usePageState from './shared/usePageState';
 import { API_BASE_URL } from '../api'; // ✅ أضف هذا السطر
 
 const AllNewsPage = () => {
@@ -16,8 +17,8 @@ const AllNewsPage = () => {
   const [error, setError] = useState(null);
   
   // حالات البحث والفلترة
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = usePageState('news.search', ''); // يبقى عند الرجوع
+  const [activeCategory, setActiveCategory] = usePageState('news.category', 'all');
 
   useEffect(() => {
     const fetchNews = async () => {

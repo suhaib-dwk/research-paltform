@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle, Briefcase, UserCog, Languages, Shield, FileText, MessageSquare, BookMarked, BarChart3, LayoutTemplate, Mail, Send, Award } from "lucide-react";
 import { getAllServices } from "./S02_Services/servicesConfig";
-import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
+import { useInnerLang, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // صفحة الموظفين ومقدّمي الخدمة (/staff) — الطبقة التشغيلية: المنصة تعمل
@@ -25,25 +25,25 @@ const StaffPage = () => {
     ? {
         section: "للموظفين ومقدّمي الخدمة",
         kicker: "الطبقة التشغيلية — شبكة الخبراء وفريق التشغيل",
-        titlePre: "المنصة تعمل بأيدي ", titleEm: "خبرائها وفريقها", titlePost: ".",
-        intro: "خدمات سورس لا يقدّمها النظام وحده: محكّمون ومترجمون ومدققون ومستشارو نشر يستلمون الطلبات ويسلّمون الأعمال، وفريق تشغيل يدير المؤسسات والحسابات ويراقب جودة البيانات. لكلٍّ منهما تسجيل خاص وصلاحيات محددة.",
-        provider: "مقدّم خدمة", providerRole: "شبكة الخبراء", providerDesc: "محكّم، مترجم، مدقق لغوي، مستشار منهجية أو إحصاء، أو مستشار نشر — تستلم طلبات الباحثين المطابقة لتخصصك وتسلّمها من لوحة مخصصة.",
-        providerDo: ["استقبال طلبات الترجمة أو التدقيق أو التحكيم أو الاستشارة المطابقة لخدماتك", "تسليم الأعمال ومتابعتها من لوحة مخصصة مع سجل لكل طلب", "بناء سجل أداء وموثوقية عبر الوقت", "تواصل مباشر مع الباحثين والجامعات داخل المنصة"],
-        providerNeed: ["الاسم الكامل والبريد والهاتف", "الخدمات التي تقدمها (اختيار متعدد)", "المؤهلات ونبذة مهنية", "السيرة الذاتية (PDF / Word)"],
-        employee: "موظف المنصة", employeeRole: "فريق التشغيل", employeeDesc: "كادر تشغيل المنصة: إدارة الجامعات والكليات والحسابات، مراجعة الطلبات، ورقابة جودة البيانات — بسجل تدقيق كامل لكل إجراء.",
-        employeeDo: ["إدارة الجامعات والكليات وحسابات المستخدمين من لوحة واحدة", "مراجعة طلبات الباحثين والجامعات واتخاذ إجراء بشأنها", "رقابة على جودة البيانات قبل اعتمادها", "سجل تدقيق كامل لكل إجراء يتم بالمنصة"],
-        employeeNeed: ["الاسم الكامل", "المسمى الوظيفي والقسم", "البريد الإلكتروني والهاتف"],
+        titlePre: "خبراء وفريق تشغيل ", titleEm: "يدعمون عمل المنصة", titlePost: ".",
+        intro: "تعتمد SOURCE على شبكة من الخبراء المتخصصين وفريق تشغيل يدعم إدارة المنصة وخدماتها. وتشمل شبكة الخبراء المحكّمين، وخبراء التخصص والمنهجية والإحصاء، والمحررين، والمترجمين، ومستشاري النشر، إلى جانب خبرات الابتكار والملكية الفكرية. ويعمل فريق التشغيل على دعم إدارة المستخدمين والمؤسسات والخدمات والبيانات ضمن الصلاحيات وإطار الحوكمة المعتمد. لكل دور صلاحيات ومسؤوليات تتناسب مع طبيعة عمله داخل المنصة.",
+        provider: "مقدّم خدمة", providerRole: "شبكة الخبراء", providerDesc: "محكّم، خبير تخصص، مستشار منهجية أو إحصاء، محرر، مترجم، مستشار نشر، أو خبير في الابتكار والملكية الفكرية — يقدّم خدماته ضمن شبكة الخبراء في SOURCE بحسب تخصصه ونوع الخدمة المطلوبة.",
+        providerDo: ["استقبال الطلبات المرتبطة بخبرتك وتخصصك", "تنفيذ المراجعات أو الخدمات المطلوبة ضمن مسار العمل في المنصة", "تسليم المخرجات ومتابعة حالة الطلبات المرتبطة بك", "العمل ضمن الضوابط والصلاحيات المعتمدة للخدمة"],
+        providerNeed: ["الاسم الكامل", "البريد الإلكتروني ورقم الهاتف", "الخدمات أو مجالات الخبرة التي تقدمها", "المؤهلات ونبذة مهنية", "السيرة الذاتية"],
+        employee: "موظف المنصة", employeeRole: "فريق التشغيل", employeeDesc: "فريق مسؤول عن دعم تشغيل المنصة وإدارة المستخدمين والمؤسسات والخدمات والبيانات ضمن الصلاحيات وإطار الحوكمة المعتمد.",
+        employeeDo: ["إدارة حسابات المستخدمين والمؤسسات بحسب الصلاحيات", "متابعة الطلبات ومسارات العمل داخل المنصة", "دعم جودة البيانات والعمليات التشغيلية", "متابعة الأنشطة والإجراءات ضمن سجلات النظام وصلاحياته المعتمدة"],
+        employeeNeed: ["الاسم الكامل", "المسمى الوظيفي والقسم", "البريد الإلكتروني", "رقم الهاتف"],
         what: "ماذا تفعل", need: "ما تحتاجه للتسجيل", register: "إنشاء حساب",
-        servicesKicker: "الخدمات التي تحتاج مقدّمين", servicesTitle: "الخدمات التي تعمل بخبراء بشريين.", servicesDesc: "عند التسجيل كمقدّم خدمة تختار الخدمات التي تقدّمها، فتصلك طلباتها فقط.",
+        servicesKicker: "الخدمات التي تحتاج مقدّمين", servicesTitle: "خدمات تعتمد على خبرة بشرية متخصصة", servicesDesc: "عند التسجيل كمقدّم خدمة، تحدد مجالات خبرتك والخدمات التي يمكنك تقديمها، وتتم مطابقة الطلبات مع الخبراء المناسبين بحسب التخصص وطبيعة الخدمة المطلوبة.",
         stepsKicker: "كيف يتم التفعيل", stepsTitle: "ثلاث خطوات من التسجيل إلى بدء العمل.",
         steps: [
-          { title: "إنشاء الحساب", desc: "تعبئة نموذج الدور ورفع السيرة الذاتية لمقدّمي الخدمة." },
-          { title: "مراجعة الإدارة", desc: "يتحقق فريق المنصة من المؤهلات والبيانات، ويبقى الحساب قيد الانتظار حتى الاعتماد." },
-          { title: "التفعيل وبدء العمل", desc: "بعد الاعتماد تُفعَّل الصلاحيات وتظهر الطلبات أو أدوات التشغيل في لوحتك." },
+          { title: "إنشاء الحساب", desc: "تعبئة نموذج التسجيل وإدخال البيانات المهنية، مع رفع السيرة الذاتية لمقدّمي الخدمة." },
+          { title: "مراجعة البيانات", desc: "تُراجع بيانات التسجيل والمؤهلات ومجالات الخبرة وفق إجراءات المنصة المعتمدة." },
+          { title: "التفعيل وبدء العمل", desc: "بعد استكمال المراجعة، تُفعّل الصلاحيات المناسبة للدور وتظهر للمستخدم الأدوات والخدمات المرتبطة به." },
         ],
-        quote: "وصول مُدار إلى المراجعين والخبراء المتخصصين وخبراء المنهجية والإحصائيين والمحررين والمترجمين ومستشاري النشر وخبراء الابتكار والملكية الفكرية.",
+        quote: "وصول مُدار إلى المحكّمين، والخبراء المتخصصين، وخبراء المنهجية، والإحصائيين، والمحررين، والمترجمين، ومستشاري النشر، وخبراء الابتكار والملكية الفكرية.",
         quoteSource: "المقترح — الطبقات التشغيلية الثلاث: شبكة الخبراء",
-        ctaTitle: "انضم إلى شبكة الخبراء أو فريق التشغيل.", ctaDesc: "الحساب يُفعَّل بعد مراجعة الإدارة.",
+        ctaTitle: "انضم إلى شبكة الخبراء أو فريق التشغيل.", ctaDesc: "يُفعَّل الحساب بعد استكمال مراجعة البيانات والمؤهلات وفق إجراءات المنصة المعتمدة.",
         login: "تسجيل الدخول", nav: { roles: "الدوران", services: "الخدمات", steps: "التفعيل" },
       }
     : {
@@ -80,8 +80,8 @@ const StaffPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumb section={L.section} items={[{ label: t("nav.home"), to: "/" }, { label: L.section }]} />
       <InnerHero
+        crumbs={[{ label: t("nav.home"), to: "/" }, { label: L.section }]}
         image="/Home/04.jpg"
         kicker={L.kicker}
         titlePre={L.titlePre}
@@ -102,9 +102,9 @@ const StaffPage = () => {
           {roles.map((r) => {
             const dark = r.tone === "dark";
             return (
-              <div key={r.key} id={r.key} className={`p-8 md:p-10 flex flex-col scroll-mt-28 ${dark ? "bg-brand-ink text-white" : "bg-white border border-gray-200 text-brand-ink"}`}>
+              <div key={r.key} id={r.key} className={`rounded-2xl overflow-hidden p-8 md:p-10 flex flex-col scroll-mt-28 ${dark ? "bg-brand-ink text-white" : "bg-white border-2 border-gray-200 text-brand-ink"}`}>
                 <div className="flex items-center gap-4 mb-6">
-                  <span className={`w-14 h-14 flex items-center justify-center ${dark ? "bg-brand-orange/15 text-brand-orange border border-brand-orange/30" : "bg-brand-orange/10 text-brand-orange"}`}>
+                  <span className={`w-14 h-14 rounded-xl flex items-center justify-center ${dark ? "bg-brand-orange/15 text-brand-orange border border-brand-orange/30" : "bg-brand-orange/10 text-brand-orange"}`}>
                     <r.icon className="w-7 h-7" strokeWidth={1.5} />
                   </span>
                   <div>
@@ -125,7 +125,7 @@ const StaffPage = () => {
                 <span className={`text-[11px] font-bold tracking-[0.2em] uppercase mb-3 ${dark ? "text-white/50" : "text-brand-muted"}`}>{L.need}</span>
                 <div className="flex flex-wrap gap-2 mb-8">
                   {r.need.map((item) => (
-                    <span key={item} className={`text-xs font-semibold px-3 py-1.5 ${dark ? "bg-white/10 text-white" : "bg-gray-100 text-brand-ink"}`}>{item}</span>
+                    <span key={item} className={`text-xs font-semibold rounded-lg px-3 py-1.5 ${dark ? "bg-white/10 text-white" : "bg-gray-100 text-brand-ink"}`}>{item}</span>
                   ))}
                 </div>
                 <Link

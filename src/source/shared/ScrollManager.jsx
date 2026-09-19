@@ -7,7 +7,9 @@ import { useLocation, useNavigationType } from "react-router-dom";
 //    المكان الذي كان عليه بالضبط في الصفحة السابقة.
 //  • الانتقال لصفحة جديدة (PUSH/REPLACE): تفتح من أعلاها، إلا إذا كان في الرابط
 //    قسم (#hash) فيتولاه الـ Navbar.
-// المواقع تُحفظ لكل مدخل في سجل التصفح (location.key) في sessionStorage.
+// المواقع تُحفظ لكل مدخل في سجل التصفح (location.key) في الذاكرة و sessionStorage.
+// مستمع تمرير واحد يكتب دائمًا لمفتاح الصفحة الحالية (currentKey) — يُحدَّث قبل أي
+// تمرير برمجي، فلا يطغى «التمرير للأعلى» في الصفحة الجديدة على موقع الصفحة السابقة.
 // =========================================================
 
 const STORAGE_KEY = "source:scroll-positions";
@@ -21,28 +23,38 @@ const ScrollManager = () => {
   const location = useLocation();
   const navType = useNavigationType();
   const positions = useRef(load());
+  const currentKey = useRef(location.key);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
   }, []);
 
-  // حفظ موقع التمرير للصفحة الحالية أثناء التمرير
+  // مستمع واحد طوال عمر التطبيق: يحفظ موقع التمرير لمفتاح الصفحة الحالية
   useEffect(() => {
-    const key = location.key;
     let timer;
     const save = () => {
-      positions.current[key] = window.scrollY;
+      positions.current[currentKey.current] = window.scrollY;
       clearTimeout(timer);
       timer = setTimeout(() => {
         try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(positions.current)); } catch { /* التخزين غير متاح */ }
       }, 150);
     };
     window.addEventListener("scroll", save, { passive: true });
-    return () => { window.removeEventListener("scroll", save); clearTimeout(timer); };
-  }, [location.key]);
+    // ✅ نحفظ أيضًا لحظة الضغط/الإدخال (قبل أي انتقال) — لا نعتمد على أحداث التمرير
+    // وحدها، فهي لا تُطلق مثلًا إذا كانت الصفحة في الخلفية
+    document.addEventListener("click", save, true);
+    document.addEventListener("keydown", save, true);
+    return () => {
+      window.removeEventListener("scroll", save);
+      document.removeEventListener("click", save, true);
+      document.removeEventListener("keydown", save, true);
+      clearTimeout(timer);
+    };
+  }, []);
 
   // عند تغيّر الصفحة: استعادة الموقع عند الرجوع، أو البدء من الأعلى
   useLayoutEffect(() => {
+    currentKey.current = location.key; // أولًا — قبل أي تمرير
     if (navType !== "POP") {
       if (!location.hash) window.scrollTo(0, 0);
       return undefined;

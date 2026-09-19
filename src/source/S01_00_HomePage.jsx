@@ -13,10 +13,12 @@ import { PILLARS, LAYERS, LAYER_ORDER } from "./S01_Home/pillarsContent";
 import { HOME_STATS } from "./S01_Home/homeStats";
 import { MINISTRY_SPACES } from "./S01_Home/audiencesContent";
 import HomeStatsPanel from "./S01_Home/HomeStatsPanel";
+import usePageState from "./shared/usePageState";
 import {
   SERVICE_FAMILIES,
   SERVICES_CATALOGUE,
   EXEC_TYPES,
+  getExecLabel,
   getServicesByFamily,
 } from "./S02_Services/servicesCatalogue";
 
@@ -102,10 +104,10 @@ const HomePage = () => {
 
   // ✅ التاب النشط بشريط الفئات العائم (الوزارة / الجامعات / الباحثون والطلبة)
   // الافتراضي: تاب الوزارة (index 0) عند فتح الصفحة
-  const [activeLevel, setActiveLevel] = useState(0);
+  const [activeLevel, setActiveLevel] = usePageState("home.level", 0); // يبقى عند الرجوع
 
   // ✅ عائلة الخدمات النشطة بقسم "الخدمات" — مفاتيح SERVICE_FAMILIES
-  const [activeFamily, setActiveFamily] = useState("assessment");
+  const [activeFamily, setActiveFamily] = usePageState("home.family", "assessment"); // يبقى عند الرجوع
 
   // ✅ الشرائح الفعلية تُدار من لوحة الأدمن (جدول home_slides) — هذه احتياط فقط عند خلو الجدول
   const defaultSlides = [
@@ -409,7 +411,8 @@ const HomePage = () => {
           {/* ✅ العنوان وتحته الشرح في عمود واحد، وفي العمود الآخر أكورديون الركائز (بطلب صريح) */}
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             <ScrollReveal className="lg:col-span-5 flex flex-col items-start gap-5">
-              <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase block">{t("home.about_kicker")}</span>
+              {/* ✅ شعار SOURCE بدل نص «عن SOURCE» */}
+              <img src="/logo/logo1.png" alt={t("home.about_kicker")} className="h-10 md:h-12 w-auto" />
               <h2 className="text-3xl md:text-[40px] font-bold leading-[1.35] text-brand-ink">{t("home.about_title")}</h2>
               <p className="text-base md:text-lg leading-[1.9] text-brand-ink/85">{t("home.about_desc")}</p>
               <p className="text-[15px] md:text-base leading-[1.9] text-brand-muted">{t("home.about_desc2")}</p>
@@ -688,14 +691,14 @@ const HomePage = () => {
                         <Icon className="w-[22px] h-[22px] text-brand-orange" strokeWidth={1.75} />
                       </span>
                       <span className="text-[11px] font-bold text-brand-ink bg-brand-cream-hero px-2.5 py-1 leading-tight text-end">
-                        {EXEC_TYPES[service.exec][`label_${lang}`]}
+                        {getExecLabel(service, lang)}
                       </span>
                     </div>
                     <span className="text-[11px] font-bold tracking-[0.15em] text-brand-muted mb-1.5 block" dir="ltr">
                       <span className="block text-start">{service.id}</span>
                     </span>
-                    <h3 className="text-[17px] font-bold text-brand-ink mb-2">{service[`name_${lang}`]}</h3>
-                    <p className="text-[13px] leading-relaxed text-brand-muted flex-1">{service[`desc_${lang}`]}</p>
+                    <h3 className="text-[17px] font-bold text-brand-ink mb-2">{service[`card_name_${lang}`] || service[`name_${lang}`]}</h3>
+                    <p className="text-[13px] leading-relaxed text-brand-muted flex-1">{service[`card_desc_${lang}`] || service[`desc_${lang}`]}</p>
                     <CardArrow Icon={ArrowIcon} />
                   </Link>
                 </ScrollReveal>

@@ -393,7 +393,9 @@
     "submit": "Create Account",
     "success_title": "Registration Successful!",
     "success_desc": "Your account is under review and will be activated by the administration. You will receive an email notification upon activation.",
-    "go_to_login": "Go to Login"
+    "go_to_login": "Go to Login",
+    "side_title_staff": "Start your role in the national SOURCE system.",
+    "side_desc_staff": "Join as a service provider or an operations team member, and help support researchers and institutions and manage research services within one unified national digital environment."
   },
   "steps": {
     "category": "Category",

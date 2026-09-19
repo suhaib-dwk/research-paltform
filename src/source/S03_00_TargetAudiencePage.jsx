@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Landmark, Building2, School, FlaskConical, GraduationCap, BookOpen, Users, Briefcase, ChevronDown } from "lucide-react";
-import { useInnerLang, Breadcrumb, InnerHero, AnchorNav, SectionHead, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
+import { useInnerLang, InnerHero, AnchorNav, SectionHead, CtaBand, CardArrow } from "./S01_Home/InnerBlocks";
 
 // =========================================================
 // الفئة المستهدفة (/target-audience) — خريطة المنظومة كما هي مبنية فعلًا:
@@ -72,12 +72,9 @@ const TargetAudiencePage = () => {
 
   return (
     <>
-      <Breadcrumb
-        section={t("nav.target_audience")}
-        items={[{ to: "/", label: t("nav.home") }, { label: t("nav.target_audience") }]}
-      />
 
       <InnerHero
+        crumbs={[{ to: "/", label: t("nav.home") }, { label: t("nav.target_audience") }]}
         tone="light"
         image="/Home/home02.jpg"
         kicker={L("لمن هذه المنصة", "Who the platform is for")}

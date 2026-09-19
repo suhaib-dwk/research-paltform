@@ -47,7 +47,6 @@ const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
     <div className="relative flex flex-col md:flex-row gap-3 h-[720px] md:h-[460px]" onMouseLeave={() => setActive(null)}>
       {items.map((item, i) => {
         const open = i === active;
-        const number = `0${i + 1}`;
         return (
           <div
             key={item.key}
@@ -68,7 +67,6 @@ const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
             {/* ── البطاقة المطوية: العنوان أعلى + شرائح أفقية من الصورة أسفل ── */}
             <div className={`absolute inset-0 flex flex-col transition-opacity duration-500 ${open ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
               <div className="p-5 md:p-6">
-                <span className="text-brand-orange text-xs font-bold tracking-[0.25em] block mb-2">{number}</span>
                 <h3 className="text-base md:text-lg font-bold text-brand-ink leading-snug">{item.title}</h3>
               </div>
               {/* الصورة عادية (بلا تقطيع) في الحالة المطوية — التقطيع يظهر عند التمدد فقط */}
@@ -80,7 +78,6 @@ const PillarsAccordion = ({ items, isRTL, moreLabel }) => {
             {/* ── البطاقة الممددة: نص في جهة + شرائح رأسية (chevron) من الصورة في الجهة الأخرى ── */}
             <div className={`absolute inset-0 grid md:grid-cols-12 transition-opacity duration-500 delay-150 ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
               <div className="md:col-span-6 p-6 md:p-8 flex flex-col items-start text-start">
-                <span className="text-brand-orange text-xs font-bold tracking-[0.25em] mb-3">{number}</span>
                 <h3 className="text-2xl md:text-[28px] font-bold text-brand-ink leading-snug mb-3">{item.title}</h3>
                 <p className="text-sm md:text-[15px] leading-relaxed text-brand-muted mb-5">{item.desc}</p>
                 <Link

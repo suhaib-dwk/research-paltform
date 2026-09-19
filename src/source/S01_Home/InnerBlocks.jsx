@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import useBackClick from "../shared/useBackClick";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -56,8 +57,54 @@ export const Breadcrumb = ({ section, items }) => {
   );
 };
 
+// ── مسار التنقل داخل الهيرو (أسفل السلايدر) على شكل زر بيضاوي، ومقابله زر رجوع ──
+// dark = فوق صورة داكنة، وإلا فوق خلفية فاتحة.
+// زر الرجوع يعيد المستخدم إلى المكان الذي ضغط منه بالضبط (useBackClick + ScrollManager)؛
+// وإن فُتحت الصفحة مباشرة يذهب إلى الصفحة الأعلى في المسار.
+export const HeroCrumbs = ({ items, dark = true, className = "" }) => {
+  const { CrumbIcon, BackIcon, isRTL } = useInnerLang();
+  const onBack = useBackClick();
+  if (!items?.length) return null;
+  const fallback = [...items].slice(0, -1).reverse().find((it) => it.to)?.to || "/";
+  return (
+    <div className={`w-full flex flex-wrap items-center justify-between gap-3 ${className}`}>
+    <nav aria-label="breadcrumb">
+      <div
+        className={`inline-flex flex-wrap items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-bold ${
+          dark ? "bg-white/10 border border-white/20 backdrop-blur-md text-white/70" : "bg-white border-2 border-gray-200 text-brand-muted shadow-sm"
+        }`}
+      >
+        {items.map((item, i) => {
+          const isLast = i === items.length - 1;
+          return (
+            <span key={`${item.label}-${i}`} className="inline-flex items-center gap-2">
+              {item.to && !isLast ? (
+                <Link to={item.to} className={`transition-colors hover:text-brand-orange ${dark ? "text-white" : "text-brand-ink"}`}>
+                  {item.label}
+                </Link>
+              ) : (
+                <span className={isLast ? "text-brand-orange" : ""}>{item.label}</span>
+              )}
+              {!isLast && <CrumbIcon className={`w-3.5 h-3.5 ${dark ? "text-white/50" : "text-brand-muted"}`} />}
+            </span>
+          );
+        })}
+      </div>
+    </nav>
+    <Link
+      to={fallback}
+      onClick={onBack}
+      className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-2.5 text-[13px] font-bold text-white hover:bg-brand-orange-dark transition-colors"
+    >
+      <BackIcon className="w-4 h-4" />
+      {isRTL ? "الرجوع للخلف" : "Go back"}
+    </Link>
+    </div>
+  );
+};
+
 // ── الهيرو المصوّر ──
-export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, primary, secondary, tone = "dark", children }) => {
+export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, primary, secondary, tone = "dark", crumbs, children }) => {
   const { ArrowIcon, BackIcon, displayFont } = useInnerLang();
   const navigate = useNavigate();
   // زر الرجوع يعود للصفحة السابقة فعليًا (وموقعها يُستعاد عبر ScrollManager)؛
@@ -134,6 +181,12 @@ export const InnerHero = ({ image, kicker, titlePre, titleEm, titlePost, intro, 
         </div>
         {children && <div className="lg:col-span-4">{children}</div>}
       </div>
+      {/* ✅ مسار التنقل أسفل الهيرو على شكل زر */}
+      {crumbs && (
+        <div className="relative container mx-auto px-6 pb-10 -mt-6 md:-mt-8">
+          <HeroCrumbs items={crumbs} dark={dark} />
+        </div>
+      )}
     </section>
   );
 };

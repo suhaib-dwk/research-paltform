@@ -8,7 +8,7 @@ import { MINISTRY_SPACES } from "./S01_Home/audiencesContent";
 import { MINISTRY_SPACE_DETAILS, FUNDING_FALLBACK } from "./S03_Audience/ministrySpacesDetails";
 import HomeStatsPanel from "./S01_Home/HomeStatsPanel";
 import {
-  useInnerLang, pick, Breadcrumb, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, RelatedCards,
+  useInnerLang, pick, InnerHero, AnchorNav, SectionHead, QuoteBand, CtaBand, RelatedCards,
 } from "./S01_Home/InnerBlocks";
 
 // =========================================================
@@ -288,23 +288,19 @@ const MinistrySpacePage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumb
-        section={labels.ministry}
-        items={[
+      <InnerHero
+        crumbs={[
           { label: t("nav.home"), to: "/" },
           { label: t("nav.target_audience"), to: "/target-audience" },
           { label: labels.ministry, to: "/audience/ministry" },
           { label: pick(space, "title", lang) },
         ]}
-      />
-      <InnerHero
         image={detail.image}
         kicker={`${labels.space} ${space.number} — ${pick(detail, "kicker", lang)}`}
         titlePre={pick(detail, "hero_pre", lang)}
         titleEm={pick(detail, "hero_em", lang)}
         titlePost={pick(detail, "hero_post", lang)}
         intro={pick(space, "desc", lang)}
-        primary={{ to: "/audience/ministry", label: labels.back, back: true }}
       >
         <div className="bg-white p-6 md:p-7 flex flex-col gap-4 shadow-[0_32px_56px_-28px_rgba(0,0,0,0.6)]">
           <span className="text-5xl font-black text-brand-orange leading-none">{space.number}</span>
