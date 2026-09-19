@@ -44,7 +44,7 @@ const PillarPage = () => {
 
   const L = isRTL
     ? (isLayer
-        ? { section: "طبقات التشغيل", pillar: "الطبقة", chapter: "الفصل", ch1: "ما هي", ch2: "المكونات", ch3: "كيف تعمل", ch4: "الضمانة", who: "لمن تفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الطبقة السابقة", next: "الطبقة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "ثلاث طبقات تشغيلية — المنصة الرقمية وخدمات الذكاء الاصطناعي وشبكة الخبراء — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" }
+        ? { section: "طبقات التشغيل", pillar: "الطبقة", chapter: "الفصل", ch1: "ما هي", ch2: "المكونات", ch3: "كيف تعمل", ch4: "الضمانة", who: "القيمة عبر مستويات المنظومة", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الطبقة السابقة", next: "الطبقة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "ثلاث طبقات. منظومة تشغيلية واحدة.", ctaDesc: "المنصة الرقمية، خدمات الذكاء الاصطناعي، وشبكة الخبراء تعمل معاً لدعم البحث وإدارته وتطويره ضمن بيئة مترابطة.", chapters: "الفصول الأربعة", all: "كل الميزات" }
         : { section: "الركائز التقنية", pillar: "الركيزة", chapter: "الفصل", ch1: "ما هو", ch2: "المكونات", ch3: "كيف يعمل", ch4: "الضمانة", who: "لمن يفيد", whoTitle: "ماذا يتغيّر لكل دور؟", prev: "الركيزة السابقة", next: "الركيزة التالية", register: "تسجيل الدخول", contact: "للتواصل معنا", ctaTitle: "خطوة نحو جاهزية أكاديمية عالمية.", ctaDesc: "أربع ركائز تقنية تحت المكونات الثلاثة — في منظومة وطنية واحدة.", chapters: "الفصول الأربعة", all: "كل الميزات" })
     : (isLayer
         ? { section: "Operating layers", pillar: "Layer", chapter: "Chapter", ch1: "What it is", ch2: "Components", ch3: "How it works", ch4: "The guarantee", who: "Who benefits", whoTitle: "What changes for each role?", prev: "Previous layer", next: "Next layer", register: "Sign in", contact: "Contact us", ctaTitle: "A step towards global academic readiness.", ctaDesc: "Three operating layers — the digital platform, AI services and the expert network — in one national system.", chapters: "The four chapters", all: "All features" }
@@ -195,9 +195,12 @@ const PillarPage = () => {
       <section id="guarantee" className="bg-gray-50 pt-20 md:pt-24 border-t border-gray-200 scroll-mt-20">
         <div className="container mx-auto px-6">
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.chapter} 04 — {pick(p, "guarantee_kicker", lang)}</span>
-          <h2 className="text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink mb-14">{pick(p, "guarantee_title", lang)}</h2>
+          <h2 className={`text-3xl md:text-[44px] md:leading-[1.25] font-bold text-brand-ink ${pick(p, "guarantee_desc", lang) ? "mb-5" : "mb-14"}`}>{pick(p, "guarantee_title", lang)}</h2>
+          {pick(p, "guarantee_desc", lang) && (
+            <p className="text-base leading-relaxed text-brand-muted max-w-3xl mb-14">{pick(p, "guarantee_desc", lang)}</p>
+          )}
         </div>
-        <div className="grid md:grid-cols-2">
+        <div className={`grid ${pick(p, "split_c_word", lang) ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
           <div className="bg-brand-cream-hero px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
             <span className="text-xs font-bold tracking-[0.3em] text-brand-orange">{pick(p, "split_a_label", lang)}</span>
             <span className="text-6xl md:text-[100px] leading-none font-black text-brand-orange" dir={/^[0-9+]/.test(pick(p, "split_a_word", lang)) ? "ltr" : undefined}>{pick(p, "split_a_word", lang)}</span>
@@ -209,17 +212,26 @@ const PillarPage = () => {
             <span className="text-6xl md:text-[100px] leading-none font-black text-brand-cream-hero" dir={/^[0-9+]/.test(pick(p, "split_b_word", lang)) ? "ltr" : undefined}>{pick(p, "split_b_word", lang)}</span>
             <p className="text-base leading-relaxed text-brand-cream-hero max-w-md">{pick(p, "split_b_desc", lang)}</p>
           </div>
+          {pick(p, "split_c_word", lang) && (
+            <div className="bg-white border-y border-gray-200 px-8 md:px-16 py-16 flex flex-col justify-between gap-8 min-h-[400px]">
+              <span className="text-xs font-bold tracking-[0.3em] text-brand-orange">{pick(p, "split_c_label", lang)}</span>
+              <span className="text-6xl md:text-[100px] leading-none font-black text-brand-ink">{pick(p, "split_c_word", lang)}</span>
+              <p className="text-base leading-relaxed text-brand-ink max-w-md">{pick(p, "split_c_desc", lang)}</p>
+            </div>
+          )}
         </div>
-        <div className="bg-white px-6 py-16 md:py-20 border-b border-gray-200 flex justify-center text-center">
-          <p className="text-2xl md:text-[32px] md:leading-[1.6] font-medium text-brand-ink max-w-4xl" style={{ fontFamily: displayFont }}>«{pick(p, "quote", lang)}»</p>
-        </div>
+        {pick(p, "quote", lang) && (
+          <div className="bg-white px-6 py-16 md:py-20 border-b border-gray-200 flex justify-center text-center">
+            <p className="text-2xl md:text-[32px] md:leading-[1.6] font-medium text-brand-ink max-w-4xl" style={{ fontFamily: displayFont }}>«{pick(p, "quote", lang)}»</p>
+          </div>
+        )}
       </section>
 
       {/* لمن يفيد */}
       <section className="bg-white py-20 md:py-24">
         <div className="container mx-auto px-6">
           <span className="text-brand-orange text-xs font-bold tracking-[0.3em] uppercase mb-5 block">{L.who}</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-brand-ink mb-10">{L.whoTitle}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-brand-ink mb-10">{pick(p, "who_title", lang) || L.whoTitle}</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {p.audiences.map((a) => {
               const Icon = AUDIENCE_ICONS[a.key];

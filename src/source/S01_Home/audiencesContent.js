@@ -151,9 +151,9 @@ export const AUDIENCES = {
     image: "/Home/home01.jpg",
     kicker_ar: "الوزارة — لوحات الوزارة والذكاء البحثي الوطني",
     kicker_en: "Ministry — Ministry dashboards & national research intelligence",
-    title_pre_ar: "ليست شاشة تقارير — ", title_em_ar: "طبقة ذكاء بحثي وطني", title_post_ar: ".",
+    title_pre_ar: "أكثر من شاشة تقارير — ", title_em_ar: "رؤية وطنية للبحث العلمي", title_post_ar: ".",
     title_pre_en: "Not a reporting screen — ", title_em_en: "a national research intelligence layer", title_post_en: ".",
-    intro_ar: "تعمل فوق بيانات الجامعات المصرّح بمشاركتها، وتربطها ببيانات مؤسسات الدولة والفرص والشراكات، لتنقل الوزارة من «عرض الأرقام» إلى «فهم الواقع ثم اختيار التدخل» — بحوكمة وصلاحيات واضحة، وكل رقم يعود إلى مصدره.",
+    intro_ar: "تجمع هذه الطبقة البيانات والمؤشرات البحثية المعتمدة في صورة وطنية مترابطة، وتربطها بالأولويات والشراكات وفرص التمويل، بما يساعد الوزارة على فهم المشهد البحثي، رصد الفجوات والاتجاهات، ودعم التوجيه والقرار ضمن حوكمة وصلاحيات واضحة ومعلومات قابلة للتتبع إلى مصادرها.",
     intro_en: "It runs on the data universities authorise for sharing, links it to state institutions' data, opportunities and partnerships, and moves the Ministry from “showing numbers” to “understanding reality, then choosing the intervention” — with clear governance and permissions, and every figure traceable to its source.",
   },
 };
@@ -195,85 +195,89 @@ export const DATA_FLOW = [
   { title_ar: "لوحات الوزارة", title_en: "Ministry dashboards", desc_ar: "تصل البيانات المعتمدة عبر API أو مزامنة مضبوطة — لا إعادة إدخال يدوي.", desc_en: "Approved data arrives through APIs or controlled synchronisation — no manual re-entry." },
 ];
 
-// ── المساحات الأربع لطبقة الوزارة (مواصفة الجزء الثالث) ──
+// ── المساحات الأربع لطبقة الوزارة — نصوص Source.docx:
+//    title/question/desc/items = صفحة الوزارة، home_question/home_desc = بطاقات تاب الوزارة في الرئيسية.
+//    العنصر الأول في items أُضيف بطلب سابق (الشات بوت، الأولويات المقترحة، الشراكات كبيانات، إعلانات التمويل).
 export const MINISTRY_SPACES = [
   {
     number: "01", slug: "data-intelligence", mock: "kpi",
     title_ar: "البيانات والذكاء البحثي الوطني", title_en: "National research data & intelligence",
-    question_ar: "ماذا يحدث في البحث العلمي على المستوى الوطني؟", question_en: "What is happening in scientific research nationally?",
-    desc_ar: "قاعدة البيانات البحثية الوطنية وواجهة الذكاء الوطني: لوحة بفلاتر السنة والجامعة والمجال والجغرافيا والقطاع، ومقارنات جامعة مقابل المتوسط الوطني، ومنطقة مقابل منطقة، وتخصص مقابل تخصص، وتمويل مقابل مخرجات، وأولوية مقابل نشاط.",
-    desc_en: "The national research database and intelligence interface: a dashboard filtered by year, university, field, geography and sector, with comparisons of university vs national average, region vs region, field vs field, funding vs output, and priority vs activity.",
-    items_ar: ["SOURCE Chatbot: شات بوت بالذكاء الاصطناعي يحلّل أرقام البحث الوطني ويشرحها بلغة طبيعية", "الباحثون والمنشورات والمشاريع والتمويل والتعاون والابتكار والبنية التحتية والقدرات والأثر", "تمييز صريح بين البيانات الخام والمتحقق منها والموحّدة والمؤشرات المشتقة ورؤى السياسة", "تنبيهات: فجوة حرجة، مجال صاعد، أولوية ناقصة التمويل، فرصة شراكة، نقص قدرات"],
-    items_en: ["SOURCE Chatbot: an AI chatbot that analyses and explains national research figures in natural language", "Researchers, publications, projects, funding, collaboration, innovation, infrastructure, capacity and impact", "Explicit separation of raw, verified, normalised data, derived indicators and policy insights", "Alerts: critical gap, emerging field, underfunded priority, collaboration opportunity, capacity shortage"],
+    question_ar: "ماذا يحدث في البحث العلمي على المستوى الوطني؟", question_en: "What is happening across the national research landscape?",
+    home_question_ar: "ماذا يحدث في البحث العلمي على المستوى الوطني؟",
+    home_desc_ar: "تجمع البيانات والمؤشرات البحثية في صورة وطنية مترابطة، مع إمكانية التحليل حسب الجامعة والمجال والسنة والجغرافيا، ومقارنة الأداء والاتجاهات والفجوات بين المؤسسات والمجالات.",
+    desc_ar: "تجمع هذه المساحة البيانات والمؤشرات البحثية في صورة وطنية قابلة للتحليل بحسب الجامعة والمجال والسنة والجغرافيا، بما يساعد الوزارة على متابعة النشاط البحثي والاتجاهات والفجوات ومقارنة الأداء عبر مستويات مختلفة.",
+    desc_en: "This space brings research data and indicators together into a national picture that can be analysed by university, field, year and geography, helping the Ministry follow research activity, trends and gaps and compare performance across levels.",
+    items_ar: ["SOURCE Chatbot: شات بوت بالذكاء الاصطناعي يحلّل أرقام البحث الوطني ويشرحها بلغة طبيعية", "الباحثون والمنشورات والمشاريع والتمويل والتعاون وغيرها من مؤشرات النشاط والأداء البحثي", "تحليل الاتجاهات والفجوات والتغيرات على مستوى المؤسسات والمجالات", "تنبيهات تساعد على رصد مجالات بحثية صاعدة، أولويات ضعيفة التغطية، وفجوات في التمويل أو القدرات"],
+    items_en: ["SOURCE Chatbot: an AI chatbot that analyses and explains national research figures in natural language", "Researchers, publications, projects, funding, collaboration and other research activity and performance indicators", "Analysis of trends, gaps and changes across institutions and fields", "Alerts that help spot emerging research fields, weakly covered priorities, and funding or capacity gaps"],
   },
   {
     number: "02", slug: "priorities", mock: "priorities",
     title_ar: "الأولويات البحثية الوطنية", title_en: "National research priorities",
-    question_ar: "ما الذي تحتاج الدولة أن تبحث فيه، وأين الفجوات؟", question_en: "What does the country need to research, and where are the gaps?",
-    desc_ar: "الذكاء الاصطناعي يقترح الأولويات من الفجوات بين احتياجات الدولة والإنتاج البحثي الفعلي، والوزارة تعتمد. الجسر العكسي بين الدولة والجامعات: من احتياجات الدولة إلى تحديات القطاعات إلى أولويات وموضوعات، ثم قياس تغطيتها بحثيًا وتحويل الفجوات إلى دعوات وتمويل وشراكات. القطاعات قابلة للتهيئة — لا أسماء ثابتة في الكود.",
-    desc_en: "AI suggests priorities from the gaps between national needs and actual research output, and the Ministry approves. The reverse bridge from the state to universities: from national needs to sector challenges to priorities and topics, then measuring their research coverage and turning gaps into calls, funding and partnerships. Sectors are configurable — never hard-coded.",
-    items_ar: ["أولويات مقترحة من الذكاء الاصطناعي بمؤشر فجوة مشروح — بانتظار اعتماد الوزارة", "مؤشر أولوية بصيغة وأوزان معتمدة (الحاجة، الفجوة، مواءمة السياسة، القدرة، الاتجاه)", "تغطية الأولوية = النشاط البحثي الفعلي مقابل المستهدف، على مستوى الجامعات والجغرافيا", "دورة اعتماد: مسودة → أدلة → مراجعة قطاعية → مراجعة خبراء → اعتماد الوزارة → نشر"],
-    items_en: ["AI-suggested priorities with an explained gap index — pending Ministry approval", "A priority index with an approved formula and weights (need, gap, policy alignment, capacity, trend)", "Priority coverage = actual research activity vs target, by university and geography", "Approval cycle: draft → evidence → sector review → expert review → Ministry approval → published"],
+    question_ar: "ما الذي تحتاج الدولة إلى توجيه البحث نحوه، وأين تتركز الفجوات؟", question_en: "Which research areas require greater national focus, and where are the gaps?",
+    home_question_ar: "ما الذي تحتاج الدولة أن تبحث فيه، وأين الفجوات؟",
+    home_desc_ar: "تربط احتياجات الدولة وتحديات القطاعات بالأولويات البحثية، وتساعد على قياس مدى تغطيتها ورصد المجالات التي تحتاج إلى مزيد من البحث أو الدعم.",
+    desc_ar: "تساعد هذه المساحة الوزارة على ربط الاحتياجات والتحديات الوطنية بالمجالات البحثية، ومقارنة الأولويات بما يُنتج فعلياً من أبحاث، بما يوضح المجالات التي تحتاج إلى مزيد من الاهتمام أو التمويل أو التعاون.",
+    desc_en: "This space helps the Ministry link national needs and challenges to research fields and compare priorities with the research actually produced, showing which areas need more attention, funding or collaboration.",
+    items_ar: ["أولويات مقترحة من الذكاء الاصطناعي بمؤشر فجوة مشروح — بانتظار اعتماد الوزارة", "تنظيم الأولويات البحثية الوطنية وربطها بالمجالات والموضوعات ذات الصلة", "قياس مستوى النشاط البحثي المرتبط بكل أولوية", "رصد الفجوات التي يمكن أن تستفيد من توجيه بحثي أو تمويلي أو شراكات جديدة"],
+    items_en: ["AI-suggested priorities with an explained gap index — pending Ministry approval", "Organising national research priorities and linking them to related fields and topics", "Measuring the level of research activity linked to each priority", "Spotting gaps that could benefit from research direction, funding or new partnerships"],
   },
   {
     number: "03", slug: "partnerships", mock: "network",
-    title_ar: "الشراكات والاتفاقيات البحثية", title_en: "Research partnerships & agreements",
-    question_ar: "من يتعاون مع من على المستوى المحلي، وما الذي تنتجه هذه الشراكات؟", question_en: "Who collaborates with whom locally, and what do these partnerships produce?",
-    desc_ar: "الشراكات لا تُنشئها الوزارة — تنشأ على المستوى المحلي بين الطلبة والباحثين والجامعات والمراكز والجهات المحلية، وتصل إلى الوزارة كبيانات: اتفاقيات ومشاريع ومخرجات. محرك ذكاء للشراكات لا قاعدة اتفاقيات فقط: من يتعاون مع من، في ماذا، بأي نتائج، وأين توجد فرصة شراكة تعالج فجوة وطنية — بين الجامعات، ومع المراكز والصناعة والبلديات، ومع الشركاء العرب والدوليين.",
-    desc_en: "The Ministry doesn't create partnerships — they start locally between students, researchers, universities, centres and local bodies, and reach the Ministry as data: agreements, projects and outputs. A partnership intelligence engine, not just an agreements database: who collaborates with whom, on what, with which results, and where a partnership could close a national gap — between universities, with centres, industry and municipalities, and with Arab and international partners.",
-    items_ar: ["كل شراكة بيانات: أطرافها ومشاريعها ومخرجاتها ومدتها — تُسجَّل محليًا وتقرأها الوزارة", "مطابقة بأبعاد معلنة: تقارب الموضوع، الخبرة المكمّلة، البنية التحتية، ملاءمة التمويل، خدمة الأولوية، الأثر، الجغرافيا", "كل مطابقة تشرح سبب الاقتراح، ثم مراجعة بشرية وتواصل", "إدارة الاتفاقيات بالتزاماتها ومخرجاتها ومؤشراتها وتنبيه قبل الانتهاء"],
-    items_en: ["Every partnership is data: its parties, projects, outputs and term — recorded locally, read by the Ministry", "Matching on declared dimensions: topic similarity, complementary expertise, infrastructure, funding fit, priority fit, impact, geography", "Every match explains why it was proposed, followed by human review and outreach", "Agreements managed with commitments, outputs, KPIs and renewal alerts"],
+    title_ar: "الشراكات البحثية", title_en: "Research partnerships",
+    question_ar: "أين توجد فرص التعاون على المستوى الوطني والإقليمي والدولي؟", question_en: "Where are the strongest opportunities for collaboration nationally, regionally and internationally?",
+    home_question_ar: "مع من يمكن أن نتعاون داخلياً وإقليمياً ودولياً؟",
+    home_desc_ar: "تساعد على تحديد فرص التعاون بين الجامعات والباحثين والمؤسسات، ورصد المجالات التي يمكن أن تستفيد من شراكات وطنية أو إقليمية أو دولية.",
+    desc_ar: "تساعد هذه المساحة على قراءة شبكات التعاون القائمة واكتشاف فرص جديدة بين الجامعات والباحثين والمراكز والمؤسسات والشركاء الخارجيين، وخاصة عندما يمكن للشراكة أن تدعم أولوية وطنية أو تعالج فجوة بحثية.",
+    desc_en: "This space helps read existing collaboration networks and discover new opportunities between universities, researchers, centres, institutions and external partners — especially where a partnership can support a national priority or close a research gap.",
+    items_ar: ["كل شراكة بيانات: أطرافها ومشاريعها ومخرجاتها ومدتها — تُسجَّل محليًا وتقرأها الوزارة", "اكتشاف باحثين ومؤسسات ذات اهتمامات أو قدرات بحثية متكاملة", "ربط فرص التعاون بالأولويات والمجالات والقدرات البحثية", "متابعة الشراكات والاتفاقيات ذات الصلة ومخرجاتها ضمن المنظومة"],
+    items_en: ["Every partnership is data: its parties, projects, outputs and term — recorded locally, read by the Ministry", "Discovering researchers and institutions with complementary interests or research capabilities", "Linking collaboration opportunities to priorities, fields and research capabilities", "Following related partnerships and agreements and their outputs within the system"],
   },
   {
     number: "04", slug: "funding", mock: "funding",
-    title_ar: "فرص التمويل وذكاء التمويل البحثي", title_en: "Funding opportunities & funding intelligence",
-    question_ar: "أين توجد فرص تمويل مناسبة، ولمن؟", question_en: "Where is suitable funding, and for whom?",
-    desc_ar: "يربط «من يحتاج التمويل؟» بـ«أين توجد الأموال المناسبة؟»: فرص محلية وعربية وإقليمية ودولية وصناعية وجامعية داخلية، مع شروط الأهلية والمواعيد والنطاق الجغرافي ومصدر رسمي وحالة تحقق.",
-    desc_en: "It connects “who needs funding?” with “where is the right money?”: local, Arab, regional, international, industry and internal university opportunities, with eligibility, deadlines, geographic scope, an official source and a verification status.",
-    items_ar: ["أخبار وإعلانات تمويل متجددة للطلبة والباحثين: منح ودعوات وفرص", "مطابقة ملف الباحث أو الفريق والموضوع والسجل والأهلية والميزانية مع الفرص", "درجة الملاءمة ترتيب داخلي — وليست قرار قبول من الجهة الممولة", "تنبيهات المواعيد وسير عمل التقديم من داخل المنصة"],
-    items_en: ["Constantly refreshed funding news and announcements for students and researchers: grants, calls and opportunities", "Matching the researcher or team profile, topic, track record, eligibility and budget to opportunities", "The fit score is an internal ranking — never an acceptance decision by the funder", "Deadline alerts and an application workflow inside the platform"],
+    title_ar: "فرص التمويل البحثي", title_en: "Research funding opportunities",
+    question_ar: "ما فرص التمويل المتاحة، وكيف يمكن ربطها بالأولويات والقدرات البحثية؟", question_en: "What funding opportunities are available, and how can they be matched with national priorities and research capabilities?",
+    home_question_ar: "أين توجد فرص تمويل مناسبة، ولمن؟",
+    home_desc_ar: "تجمع فرص التمويل البحثي ذات الصلة، وتساعد على ربطها بالأولويات والمجالات والقدرات البحثية المناسبة، مع إظهار متطلبات الفرصة ومصدرها.",
+    desc_ar: "تجمع هذه المساحة فرص التمويل ذات الصلة وتساعد على ربطها بالباحثين والفرق والمؤسسات والمجالات البحثية المناسبة، مع إظهار متطلبات كل فرصة ومواعيدها ومصدرها.",
+    desc_en: "This space gathers relevant funding opportunities and helps match them to the right researchers, teams, institutions and research fields, showing each opportunity's requirements, deadlines and source.",
+    items_ar: ["أخبار وإعلانات تمويل متجددة للطلبة والباحثين: منح ودعوات وفرص", "عرض فرص التمويل المحلية والإقليمية والدولية ذات الصلة", "مساعدة الباحثين والفرق والمؤسسات على اكتشاف الفرص الأقرب إلى موضوعاتهم وقدراتهم", "ربط فرص التمويل بالأولويات الوطنية والمجالات البحثية التي تحتاج إلى دعم"],
+    items_en: ["Constantly refreshed funding news and announcements for students and researchers: grants, calls and opportunities", "Showing relevant local, regional and international funding opportunities", "Helping researchers, teams and institutions discover the opportunities closest to their topics and capabilities", "Linking funding opportunities to national priorities and research fields that need support"],
   },
 ];
 
+// ── من البيانات إلى فهم أعمق للمشهد البحثي (highlight = خطوة القرار البشري) ──
 export const POLICY_JOURNEY = [
-  { ar: "البيانات", en: "Data" },
-  { ar: "وصفي — ماذا يحدث؟", en: "Descriptive — what is happening?" },
-  { ar: "تشخيصي — لماذا؟", en: "Diagnostic — why?" },
-  { ar: "سيناريو — ماذا لو تدخّلنا؟", en: "Scenario — what if we act?" },
-  { ar: "خيارات السياسة", en: "Policy options" },
-  { ar: "قرار بشري", en: "Human decision" },
-  { ar: "التنفيذ", en: "Implementation" },
-  { ar: "المتابعة", en: "Monitoring" },
-  { ar: "تقييم الأثر", en: "Impact evaluation" },
+  { ar: "البيانات", en: "Data", desc_ar: "جمع المؤشرات والمعلومات ذات الصلة.", desc_en: "Gathering the relevant indicators and information." },
+  { ar: "قراءة المشهد", en: "Reading the landscape", desc_ar: "ما الذي يحدث وأين؟", desc_en: "What is happening, and where?" },
+  { ar: "رصد الفجوات والاتجاهات", en: "Spotting gaps & trends", desc_ar: "ما المجالات التي تحتاج إلى مزيد من الاهتمام؟", desc_en: "Which areas need more attention?" },
+  { ar: "استكشاف الخيارات", en: "Exploring options", desc_ar: "ما فرص التمويل أو التعاون أو التوجيه المتاحة؟", desc_en: "What funding, collaboration or direction options exist?" },
+  { ar: "القرار البشري", en: "Human decision", desc_ar: "تتخذ الوزارة القرار وفق صلاحياتها وأطرها المعتمدة.", desc_en: "The Ministry decides within its mandate and approved frameworks.", highlight: true },
+  { ar: "المتابعة", en: "Monitoring", desc_ar: "تُستخدم المؤشرات لمتابعة التطور والأثر بمرور الوقت.", desc_en: "Indicators are used to follow progress and impact over time." },
 ];
 
 export const MINISTRY_PRINCIPLES = [
-  { ar: "كل رقم في اللوحة يعود إلى مصدره: جامعة، سنة، وحدة، مصدر خارجي أو سجل رسمي.", en: "Every figure on the dashboard traces back to its source: university, year, unit, external source or official record." },
-  { ar: "الذكاء الاصطناعي يكتشف الأنماط ويشرحها ويقترح خيارات — لكنه لا يتخذ القرار الحكومي.", en: "AI detects patterns, explains them and proposes options — it never makes the government decision." },
-  { ar: "لا نسخة يدوية مستقلة من بيانات الجامعات، ولا ربط مباشر بقواعدها دون طبقة استقبال وحوكمة.", en: "No separate manual copy of university data, and no direct link to their databases without an ingestion and governance layer." },
-  { ar: "الجغرافيا والقطاعات والأولويات قابلة للتهيئة من الوزارة — لا شيء ثابت في الكود.", en: "Geography, sectors and priorities are configurable by the Ministry — nothing is hard-coded." },
-  { ar: "لا تظهر بيانات فردية حساسة في اللوحات الوطنية إلا وفق الصلاحيات والسياسات.", en: "No sensitive individual data appears in national dashboards except under permissions and policy." },
-  { ar: "كل توصية سياسة لها حزمة أدلة، وكل مطابقة شراكة أو تمويل تشرح سببها وشروطها.", en: "Every policy recommendation has an evidence pack; every partnership or funding match explains its reason and conditions." },
+  { ar: "البيانات والمؤشرات المعروضة قابلة للتتبع إلى مصادرها المعتمدة.", en: "The data and indicators shown are traceable to their approved sources." },
+  { ar: "يساعد الذكاء الاصطناعي في التحليل ورصد الأنماط والفرص، ولا يتخذ القرار الحكومي بدلاً من المسؤولين.", en: "AI helps analyse and spot patterns and opportunities; it never makes the government decision in place of officials." },
+  { ar: "تتم مشاركة البيانات والوصول إليها ضمن حوكمة وصلاحيات تعتمدها الوزارة والمؤسسات المشاركة.", en: "Data sharing and access follow governance and permissions approved by the Ministry and participating institutions." },
+  { ar: "تُعرض البيانات على المستوى المناسب بحسب الصلاحيات وحساسية المعلومات.", en: "Data is shown at the appropriate level according to permissions and the sensitivity of the information." },
+  { ar: "تبقى الأولويات والمؤشرات قابلة للتطوير والتحديث بحسب احتياجات الوزارة وتطور المشهد البحثي.", en: "Priorities and indicators remain open to development and updating as the Ministry's needs and the research landscape evolve." },
 ];
 
 export const MINISTRY_ROLES = [
-  { ar: "الوزير والقيادة التنفيذية", en: "Minister & executive leadership", desc_ar: "اللوحات الوطنية والتقارير الاستراتيجية والمقارنات المعتمدة.", desc_en: "National dashboards, strategic reports and approved comparisons." },
-  { ar: "إدارة البحث العلمي", en: "Research directorate", desc_ar: "التحليلات الوطنية ضمن الاختصاص.", desc_en: "National analytics within its remit." },
-  { ar: "فريق السياسات", en: "Policy team", desc_ar: "ذكاء السياسات والأولويات والسيناريوهات وحزم القرار.", desc_en: "Policy intelligence, priorities, scenarios and decision packs." },
-  { ar: "وحدة التمويل", en: "Funding unit", desc_ar: "فرص التمويل وأداء المشاريع الممولة.", desc_en: "Funding opportunities and funded-project performance." },
-  { ar: "وحدة الشراكات", en: "Partnerships unit", desc_ar: "الشركاء والاتفاقيات والمطابقة.", desc_en: "Partners, agreements and matching." },
-  { ar: "حوكمة البيانات", en: "Data governance", desc_ar: "جودة البيانات والنسب والصلاحيات والتدقيق.", desc_en: "Data quality, provenance, permissions and audit." },
+  { ar: "القيادة وصنّاع القرار", en: "Leadership & decision-makers", desc_ar: "رؤية وطنية للمؤشرات والاتجاهات والأولويات ومتابعة الأداء العام.", desc_en: "A national view of indicators, trends and priorities, and oversight of overall performance." },
+  { ar: "فرق البحث والسياسات", en: "Research & policy teams", desc_ar: "تحليل المجالات والأولويات والفجوات والاتجاهات البحثية.", desc_en: "Analysis of research fields, priorities, gaps and trends." },
+  { ar: "فرق التمويل والشراكات", en: "Funding & partnerships teams", desc_ar: "متابعة فرص التمويل والتعاون وربطها بالاحتياجات والقدرات البحثية.", desc_en: "Following funding and collaboration opportunities and linking them to research needs and capabilities." },
+  { ar: "فرق البيانات والحوكمة", en: "Data & governance teams", desc_ar: "متابعة جودة البيانات ومصادرها وصلاحيات الوصول إليها.", desc_en: "Overseeing data quality, sources and access permissions." },
 ];
 
 export const MINISTRY_REPORTS = [
   { ar: "حالة البحث العلمي", en: "State of research" },
   { ar: "الأولويات البحثية الوطنية", en: "National research priorities" },
-  { ar: "التقرير البحثي الإقليمي", en: "Regional research report" },
-  { ar: "مقارنة الجامعات", en: "University benchmark" },
-  { ar: "تقرير التمويل البحثي", en: "Research funding report" },
-  { ar: "تقرير الشراكات", en: "Partnership report" },
-  { ar: "تقرير القدرات البحثية", en: "Research capacity report" },
-  { ar: "موجز سياسة لسؤال حكومي محدد", en: "Policy brief for a specific question" },
+  { ar: "مقارنات الأداء البحثي", en: "Research performance comparisons" },
+  { ar: "التمويل البحثي", en: "Research funding" },
+  { ar: "الشراكات البحثية", en: "Research partnerships" },
+  { ar: "القدرات والفجوات البحثية", en: "Research capacity & gaps" },
+  { ar: "تحليلات مخصصة لدعم أسئلة الوزارة", en: "Custom analyses for Ministry questions" },
 ];
 
 export const getLevelLabel = (key, lang) => LEVEL_LABELS[key]?.[lang] ?? key;

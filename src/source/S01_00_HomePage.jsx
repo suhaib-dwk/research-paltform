@@ -530,8 +530,8 @@ const HomePage = () => {
                           {space.number}
                         </span>
                         <h3 className="text-lg font-bold text-brand-ink mb-1.5">{space[`title_${lang}`]}</h3>
-                        <p className="text-[13px] font-semibold text-brand-orange/90 mb-2.5">{space[`question_${lang}`]}</p>
-                        <p className="text-sm leading-relaxed text-brand-muted flex-1 line-clamp-4">{space[`desc_${lang}`]}</p>
+                        <p className="text-[13px] font-semibold text-brand-orange/90 mb-2.5">{space[`home_question_${lang}`] || space[`question_${lang}`]}</p>
+                        <p className="text-sm leading-relaxed text-brand-muted flex-1 line-clamp-4">{space[`home_desc_${lang}`] || space[`desc_${lang}`]}</p>
                         <CardArrow Icon={ArrowIcon} className="mt-5 self-end" />
                       </Link>
                     ))}
@@ -583,6 +583,16 @@ const HomePage = () => {
             <p className="lg:col-span-5 text-[15px] leading-relaxed text-brand-muted">
               {t("home.journey_desc")}
             </p>
+          </ScrollReveal>
+
+          {/* ✅ «سجل بحثي مستمر واحد» ليس مرحلة — إطار ممتد فوق كل المراحل */}
+          <ScrollReveal className="mb-10 flex items-center gap-4">
+            <span className="h-px flex-1 bg-brand-orange/40"></span>
+            <span className="inline-flex items-center gap-2.5 border border-brand-orange/50 bg-white px-5 py-2 text-[13px] font-extrabold text-brand-orange whitespace-nowrap">
+              <RefreshCw className="w-4 h-4" strokeWidth={2.25} />
+              {t("home.journey_record")}
+            </span>
+            <span className="h-px flex-1 bg-brand-orange/40"></span>
           </ScrollReveal>
 
           <ScrollReveal className="relative">

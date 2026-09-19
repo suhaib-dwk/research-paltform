@@ -409,14 +409,14 @@ export const SpaceMock = ({ kind, lang }) => {
 const IntelligenceLayout = ({ data, L }) => {
   const { t, lang, isRTL, ArrowIcon } = L;
   const labels = isRTL
-    ? { spaces: "المساحات الأربع", policy: "رحلة القرار", principles: "القواعد", roles: "لمن", reports: "التقارير", spacesKicker: "المكون الأول — لوحات الوزارة والذكاء البحثي الوطني", spacesTitle: "أربع مساحات مستقلة وظيفيًا، مترابطة بياناتيًا.", spacesDesc: "البيانات تتحول إلى أولويات، والأولويات إلى شراكات وتمويل، ثم تنتج مشاريع ومخرجات تعود إلى قاعدة البيانات لقياس الأثر.", policyKicker: "الاستخدام الأهم", policyTitle: "من «عرض الأرقام» إلى «فهم الواقع ثم اختيار التدخل».", policyDesc: "المخرج النهائي ليس رقمًا؛ بل ملف قرار يوضح الأدلة والخيارات والمخاطر والمؤشرات التي ستُستخدم لمتابعته.", principlesKicker: "قواعد غير قابلة للتفاوض", principlesTitle: "ما الذي يضمنه النظام للوزارة.", rolesKicker: "لمن هذه الطبقة", rolesTitle: "صلاحيات بحسب الدور داخل الوزارة.", reportsKicker: "التقارير الوطنية", reportsTitle: "تقارير دورية تُبنى من الأرقام نفسها التي تراها في اللوحة.", contact: "للتواصل معنا", ctaTitle: "الخطوة التالية: مرحلة تأسيس واكتشاف تقني مشتركة.", ctaDesc: "تبدأ باعتماد لوحات الوزارة ومؤشراتها الأساسية، ثم النطاق والحوكمة والمؤسسات المشاركة.", relatedTitle: "صفحات ذات صلة", quote: "لا تجعلوا الوزارة مجرد شاشة تقارير.", quoteSource: "مواصفة طبقة الوزارة — قواعد غير قابلة للتفاوض", question: "السؤال", details: "العرض التفصيلي والمؤشرات" }
-    : { spaces: "The four spaces", policy: "Decision journey", principles: "Rules", roles: "Who", reports: "Reports", spacesKicker: "Component one — Ministry dashboards & national research intelligence", spacesTitle: "Four functionally independent spaces, linked by data.", spacesDesc: "Data becomes priorities, priorities become partnerships and funding, which produce projects and outputs that return to the database to measure impact.", policyKicker: "The most important use", policyTitle: "From “showing numbers” to “understanding reality, then choosing the intervention”.", policyDesc: "The final output is not a number; it is a decision file showing evidence, options, risks and the indicators that will track the decision.", principlesKicker: "Non-negotiable rules", principlesTitle: "What the system guarantees the Ministry.", rolesKicker: "Who this layer is for", rolesTitle: "Role-based access inside the Ministry.", reportsKicker: "National reports", reportsTitle: "Periodic reports built from the same figures you see on the dashboard.", contact: "Contact us", ctaTitle: "Next step: a joint foundation and technical discovery phase.", ctaDesc: "It starts by approving the Ministry dashboards and core indicators, then scope, governance and participating institutions.", relatedTitle: "Related pages", quote: "Do not turn the Ministry into a mere reporting screen.", quoteSource: "Ministry layer specification — non-negotiable rules", question: "The question", details: "Detailed view & indicators" };
+    ? { spaces: "المساحات الأربع", policy: "من البيانات إلى الفهم", principles: "المبادئ", roles: "لمن", reports: "التقارير", spacesKicker: "المكون الأول — لوحات الوزارة والذكاء البحثي الوطني", spacesTitle: "أربع مساحات مترابطة تدعم قراءة المشهد البحثي وتوجيهه.", spacesDesc: "تربط SOURCE بين البيانات البحثية والأولويات الوطنية والشراكات وفرص التمويل، بحيث تساعد الوزارة على فهم ما يحدث، ورصد الفجوات والفرص، ومتابعة تطور المشهد البحثي ضمن صورة وطنية أكثر ترابطاً.", policyKicker: "", policyTitle: "من البيانات إلى فهم أعمق للمشهد البحثي", policyDesc: "لا تقتصر قيمة هذه الطبقة على عرض المؤشرات، بل تساعد الوزارة على الانتقال من معرفة ما يحدث إلى فهم الاتجاهات والفجوات والفرص التي يمكن أن تستند إليها في التوجيه والمتابعة.", principlesKicker: "", principlesTitle: "مبادئ تحكم استخدام الطبقة", rolesKicker: "", rolesTitle: "من يستخدم هذه الطبقة؟", rolesDesc: "تخدم لوحات الوزارة والذكاء البحثي الوطني مستويات مختلفة من العمل داخل الوزارة، بحسب الاختصاص والصلاحيات.", reportsKicker: "التقارير الوطنية", reportsTitle: "تقارير وتحليلات تُبنى على البيانات والمؤشرات نفسها المستخدمة في اللوحات.", contact: "للتواصل معنا", ctaTitle: "الخطوة التالية: مرحلة تأسيس واكتشاف مشتركة", ctaDesc: "تبدأ بتحديد احتياجات الوزارة ولوحاتها ومؤشراتها الأساسية، ثم استكمال متطلبات الحوكمة والتكامل ونطاق المؤسسات المشاركة.", relatedTitle: "صفحات ذات صلة", quote: "من البيانات إلى فهم أعمق للمشهد البحثي.", quoteSource: "", question: "السؤال", details: "العرض التفصيلي والمؤشرات", relComp2: "الجودة والاعتماد والجاهزية للتصنيفات", relComp3: "خدمات البحث ودعم الباحثين", relAi: "خدمات الذكاء الاصطناعي" }
+    : { spaces: "The four spaces", policy: "From data to insight", principles: "Principles", roles: "Who", reports: "Reports", spacesKicker: "Component one — Ministry dashboards & national research intelligence", spacesTitle: "Four connected spaces that support reading and steering the research landscape.", spacesDesc: "SOURCE links research data, national priorities, partnerships and funding opportunities, helping the Ministry understand what is happening, spot gaps and opportunities, and follow how the research landscape evolves within a more connected national picture.", policyKicker: "", policyTitle: "From data to a deeper understanding of the research landscape", policyDesc: "This layer's value goes beyond displaying indicators: it helps the Ministry move from knowing what is happening to understanding the trends, gaps and opportunities it can rely on for direction and follow-up.", principlesKicker: "", principlesTitle: "Principles governing the use of this layer", rolesKicker: "", rolesTitle: "Who uses this layer?", rolesDesc: "Ministry dashboards and national research intelligence serve different levels of work inside the Ministry, according to remit and permissions.", reportsKicker: "National reports", reportsTitle: "Reports and analyses built on the same data and indicators used in the dashboards.", contact: "Contact us", ctaTitle: "Next step: a joint foundation and discovery phase", ctaDesc: "It starts by defining the Ministry's needs, dashboards and core indicators, then completing governance, integration requirements and the scope of participating institutions.", relatedTitle: "Related pages", quote: "From data to a deeper understanding of the research landscape.", quoteSource: "", question: "The question", details: "Detailed view & indicators", relComp2: "Quality, accreditation & rankings readiness", relComp3: "Research services & researcher support", relAi: "AI services" };
 
   const regLinks = registerLinks("ministry", t, isRTL);
   const related = [
-    { to: "/audience/university", kicker: isRTL ? "المكون الثاني" : "Component two", title: t("home.comp2_title"), desc: t("home.comp2_desc").slice(0, 120) + "…" },
-    { to: "/services", kicker: isRTL ? "المكون الثالث" : "Component three", title: t("home.comp3_title"), desc: t("home.comp3_desc").slice(0, 120) + "…" },
-    { to: "/pillar/ai", kicker: isRTL ? "الركيزة 02" : "Pillar 02", title: t("home.tile2_title"), desc: t("home.tile2_desc") },
+    { to: "/audience/university", kicker: isRTL ? "المكون الثاني" : "Component two", title: labels.relComp2, desc: isRTL ? undefined : t("home.comp2_desc").slice(0, 120) + "…" },
+    { to: "/services", kicker: isRTL ? "المكون الثالث" : "Component three", title: labels.relComp3, desc: isRTL ? undefined : t("home.comp3_desc").slice(0, 120) + "…" },
+    { to: "/pillar/ai", kicker: isRTL ? "الركيزة 02" : "Pillar 02", title: labels.relAi, desc: isRTL ? undefined : t("home.tile2_desc") },
   ];
 
   return (
@@ -472,19 +472,19 @@ const IntelligenceLayout = ({ data, L }) => {
                   )}
                   {/* ✅ المستوى الثاني (الأولويات) بلا إحصائيات — شرح مختصر مبني على أرقام المستوى الأول */}
                   {MINISTRY_SPACE_DETAILS[space.slug]?.explanation_summary && (
-                    <div className="bg-brand-ink p-7 md:p-9 flex flex-col gap-5">
+                    <div className="bg-brand-cream-hero border border-brand-ink/10 p-7 md:p-9 flex flex-col gap-5">
                       <span className="text-xs font-bold tracking-[0.2em] uppercase text-brand-orange">
                         {isRTL ? "ماذا تقول البيانات" : "What the data says"}
                       </span>
                       <ul className="flex flex-col gap-4">
                         {MINISTRY_SPACE_DETAILS[space.slug].explanation_summary[lang].map((txt) => (
-                          <li key={txt} className="flex items-start gap-3 text-[15px] font-semibold text-white/85 leading-relaxed">
+                          <li key={txt} className="flex items-start gap-3 text-[15px] font-semibold text-brand-ink leading-relaxed">
                             <span className="w-1.5 h-1.5 bg-brand-orange flex-shrink-0 mt-2.5"></span>
                             {txt}
                           </li>
                         ))}
                       </ul>
-                      <Link to="/ministry-space/data-intelligence#priority-indicators" className="inline-flex items-center gap-2 text-[13px] font-bold text-white hover:text-brand-orange transition-colors border-t border-white/10 pt-4">
+                      <Link to="/ministry-space/data-intelligence#priority-indicators" className="inline-flex items-center gap-2 text-[13px] font-bold text-brand-ink hover:text-brand-orange transition-colors border-t border-brand-ink/10 pt-4">
                         {isRTL ? "الأرقام في المستوى الأول" : "Figures in level one"} <ArrowIcon className="w-3.5 h-3.5 text-brand-orange" />
                       </Link>
                     </div>
@@ -502,11 +502,12 @@ const IntelligenceLayout = ({ data, L }) => {
           <SectionHead kicker={labels.policyKicker} title={labels.policyTitle} desc={labels.policyDesc} light />
           <div className="relative">
             <span className="hidden lg:block absolute top-6 start-6 end-6 h-px bg-brand-orange/50"></span>
-            <div className="relative grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-x-4 gap-y-8">
+            <div className="relative grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-10">
               {POLICY_JOURNEY.map((step, i) => (
-                <div key={step.ar} className="flex flex-col items-start gap-4">
-                  <span className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${i === 5 ? "bg-brand-orange text-white shadow-[0_0_0_8px_rgba(255,135,16,0.15)]" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
-                  <span className={`text-[13px] font-bold leading-snug ${i === 5 ? "text-brand-orange" : "text-white"}`}>{step[lang]}</span>
+                <div key={step.ar} className="flex flex-col items-start gap-3">
+                  <span className={`w-12 h-12 rounded-full flex items-center justify-center text-[13px] font-extrabold ${step.highlight ? "bg-brand-orange text-white shadow-[0_0_0_8px_rgba(255,135,16,0.15)]" : "bg-brand-ink border border-brand-orange/60 text-brand-orange"}`}>0{i + 1}</span>
+                  <span className={`text-[15px] font-bold leading-snug ${step.highlight ? "text-brand-orange" : "text-white"}`}>{step[lang]}</span>
+                  <span className="text-[13px] text-white/65 leading-relaxed">{step[`desc_${lang}`]}</span>
                 </div>
               ))}
             </div>
@@ -532,8 +533,8 @@ const IntelligenceLayout = ({ data, L }) => {
       {/* الأدوار */}
       <section id="roles" className="bg-white py-20 md:py-24 scroll-mt-28">
         <div className="container mx-auto px-6">
-          <SectionHead kicker={labels.rolesKicker} title={labels.rolesTitle} />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <SectionHead kicker={labels.rolesKicker} title={labels.rolesTitle} desc={labels.rolesDesc} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {MINISTRY_ROLES.map((role) => (
               <div key={role.ar} className="bg-white border border-gray-200 p-7 flex flex-col gap-3">
                 <span className="w-10 h-10 bg-brand-orange/10 flex items-center justify-center text-brand-orange"><Landmark className="w-5 h-5" strokeWidth={1.75} /></span>

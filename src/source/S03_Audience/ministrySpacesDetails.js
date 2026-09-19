@@ -239,7 +239,7 @@ export const MINISTRY_SPACE_DETAILS = {
 
   partnerships: {
     image: "/Home/home03.jpg",
-    kicker_ar: "الشراكات والاتفاقيات البحثية", kicker_en: "Research partnerships & agreements",
+    kicker_ar: "الشراكات البحثية", kicker_en: "Research partnerships",
     hero_pre_ar: "من يتعاون مع من، ", hero_pre_en: "Who works with whom, ",
     hero_em_ar: "وأين الشراكة التالية", hero_em_en: "and where the next partnership is",
     hero_post_ar: " — بأدلة.", hero_post_en: " — with evidence.",
@@ -292,7 +292,7 @@ export const MINISTRY_SPACE_DETAILS = {
 
   funding: {
     image: "/Home/home04.png",
-    kicker_ar: "فرص التمويل وذكاء التمويل البحثي", kicker_en: "Funding opportunities & funding intelligence",
+    kicker_ar: "فرص التمويل البحثي", kicker_en: "Research funding opportunities",
     hero_pre_ar: "المال المناسب ", hero_pre_en: "The right money ",
     hero_em_ar: "للباحث المناسب", hero_em_en: "for the right researcher",
     hero_post_ar: " — في الوقت المناسب.", hero_post_en: " — at the right time.",

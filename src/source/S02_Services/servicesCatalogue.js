@@ -16,9 +16,9 @@ export const SERVICE_FAMILIES = [
   { key: "development", label_ar: "تطوير البحث", label_en: "Research Development" },
   { key: "editing", label_ar: "التحرير والترجمة", label_en: "Editing & Translation" },
   { key: "review", label_ar: "التحكيم العلمي", label_en: "Scientific Peer Review" },
-  { key: "journal", label_ar: "المجلة والنشر", label_en: "Journal Selection & Publication" },
+  { key: "journal", label_ar: "اختيار المجلة والنشر", label_en: "Journal Selection & Publication" },
   { key: "revision", label_ar: "المراجعات والرد على المحكمين", label_en: "Revision & Reviewer Response Support" },
-  { key: "post", label_ar: "ما بعد النشر وملف الباحث", label_en: "Post-Publication & Research Profile" },
+  { key: "post", label_ar: "ما بعد النشر وتطوير ملف الباحث", label_en: "Post-Publication & Research Profile" },
 ];
 
 // نوع التنفيذ (القسم 6 بالدليل: AI / Human / Hybrid + Workflow للخدمات المركّبة)
